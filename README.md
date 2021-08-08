@@ -13,7 +13,10 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Hello, World!](./Exercism/csharp/hello-world)
 
 - Elm
-  - [Hello, Wordl!](./Excercism/elm/hello-world)
+  - [Hello, World!](./Excercism/elm/hello-world)
+
+- PHP
+  - [Hello, World!](./Exercism/php/hello-world)
 
 ### HackerRank
 
