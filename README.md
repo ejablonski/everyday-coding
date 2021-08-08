@@ -9,6 +9,9 @@ Programs and solutions from tutorials, daily coding routines and such.
 - C++
   - [Hello, World!](./Exercism/cpp/hello-world)
 
+- Elm
+  - [Hello, Wordl!](./Excercism/elm/hello-world)
+
 ### HackerRank
 
 - 10 days of JavaScript
