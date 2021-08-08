@@ -158,3 +158,4 @@ Programs and solutions from tutorials, daily coding routines and such.
 
 - [Multiples of 3 and 5](./ProjectEuler/multiples-of-3-and-5)
 - [Even Fibonacci numbers](./ProjectEuler/even-fibonacci-numbers)
+- [Largest prime factor](./ProjectEuler/largest-prime-factor)
