@@ -165,3 +165,4 @@ Programs and solutions from tutorials, daily coding routines and such.
 - [Special pythagorean triplet](./ProjectEuler/special-pythagorean-triplet)
 - [Summation of primes](./ProjectEuler/summation-of-primes)
 - [Large sum](./ProjectEuler/large-sum)
+- [Largest product in a series](./ProjectEuler/largest-product-in-a-series)
