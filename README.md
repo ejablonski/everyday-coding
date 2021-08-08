@@ -166,3 +166,4 @@ Programs and solutions from tutorials, daily coding routines and such.
 - [Summation of primes](./ProjectEuler/summation-of-primes)
 - [Large sum](./ProjectEuler/large-sum)
 - [Largest product in a series](./ProjectEuler/largest-product-in-a-series)
+- [Smallest multiple](./ProjectEuler/smallest-multiple)
