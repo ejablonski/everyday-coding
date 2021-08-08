@@ -162,3 +162,5 @@ Programs and solutions from tutorials, daily coding routines and such.
 - [Largest palidrome product](./ProjectEuler/largest-palidrome-product)
 - [Sum square difference](./ProjectEuler/sum-square-difference)
 - [10001st prime](./ProjectEuler/nth-prime)
+- [Special pythagorean triplet](./ProjectEuler/special-pythagorean-triplet)
+- [Summation of primes](./ProjectEuler/summation-of-primes)
