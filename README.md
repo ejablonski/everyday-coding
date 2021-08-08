@@ -161,3 +161,4 @@ Programs and solutions from tutorials, daily coding routines and such.
 - [Largest prime factor](./ProjectEuler/largest-prime-factor)
 - [Largest palidrome product](./ProjectEuler/largest-palidrome-product)
 - [Sum square difference](./ProjectEuler/sum-square-difference)
+- [10001st prime](./ProjectEuler/nth-prime)
