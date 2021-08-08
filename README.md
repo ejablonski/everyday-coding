@@ -160,3 +160,4 @@ Programs and solutions from tutorials, daily coding routines and such.
 - [Even Fibonacci numbers](./ProjectEuler/even-fibonacci-numbers)
 - [Largest prime factor](./ProjectEuler/largest-prime-factor)
 - [Largest palidrome product](./ProjectEuler/largest-palidrome-product)
+- [Sum square difference](./ProjectEuler/sum-square-difference)
