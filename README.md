@@ -9,6 +9,9 @@ Programs and solutions from tutorials, daily coding routines and such.
 - C++
   - [Hello, World!](./Exercism/cpp/hello-world)
 
+- C#
+  - [Hello, World!](./Exercism/csharp/hello-world)
+
 - Elm
   - [Hello, Wordl!](./Excercism/elm/hello-world)
 
