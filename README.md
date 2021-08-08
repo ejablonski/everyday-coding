@@ -153,3 +153,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - Introduction
     - [Hello World](./HackerRank/python/introduction/hello-world)
     - [If-else](./HackerRank/python/introduction/if-else)
+
+### ProjectEuler
+
+- [Multiples of 3 and 5](./ProjectEuler/multiples-of-3-and-5)
