@@ -2,9 +2,7 @@
 
 Programs and solutions from tutorials, daily coding routines and such.
 
-## Table of content
-
-### Exercism
+## Exercism
 
 - C++
   - [Hello, World!](./Exercism/cpp/hello-world)
@@ -13,12 +11,12 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Hello, World!](./Exercism/csharp/hello-world)
 
 - Elm
-  - [Hello, World!](./Excercism/elm/hello-world)
+  - [Hello, World!](./Exercism/elm/hello-world)
 
 - PHP
   - [Hello, World!](./Exercism/php/hello-world)
 
-### HackerRank
+## HackerRank
 
 - 10 days of JavaScript
   - [00a. Hello, World](./HackerRank/10-days-of-js/00a-hello-world)
@@ -168,7 +166,7 @@ Programs and solutions from tutorials, daily coding routines and such.
     - [Hello World](./HackerRank/python/introduction/hello-world)
     - [If-else](./HackerRank/python/introduction/if-else)
 
-### ProjectEuler
+## ProjectEuler
 
 - [Multiples of 3 and 5](./ProjectEuler/multiples-of-3-and-5)
 - [Even Fibonacci numbers](./ProjectEuler/even-fibonacci-numbers)
@@ -182,3 +180,9 @@ Programs and solutions from tutorials, daily coding routines and such.
 - [Largest product in a series](./ProjectEuler/largest-product-in-a-series)
 - [Smallest multiple](./ProjectEuler/smallest-multiple)
 - [Thousand digit Fibonacci number](./ProjectEuler/thousand-digit-fibonacci-digit)
+
+## Tutorials
+
+- MIPS
+  - MIPS Assembly Language Programming by Robert Britton
+    - [Sum of integers](./Tutorials/MIPS/malp/sum-of-integers)
