@@ -187,3 +187,4 @@ Programs and solutions from tutorials, daily coding routines and such.
   - MIPS Assembly Language Programming by Robert Britton
     - [Sum of integers](./Tutorials/MIPS/malp/sum-of-integers)
     - [Switch case](./Tutorials/MIPS/malp/switch-case)
+    - [Print integer](./Tutorials/MIPS/malp/print-integer)
