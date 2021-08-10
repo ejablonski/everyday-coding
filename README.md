@@ -188,3 +188,4 @@ Programs and solutions from tutorials, daily coding routines and such.
     - [Sum of integers](./Tutorials/MIPS/malp/sum-of-integers)
     - [Switch case](./Tutorials/MIPS/malp/switch-case)
     - [Print integer](./Tutorials/MIPS/malp/print-integer)
+    - [Sum header](./Tutorials/MIPS/malp/sum-header)
