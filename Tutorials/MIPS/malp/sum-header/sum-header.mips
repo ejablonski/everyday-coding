@@ -1,0 +1,39 @@
+#
+# This main line program is used to test the function "sum"
+# After calling the function, results are printed
+#
+# Register usege in main:
+#   $a0: used to pass the address of an array to the function
+#   $a1: used to pass the length parameter N to the function
+
+		.data
+array:	.word	-4, 5, 8, -1
+msg1:	.asciiz	"\nThe sum of the positive values = \n"
+msg2:	.asciiz "\nThe sum of the negative values = \n"
+		.globl	main
+		.text
+
+main:
+		li		$v0, 4		# system call for printing
+		la		$a0, msg1	# load address of msg1
+		syscall
+
+		la		$a0, array
+		li		$a1, 4
+		jal		sum
+
+		move	$a0, $v0
+		li		$v0, 1
+		syscall
+
+		li		$v0, 4
+		la		$a0, msg2
+		syscall
+
+		li		$v0, 1
+		move	$a0, $v1
+		syscall
+
+end:
+		li		$v0, 10
+		syscall

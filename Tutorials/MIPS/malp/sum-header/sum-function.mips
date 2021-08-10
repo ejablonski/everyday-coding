@@ -1,0 +1,35 @@
+#
+# This function will find the sum of the positive
+# and sum of negative values in an array X of length N
+#
+# X is the address of an array passed $a0
+# N is the length of the array passed $a1
+# Function returns two values:
+#    Sum of positives in $v0
+#    Sum of negatives in $v1
+#
+# Registers used in function
+#    $a0 - address pointer into the array
+#    $a1 - loop counter (counts down to zero)
+#    $t0 - value read from the array
+#
+
+sum:
+		li		$v0, 0
+		li		$v1, 0
+
+loop:
+		blez	$a1, retzz
+		addi	$a1, $a1, -1	# decrement the loop count
+		lw		$t0, 0($a0)
+		addi	$a0, $a0, 4		# increment array to next word
+		bltz	$t0, negg
+		add		$v0, $v0, $t0
+		b		loop
+
+negg:
+		add		$v1, $v1, $t0
+		b		loop
+
+retzz:
+		jr		$ra				# return
