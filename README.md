@@ -184,6 +184,8 @@ Programs and solutions from tutorials, daily coding routines and such.
 ## Tutorials
 
 - MIPS
+  - Introduction to RISC assembly by John Waldron
+    - [Hello](./Tutorials/MIPS/itra/hello)
   - MIPS Assembly Language Programming by Robert Britton
     - [Sum of integers](./Tutorials/MIPS/malp/sum-of-integers)
     - [Switch case](./Tutorials/MIPS/malp/switch-case)
