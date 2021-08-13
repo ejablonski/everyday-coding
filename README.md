@@ -6,6 +6,7 @@ Programs and solutions from tutorials, daily coding routines and such.
 
 - C++
   - [Hello, World!](./Exercism/cpp/hello-world)
+  - [Leap](./Exercism/cpp/leap)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
@@ -189,6 +190,7 @@ Programs and solutions from tutorials, daily coding routines and such.
     - [Temperature](./Tutorials/MIPS/itra/temperature)
     - [Math](./Tutorials/MIPS/itra/math)
     - [Length](./Tutorials/MIPS/itra/length)
+    - [Loop](./Tutorials/MIPS/itra/loop)
   - MIPS assembly language programming by Robert Britton
     - [Sum of integers](./Tutorials/MIPS/malp/sum-of-integers)
     - [Switch case](./Tutorials/MIPS/malp/switch-case)
