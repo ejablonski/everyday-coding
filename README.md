@@ -191,7 +191,7 @@ Programs and solutions from tutorials, daily coding routines and such.
     - [Temperature](./Tutorials/MIPS/itra/temperature)
     - [Math](./Tutorials/MIPS/itra/math)
     - [Length](./Tutorials/MIPS/itra/length)
-    - [Loop](./Tutorials/MIPS/itra/loop)
+    - [Loop](./Tutorials/MIPS/itra/loops)
   - MIPS assembly language programming by Robert Britton
     - [Sum of integers](./Tutorials/MIPS/malp/sum-of-integers)
     - [Switch case](./Tutorials/MIPS/malp/switch-case)
