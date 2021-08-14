@@ -2,7 +2,7 @@
 #include "hello_world.h"
 
 // Include the test framework.
-#include "test/catch.hpp"
+#include "../test/catch.hpp"
 
 // Declares a single test.
 TEST_CASE("test_hello")

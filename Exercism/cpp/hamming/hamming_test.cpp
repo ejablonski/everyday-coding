@@ -1,6 +1,6 @@
 #include "hamming.h"
 #include <stdexcept>
-#include "test/catch.hpp"
+#include "../test/catch.hpp"
 
 TEST_CASE("no_difference_between_identical_strands")
 {

@@ -1,5 +1,5 @@
 #include "gigasecond.h"
-#include "test/catch.hpp"
+#include "../test/catch.hpp"
 #include "boost/date_time/posix_time/posix_time.hpp"
 
 // This problem requires you to install and use the boost date_time library.
