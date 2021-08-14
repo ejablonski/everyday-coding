@@ -23,7 +23,7 @@ if(EXERCISM_COMMON_CATCH)
     add_executable(${exercise} ${file}_test.cpp ${exercise_cpp} ${file}.h $<TARGET_OBJECTS:catchlib>)
 else()
     # Build executable from sources and headers
-    add_executable(${exercise} ${file}_test.cpp ${exercise_cpp} ${file}.h test/tests-main.cpp)
+    add_executable(${exercise} ${file}_test.cpp ${exercise_cpp} ${file}.h ../test/tests-main.cpp)
 endif()
 
 set_target_properties(${exercise} PROPERTIES
