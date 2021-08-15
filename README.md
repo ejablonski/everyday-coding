@@ -192,7 +192,7 @@ Programs and solutions from tutorials, daily coding routines and such.
     - [Temperature](./Tutorials/MIPS/itra/temperature)
     - [Math](./Tutorials/MIPS/itra/math)
     - [Length](./Tutorials/MIPS/itra/length)
-    - [Loop](./Tutorials/MIPS/itra/loops)
+    - [Loops](./Tutorials/MIPS/itra/loops)
     - [Min-max](./Tutorials/MIPS/itra/minmax)
     - [Count](./Tutorials/MIPS/itra/count)
   - MIPS assembly language programming by Robert Britton
