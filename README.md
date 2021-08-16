@@ -209,6 +209,7 @@ Programs and solutions from tutorials, daily coding routines and such.
     - [Count](./Tutorials/MIPS/itra/count)
     - [Hex](./Tutorials/MIPS/itra/hex)
     - [Dec](./Tutorials/MIPS/itra/dec)
+    - [Reverse](./Tutorials/MIPS/itra/reverse)
 
   - MIPS assembly language programming by Robert Britton
     - [Sum of integers](./Tutorials/MIPS/malp/sum-of-integers)
