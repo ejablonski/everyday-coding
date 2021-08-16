@@ -21,6 +21,7 @@ Programs and solutions from tutorials, daily coding routines and such.
 
 - TypeScript
   - [Hello, World!](./Exercism/typescript/hello-world)
+  - [Two fer](./Exercism/typescript/two-fer)
 
 ## HackerRank
 
