@@ -196,6 +196,7 @@ Programs and solutions from tutorials, daily coding routines and such.
     - [Min-max](./Tutorials/MIPS/itra/minmax)
     - [Count](./Tutorials/MIPS/itra/count)
     - [Hex](./Tutorials/MIPS/itra/hex)
+    - [Dec](./Tutorials/MIPS/itra/dec)
   - MIPS assembly language programming by Robert Britton
     - [Sum of integers](./Tutorials/MIPS/malp/sum-of-integers)
     - [Switch case](./Tutorials/MIPS/malp/switch-case)
