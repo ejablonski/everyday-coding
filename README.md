@@ -18,6 +18,7 @@ Programs and solutions from tutorials, daily coding routines and such.
 
 - PHP
   - [Hello, World!](./Exercism/php/hello-world)
+  - [Hamming](./Exercism/php/hamming)
 
 - TypeScript
   - [Hello, World!](./Exercism/typescript/hello-world)
