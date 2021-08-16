@@ -19,6 +19,7 @@ Programs and solutions from tutorials, daily coding routines and such.
 - PHP
   - [Hello, World!](./Exercism/php/hello-world)
   - [Hamming](./Exercism/php/hamming)
+  - [RNA transcription](./Exercism/php/rna-transcription)
 
 - TypeScript
   - [Hello, World!](./Exercism/typescript/hello-world)
