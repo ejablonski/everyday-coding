@@ -7,6 +7,7 @@ Programs and solutions from tutorials, daily coding routines and such.
 - C
   - [Hello, World!](./Exercism/c/hello-world)
   - [Leap](./Exercism/c/leap)
+  - [Hamming](./Exercism/c/hamming)
 
 - C++
   - [Hello, World!](./Exercism/cpp/hello-world)
