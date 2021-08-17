@@ -29,6 +29,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [RNA transcription](./Exercism/php/rna-transcription)
   - [Robot name](./Exercism/php/robot-name)
   - [Isogram](./Exercism/php/isogram)
+  - [Leap](./Exercism/php/leap)
 
 - TypeScript
   - [Hello, World!](./Exercism/typescript/hello-world)
