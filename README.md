@@ -14,6 +14,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Leap](./Exercism/cpp/leap)
   - [Gigasecond](./Exercism/cpp/gigasecond)
   - [Hamming](./Exercism/cpp/hamming)
+  - [Isogram](./Exercism/cpp/isogram)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
