@@ -24,6 +24,7 @@ Programs and solutions from tutorials, daily coding routines and such.
 
 - Elm
   - [Hello, World!](./Exercism/elm/hello-world)
+  - [Two fer](./Exercism/elm/two-fer)
 
 - PHP
   - [Hello, World!](./Exercism/php/hello-world)
