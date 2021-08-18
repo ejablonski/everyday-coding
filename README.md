@@ -40,6 +40,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Leap](./Exercism/typescript/leap)
   - [Resistor color](./Exercism/typescript/resistor-color)
   - [Resistor color duo](./Exercism/typescript/resistor-color-duo)
+  - [RNA transcription](./Exercism/typescript/rna-transcription)
 
 ## HackerRank
 
