@@ -38,6 +38,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Hello, World!](./Exercism/typescript/hello-world)
   - [Two fer](./Exercism/typescript/two-fer)
   - [Leap](./Exercism/typescript/leap)
+  - [Resistor color duo](./Exercism/typescript/resistor-color-duo)
 
 ## HackerRank
 
