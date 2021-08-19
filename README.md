@@ -35,6 +35,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Isogram](./Exercism/php/isogram)
   - [Leap](./Exercism/php/leap)
   - [Anagram](./Exercism/php/anagram)
+  - [Difference of squares](./Exercism/php/difference-of-squares)
 
 - TypeScript
   - [Hello, World!](./Exercism/typescript/hello-world)
