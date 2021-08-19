@@ -34,6 +34,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Robot name](./Exercism/php/robot-name)
   - [Isogram](./Exercism/php/isogram)
   - [Leap](./Exercism/php/leap)
+  - [Anagram](./Exercism/php/anagram)
 
 - TypeScript
   - [Hello, World!](./Exercism/typescript/hello-world)
