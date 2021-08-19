@@ -17,6 +17,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Hamming](./Exercism/cpp/hamming)
   - [Isogram](./Exercism/cpp/isogram)
   - [Bob](./Exercism/cpp/bob)
+  - [Anagram](./Exercism/cpp/anagram)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
