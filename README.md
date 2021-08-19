@@ -43,6 +43,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Resistor color](./Exercism/typescript/resistor-color)
   - [Resistor color duo](./Exercism/typescript/resistor-color-duo)
   - [RNA transcription](./Exercism/typescript/rna-transcription)
+  - [Anagram](./Exercism/typescript/anagram)
 
 ## HackerRank
 
