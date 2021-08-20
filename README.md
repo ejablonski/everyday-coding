@@ -23,6 +23,7 @@ Programs and solutions from tutorials, daily coding routines and such.
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
   - [Leap](./Exercism/csharp/leap)
+  - [Two fer](./Exercism/csharp/two-fer)
 
 - Elm
   - [Hello, World!](./Exercism/elm/hello-world)
