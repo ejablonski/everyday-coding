@@ -50,6 +50,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [RNA transcription](./Exercism/typescript/rna-transcription)
   - [Anagram](./Exercism/typescript/anagram)
   - [Difference of squares](./Exercism/typescript/difference-of-squares)
+  - [Gigasecond](./Exercism/typescript/gigasecond)
 
 ## HackerRank
 
