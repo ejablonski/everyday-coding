@@ -24,6 +24,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Hello, World!](./Exercism/csharp/hello-world)
   - [Leap](./Exercism/csharp/leap)
   - [Two fer](./Exercism/csharp/two-fer)
+  - [Nucleotide count](./Exercism/csharp/nucleotide-count)
 
 - Elm
   - [Hello, World!](./Exercism/elm/hello-world)
