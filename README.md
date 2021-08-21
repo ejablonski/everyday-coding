@@ -19,6 +19,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Bob](./Exercism/cpp/bob)
   - [Anagram](./Exercism/cpp/anagram)
   - [ETL](./Exercism/cpp/etl)
+  - [Word count](./Exercism/cpp/word-count)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
