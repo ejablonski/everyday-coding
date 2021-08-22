@@ -45,6 +45,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Word count](./Exercism/php/word-count)
   - [Sieve](./Exercism/php/sieve)
   - [Raindrops](./Exercism/php/raindrops)
+  - [Two fer](./Exercism/php/two-fer)
 
 - TypeScript
   - [Hello, World!](./Exercism/typescript/hello-world)
