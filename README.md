@@ -46,6 +46,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Sieve](./Exercism/php/sieve)
   - [Raindrops](./Exercism/php/raindrops)
   - [Two fer](./Exercism/php/two-fer)
+  - [Pangram](./Exercism/php/pangram)
 
 - TypeScript
   - [Hello, World!](./Exercism/typescript/hello-world)
