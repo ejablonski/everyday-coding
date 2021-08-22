@@ -47,6 +47,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Raindrops](./Exercism/php/raindrops)
   - [Two fer](./Exercism/php/two-fer)
   - [Pangram](./Exercism/php/pangram)
+  - [Run length encoding](./Exercism/php/run-length-encoding)
 
 - TypeScript
   - [Hello, World!](./Exercism/typescript/hello-world)
