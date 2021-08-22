@@ -43,6 +43,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Difference of squares](./Exercism/php/difference-of-squares)
   - [Bob](./Exercism/php/bob)
   - [Word count](./Exercism/php/word-count)
+  - [Sieve](./Exercism/php/sieve)
 
 - TypeScript
   - [Hello, World!](./Exercism/typescript/hello-world)
