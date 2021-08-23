@@ -21,6 +21,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [ETL](./Exercism/cpp/etl)
   - [Word count](./Exercism/cpp/word-count)
   - [Difference of squares](./Exercism/cpp/difference-of-squares)
+  - [Nucleotide count](./Exercism/cpp/nucleotide-count)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
