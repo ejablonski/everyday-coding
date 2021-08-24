@@ -22,6 +22,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Word count](./Exercism/cpp/word-count)
   - [Difference of squares](./Exercism/cpp/difference-of-squares)
   - [Nucleotide count](./Exercism/cpp/nucleotide-count)
+  - [Food chain](./Exercism/cpp/food-chain)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
