@@ -25,6 +25,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Food chain](./Exercism/cpp/food-chain)
   - [Phone number](./Exercism/cpp/phone-number)
   - [Grade school](./Exercism/cpp/grade-school)
+  - [Robot name](./Exercism/cpp/robot-name)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
