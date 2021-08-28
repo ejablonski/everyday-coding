@@ -26,6 +26,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Phone number](./Exercism/cpp/phone-number)
   - [Grade school](./Exercism/cpp/grade-school)
   - [Robot name](./Exercism/cpp/robot-name)
+  - [Sum of multiples](./Exercism/cpp/sum-of-multiples)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
