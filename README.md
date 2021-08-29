@@ -27,6 +27,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Grade school](./Exercism/cpp/grade-school)
   - [Robot name](./Exercism/cpp/robot-name)
   - [Sum of multiples](./Exercism/cpp/sum-of-multiples)
+  - [Space age](./Exercism/cpp/space-age)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
