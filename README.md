@@ -28,6 +28,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Robot name](./Exercism/cpp/robot-name)
   - [Sum of multiples](./Exercism/cpp/sum-of-multiples)
   - [Space age](./Exercism/cpp/space-age)
+  - [Scrabble score](./Exercism/cpp/scrabble-score)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
