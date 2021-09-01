@@ -43,6 +43,9 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Hello, World!](./Exercism/elm/hello-world)
   - [Two fer](./Exercism/elm/two-fer)
 
+- MIPS
+  - [Hello, World!](./Exercism/mips/hello-world)
+
 - PHP
   - [Hello, World!](./Exercism/php/hello-world)
   - [Hamming](./Exercism/php/hamming)
