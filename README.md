@@ -30,6 +30,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Space age](./Exercism/cpp/space-age)
   - [Scrabble score](./Exercism/cpp/scrabble-score)
   - [Triangle](./Exercism/cpp/triangle)
+  - [Grains](./Exercism/cpp/grains)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
