@@ -32,6 +32,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Triangle](./Exercism/cpp/triangle)
   - [Grains](./Exercism/cpp/grains)
   - [Raindrops](./Exercism/cpp/raindrops)
+  - [Reverse string](./Exercism/cpp/reverse-string)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
