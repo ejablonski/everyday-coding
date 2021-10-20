@@ -34,6 +34,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Raindrops](./Exercism/cpp/raindrops)
   - [Reverse string](./Exercism/cpp/reverse-string)
   - [Isogram](./Exercism/cpp/isogram)
+  - [Luhn](./Exercism/cpp/luhn)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
