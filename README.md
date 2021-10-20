@@ -35,6 +35,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Reverse string](./Exercism/cpp/reverse-string)
   - [Isogram](./Exercism/cpp/isogram)
   - [Luhn](./Exercism/cpp/luhn)
+  - [Two fer](./Exercism/cpp/two-fer)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
