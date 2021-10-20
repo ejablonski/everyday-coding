@@ -45,6 +45,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Bob](./Exercism/csharp/bob)
   - [Raindrops](./Exercism/csharp/raindrops)
   - [Accumulate](./Exercism/csharp/accumulate)
+  - [Sum of multiples](./Exercism/csharp/sum-of-multiples)
 
 - Elm
   - [Hello, World!](./Exercism/elm/hello-world)
