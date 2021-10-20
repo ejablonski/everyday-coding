@@ -43,6 +43,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Two fer](./Exercism/csharp/two-fer)
   - [Nucleotide count](./Exercism/csharp/nucleotide-count)
   - [Bob](./Exercism/csharp/bob)
+  - [Raindrops](./Exercism/csharp/raindrops)
 
 - Elm
   - [Hello, World!](./Exercism/elm/hello-world)
