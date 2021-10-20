@@ -44,6 +44,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Nucleotide count](./Exercism/csharp/nucleotide-count)
   - [Bob](./Exercism/csharp/bob)
   - [Raindrops](./Exercism/csharp/raindrops)
+  - [Accumulate](./Exercism/csharp/accumulate)
 
 - Elm
   - [Hello, World!](./Exercism/elm/hello-world)
