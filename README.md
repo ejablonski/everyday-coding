@@ -36,6 +36,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Isogram](./Exercism/cpp/isogram)
   - [Luhn](./Exercism/cpp/luhn)
   - [Two fer](./Exercism/cpp/two-fer)
+  - [Binary](./Exercism/cpp/binary)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
