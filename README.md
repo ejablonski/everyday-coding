@@ -38,6 +38,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Two fer](./Exercism/cpp/two-fer)
   - [Binary](./Exercism/cpp/binary)
   - [Pascal's triangle](./Exercism/cpp/pascals-triangle)
+  - [Trinary](./Exercism/cpp/trinary)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
