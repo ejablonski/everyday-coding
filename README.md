@@ -50,6 +50,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Raindrops](./Exercism/csharp/raindrops)
   - [Accumulate](./Exercism/csharp/accumulate)
   - [Sum of multiples](./Exercism/csharp/sum-of-multiples)
+  - [Grade school](./Exercism/csharp/grade-school)
 
 - Elm
   - [Hello, World!](./Exercism/elm/hello-world)
