@@ -39,6 +39,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Binary](./Exercism/cpp/binary)
   - [Pascal's triangle](./Exercism/cpp/pascals-triangle)
   - [Trinary](./Exercism/cpp/trinary)
+  - [RNA transcription](./Exercism/cpp/rna-transcription)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
