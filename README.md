@@ -43,6 +43,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Acronym](./Exercism/cpp/acronym)
   - [Hexadecimal](./Exercism/cpp/hexadecimal)
   - [Atbash cipher](./Exercism/cpp/atbash-cipher)
+  - [Armstrong numbers](./Exercism/cpp/armstrong-numbers)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
