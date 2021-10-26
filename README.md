@@ -42,6 +42,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [RNA transcription](./Exercism/cpp/rna-transcription)
   - [Acronym](./Exercism/cpp/acronym)
   - [Hexadecimal](./Exercism/cpp/hexadecimal)
+  - [Atbash cipher](./Exercism/cpp/atbash-cipher)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
