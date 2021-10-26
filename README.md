@@ -41,6 +41,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Trinary](./Exercism/cpp/trinary)
   - [RNA transcription](./Exercism/cpp/rna-transcription)
   - [Acronym](./Exercism/cpp/acronym)
+  - [Hexadecimal](./Exercism/cpp/hexadecimal)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
