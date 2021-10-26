@@ -44,6 +44,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Hexadecimal](./Exercism/cpp/hexadecimal)
   - [Atbash cipher](./Exercism/cpp/atbash-cipher)
   - [Armstrong numbers](./Exercism/cpp/armstrong-numbers)
+  - [Pangram](./Exercism/cpp/pangram)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
