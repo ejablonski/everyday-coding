@@ -46,6 +46,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Armstrong numbers](./Exercism/cpp/armstrong-numbers)
   - [Pangram](./Exercism/cpp/pangram)
   - [Secret handshake](./Exercism/cpp/secret-handshake)
+  - [Allergies](./Exercism/cpp/allergies)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
