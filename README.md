@@ -48,6 +48,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Secret handshake](./Exercism/cpp/secret-handshake)
   - [Allergies](./Exercism/cpp/allergies)
   - [Matching brackets](./Exercism/cpp/matching-brackets)
+  - [Collatz conjecture](./Exercism/cpp/collatz-conjecture)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
