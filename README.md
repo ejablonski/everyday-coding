@@ -47,6 +47,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Pangram](./Exercism/cpp/pangram)
   - [Secret handshake](./Exercism/cpp/secret-handshake)
   - [Allergies](./Exercism/cpp/allergies)
+  - [Matching brackets](./Exercism/cpp/matching-brackets)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
