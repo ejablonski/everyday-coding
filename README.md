@@ -51,6 +51,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Collatz conjecture](./Exercism/cpp/collatz-conjecture)
   - [Protein translation](./Exercism/cpp/protein-translation)
   - [Sieve](./Exercism/cpp/sieve)
+  - [Nth prime](./Exercism/cpp/nth-prime)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
