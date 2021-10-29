@@ -50,6 +50,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Matching brackets](./Exercism/cpp/matching-brackets)
   - [Collatz conjecture](./Exercism/cpp/collatz-conjecture)
   - [Protein translation](./Exercism/cpp/protein-translation)
+  - [Sieve](./Exercism/cpp/sieve)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
