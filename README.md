@@ -52,6 +52,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Protein translation](./Exercism/cpp/protein-translation)
   - [Sieve](./Exercism/cpp/sieve)
   - [Nth prime](./Exercism/cpp/nth-prime)
+  - [All your base](./Exercism/cpp/all-your-base)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
