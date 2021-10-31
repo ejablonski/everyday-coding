@@ -101,6 +101,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Anagram](./Exercism/typescript/anagram)
   - [Difference of squares](./Exercism/typescript/difference-of-squares)
   - [Gigasecond](./Exercism/typescript/gigasecond)
+  - [Triangle](./Exercism/typescript/triangle)
 
 ## HackerRank
 
