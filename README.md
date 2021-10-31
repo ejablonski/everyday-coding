@@ -102,6 +102,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Difference of squares](./Exercism/typescript/difference-of-squares)
   - [Gigasecond](./Exercism/typescript/gigasecond)
   - [Triangle](./Exercism/typescript/triangle)
+  - [Space age](./Exercism/typescript/space-age)
 
 ## HackerRank
 
