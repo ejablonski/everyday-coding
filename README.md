@@ -54,6 +54,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Nth prime](./Exercism/cpp/nth-prime)
   - [All your base](./Exercism/cpp/all-your-base)
   - [Prime factors](./Exercism/cpp/prime-factors)
+  - [Beer song](./Exercism/cpp/beer-song)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
