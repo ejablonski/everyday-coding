@@ -53,6 +53,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Sieve](./Exercism/cpp/sieve)
   - [Nth prime](./Exercism/cpp/nth-prime)
   - [All your base](./Exercism/cpp/all-your-base)
+  - [Prime factors](./Exercism/cpp/prime-factors)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
