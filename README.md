@@ -66,6 +66,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Accumulate](./Exercism/csharp/accumulate)
   - [Sum of multiples](./Exercism/csharp/sum-of-multiples)
   - [Grade school](./Exercism/csharp/grade-school)
+  - [Lucians luscious lasagna](./Exercism/csharp/lucians-luscious-lasagna)
 
 - Elm
   - [Hello, World!](./Exercism/elm/hello-world)
