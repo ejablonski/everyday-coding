@@ -70,6 +70,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Annalyns infiltration](./Exercism/csharp/annalyns-infiltration)
   - [Cars, assemble](./Exercism/csharp/cars-assemble)
   - [Interest is Interesting](./Exercism/csharp/interest-is-interesting)
+  - [Triangle](./Exercism/csharp/triangle)
 
 - Elm
   - [Hello, World!](./Exercism/elm/hello-world)
