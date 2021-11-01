@@ -1,5 +1,9 @@
 #include "clock.h"
+#ifdef EXERCISM_TEST_SUITE
+#include <catch2/catch.hpp>
+#else
 #include "../test/catch.hpp"
+#endif
 #include <sstream>
 
 using namespace std;
@@ -183,7 +187,6 @@ TEST_CASE("time_tests")
     }
 }
 
-#if defined(EXERCISM_RUN_ALL_TESTS)
 TEST_CASE("add_tests")
 {
     for (addTest a : addCases) {
@@ -210,4 +213,3 @@ TEST_CASE("equal_tests")
         }
     }
 }
-#endif
