@@ -69,6 +69,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Lucians luscious lasagna](./Exercism/csharp/lucians-luscious-lasagna)
   - [Annalyns infiltration](./Exercism/csharp/annalyns-infiltration)
   - [Cars, assemble](./Exercism/csharp/cars-assemble)
+  - [Interest is Interesting](./Exercism/csharp/interest-is-interesting)
 
 - Elm
   - [Hello, World!](./Exercism/elm/hello-world)
