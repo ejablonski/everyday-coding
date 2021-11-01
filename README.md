@@ -56,6 +56,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Prime factors](./Exercism/cpp/prime-factors)
   - [Beer song](./Exercism/cpp/beer-song)
   - [Clock](./Exercism/cpp/clock)
+  - [Robot simulator](./Exercism/cpp/robot-simulator)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
