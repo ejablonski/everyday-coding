@@ -68,6 +68,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Grade school](./Exercism/csharp/grade-school)
   - [Lucians luscious lasagna](./Exercism/csharp/lucians-luscious-lasagna)
   - [Annalyns infiltration](./Exercism/csharp/annalyns-infiltration)
+  - [Cars, assemble](./Exercism/csharp/cars-assemble)
 
 - Elm
   - [Hello, World!](./Exercism/elm/hello-world)
