@@ -59,6 +59,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Robot simulator](./Exercism/cpp/robot-simulator)
   - [Series](./Exercism/cpp/series)
   - [Queen Attack](./Exercism/cpp/queen-attack)
+  - [Binary search](./Exercism/cpp/binary-search)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
