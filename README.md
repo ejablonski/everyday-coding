@@ -110,6 +110,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Gigasecond](./Exercism/typescript/gigasecond)
   - [Triangle](./Exercism/typescript/triangle)
   - [Space age](./Exercism/typescript/space-age)
+  - [DnD Character](./Exercism/typescript/dnd-character)
 
 ## HackerRank
 
