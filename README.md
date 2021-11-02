@@ -58,6 +58,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Clock](./Exercism/cpp/clock)
   - [Robot simulator](./Exercism/cpp/robot-simulator)
   - [Series](./Exercism/cpp/series)
+  - [Queen Attack](./Exercism/cpp/queen-attack)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
