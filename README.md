@@ -57,6 +57,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Beer song](./Exercism/cpp/beer-song)
   - [Clock](./Exercism/cpp/clock)
   - [Robot simulator](./Exercism/cpp/robot-simulator)
+  - [Series](./Exercism/cpp/series)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
