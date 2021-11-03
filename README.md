@@ -60,6 +60,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Series](./Exercism/cpp/series)
   - [Queen Attack](./Exercism/cpp/queen-attack)
   - [Binary search](./Exercism/cpp/binary-search)
+  - [Crypto Square](./Exercism/cpp/crypto-square)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
