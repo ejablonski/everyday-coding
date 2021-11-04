@@ -116,6 +116,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Space age](./Exercism/typescript/space-age)
   - [DnD Character](./Exercism/typescript/dnd-character)
   - [Hamming](./Exercism/typescript/hamming)
+  - [Queen Attack](./Exercism/typescript/queen-attack)
 
 ## HackerRank
 
