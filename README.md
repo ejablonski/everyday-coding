@@ -117,6 +117,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [DnD Character](./Exercism/typescript/dnd-character)
   - [Hamming](./Exercism/typescript/hamming)
   - [Queen Attack](./Exercism/typescript/queen-attack)
+  - [Pangram](./Exercism/typescript/pangram)
 
 ## HackerRank
 
