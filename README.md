@@ -61,6 +61,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Queen Attack](./Exercism/cpp/queen-attack)
   - [Binary search](./Exercism/cpp/binary-search)
   - [Crypto Square](./Exercism/cpp/crypto-square)
+  - [Circular buffer](./Exercism/cpp/circular-buffer)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
