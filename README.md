@@ -62,6 +62,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Binary search](./Exercism/cpp/binary-search)
   - [Crypto Square](./Exercism/cpp/crypto-square)
   - [Circular buffer](./Exercism/cpp/circular-buffer)
+  - [Binary search tree](./Exercism/cpp/binary-search-tree)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
@@ -82,7 +83,8 @@ Programs and solutions from tutorials, daily coding routines and such.
 - Elm
   - [Hello, World!](./Exercism/elm/hello-world)
   - [Two fer](./Exercism/elm/two-fer)
-
+  - [Bob](./Exercism/elm/bob)
+  
 - MIPS
   - [Hello, World!](./Exercism/mips/hello-world)
 
