@@ -122,6 +122,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Queen Attack](./Exercism/typescript/queen-attack)
   - [Pangram](./Exercism/typescript/pangram)
   - [Raindrops](./Exercism/typescript/raindrops)
+  - [Bob](./Exercism/typescript/bob)
 
 ## HackerRank
 
