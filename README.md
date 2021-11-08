@@ -123,7 +123,8 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Pangram](./Exercism/typescript/pangram)
   - [Raindrops](./Exercism/typescript/raindrops)
   - [Bob](./Exercism/typescript/bob)
-
+  - [Reverse string](./Exercism/typescript/reverse-string)
+  
 ## HackerRank
 
 - 10 days of JavaScript
