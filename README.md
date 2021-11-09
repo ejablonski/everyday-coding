@@ -124,7 +124,8 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Raindrops](./Exercism/typescript/raindrops)
   - [Bob](./Exercism/typescript/bob)
   - [Reverse string](./Exercism/typescript/reverse-string)
-  
+  - [Protein translation](./Exercism/typescript/protein-translation)
+
 ## HackerRank
 
 - 10 days of JavaScript
