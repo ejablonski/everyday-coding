@@ -125,6 +125,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Bob](./Exercism/typescript/bob)
   - [Reverse string](./Exercism/typescript/reverse-string)
   - [Protein translation](./Exercism/typescript/protein-translation)
+  - [Sum of multiples](./Exercism/typescript/sum-of-multiples)
 
 ## HackerRank
 
