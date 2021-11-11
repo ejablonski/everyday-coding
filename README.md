@@ -126,6 +126,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Reverse string](./Exercism/typescript/reverse-string)
   - [Protein translation](./Exercism/typescript/protein-translation)
   - [Sum of multiples](./Exercism/typescript/sum-of-multiples)
+  - [Sieve](./Exercism/typescript/sieve)
 
 ## HackerRank
 
