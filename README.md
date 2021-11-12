@@ -127,6 +127,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Protein translation](./Exercism/typescript/protein-translation)
   - [Sum of multiples](./Exercism/typescript/sum-of-multiples)
   - [Sieve](./Exercism/typescript/sieve)
+  - [Grains](./Exercism/typescript/grains)
 
 ## HackerRank
 
