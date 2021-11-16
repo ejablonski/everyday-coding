@@ -128,6 +128,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Sum of multiples](./Exercism/typescript/sum-of-multiples)
   - [Sieve](./Exercism/typescript/sieve)
   - [Grains](./Exercism/typescript/grains)
+  - [Pascals triangle](./Exercism/typescript/pascals-triangle)
 
 ## HackerRank
 
