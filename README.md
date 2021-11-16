@@ -87,6 +87,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   
 - MIPS
   - [Hello, World!](./Exercism/mips/hello-world)
+  - [Binary](./Exercism/mips/binary)
 
 - PHP
   - [Hello, World!](./Exercism/php/hello-world)
