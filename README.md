@@ -130,6 +130,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Sieve](./Exercism/typescript/sieve)
   - [Grains](./Exercism/typescript/grains)
   - [Pascals triangle](./Exercism/typescript/pascals-triangle)
+  - [Beer song](./Exercism/typescript/beer-song)
 
 ## HackerRank
 
