@@ -131,6 +131,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Grains](./Exercism/typescript/grains)
   - [Pascals triangle](./Exercism/typescript/pascals-triangle)
   - [Beer song](./Exercism/typescript/beer-song)
+  - [Armstrong numbers](./Exercism/typescript/armstrong-numbers)
 
 ## HackerRank
 
