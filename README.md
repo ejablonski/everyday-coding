@@ -132,6 +132,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Pascals triangle](./Exercism/typescript/pascals-triangle)
   - [Beer song](./Exercism/typescript/beer-song)
   - [Armstrong numbers](./Exercism/typescript/armstrong-numbers)
+  - [Nth prime](./Exercism/typescript/nth-prime)
 
 ## HackerRank
 
