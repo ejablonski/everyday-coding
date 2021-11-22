@@ -133,6 +133,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Beer song](./Exercism/typescript/beer-song)
   - [Armstrong numbers](./Exercism/typescript/armstrong-numbers)
   - [Nth prime](./Exercism/typescript/nth-prime)
+  - [Nucleotide count](./Exercism/typescript/nucleotide-count)
 
 ## HackerRank
 
