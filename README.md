@@ -134,6 +134,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Armstrong numbers](./Exercism/typescript/armstrong-numbers)
   - [Nth prime](./Exercism/typescript/nth-prime)
   - [Nucleotide count](./Exercism/typescript/nucleotide-count)
+  - [Resistor color trio](./Exercism/typescript/resistor-color-trio)
 
 ## HackerRank
 
