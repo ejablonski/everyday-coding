@@ -1,10 +1,15 @@
 # Resistor Color Duo
 
+Welcome to Resistor Color Duo on Exercism's TypeScript Track.
+If you need help running the tests or submitting your code, check out `HELP.md`.
+
+## Instructions
+
 If you want to build something using a Raspberry Pi, you'll probably use _resistors_.
 For this exercise, you need to know two things about them:
 
-* Each resistor has a resistance value.
-* Resistors are small - so small in fact that if you printed the resistance value on them, it would be hard to read.
+- Each resistor has a resistance value.
+- Resistors are small - so small in fact that if you printed the resistance value on them, it would be hard to read.
 
 To get around this problem, manufacturers print color-coded bands onto the resistors to denote their resistance values.
 Each band has a position and a numeric value.
@@ -32,40 +37,17 @@ From the example above:
 brown-green should return 15
 brown-green-violet should return 15 too, ignoring the third color.
 
-
-## Setup
-
-Go through the setup instructions for TypeScript to install the necessary
-dependencies:
-
-[https://exercism.io/tracks/typescript/installation](https://exercism.io/tracks/typescript/installation)
-
-## Requirements
-
-Install assignment dependencies:
-
-```bash
-$ yarn install
-```
-
-## Making the test suite pass
-
-Execute the tests with:
-
-```bash
-$ yarn test
-```
-
-In the test suites all tests but the first have been skipped.
-
-Once you get a test passing, you can enable the next one by changing `xit` to
-`it`.
-
 ## Source
 
-Maud de Vries, Erik Schierboom [https://github.com/exercism/problem-specifications/issues/1464](https://github.com/exercism/problem-specifications/issues/1464)
+### Created by
 
-## Submitting Incomplete Solutions
+- @msomji
 
-It's possible to submit an incomplete solution so you can see how others have
-completed the exercise.
+### Contributed to by
+
+- @EduardoBautista
+- @SleeplessByte
+
+### Based on
+
+Maud de Vries, Erik Schierboom - https://github.com/exercism/problem-specifications/issues/1464
