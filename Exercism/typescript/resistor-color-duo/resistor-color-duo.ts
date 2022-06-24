@@ -1,36 +1,47 @@
-export class ResistorColor {
-  private colors: string[]
-  private values: Map<string, number> = new Map([
-    ['black', 0],
-    ['brown', 1],
-    ['red', 2],
-    ['orange', 3],
-    ['yellow', 4],
-    ['green', 5],
-    ['blue', 6],
-    ['violet', 7],
-    ['grey', 8],
-    ['white', 9]
-  ])
+export function decodedValue(_vals: string[]) {
+	let ret = ""
 
-  constructor(colors: string[]) {
-    this.colors = colors
+	for(let i = 0; i < 2; i++) {
+		ret += getVal(_vals[i])
+	}
 
-    if(this.colors.length < 2) {
-      throw new Error('At least two colors need to be present')
-    }
-  }
+	return Number(ret)
+}
 
-  value(): number {
-    let i: number = 0
-    let j: number = 1
-    let v: number = 0
-
-    for(i; i <= 1; i++) {
-      v += (this.values.get(this.colors[i])! * Math.pow(10, j))
-      j--
-    }
-
-    return v
-  }
+function getVal(_val: string) {
+	switch(_val) {
+		case "black":
+			return "0"
+			break
+		case "brown":
+			return "1"
+			break
+		case "red":
+			return "2"
+			break
+		case "orange":
+			return "3"
+			break
+		case "yellow":
+			return "4"
+			break
+		case "green":
+			return "5"
+			break
+		case "blue":
+			return "6"
+			break
+		case "violet":
+			return "7"
+			break
+		case "grey":
+			return "8"
+			break
+		case "white":
+			return "9"
+			break
+		default:
+			return "-1"
+			break
+	}
 }
