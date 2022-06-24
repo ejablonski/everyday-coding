@@ -1,4 +1,4 @@
-function isLeapYear(_y: number) : boolean {
+export function isLeap(_y: number) : boolean {
   if(_y % 4 == 0 && _y % 100 != 0) {
     return true;
   } else {
@@ -10,4 +10,3 @@ function isLeapYear(_y: number) : boolean {
   }
 }
 
-export default isLeapYear
