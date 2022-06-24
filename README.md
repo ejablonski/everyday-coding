@@ -136,6 +136,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Nucleotide count](./Exercism/typescript/nucleotide-count)
   - [Resistor color trio](./Exercism/typescript/resistor-color-trio)
   - [Word count](./Exercism/typescript/word-count)
+  - [Isogram](./Exercism/typescript/isogram)
 
 ## HackerRank
 
