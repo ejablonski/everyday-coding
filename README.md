@@ -139,6 +139,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Isogram](./Exercism/typescript/isogram)
   - [ETL](./Exercism/typescript/etl)
   - [Acronym](./Exercism/typescript/acronym)
+  - [Matrix](./Exercism/typescript/matrix)
 
 ## HackerRank
 
