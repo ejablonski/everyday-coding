@@ -140,6 +140,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [ETL](./Exercism/typescript/etl)
   - [Acronym](./Exercism/typescript/acronym)
   - [Matrix](./Exercism/typescript/matrix)
+  - [Robot name](./Exercism/typescript/robot-name)
 
 ## HackerRank
 
