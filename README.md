@@ -137,6 +137,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Resistor color trio](./Exercism/typescript/resistor-color-trio)
   - [Word count](./Exercism/typescript/word-count)
   - [Isogram](./Exercism/typescript/isogram)
+  - [ETL](./Exercism/typescript/etl)
 
 ## HackerRank
 
