@@ -138,6 +138,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Word count](./Exercism/typescript/word-count)
   - [Isogram](./Exercism/typescript/isogram)
   - [ETL](./Exercism/typescript/etl)
+  - [Acronym](./Exercism/typescript/acronym)
 
 ## HackerRank
 
