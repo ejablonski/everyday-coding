@@ -142,6 +142,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Matrix](./Exercism/typescript/matrix)
   - [Robot name](./Exercism/typescript/robot-name)
   - [Grade school](./Exercism/typescript/grade-school)
+  - [Clock](./Exercism/typescript/clock)
 
 ## HackerRank
 
