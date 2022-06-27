@@ -147,6 +147,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Collatz conjecture](./Exercism/typescript/collatz-conjecture)
   - [Scrabble score](./Exercism/typescript/scrabble-score)
   - [Series](./Exercism/typescript/series)
+  - [Prime factors](./Exercism/typescript/prime-factors)
 
 ## HackerRank
 
