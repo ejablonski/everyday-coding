@@ -143,6 +143,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Robot name](./Exercism/typescript/robot-name)
   - [Grade school](./Exercism/typescript/grade-school)
   - [Clock](./Exercism/typescript/clock)
+  - [Secret handshake](./Exercism/typescript/secret-handshake)
 
 ## HackerRank
 
