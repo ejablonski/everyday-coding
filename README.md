@@ -148,6 +148,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Scrabble score](./Exercism/typescript/scrabble-score)
   - [Series](./Exercism/typescript/series)
   - [Prime factors](./Exercism/typescript/prime-factors)
+  - [Pythagorean triplet](./Exercism/typescript/pythagorean-triplet)
 
 ## HackerRank
 
