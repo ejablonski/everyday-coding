@@ -146,6 +146,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Secret handshake](./Exercism/typescript/secret-handshake)
   - [Collatz conjecture](./Exercism/typescript/collatz-conjecture)
   - [Scrabble score](./Exercism/typescript/scrabble-score)
+  - [Series](./Exercism/typescript/series)
 
 ## HackerRank
 
