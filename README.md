@@ -150,6 +150,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Prime factors](./Exercism/typescript/prime-factors)
   - [Pythagorean triplet](./Exercism/typescript/pythagorean-triplet)
   - [Luhn](./Exercism/typescript/luhn)
+  - [Phone number](./Exercism/typescript/phone-number)
 
 ## HackerRank
 
