@@ -151,6 +151,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Pythagorean triplet](./Exercism/typescript/pythagorean-triplet)
   - [Luhn](./Exercism/typescript/luhn)
   - [Phone number](./Exercism/typescript/phone-number)
+  - [Robor simulator](./Exercism/typescript/robor-simulator)
 
 ## HackerRank
 
