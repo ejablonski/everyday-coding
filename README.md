@@ -149,6 +149,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Series](./Exercism/typescript/series)
   - [Prime factors](./Exercism/typescript/prime-factors)
   - [Pythagorean triplet](./Exercism/typescript/pythagorean-triplet)
+  - [Luhn](./Exercism/typescript/luhn)
 
 ## HackerRank
 
