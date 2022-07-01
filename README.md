@@ -152,6 +152,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Luhn](./Exercism/typescript/luhn)
   - [Phone number](./Exercism/typescript/phone-number)
   - [Robor simulator](./Exercism/typescript/robor-simulator)
+  - [ISBN verifier](./Exercism/typescript/isbn-verifier)
 
 ## HackerRank
 
