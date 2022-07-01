@@ -85,6 +85,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Hello, World!](./Exercism/elm/hello-world)
   - [Two fer](./Exercism/elm/two-fer)
   - [Bob](./Exercism/elm/bob)
+  - [Leap](./Exercism/elm/leap)
   
 - MIPS
   - [Hello, World!](./Exercism/mips/hello-world)
