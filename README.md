@@ -63,6 +63,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Crypto Square](./Exercism/cpp/crypto-square)
   - [Circular buffer](./Exercism/cpp/circular-buffer)
   - [Binary search tree](./Exercism/cpp/binary-search-tree)
+  - [Roman numerals](./Exercism/cpp/roman-numerals)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
