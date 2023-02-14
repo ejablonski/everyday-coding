@@ -157,6 +157,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Robor simulator](./Exercism/typescript/robor-simulator)
   - [ISBN verifier](./Exercism/typescript/isbn-verifier)
   - [Roman numerals](./Exercism/typescript/roman-numerals)
+  - [Accumulate](./Exercism/typescript/accumulate)
 
 ## HackerRank
 
