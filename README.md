@@ -88,6 +88,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Leap](./Exercism/elm/leap)
   - [Gigasecond](./Exercism/elm/gigasecond)
   - [Lucian's Luscious Lasagna](./Exercism/elm/lucians-luscious-lasagna)
+  - [Betty's Bike Shop](./Exercism/elm/bettys-bike-shop)
   
 - MIPS
   - [Hello, World!](./Exercism/mips/hello-world)
