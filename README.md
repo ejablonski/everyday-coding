@@ -95,6 +95,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Lucian's Luscious Lasagna](./Exercism/fsharp/lucians-luscious-lasagna)
   - [Annalyn's Infiltration](./Exercism/fsharp/annalyns-infiltration)
   - [Log Levels](./Exercism/fsharp/log-levels)
+  - [Two Fer](./Exercism/fsharp/two-fer)
 
 - MIPS
   - [Hello, World!](./Exercism/mips/hello-world)
