@@ -92,6 +92,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   
 - F#
   - [Hello, World!](./Exercism/fsharp/hello-world)
+  - [Lucian's Luscious Lasagna](./Exercism/fsharp/lucians-luscious-lasagna)
 
 - MIPS
   - [Hello, World!](./Exercism/mips/hello-world)
