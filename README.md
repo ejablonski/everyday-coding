@@ -90,6 +90,9 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Lucian's Luscious Lasagna](./Exercism/elm/lucians-luscious-lasagna)
   - [Betty's Bike Shop](./Exercism/elm/bettys-bike-shop)
   
+- F#
+  - [Hello, World!](./Exercism/fsharp/hello-world)
+
 - MIPS
   - [Hello, World!](./Exercism/mips/hello-world)
   - [Binary](./Exercism/mips/binary)
