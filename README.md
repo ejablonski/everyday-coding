@@ -168,6 +168,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [ISBN verifier](./Exercism/typescript/isbn-verifier)
   - [Roman numerals](./Exercism/typescript/roman-numerals)
   - [Accumulate](./Exercism/typescript/accumulate)
+  - [Diffie Hellman](./Exercism/typescript/diffie-hellman)
 
 ## HackerRank
 
