@@ -170,6 +170,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Accumulate](./Exercism/typescript/accumulate)
   - [Diffie Hellman](./Exercism/typescript/diffie-hellman)
   - [Perfect Numbers](./Exercism/typescript/perfect-numbers)
+  - [Run length encoding](./Exercism/typescript/run-length-encoding)
 
 ## HackerRank
 
