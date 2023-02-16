@@ -169,6 +169,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Roman numerals](./Exercism/typescript/roman-numerals)
   - [Accumulate](./Exercism/typescript/accumulate)
   - [Diffie Hellman](./Exercism/typescript/diffie-hellman)
+  - [Perfect Numbers](./Exercism/typescript/perfect-numbers)
 
 ## HackerRank
 
