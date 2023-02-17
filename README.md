@@ -171,6 +171,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Diffie Hellman](./Exercism/typescript/diffie-hellman)
   - [Perfect Numbers](./Exercism/typescript/perfect-numbers)
   - [Run length encoding](./Exercism/typescript/run-length-encoding)
+  - [Binary search](./Exercism/typescript/binary-search)
 
 ## HackerRank
 
