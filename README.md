@@ -90,6 +90,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Lucian's Luscious Lasagna](./Exercism/elm/lucians-luscious-lasagna)
   - [Betty's Bike Shop](./Exercism/elm/bettys-bike-shop)
   - [Annalyns Infiltration](./Exercism/elm/annalyns-infiltration)
+  - [Difference of squares](Exercism/elm/difference-of-squares)
   
 - F#
   - [Hello, World!](./Exercism/fsharp/hello-world)
