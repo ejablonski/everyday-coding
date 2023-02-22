@@ -176,6 +176,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Binary search](./Exercism/typescript/binary-search)
   - [Linked list](./Exercism/typescript/linked-list)
   - [Rational numbers](Exercism/typescript/rational-numbers)
+  - [Atbash cipher](Exercism/typescript/atbash-cipher)
 
 ## HackerRank
 
