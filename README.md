@@ -175,8 +175,8 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Run length encoding](./Exercism/typescript/run-length-encoding)
   - [Binary search](./Exercism/typescript/binary-search)
   - [Linked list](./Exercism/typescript/linked-list)
-  - [Rational numbers](Exercism/typescript/rational-numbers)
-  - [Atbash cipher](Exercism/typescript/atbash-cipher)
+  - [Rational numbers](./Exercism/typescript/rational-numbers)
+  - [Atbash cipher](./Exercism/typescript/atbash-cipher)
   - [Simple cipher](./Exercism/typescript/simple-cipher)
 
 ## HackerRank
