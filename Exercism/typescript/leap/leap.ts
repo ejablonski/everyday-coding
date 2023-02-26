@@ -1,12 +1,3 @@
-export function isLeap(_y: number) : boolean {
-  if(_y % 4 == 0 && _y % 100 != 0) {
-    return true;
-  } else {
-    if(_y % 400 == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+export function isLeap(y: number) : boolean {
+  return (y % 4 === 0 && y % 100 !== 0) ? true : (y % 400 === 0)
 }
-
