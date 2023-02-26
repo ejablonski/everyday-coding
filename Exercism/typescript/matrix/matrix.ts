@@ -1,29 +1,23 @@
 export class Matrix {
-	s: string
+  constructor(public s: string) {}
 
-	constructor(_s: string) {
-		this.s = _s
-	}
+  get rows(): number[][] {
+    return this.s
+      .split('\n')
+      .map(row => row
+        .split(' ')
+        .map(char => Number(char))
+      )
+  }
 
-	get rows(): number[][] {
-		let ret: number[][] = []
-		let row: string[] = this.s.split('\n')
+  get columns(): number[][] {
+    let ret: number[][] = []
+    let row = this.rows
 
-		for(let i = 0; i < row.length; i++) {
-			ret.push(row[i].split(' ').map(x => +x))
-		}
+    for(let i = 0; i < row[0].length; i++) {
+      ret[i] = row.map(x => x[i])
+    }
 
-		return ret
-	}
-
-	get columns(): number[][] {
-		let ret: number[][] = []
-		let row = this.rows
-
-		for(let i = 0; i < row[0].length; i++) {
-			ret[i] = row.map(x => x[i])
-		}
-
-		return ret
-	}
+    return ret
+  }
 }
