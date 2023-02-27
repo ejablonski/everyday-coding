@@ -1,3 +1,3 @@
-export function isPangram(_s: string): boolean {
-  return [..."abcdefghijklmnopqrstuvwxyz"].every(c => _s.toLowerCase().includes(c))
+export function isPangram(s: string): boolean {
+  return [...'abcdefghijklmnopqrstuvwxyz'].every(c => s.toLowerCase().includes(c))
 }
