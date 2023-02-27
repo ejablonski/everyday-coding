@@ -63,11 +63,11 @@ describe('School', () => {
   })
 
   it('roster cannot be modified outside of module', () => {
-	school.add('Aimee', 2)
-	const roster = school.roster()
-	roster[2].push('Oops.')
-	const expectedDb = { 2: ['Aimee'] }
-	expect(school.roster()).toEqual(expectedDb)
+    school.add('Aimee', 2)
+    const roster = school.roster()
+    roster[2].push('Oops.')
+    const expectedDb = { 2: ['Aimee'] }
+    expect(school.roster()).toEqual(expectedDb)
   })
 
   it('roster cannot be modified outside of module using grade()', () => {
