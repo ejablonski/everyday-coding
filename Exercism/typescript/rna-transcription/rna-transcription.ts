@@ -1,23 +1,14 @@
-class Transcriptor {
-  toRna(_rna: string): string {
-    let transcription = ''
+const DNA = ['G', 'C', 'T', 'A']
+const RNA = ['C', 'G', 'A', 'U']
 
-    for(let i = 0; i < _rna.length; i++) {
-      if(_rna[i] == 'G') {
-          transcription += 'C'
-      } else if(_rna[i] == 'C') {
-          transcription += 'G'
-      } else if(_rna[i] == 'T') {
-          transcription += 'A'
-      } else if(_rna[i] == 'A') {
-          transcription += 'U'
-      } else {
-        throw new Error("Invalid input DNA.")
-      }
+export function toRna(dna: string): string {
+  return dna.split('').map(el => {
+    let i = DNA.indexOf(el)
+
+    if(i < 0 || i > 4) {
+      throw new Error("Invalid input DNA.")
+    } else {
+      return RNA[i]
     }
-
-    return transcription
-  }
+  }).join('')
 }
-
-export default Transcriptor
