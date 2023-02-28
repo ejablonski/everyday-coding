@@ -1,44 +1,41 @@
+var names: string[] = []
+
 export class Robot {
-	_name: string = ""
-	_names: string[] = []
+  public name = ''
 
-	constructor() {
-		this._name = this.createName()
-		this._names.push(this.name)
-	}
+  constructor() {
+    this.resetName()
+  }
 
-	public get name(): string {
-		return this._name
-	}
+  public static releaseNames(): void { names = [] }
 
-	public resetName(): void {
-		let f: boolean = true
-		while(f) {
-			let s: string = this.createName()
-			if(!this._names.includes(s)) {
-				this._name = s
-				this._names.push(this.name)
-				f = false
-			}
-		}
-	}
+  public resetName(): void {
+    let f = true
+    while(f) {
+      let s: string = this.createName()
+      if(!names.includes(s)) {
+        this.name = s
+        names.push(this.name)
+        f = false
+      }
+    }
+  }
 
-	public static releaseNames(): void {
-	}
+  private createName(): string {
+    const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    const NUMS = '0123456789'
 
-	private createName(): string {
-		let AA: string = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 2).toUpperCase()
-		let BBB: string = (Math.floor(Math.random() * 999)).toString()
+    let aa: string[] = Array.from({ length: 2 })
+    let nnn: string[] = Array.from({ length: 3 })
 
-		if(BBB.length < 3) {
-			let fill: string = ""
-			for(let i = 0; i < 3 - BBB.length; i++) {
-				fill += "0"
-			}
-			fill += BBB
-			BBB = fill
-		}
+    aa = aa.map(() => {
+      return ALPHA[Math.floor(Math.random() * ALPHA.length)]
+    })
 
-		return AA + BBB
-	}
+    nnn = nnn.map(() => {
+      return NUMS[(Math.floor(Math.random() * NUMS.length))]
+    })
+
+    return `${aa.join('')}${nnn.join('')}`
+  }
 }
