@@ -1,12 +1,9 @@
-#if !defined(BINARY_SEARCH_H)
-#define BINARY_SEARCH_H
-
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
 
 namespace binary_search {
-	std::size_t find(std::vector<int>, int);
-}  // namespace binary_search
+  using std::size_t, std::vector;
 
-#endif // BINARY_SEARCH_H
+  size_t find(vector<int>, int);
+}  // namespace binary_search
