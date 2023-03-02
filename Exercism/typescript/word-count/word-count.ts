@@ -1,14 +1,25 @@
-export function count(_s: string) {
-	let ret = new Map()
-	let arr = _s.replace(/[\n\t\r]/gm, ' ').replace(/\s+(?: )/g, ' ').trim().toLowerCase().split(' ')
+export function count(words: string): Map<string, number> {
+  let ret = new Map()
 
-	arr.forEach(it => {
-		if(ret.has(it)) {
-			ret.set(it, ret.get(it) + 1)
-		} else {
-			ret.set(it, 1)
-		}
-	})
+  words
+    .replace(/[\n\t\r!"#$%&()*+,\-./:;<=>@[\]^_`{|}~]/gm, ' ') // remove all characters that are haram according to test cases
+    .replace(/\s+(?: )/g, ' ') // remove extra spaces, leaving only single space between words
+    .toLowerCase()
+    .trim()
+    .split(' ')
+    .forEach(e => {
+      e = e
+        .replace(/^'/, '') // remove apostrophy at the beginning of the word
+        .replace(/'$/, '') // -------||-------- at the end of the word
 
-	return ret
+      if(e.length === 0) return
+
+      if(ret.has(e)) {
+        ret.set(e, ret.get(e) + 1)
+      } else {
+        ret.set(e, 1)
+      }
+    })
+
+  return ret
 }
