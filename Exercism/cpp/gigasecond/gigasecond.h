@@ -4,9 +4,6 @@
 using namespace boost::posix_time;
 using namespace boost::gregorian;
 
-namespace gigasecond
-{
-	ptime advance(ptime d) {
-		return d + seconds(1000000000);
-	}
+namespace gigasecond {
+  ptime advance(ptime d);
 }
