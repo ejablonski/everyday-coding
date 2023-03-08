@@ -65,6 +65,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Binary search tree](./Exercism/cpp/binary-search-tree)
   - [Roman numerals](./Exercism/cpp/roman-numerals)
   - [Darts](./Exercism/cpp/darts)
+  - [ISBN verifier](./Exercism/cpp/isbn-verifier)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
