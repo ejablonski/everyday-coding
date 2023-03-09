@@ -66,6 +66,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Roman numerals](./Exercism/cpp/roman-numerals)
   - [Darts](./Exercism/cpp/darts)
   - [ISBN verifier](./Exercism/cpp/isbn-verifier)
+  - [Simple linked list](./Exercism/cpp/simple-linked-list)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
