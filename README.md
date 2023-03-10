@@ -67,6 +67,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Darts](./Exercism/cpp/darts)
   - [ISBN verifier](./Exercism/cpp/isbn-verifier)
   - [Simple linked list](./Exercism/cpp/simple-linked-list)
+  - [Bank account](./Exercism/cpp/bank-account)
 
 - C#
   - [Hello, World!](./Exercism/csharp/hello-world)
