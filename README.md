@@ -182,6 +182,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Rational numbers](./Exercism/typescript/rational-numbers)
   - [Atbash cipher](./Exercism/typescript/atbash-cipher)
   - [Simple cipher](./Exercism/typescript/simple-cipher)
+  - [Rotational cipher](./Exercism/typescript/rotational-cipher)
 
 ## HackerRank
 
