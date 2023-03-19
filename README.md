@@ -9,6 +9,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Leap](./Exercism/c/leap)
   - [Hamming](./Exercism/c/hamming)
   - [Isogram](./Exercism/c/isogram)
+  - [Binary search](./Exercism/c/binary-search)
 
 - C++
   - [Hello, World!](./Exercism/cpp/hello-world)
