@@ -10,6 +10,7 @@ Programs and solutions from tutorials, daily coding routines and such.
   - [Hamming](./Exercism/c/hamming)
   - [Isogram](./Exercism/c/isogram)
   - [Binary search](./Exercism/c/binary-search)
+  - [Sieve](./Exercism/c/sieve)
 
 - C++
   - [Hello, World!](./Exercism/cpp/hello-world)
