@@ -1,47 +1,25 @@
 #include "sieve.h"
 
+#define MAX_LEN 1001
+
 uint32_t sieve(uint32_t limit, uint32_t *primes, size_t max_primes)
 {
-    bool primes_b[ARRAY_LEN];
-    primes_b[0] = false;
-    primes_b[1] = false;
+    if (limit < 2 || max_primes == 0)
+        return 0;
 
-    for(unsigned int i = 2; i <= ARRAY_LEN; i++) {
-        primes_b[i] = true;
-    }
+    uint32_t composite[MAX_LEN];
+    for (int i = 0; i < MAX_LEN; i++)
+        composite[i] = 0;
 
-    for(int i = 0; i <= trunc(sqrt(ARRAY_LEN)); i++) {
-      if(primes_b[i] == true) {
-        bool is_prime = true;
-
-        for(int j = 2; j <= i; j++) {
-          if(i % j == 0 && i != j) {
-            is_prime = false;
+    size_t output_pos = 0;
+    for (uint32_t number = 2; number <= limit; number++) {
+        if (!composite[number]) {
+            primes[output_pos++] = number;
+            if (output_pos == max_primes)
             break;
-          }
+            for (uint32_t idx = number * number; idx <= limit; idx += number)
+            composite[idx] = 1;
         }
-
-        if(is_prime) {
-          primes_b[i] = true;
-          primes_b[i * i] = false;
-
-          for(unsigned int k = 1; (i * i) + (i * k) <= ARRAY_LEN; k++) {
-            primes_b[(i * i) + (i * k)] = false;
-          }
-        } else {
-          primes_b[i] = false;
-        }
-      }
     }
-
-    int j = 0;
-
-    for(unsigned int i = 0; i <= limit; i++) {
-      if(primes_b[i] == true) {
-        primes[j] = i;
-        j++;
-      }
-    }
-
-    return j > (int)max_primes ? (int)max_primes : j;
+    return (uint32_t)output_pos;
 }
