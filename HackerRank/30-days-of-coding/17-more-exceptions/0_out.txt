@@ -1,4 +1,0 @@
-243
-16
-n and p should be non-negative
-n and p should be non-negative
