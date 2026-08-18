@@ -1,5 +1,0 @@
-julia
-julia
-riya
-samantha
-tanya
