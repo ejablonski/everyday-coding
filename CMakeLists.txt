@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 project("everyday_coding"
-  VERSION 1.0.0
+  VERSION 1.0.1
   LANGUAGES CXX
 )
 
@@ -33,4 +33,6 @@ if(CLANG_TIDY_EXE)
 else()
   message(WARNING "clang-tidy not found! Disabling clang-tidy integration.")
 endif()
+
+add_subdirectory(./LeetCode)
 

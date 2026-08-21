@@ -1,0 +1,43 @@
+add_executable(LeetCodeSolutions
+  quests/maths/q1/q1_tests.cpp
+)
+
+target_include_directories(LeetCodeSolutions
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/quests/maths/q1
+)
+
+target_link_libraries(LeetCodeSolutions
+  PRIVATE
+    Catch2::Catch2WithMain
+)
+
+# Automatically locate and copy the ASan DLL on Windows
+if(WIN32 AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  # Ask Clang dynamically where its internal libraries are located
+  execute_process(
+    COMMAND ${CMAKE_CXX_COMPILER} -print-resource-dir
+    OUTPUT_VARIABLE CLANG_RESOURCE_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+  # Build the path to the ASan DLL relative to the dynamic resource dir
+  set(ASAN_DLL "${CLANG_RESOURCE_DIR}/lib/windows/clang_rt.asan_dynamic-x86_64.dll")
+
+  # Copy the DLL into the same folder as the test executable
+  if(EXISTS "${ASAN_DLL}")
+    add_custom_command(TARGET LeetCodeSolutions POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      "${ASAN_DLL}"
+      $<TARGET_FILE_DIR:LeetCodeSolutions>
+      COMMENT "Dynamically copying ASan DLL from compiler resources"
+    )
+  endif()
+endif()
+
+include(CTest)
+include(Catch)
+
+# Discover tests and benchmarks inside the single monolithic executable
+catch_discover_tests(LeetCodeSolutions)
