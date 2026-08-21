@@ -1,0 +1,46 @@
+---
+# Start with the LLVM style as a baseline, then override specific rules
+BasedOnStyle: LLVM
+
+# Use C++20/23 standard rules for formatting
+Standard: c++20
+
+# Use 4 spaces for indentation (no tabs)
+IndentWidth: 4
+UseTab: Never
+TabWidth: 4
+
+# Column limit before clang-format forces a line wrap
+ColumnLimit: 100
+
+# Pointer/Reference alignment (e.g., 'int* ptr' instead of 'int *ptr')
+PointerAlignment: Left
+
+# Brace wrapping style (Attach = same line, Custom allows fine-grained control)
+# Here we use a common style where namespaces/classes get their own line, but if/for/while attach.
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: Never
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: true
+  AfterUnion: true
+  BeforeCatch: false
+  BeforeElse: false
+  IndentBraces: false
+
+# Keep empty lines inside blocks to a minimum
+MaxEmptyLinesToKeep: 1
+
+# Indent 'case' labels inside 'switch' blocks
+IndentCaseLabels: true
+
+# Sort #includes alphabetically and by category (system headers vs project headers)
+SortIncludes: CaseSensitive
+
+# Automatically align trailing comments
+AlignTrailingComments: true
+
+...
