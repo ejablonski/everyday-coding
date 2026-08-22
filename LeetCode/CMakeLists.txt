@@ -1,5 +1,6 @@
 add_executable(LeetCodeSolutions
   quests/maths/q1/q1_tests.cpp
+  quests/maths/q2/q2_tests.cpp
 )
 
 target_include_directories(LeetCodeSolutions
