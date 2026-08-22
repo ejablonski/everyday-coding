@@ -1,9 +1,9 @@
-#include "q1.h"
+#include "q1.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
-TEST_CASE("Can Make Arithmetic Progression From Sequence", "[maths][q1]")
+TEST_CASE("Can Make Arithmetic Progression From Sequence", "[LeetCode][quest][maths][q1]")
 {
     Solution solution;
 
