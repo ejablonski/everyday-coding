@@ -2,7 +2,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-TEST_CASE("Palindrome Number", "[LeetCode][quest][maths][q3]")
+TEST_CASE("Palindrome Number", "[LeetCode][quest][maths][l1q3]")
 {
     Solution solution;
 

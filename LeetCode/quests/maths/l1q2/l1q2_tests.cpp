@@ -2,7 +2,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-TEST_CASE("Find the Pivot Integer", "[LeetCode][quest][maths][q2]")
+TEST_CASE("Find the Pivot Integer", "[LeetCode][quest][maths][l1q2]")
 {
     Solution solution;
 
