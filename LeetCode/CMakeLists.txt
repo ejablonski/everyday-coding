@@ -3,6 +3,7 @@ add_executable(LeetCodeSolutions
   quests/maths/l1q2/l1q2_tests.cpp
   quests/maths/l1q3/l1q3_tests.cpp
   quests/maths/l2q1/l2q1_tests.cpp
+  quests/maths/l2q2/l2q2_tests.cpp
 )
 
 target_include_directories(LeetCodeSolutions
