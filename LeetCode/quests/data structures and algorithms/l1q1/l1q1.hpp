@@ -2,13 +2,13 @@
 
 struct Solution
 {
-    static std::vector<int> getConcatenation(std::vector<int>& nums)
+    static std::vector<int> getConcatenation(std::vector<int>& _nums)
     {
 #ifdef __cpp_lib_containers_ranges
-        nums.append_range(nums);
+        _nums.append_range(_nums);
 #else
-        nums.insert(nums.end(), nums.cbegin(), nums.cend());
+        _nums.insert(_nums.end(), _nums.cbegin(), _nums.cend());
 #endif
-        return nums;
+        return _nums;
     }
 };

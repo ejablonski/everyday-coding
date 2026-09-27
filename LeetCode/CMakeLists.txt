@@ -10,6 +10,7 @@ add_executable(LeetCodeSolutions
   quests/maths/l3q3/l3q3_tests.cpp
   quests/maths/l4q1/l4q1_tests.cpp
   quests/data\ structures\ and\ algorithms/l1q1/l1q1_tests.cpp
+  quests/data\ structures\ and\ algorithms/l1q2/l1q2_tests.cpp
 )
 
 target_include_directories(LeetCodeSolutions
