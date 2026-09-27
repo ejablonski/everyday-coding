@@ -9,12 +9,12 @@ add_executable(LeetCodeSolutions
   quests/maths/l3q2/l3q2_tests.cpp
   quests/maths/l3q3/l3q3_tests.cpp
   quests/maths/l4q1/l4q1_tests.cpp
+  quests/data\ structures\ and\ algorithms/l1q1/l1q1_tests.cpp
 )
 
 target_include_directories(LeetCodeSolutions
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/quests/maths/q1
 )
 
 target_link_libraries(LeetCodeSolutions
