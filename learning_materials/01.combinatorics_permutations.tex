@@ -1,0 +1,893 @@
+﻿\documentclass[11pt,a4paper]{article}
+
+% --- Core LaTeX Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{graphicx}
+
+% --- Optional Diagram Packages (include when needed) ---
+\usepackage{forest}
+\usepackage{tikz}
+\usetikzlibrary{shapes, positioning, arrows.meta, backgrounds, fit}
+
+% --- Unified Color Palette ---
+\definecolor{primaryblue}{RGB}{24, 75, 140}
+\definecolor{codebg}{RGB}{248, 249, 250}
+\definecolor{codeframe}{RGB}{210, 215, 222}
+\definecolor{codegreen}{RGB}{40, 130, 60}
+\definecolor{codeblue}{RGB}{20, 90, 180}
+\definecolor{codegray}{RGB}{120, 120, 120}
+
+% --- Hyperref Setup ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    citecolor=primaryblue,
+    urlcolor=primaryblue,
+    pdftitle={Combinatorics and Permutations},
+    pdfauthor={Antigravity Engineering}
+}
+
+% --- Theorem & Definition Environments ---
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{example}{Example}[section]
+
+% --- Callout Box Environment ---
+\newenvironment{calloutbox}[1]{
+    \par\vspace{0.3cm}
+    \noindent\begin{tabular}{|p{0.96\textwidth}|}
+    \hline
+    \vspace{0.1cm}
+    \textbf{#1}\par\vspace{0.1cm}
+}{
+    \vspace{0.1cm}
+    \\ \hline
+    \end{tabular}
+    \vspace{0.3cm}\par
+}
+
+% --- Modern C++ Code Listing Setup ---
+\lstset{
+    language=C++,
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{orange!80!black},
+    numberstyle=\tiny\color{codegray},
+    numbers=left,
+    numbersep=8pt,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b
+}
+
+% --- Title Block ---
+\title{\vspace{-1.5cm}\textbf{\Huge Combinatorics and Permutations}\\[0.3cm]
+\Large Counting Principles, Binomial Coefficients, Advanced Sequences, and C++ Implementations}
+\author{Technical Monograph}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+Combinatorics is the branch of discrete mathematics concerned with counting, arranging, and selecting objects. This document builds intuition from foundational logic rules up to advanced sequences and combinatorial dynamic programming. It provides step-by-step examples, visual traces, and modern C++ implementations for practical algorithmic application. Readers will learn how to identify problem patterns and apply the correct counting technique without relying on brute force.
+\end{abstract}
+
+\tableofcontents
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+% ============================================================================
+\section{The Foundations of Counting}
+% ============================================================================
+
+All complex combinatorial formulas are derived from two intuitive, foundational rules of logic.
+
+\subsection{The Rule of Product (Multiplication Principle)}
+If a task consists of a sequence of independent choices, the total number of ways to complete the task is the product of the number of ways to make each choice.
+
+\begin{definition}[Rule of Product]
+If task $A$ can be done in $m$ ways and task $B$ can be done in $n$ ways, and the execution of $A$ does not affect the execution of $B$, then the sequence of performing $A$ followed by $B$ can be done in $m \times n$ ways.
+\end{definition}
+
+\noindent \textbf{Example:} If a password consists of 3 lowercase English letters followed by 2 digits, there are $26 \times 26 \times 26 \times 10 \times 10 = 1,757,600$ possible passwords.
+
+\subsection{The Rule of Sum (Addition Principle)}
+If a task can be completed by choosing one out of several mutually exclusive options, the total number of ways is the sum of the individual ways.
+
+\begin{definition}[Rule of Sum]
+If event $A$ can occur in $m$ ways and event $B$ can occur in $n$ ways, and events $A$ and $B$ cannot occur simultaneously (they are disjoint), then the event ``$A$ or $B$'' can occur in $m + n$ ways.
+\end{definition}
+
+\noindent \textbf{Example:} A restaurant serves 4 soups and 6 salads as a starter. If you choose exactly one starter, you have $4 + 6 = 10$ options.
+
+\begin{calloutbox}{Multiply or Add? The Key Question}
+This is the most common source of confusion for beginners. Ask yourself: \\[0.2cm]
+\textbf{Are you making choices one after another (AND)?} $\implies$ \textbf{Multiply.} \\
+Example: A meal consisting of a soup AND a main AND a dessert. You pick all three. \\[0.2cm]
+\textbf{Are you picking one option out of several exclusive alternatives (OR)?} $\implies$ \textbf{Add.} \\
+Example: You pick a soup OR a salad as a starter. You only pick one.
+\end{calloutbox}
+
+\subsection{The Pigeonhole Principle}
+Despite its simplicity, the Pigeonhole Principle is one of the most powerful tools in combinatorics for proving that something \textbf{must} exist, even without constructing it explicitly.
+
+\begin{theorem}[Pigeonhole Principle]
+If $n$ items are placed into $m$ containers and $n > m$, then at least one container must contain more than one item.
+\end{theorem}
+
+\noindent\textbf{Generalized form:} If $n$ items are placed into $m$ containers, at least one container holds $\lceil n/m \rceil$ or more items.
+
+\begin{example}[Classic Application]
+Among any 13 people, at least 2 share the same birth month ($13$ people, $12$ months).
+\end{example}
+
+\begin{example}[Algorithmic Application]
+In the problem of finding a duplicate number, an array of $n+1$ integers where each integer is in the range $[1, n]$ must contain at least one duplicate by the Pigeonhole Principle.
+\end{example}
+
+\subsection{Complementary Counting}
+Sometimes it is easier to count what you \emph{don't} want and subtract from the total. This is especially useful when a problem says \textbf{``at least one''} or \textbf{``at least two''} --- those phrases are a signal to use complementary counting.
+\begin{equation}
+|\text{Desired}| = |\text{Total}| - |\text{Undesired}|
+\end{equation}
+\noindent\textbf{Example:} How many 3-digit numbers (100 to 999) have \textbf{at least one digit equal to 7}?
+
+Counting directly is painful because you have to consider: numbers with exactly one 7, exactly two 7s, and exactly three 7s separately. Instead, flip it around:
+
+\begin{itemize}
+    \item \textbf{Total} 3-digit numbers: $9 \times 10 \times 10 = 900$ (first digit: 1--9, others: 0--9).
+    \item \textbf{Undesired} (no digit is 7): first digit can be 1--9 except 7 ($8$ choices), other digits can be 0--9 except 7 ($9$ choices each). Total: $8 \times 9 \times 9 = 648$.
+    \item \textbf{Answer:} $900 - 648 = \mathbf{252}$.
+\end{itemize}
+
+% ============================================================================
+\section{Permutations (Order Matters)}
+% ============================================================================
+
+A permutation is an ordered arrangement of objects. The distinguishing feature of a permutation is that \textbf{the order of elements is strictly important}---the sequence $(A, B, C)$ is entirely distinct from $(B, A, C)$.
+
+\subsection{Simple Permutations (Without Repetition)}
+The number of ways to arrange $n$ distinct objects into a sequence is denoted by $n!$ (n factorial).
+\begin{equation}
+n! = n \times (n-1) \times (n-2) \times \dots \times 1, \quad \text{where } 0! = 1
+\end{equation}
+
+\subsection{$k$-Permutations (Choosing a Subset)}
+If we have $n$ distinct objects and we want to arrange only $k$ of them in a sequence, we use the formula for $k$-permutations.
+\begin{equation}
+P(n, k) = \frac{n!}{(n-k)!} = n \times (n-1) \times \dots \times (n-k+1)
+\end{equation}
+\noindent \textbf{Example:} The number of ways to award Gold, Silver, and Bronze medals among 10 athletes is $P(10, 3) = \frac{10!}{7!} = 10 \times 9 \times 8 = 720$.
+
+\subsection{Permutations with Identical Items (Multiset Permutations)}
+If the collection of $n$ objects contains duplicates (for example, $n_1$ items of type 1, $n_2$ of type 2), swapping identical items does not produce a new permutation. We must divide the total permutations by the internal permutations of the duplicates.
+\begin{equation}
+\frac{n!}{n_1! \times n_2! \times \dots \times n_k!}
+\end{equation}
+\noindent \textbf{Example:} The number of distinct anagrams of the word "MISSISSIPPI" (11 letters total: 4 'I's, 4 'S's, 2 'P's, 1 'M') is:
+$$ \frac{11!}{4! \times 4! \times 2! \times 1!} = 34,650 $$
+
+\subsection{Derangements (No Fixed Points)}
+A derangement is a permutation of $n$ elements such that \textbf{no element appears in its original position}. It is denoted as $!n$ or $D_n$.
+
+\textbf{Where does the formula come from?} Think of it this way: start with all $n!$ permutations. Subtract all the permutations where at least 1 element is in the right place. But then you've subtracted too much (overlaps), so you add back those where at least 2 are in the right place --- and so on. This alternating subtract-add-subtract pattern is Inclusion-Exclusion, and it produces the formula:
+\begin{equation}
+D_n = n! \sum_{i=0}^n \frac{(-1)^i}{i!} = n! \left( 1 - \frac{1}{1!} + \frac{1}{2!} - \frac{1}{3!} + \dots + \frac{(-1)^n}{n!} \right)
+\end{equation}
+For practical code, the recurrence is far simpler. It says: the $n$-th element must go somewhere wrong, say position $j$. Either element $j$ goes to position $n$ (a simple swap of two misplaced elements: $D_{n-2}$ sub-arrangements), or element $j$ does \emph{not} go to position $n$ ($D_{n-1}$ sub-arrangements). There are $n-1$ choices for $j$, giving:
+$$ D_n = (n-1)(D_{n-1} + D_{n-2}), \quad D_0 = 1,\; D_1 = 0 $$
+\noindent \textbf{Example Application:} The ``Hat Check Problem''---if 10 people throw their hats in a bin and each draws one out randomly, $D_{10}$ is the number of ways no one gets their own hat back.
+
+\subsection{Circular Permutations}
+When objects are arranged in a circle (for example, seating around a round table), rotations of the same arrangement are considered identical. We ``fix'' one element's position to eliminate rotational symmetry.
+\begin{equation}
+\text{Circular permutations of } n \text{ distinct objects} = (n-1)!
+\end{equation}
+\noindent \textbf{Example:} The number of ways to seat 6 people around a circular table is $(6-1)! = 120$, not $720$.
+
+\noindent If the circle can also be \textbf{flipped} (for example, a bracelet that can be turned over), we divide again by 2:
+$$ \frac{(n-1)!}{2} $$
+
+\subsection{Permutations with Repetition Allowed}
+When choosing $k$ items from $n$ types where each type can be used as many times as desired, and order matters:
+\begin{equation}
+n^k
+\end{equation}
+\noindent \textbf{Example:} The number of 4-digit PIN codes (digits 0--9, repetition allowed) is $10^4 = 10{,}000$.
+
+\subsection{The Factorial Number System (Factoradic) and the $k^{th}$ Permutation}
+While generating permutations sequentially takes $O(N \cdot N!)$ time, finding a specific $k^{th}$ permutation out of $n!$ possibilities can be done directly in $O(N^2)$ (or $O(N)$ with advanced data structures) using the \textbf{Factorial Number System}.
+
+In a standard base-10 system, place values are powers of 10. In the factorial number system (factoradic base), the place values are factorials: $0!, 1!, 2!, 3!, \dots$. Any integer $k$ ($0 \le k < n!$) can be uniquely represented as:
+\begin{equation}
+k = d_{n-1} \cdot (n-1)! + d_{n-2} \cdot (n-2)! + \dots + d_1 \cdot 1! + d_0 \cdot 0!
+\end{equation}
+where each digit $d_i$ satisfies $0 \le d_i \le i$.
+
+\textbf{Connection to Permutations:}
+Because there are exactly $n!$ permutations of $n$ items, the factoradic representation of $k$ dictates exactly which item to pick at each step from a sorted list of remaining available items.
+
+\begin{example}[Finding the $14^{th}$ permutation of $\{1,2,3,4\}$]
+Note: We use 0-based indexing, so we want permutation $k = 13$ out of $4! = 24$.
+\begin{enumerate}
+    \item \textbf{First digit:} $13 / 3! = 13 / 6 = 2$ (remainder 1). We pick the item at index $2$ from our available list $[1,2,3,4]$. The item is \textbf{3}. Remaining list: $[1,2,4]$.
+    \item \textbf{Second digit:} Current remainder is $1$. $1 / 2! = 1 / 2 = 0$ (remainder 1). We pick the item at index $0$ from $[1,2,4]$. The item is \textbf{1}. Remaining list: $[2,4]$.
+    \item \textbf{Third digit:} Current remainder is $1$. $1 / 1! = 1 / 1 = 1$ (remainder 0). We pick the item at index $1$ from $[2,4]$. The item is \textbf{4}. Remaining list: $[2]$.
+    \item \textbf{Fourth digit:} Current remainder is $0$. We pick the final item \textbf{2}.
+\end{enumerate}
+Thus, the $14^{th}$ permutation is \textbf{3142}. This mathematical technique entirely avoids generating the preceding 13 permutations!
+\end{example}
+
+% ============================================================================
+\section{Combinations (Order Does Not Matter)}
+% ============================================================================
+
+A combination is a selection of items from a larger pool where the \textbf{order of selection is irrelevant}. A team consisting of Alice and Bob is identical to a team consisting of Bob and Alice.
+
+\subsection{Standard Combinations (Binomial Coefficients)}
+The number of ways to choose $k$ items from a set of $n$ distinct items is called a Binomial Coefficient, denoted as $C(n, k)$ or $\binom{n}{k}$ ("n choose k").
+\begin{equation}
+\binom{n}{k} = \frac{P(n, k)}{k!} = \frac{n!}{k!(n-k)!}
+\end{equation}
+
+\subsubsection{Key Properties of Binomial Coefficients}
+\begin{itemize}
+    \item \textbf{Symmetry}: $\binom{n}{k} = \binom{n}{n-k}$ (Choosing $k$ items to keep is the same as choosing $n-k$ items to reject).
+    \item \textbf{Pascal's Identity}: $\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}$ (A selection of size $k$ either includes a specific element, or it doesn't).
+    \item \textbf{Sum of Row}: $\sum_{k=0}^n \binom{n}{k} = 2^n$ (The total number of subsets of an $n$-element set).
+    \item \textbf{Vandermonde's Identity}: $\binom{m+n}{r} = \sum_{k=0}^r \binom{m}{k}\binom{n}{r-k}$ (Choose $r$ items from two disjoint pools of sizes $m$ and $n$).
+    \item \textbf{Hockey Stick Identity}: $\sum_{i=r}^n \binom{i}{r} = \binom{n+1}{r+1}$ (Summing a diagonal of Pascal's Triangle).
+\end{itemize}
+
+\subsection{Pascal's Triangle and its Deep Patterns}
+Pascal's Triangle is a geometric arrangement of the binomial coefficients. It begins with a single $1$ at the top (Row 0). Each subsequent number is formed by adding the two numbers directly above it (top-left and top-right). Because the edges have no numbers outside them, they are effectively added to $0$, making the outer edges always $1$.
+
+\subsubsection{Mathematical Equivalences in the Triangle}
+The simple construction rule "each number is the sum of the two above it" is exactly the geometric manifestation of \textbf{Pascal's Identity}: $\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}$. Therefore, the entry in row $n$ and column $k$ (using 0-based indexing) perfectly corresponds to $\binom{n}{k}$.
+
+Beyond standard combinations, Pascal's Triangle conceals several elegant mathematical sequences:
+\begin{itemize}
+    \item \textbf{Powers of 2:} The sum of the elements in row $n$ is exactly $2^n$. This geometrically proves that a set of size $n$ has $2^n$ possible subsets.
+    \item \textbf{Powers of 11:} If you treat the numbers in a row as consecutive decimal digits (carrying over when numbers exceed 9), they yield powers of $11$ (for example, Row 4: $1, 4, 6, 4, 1 \rightarrow 14641 = 11^4$).
+    \item \textbf{Triangular Numbers:} The third diagonal downwards (1, 3, 6, 10...) forms the triangular numbers (the number of objects required to form an equilateral triangle).
+    \item \textbf{Sierpi\'{n}ski Fractal:} If you shade all the odd numbers in the triangle and leave the even numbers blank, the resulting image is a perfect Sierpi\'{n}ski Triangle fractal.
+\end{itemize}
+
+\subsection{The Binomial Theorem}
+The Binomial Theorem explains why $\binom{n}{k}$ is called a \textbf{Binomial} Coefficient---it gives the coefficients in the expansion of a binomial raised to a power.
+\begin{theorem}[Binomial Theorem]
+For any real numbers $x, y$ and non-negative integer $n$:
+\begin{equation}
+(x + y)^n = \sum_{k=0}^n \binom{n}{k} x^{n-k} y^k
+\end{equation}
+\end{theorem}
+
+\begin{example}[Expanding $(x + y)^4$]
+\begin{align*}
+(x+y)^4 &= \binom{4}{0}x^4 + \binom{4}{1}x^3y + \binom{4}{2}x^2y^2 + \binom{4}{3}xy^3 + \binom{4}{4}y^4 \\
+&= x^4 + 4x^3y + 6x^2y^2 + 4xy^3 + y^4
+\end{align*}
+Setting $x = y = 1$ yields the row-sum identity: $(1+1)^n = 2^n = \sum_{k=0}^n \binom{n}{k}$.
+\end{example}
+
+\subsection{Combinations with Repetition (Stars and Bars)}
+A common algorithmic problem is finding the number of ways to distribute $n$ identical items among $k$ distinct bins (where bins can be empty).
+
+Imagine representing the items as stars ($\star$) and the dividers between bins as bars ($|$). To divide $n$ items into $k$ bins, you need $k-1$ bars. The problem reduces to finding the number of ways to arrange $n$ stars and $k-1$ bars in a sequence of $n + k - 1$ slots.
+\begin{theorem}[Stars and Bars]
+The number of ways to place $n$ indistinguishable balls into $k$ distinguishable urns is:
+\begin{equation}
+\binom{n + k - 1}{k - 1} = \binom{n + k - 1}{n}
+\end{equation}
+\end{theorem}
+
+\noindent \textbf{Example:} How many solutions exist for the equation $x_1 + x_2 + x_3 = 10$, where $x_i \ge 0$ are integers? Here $n = 10$ and $k = 3$. The answer is $\binom{10 + 3 - 1}{3 - 1} = \binom{12}{2} = 66$.
+
+\subsubsection{Stars and Bars with Lower Bounds}
+If each variable has a minimum value (for example, $x_i \ge 1$), substitute $y_i = x_i - 1$ so that $y_i \ge 0$. The equation $x_1 + x_2 + x_3 = 10$ with $x_i \ge 1$ becomes $y_1 + y_2 + y_3 = 7$ with $y_i \ge 0$, giving $\binom{9}{2} = 36$.
+
+\subsection{Principle of Inclusion-Exclusion (PIE)}
+When counting the size of the union of overlapping sets, the sum of their individual sizes overcounts the intersections. PIE corrects this by alternately adding and subtracting intersection sizes.
+
+\begin{theorem}[Principle of Inclusion-Exclusion]
+For $n$ finite sets $A_1, A_2, \dots, A_n$:
+\begin{equation}
+\left| \bigcup_{i=1}^n A_i \right| = \sum_{i} |A_i| - \sum_{i<j} |A_i \cap A_j| + \sum_{i<j<k} |A_i \cap A_j \cap A_k| - \dots + (-1)^{n+1} |A_1 \cap \dots \cap A_n|
+\end{equation}
+\end{theorem}
+
+\begin{example}[PIE for Counting Coprime Integers]
+How many integers in $[1, 30]$ are \textbf{not} divisible by 2, 3, or 5?
+
+Let $A_2, A_3, A_5$ be the sets of multiples of 2, 3, 5 in that range.
+\begin{align*}
+|A_2| &= 15, \quad |A_3| = 10, \quad |A_5| = 6 \\
+|A_2 \cap A_3| &= \lfloor 30/6 \rfloor = 5, \quad |A_2 \cap A_5| = 3, \quad |A_3 \cap A_5| = 2 \\
+|A_2 \cap A_3 \cap A_5| &= \lfloor 30/30 \rfloor = 1
+\end{align*}
+By PIE: $|A_2 \cup A_3 \cup A_5| = 15+10+6-5-3-2+1 = 22$.
+
+So the count of integers not divisible by any of them is $30 - 22 = 8$.
+\end{example}
+
+\subsection{Catalan Numbers}
+The Catalan numbers ($C_n$) form a sequence of natural numbers that appear surprisingly often in counting problems.
+\begin{equation}
+C_n = \frac{1}{n+1} \binom{2n}{n} = \frac{(2n)!}{(n+1)! \, n!}
+\end{equation}
+The Catalan numbers also satisfy the recurrence:
+$$ C_0 = 1, \quad C_{n+1} = \sum_{i=0}^{n} C_i \cdot C_{n-i} $$
+
+\noindent The first few values are: $C_0 = 1, C_1 = 1, C_2 = 2, C_3 = 5, C_4 = 14, C_5 = 42, C_6 = 132$.
+
+\begin{calloutbox}{Why do Catalan Numbers keep appearing?}
+All of the problems below share a single hidden structure: you can always split them into an \textbf{independent left part} and an \textbf{independent right part}, with a pivot element in between. The recurrence $C_{n+1} = \sum C_i \cdot C_{n-i}$ is literally saying: ``the left part has $i$ elements ($C_i$ ways) and the right part has $n-i$ elements ($C_{n-i}$ ways), summed over every possible split point $i$.'' Once you see this, all five problems below feel like the same problem in a different costume.
+\end{calloutbox}
+
+\vspace{0.2cm}
+\noindent\textbf{The $n$-th Catalan number counts:}
+\begin{itemize}
+    \item The number of valid expressions containing $n$ pairs of correctly matched parentheses. \textit{(Left part = what's inside the first opening bracket; right part = what comes after its closing bracket.)}
+    \item The number of structurally unique Binary Search Trees (BSTs) with $n$ nodes. \textit{(Left part = left subtree; right part = right subtree.)}
+    \item The number of ways to fully triangulate a convex polygon with $n+2$ sides.
+    \item The number of monotonic lattice paths from $(0,0)$ to $(n,n)$ that never cross above the diagonal.
+    \item The number of different ways to completely parenthesize a product of $n+1$ factors.
+\end{itemize}
+
+\subsection{Stirling Numbers (Set Partitions)}
+Stirling numbers of the second kind, denoted $S(n, k)$ or $\left\{ \genfrac{}{}{0pt}{}{n}{k} \right\}$, count the number of ways to partition a set of $n$ elements into exactly $k$ non-empty, unordered subsets.
+
+\begin{equation}
+S(n, k) = k \cdot S(n-1, k) + S(n-1, k-1), \quad S(0,0) = 1, \quad S(n, 0) = 0 \text{ for } n > 0
+\end{equation}
+
+\noindent The recurrence says: the $n$-th element either joins one of the existing $k$ groups ($k \cdot S(n-1, k)$), or it forms a new group by itself ($S(n-1, k-1)$).
+
+\begin{example}[Partitioning $\{a, b, c\}$ into 2 subsets]
+$S(3, 2) = 3$: the partitions are $\{\{a\}, \{b,c\}\}$, $\{\{b\}, \{a,c\}\}$, $\{\{c\}, \{a,b\}\}$.
+\end{example}
+
+\noindent\textbf{Relation to Surjections:} The number of \textbf{onto} functions from an $n$-element set to a $k$-element set is $k! \cdot S(n, k)$. This connects Stirling numbers to the ``distributing distinct items into identical bins'' class of problems.
+
+\noindent\textbf{Bell Numbers:} The total number of partitions of an $n$-element set (into any number of subsets) is the Bell number $B_n = \sum_{k=0}^n S(n, k)$.
+
+\subsection{Lattice Paths and Grid Walking}
+A classic combinatorial problem: how many shortest paths exist from $(0, 0)$ to $(m, n)$ on a grid, moving only right or down?
+
+Each path consists of exactly $m$ right-moves and $n$ down-moves, in some order. This is a multiset permutation:
+\begin{equation}
+\text{Paths from } (0,0) \text{ to } (m,n) = \binom{m+n}{m} = \binom{m+n}{n}
+\end{equation}
+
+\noindent\textbf{Example:} Paths from $(0,0)$ to $(3,2)$: $\binom{5}{3} = 10$.
+
+\noindent\textbf{With Obstacles:} When certain cells are blocked, dynamic programming is used: $dp[i][j] = dp[i-1][j] + dp[i][j-1]$, setting $dp = 0$ for blocked cells.
+
+% ============================================================================
+\section{Key Algorithmic Patterns}
+% ============================================================================
+
+In competitive programming and software engineering, pure algebraic formulas are often insufficient on their own:
+\begin{enumerate}
+    \item \textbf{Factorial explosion and overflow:} $20!$ exceeds a standard 64-bit integer, and $1000!$ has over $2500$ decimal digits.
+    \item \textbf{Modular division complexity:} Computing $\binom{n}{k} \pmod M$ using factorials requires $M$ to be prime so modular inverses exist. If $M$ is composite or numbers are small, this machinery is unnecessarily complex.
+    \item \textbf{Enumeration vs.\ Counting:} Generating all arrangements with backtracking takes $O(n!)$ or $O(2^n)$ time, which becomes completely intractable for $n > 15$.
+\end{enumerate}
+
+\textbf{Combinatorial Dynamic Programming} resolves this by collapsing astronomical numbers of permutations into an equivalence class of \textbf{states}. Instead of asking \textit{``What are all the arrangements?''}, DP asks: \textit{``How many valid arrangements can be built from the solutions to smaller subproblems?''}
+
+\subsection{The Anatomy of a Combinatorial DP}
+A combinatorial DP model consists of three foundational components:
+\begin{itemize}
+    \item \textbf{State Representation ($dp[n][k]$):} A minimal set of variables that uniquely capture the boundary conditions of a subproblem (for example, $n$ items considered, $k$ visible or selected).
+    \item \textbf{Base Cases:} The trivial, non-decomposable instances of the problem (for example, $dp[0][0] = 1$, $dp[n][0] = 0$ for $n > 0$).
+    \item \textbf{Recurrence Relation (State Transition):} The mathematical rule that expresses the count of the current state as a combination of previously computed smaller states.
+\end{itemize}
+
+\subsection{The 4 Canonical Combinatorial Decision Patterns}
+Nearly all counting dynamic programming problems reduce to one of four classical decision paradigms:
+
+\subsubsection{Pattern 1: Include or Exclude (Subsets / Pascal's Identity)}
+When building a combination or subset of size $k$ from $n$ elements, focus on a single designated element (say, the $n$-th item). You have exactly two choices:
+\begin{enumerate}
+    \item \textbf{Include it:} You now need to choose the remaining $k-1$ items from the remaining $n-1$ elements $\implies dp[n-1][k-1]$.
+    \item \textbf{Exclude it:} You must still choose all $k$ items from the remaining $n-1$ elements $\implies dp[n-1][k]$.
+\end{enumerate}
+\begin{equation}
+dp[n][k] = dp[n-1][k-1] + dp[n-1][k]
+\end{equation}
+This is the dynamic programming formulation of Pascal's Triangle.
+
+\vspace{0.2cm}
+\noindent\textbf{Worked Trace: Choosing 2 items from 3 ($dp[3][2]$)}
+Suppose we want to choose $k=2$ items from $n=3$ items $\{A, B, C\}$.
+\begin{itemize}
+    \item \textbf{Naive brute force}: Generate all pairs $\{A, B\}, \{A, C\}, \{B, C\}$ and count them (total is 3). This fails for $n=1000$ due to combinatorial explosion.
+    \item \textbf{DP approach}: Focus on the last item, $C$.
+    \begin{itemize}
+        \item \textbf{Include $C$}: We need $2-1=1$ more item from $\{A, B\}$. There are 2 ways ($\{A\}, \{B\}$), so $dp[2][1] = 2$.
+        \item \textbf{Exclude $C$}: We need all $2$ items from $\{A, B\}$. There is 1 way ($\{A, B\}$), so $dp[2][2] = 1$.
+    \end{itemize}
+    \item \textbf{Result}: $dp[3][2] = dp[2][1] + dp[2][2] = 2 + 1 = 3$. We found the count without generating the combinations.
+\end{itemize}
+
+\subsubsection{Pattern 2: New Group vs.\ Join Existing (Set Partitions / Stirling 2nd Kind)}
+When distributing $n$ distinguishable objects into $k$ non-empty, indistinguishable groups:
+\begin{enumerate}
+    \item The $n$-th item forms its own brand new singleton group $\implies dp[n-1][k-1]$.
+    \item The $n$-th item joins one of the $k$ already-formed groups (there are $k$ choices) $\implies k \cdot dp[n-1][k]$.
+\end{enumerate}
+\begin{equation}
+S(n, k) = S(n-1, k-1) + k \cdot S(n-1, k)
+\end{equation}
+
+\subsubsection{Pattern 3: The Extremal Element Insertion Trick (Permutations / Stirling 1st Kind)}
+When arranging $n$ distinct elements with constraints on visibility or cycle counts (for example, arranging sticks of heights $1 \dots n$ so exactly $k$ are visible from the left):
+\begin{calloutbox}{The Extremal Element Invariant}
+Consider the \textbf{smallest element} (height 1). Because it is shorter than every other stick, it can never hide or block any stick behind it.
+\end{calloutbox}
+We ask: where can this shortest stick be placed in an arrangement of $n$ positions?
+\begin{enumerate}
+    \item \textbf{At the front (index 0):} It is guaranteed to be visible. The remaining $n-1$ sticks must provide the remaining $k-1$ visible sticks $\implies dp[n-1][k-1]$.
+    \item \textbf{In any of the other $n-1$ positions:} It is blocked by whatever stick is in front of it (so it is invisible). Because it blocks nothing behind it, the remaining $n-1$ sticks must provide all $k$ visible sticks. There are $n-1$ valid positions $\implies (n-1) \cdot dp[n-1][k]$.
+\end{enumerate}
+\begin{equation}
+dp[n][k] = dp[n-1][k-1] + (n-1) \cdot dp[n-1][k]
+\end{equation}
+This allows counting arrangements of $n=1000$ sticks in $O(n \cdot k)$ time, bypassing the $1000!$ search space completely.
+
+\subsubsection{Pattern 4: Divide by Pivot (Recursive Trees / Catalan Convolution)}
+When structures decompose into independent left and right components (for example, binary search trees, valid parenthesis nesting):
+Fix the pivot element (such as the root of the tree, or the closing parenthesis matching the first open parenthesis). If the left subproblem has size $i$, the right subproblem must have size $n - 1 - i$:
+\begin{equation}
+dp[n] = \sum_{i=0}^{n-1} dp[i] \cdot dp[n - 1 - i]
+\end{equation}
+
+% ============================================================================
+\section{Worked Examples}
+% ============================================================================
+
+\begin{example}[Counting Committee Formations with Constraints]
+A club has 8 men and 5 women. How many 5-person committees can be formed that include at least 2 women?
+\begin{enumerate}
+    \item \textbf{Identify the counting method}: "At least 2" suggests using complementary counting is easier. We will find total committees and subtract invalid ones (0 or 1 woman).
+    \item \textbf{Calculate total committees}: Choosing 5 people from 13 total people: $\binom{13}{5} = 1287$.
+    \item \textbf{Calculate committees with 0 women}: This means all 5 are chosen from the 8 men: $\binom{8}{5} = 56$.
+    \item \textbf{Calculate committees with exactly 1 woman}: Choose 1 woman from 5, AND choose 4 men from 8: $\binom{5}{1} \times \binom{8}{4} = 5 \times 70 = 350$.
+    \item \textbf{Subtract invalid from total}: $1287 - (56 + 350) = 881$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Derangement Calculation: $D_4$]
+Calculate $D_4$, the number of derangements of 4 items.
+\begin{enumerate}
+    \item \textbf{Set up the recurrence relation}: $D_n = (n-1)(D_{n-1} + D_{n-2})$.
+    \item \textbf{Define base cases}: $D_0 = 1$, $D_1 = 0$.
+    \item \textbf{Calculate $D_2$}: $D_2 = 1 \cdot (D_1 + D_0) = 1 \cdot (0 + 1) = 1$.
+    \item \textbf{Calculate $D_3$}: $D_3 = 2 \cdot (D_2 + D_1) = 2 \cdot (1 + 0) = 2$.
+    \item \textbf{Calculate $D_4$}: $D_4 = 3 \cdot (D_3 + D_2) = 3 \cdot (2 + 1) = 9$.
+\end{enumerate}
+Verification: out of $4! = 24$ total permutations of $\{1,2,3,4\}$, exactly 9 have no element in its original position.
+\end{example}
+
+\begin{example}[Catalan: Counting Valid Parenthesizations for $n=3$]
+Find the number of valid sequences of 3 pairs of parentheses.
+\begin{enumerate}
+    \item \textbf{Recognize the pattern}: Valid parenthesizations correspond to Catalan numbers $C_n$.
+    \item \textbf{Recall the recurrence relation}: $C_n = \sum_{i=0}^{n-1} C_i \cdot C_{n-1-i}$, with $C_0 = 1$.
+    \item \textbf{Calculate up to $C_3$}:
+    \begin{itemize}
+        \item $C_1 = C_0 \cdot C_0 = 1 \cdot 1 = 1$.
+        \item $C_2 = C_0 \cdot C_1 + C_1 \cdot C_0 = 1 \cdot 1 + 1 \cdot 1 = 2$.
+        \item $C_3 = C_0 \cdot C_2 + C_1 \cdot C_1 + C_2 \cdot C_0 = 1 \cdot 2 + 1 \cdot 1 + 2 \cdot 1 = 5$.
+    \end{itemize}
+    \item \textbf{Verify with actual strings}: The 5 valid strings are \texttt{((()))}, \texttt{(()())}, \texttt{(())()}, \texttt{()(())}, \texttt{()()()}.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Stars and Bars: Distributing Identical Items]
+Distribute 7 identical cookies among 3 children. Each child gets $\ge 0$ cookies.
+\begin{enumerate}
+    \item \textbf{Identify the pattern}: Distributing $n$ identical items into $k$ distinct bins uses Stars and Bars.
+    \item \textbf{Determine variables}: $n = 7$ (cookies), $k = 3$ (children).
+    \item \textbf{Calculate positions needed}: We need $k - 1 = 2$ divider bars. Total sequence length is $n + k - 1 = 9$.
+    \item \textbf{Apply combination formula}: Choose 2 positions for the bars out of 9 total positions: $\binom{9}{2} = \frac{9 \times 8}{2} = 36$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Inclusion-Exclusion: Multiples of 2 or 3]
+How many numbers from 1 to 100 are divisible by 2 or 3?
+\begin{enumerate}
+    \item \textbf{Count multiples of 2}: Let $A$ be multiples of 2. $|A| = \lfloor 100 / 2 \rfloor = 50$.
+    \item \textbf{Count multiples of 3}: Let $B$ be multiples of 3. $|B| = \lfloor 100 / 3 \rfloor = 33$.
+    \item \textbf{Count intersection (multiples of 6)}: $A \cap B$ is multiples of 6. $|A \cap B| = \lfloor 100 / 6 \rfloor = 16$.
+    \item \textbf{Apply PIE}: $|A \cup B| = |A| + |B| - |A \cap B| = 50 + 33 - 16 = 67$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Counting Grid Paths with DP]
+How many shortest paths from top-left to bottom-right of a $2 \times 2$ grid, moving only right or down?
+\begin{enumerate}
+    \item \textbf{Determine grid dimensions in edges}: A $2 \times 2$ grid has 2 edges right and 2 edges down.
+    \item \textbf{Identify total moves}: Any path requires exactly 2 Right moves and 2 Down moves. Total moves = 4.
+    \item \textbf{Apply permutation of multisets}: We must place 2 'R's in 4 available slots.
+    \item \textbf{Calculate}: $\binom{4}{2} = 6$. The paths are RRDD, RDRD, RDDR, DRRD, DRDR, DDRR.
+\end{enumerate}
+\end{example}
+
+% ============================================================================
+\section{C++ Implementations for Algorithmic Challenges}
+% ============================================================================
+
+\subsection{What is Backtracking?}
+Backtracking is the algorithmic technique used when a problem asks you to \textbf{generate all possible combinations, permutations, or subsets}. The idea is brutally simple:
+
+\begin{enumerate}
+    \item \textbf{Make a choice} (for example, add element $i$ to your current group).
+    \item \textbf{Recurse} (explore all possibilities from this choice).
+    \item \textbf{Undo the choice} (remove element $i$ from your group, as if you never added it).
+\end{enumerate}
+
+Step 3 (the ``undo'') is the key insight. It lets you reuse the same data structure for exploring all branches of the decision tree without allocating new memory. In C++, this is usually a single \texttt{push\_back} followed by a \texttt{pop\_back} after the recursive call returns.
+
+Backtracking is always \textit{slow} ($O(n!)$ or $O(2^n)$) --- it is not suitable for large inputs. If a problem only asks \textit{how many}, use a formula or DP instead. Use backtracking only when the problem asks you to \textit{return all} the actual arrangements.
+
+\subsection{Generating Permutations In-Place}
+The C++ Standard Library provides a highly optimized, lexicographical permutation generator. \textbf{Crucially, it handles duplicate elements flawlessly} without requiring manual multiset division.
+
+\begin{lstlisting}[caption={Generating All Unique Permutations}]
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+constexpr void printAllPermutations(std::vector<int>& nums) {
+    // 1. The sequence MUST be sorted to generate all permutations
+    std::sort(nums.begin(), nums.end());
+
+    // 2. Iterate using std::next_permutation
+    do {
+        for (int x : nums) std::cout << x << " ";
+        std::cout << "\n";
+    } while (std::next_permutation(nums.begin(), nums.end()));
+}
+\end{lstlisting}
+
+\subsection{Calculating Combinations via Pascal's Triangle $O(N^2)$}
+For problems where $n$ is relatively small (for example, $N \le 1000$) and you need to query many combinations modulo some $M$, building a 2D table using Pascal's Identity is simple and requires no division.
+
+\begin{lstlisting}[caption={Pascal's Triangle for Small Combinations}]
+#include <vector>
+
+const int MOD = 1e9 + 7;
+[[nodiscard]] constexpr std::vector<std::vector<long long>> buildPascalTriangle(int max_n) {
+    std::vector<std::vector<long long>> C(max_n + 1, std::vector<long long>(max_n + 1, 0));
+    
+    for (int i = 0; i <= max_n; ++i) {
+        C[i][0] = 1; // nC0 is always 1
+        for (int j = 1; j <= i; ++j) {
+            C[i][j] = (C[i - 1][j - 1] + C[i - 1][j]) % MOD;
+        }
+    }
+    return C; // C[n][k] now holds nCk % MOD
+}
+\end{lstlisting}
+
+\subsection{$O(1)$ Combinations Queries for Huge $N$ via Modular Inverses}
+When $N \approx 10^5$, an $O(N^2)$ DP table will cause Memory Limit Exceeded (MLE) and Time Limit Exceeded (TLE). Instead, we precompute arrays of factorials and their \textbf{modular multiplicative inverses}.
+
+Recall that division by $X \pmod M$ is achieved by multiplying by $X^{-1} \pmod M$, computed via Fermat's Little Theorem ($X^{M-2} \pmod M$).
+
+\begin{lstlisting}[caption={O(1) Combinations using Precomputed Factorials and Modular Inverse}]
+#include <vector>
+
+class Combinatorics {
+private:
+    long long MOD;
+    std::vector<long long> fact;
+    std::vector<long long> invFact;
+
+    // Binary Exponentiation: base^exp % MOD
+    long long power(long long base, long long exp) {
+        long long res = 1;
+        base %= MOD;
+        while (exp > 0) {
+            if (exp % 2 == 1) res = (res * base) % MOD;
+            base = (base * base) % MOD;
+            exp /= 2;
+        }
+        return res;
+    }
+
+    // Modular Inverse via Fermat's Little Theorem
+    long long modInverse(long long n) {
+        return power(n, MOD - 2);
+    }
+
+public:
+    Combinatorics(int max_n, long long mod = 1e9 + 7) : MOD(mod) {
+        fact.assign(max_n + 1, 1);
+        invFact.assign(max_n + 1, 1);
+
+        for (int i = 1; i <= max_n; ++i) {
+            fact[i] = (fact[i - 1] * i) % MOD;
+        }
+        
+        // Compute the inverse factorial for the last element
+        invFact[max_n] = modInverse(fact[max_n]);
+        
+        // Compute remaining inverse factorials backwards in O(N) total time
+        for (int i = max_n - 1; i >= 0; --i) {
+            invFact[i] = (invFact[i + 1] * (i + 1)) % MOD;
+        }
+    }
+
+    // Query nCk in O(1) time
+    long long nCk(int n, int k) {
+        if (k < 0 || k > n) return 0;
+        long long num = fact[n];
+        long long den = (invFact[k] * invFact[n - k]) % MOD;
+        return (num * den) % MOD;
+    }
+};
+\end{lstlisting}
+\subsection{Generating Combinations via Backtracking}
+When a problem asks you to return all actual subsets or combinations (not just the count), the standard approach is recursive backtracking.
+
+\begin{lstlisting}[caption={Generating All Combinations of Size k from 1 to n}]
+#include <vector>
+
+class Solution {
+public:
+    std::vector<std::vector<int>> combine(int n, int k) {
+        std::vector<std::vector<int>> result;
+        std::vector<int> current;
+        backtrack(result, current, 1, n, k);
+        return result;
+    }
+
+private:
+    void backtrack(std::vector<std::vector<int>>& result,
+                   std::vector<int>& current,
+                   int start, int n, int k) {
+        if (current.size() == k) {
+            result.push_back(current);
+            return;
+        }
+        // Pruning: stop early if not enough elements remain
+        for (int i = start; i <= n - (k - static_cast<int>(current.size())) + 1; ++i) {
+            current.push_back(i);
+            backtrack(result, current, i + 1, n, k);
+            current.pop_back(); // Undo the choice
+        }
+    }
+};
+\end{lstlisting}
+
+\subsection{Finding the $k^{th}$ Permutation in $O(N^2)$}
+Using the Factorial Number System logic described earlier, we can find the $k^{th}$ permutation of a sequence without generating the others. 
+
+\begin{lstlisting}[caption={Extracting the $k^{th}$ Permutation directly using C++20/23 Ranges}]
+#include <vector>
+#include <string>
+#include <ranges>
+
+std::string getPermutation(int n, int k) {
+    // 1. Generate available characters ['1', '2', ..., 'n']
+    auto available = std::views::iota(1, n + 1)
+                   | std::views::transform([](int i) { return (char)('0' + i); })
+                   | std::ranges::to<std::vector<char>>();
+
+    // 2. Precompute factorials up to (n-1)!
+    std::vector<int> factorials(n, 1);
+    for (int i = 1; i < n; ++i) {
+        factorials[i] = factorials[i - 1] * i;
+    }
+
+    // 3. Convert 1-based k to 0-based index
+    k -= 1; 
+    std::string result = "";
+
+    // 4. Build permutation iterating through factorials in reverse
+    for (int fact : factorials | std::views::reverse) {
+        int index = k / fact;
+        result += available[index];
+        available.erase(available.begin() + index); // O(N) erase makes overall O(N^2)
+        k %= fact;
+    }
+    
+    return result;
+}
+\end{lstlisting}
+
+\subsection{Computing Derangements in $O(N)$}
+\begin{lstlisting}[caption={Computing Derangements with Modular Arithmetic}]
+#include <vector>
+
+[[nodiscard]] constexpr long long countDerangements(int n, long long MOD = 1e9 + 7) {
+    if (n == 0) return 1;
+    if (n == 1) return 0;
+    
+    long long prev2 = 1; // D(0)
+    long long prev1 = 0; // D(1)
+    long long curr = 0;
+    
+    for (int i = 2; i <= n; ++i) {
+        curr = ((i - 1) % MOD * ((prev1 + prev2) % MOD)) % MOD;
+        prev2 = prev1;
+        prev1 = curr;
+    }
+    return curr;
+}
+\end{lstlisting}
+
+% ============================================================================
+\section{Problem Pattern Recognition}
+% ============================================================================
+
+Knowing the right formula is only half the battle. The harder part is recognizing \textbf{which formula to use} when you first read a problem. This section teaches you how to think, not just what to memorize.
+
+\begin{calloutbox}{How to Use This Section}
+When you read a problem, ask yourself the two questions below in order. They will narrow down the correct tool quickly. Then match your specific problem to the examples in the table.
+\end{calloutbox}
+
+\subsection*{Step 1: What does the problem ask for?}
+\begin{itemize}
+    \item \textbf{``Return all ...'', ``Generate all ...'', ``Find all possible ...''} $\implies$ You need to actually produce the arrangements. Use \textbf{Backtracking} or \texttt{std::next\_permutation}. The answer will be a list of lists.
+    \item \textbf{``How many ...'', ``Count the number of ...'', ``Return the number of ways ...''} $\implies$ You only need a single integer as the answer. Use a \textbf{formula or Dynamic Programming}. Never generate the actual arrangements.
+\end{itemize}
+
+\subsection*{Step 2: What is the key constraint?}
+\begin{itemize}
+    \item \textbf{Order matters} (rearranging gives a different result, for example, a PIN ``123'' $\neq$ ``321'') $\implies$ This is a \textbf{Permutation} problem.
+    \item \textbf{Order does NOT matter} (rearranging gives the same result, for example, a committee of Alice+Bob = Bob+Alice) $\implies$ This is a \textbf{Combination} problem.
+\end{itemize}
+
+\subsection*{Quick Reference: Keyword-to-Tool Mapping}
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
+\hline
+\textbf{Keywords in the Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
+``return all arrangements'' / ``all orderings'' & Generate every possible sequence & Backtracking or \texttt{next\_permutation} \\ \hline
+``return all subsets'' / ``all combos of size $k$'' & Generate every possible group & Backtracking with pruning \\ \hline
+``how many ways to arrange $n$ distinct items?'' & Count sequences where order matters & $n!$ (factorial) \\ \hline
+``how many ways to choose $k$ items from $n$?'' & Count groups where order doesn't matter & $\binom{n}{k}$ (``$n$ choose $k$'') \\ \hline
+``unique permutations'' / ``array with duplicates'' & Some swaps produce identical results & Multiset permutation: $\frac{n!}{n_1! \cdot n_2! \cdots}$ \\ \hline
+``how many ways to distribute $n$ identical items into $k$ groups?'' & Split identical objects into distinct buckets & Stars and Bars: $\binom{n+k-1}{k-1}$ \\ \hline
+``no element in its original position'' / ``nobody gets their own X'' & Every item must be displaced & Derangements $D_n$ \\ \hline
+``seating around a circular table'' / ``forming a necklace'' & Rotations count as the same & Circular permutations: $(n-1)!$ \\ \hline
+``how many valid parenthesis strings?'' / ``how many unique BSTs?'' & Problems with a recursive left/right split & Catalan number $C_n$ \\ \hline
+``shortest paths on a grid from $(0,0)$ to $(m,n)$'' & Moving only right and down on a grid & $\binom{m+n}{m}$ \\ \hline
+``how many integers divisible by at least one of these primes?'' & Overlapping groups that need de-duplication & Inclusion-Exclusion (PIE) \\ \hline
+``return the answer modulo $10^9+7$'' & The answer is astronomically large & Modular inverse + precomputed factorials \\ \hline
+``count arrangements with exactly $k$ visible'' / ``count permutations with $k$ cycles'' & Insert elements one by one, tracking constraints & Combinatorial DP (Stirling 1st Kind) \\ \hline
+``partition a set into $k$ non-empty groups'' & Split distinct objects into identical buckets & Stirling numbers $S(n, k)$ \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsection*{Step 3: Is input too large for direct solution?}
+If $n > 20$ and the problem involves factorials or combinations, the numbers will overflow any standard integer. Watch for:
+\begin{itemize}
+    \item $n \le 1000$, answer modulo $10^9+7$ $\implies$ Use a \textbf{2D DP table} (Pascal's Identity or Stirling recurrence). $O(n^2)$ time and memory.
+    \item $n \le 10^6$, answer modulo a prime $\implies$ \textbf{Precompute factorials and modular inverses} for $O(1)$ per query.
+    \item $n \le 15$, answer is exact $\implies$ \textbf{Bitmask DP} or direct backtracking is feasible.
+\end{itemize}
+\vspace{0.3cm}
+
+% ============================================================================
+\section{Summary and Complexity Reference}
+% ============================================================================
+
+\begin{calloutbox}{Decision Matrix}
+\begin{itemize}
+    \item \textbf{Does Order Matter?} Yes $\implies$ Permutations. No $\implies$ Combinations.
+    \item \textbf{Are there identical items?} Yes $\implies$ Divide by $n_i!$ (or let \texttt{next\_permutation} handle it).
+    \item \textbf{Distributing identical items into distinct bins?} $\implies$ Stars and Bars.
+    \item \textbf{Need to count, not enumerate?} $\implies$ Use a formula or DP, not backtracking.
+    \item \textbf{Answer modulo a prime?} $\implies$ Precompute factorials + modular inverses.
+    \item \textbf{Recursive structure (trees, brackets)?} $\implies$ Think Catalan Numbers.
+    \item \textbf{Overlapping sets?} $\implies$ Inclusion-Exclusion.
+\end{itemize}
+\end{calloutbox}
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\textbf{Task} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
+Generate all permutations & $O(N \cdot N!)$ & $O(1)$ in-place & Problem says ``return all orderings'' ($N \le 8$) \\ \hline
+Generate all $k$-combinations & $O(\binom{N}{k} \cdot k)$ & $O(k)$ stack depth & Problem says ``return all subsets'' ($N \le 20$) \\ \hline
+Pascal's Triangle build & $O(N^2)$ & $O(N^2)$ & Many queries, $N \le 1000$, answer mod $M$ \\ \hline
+Factorial precomputation & $O(N)$ & $O(N)$ & Many queries, $N \le 10^6$, mod a prime \\ \hline
+Query $\binom{n}{k}$ (Pascal) & $O(1)$ & $O(N^2)$ storage & After building Pascal table \\ \hline
+Query $\binom{n}{k}$ (modular inverse) & $O(1)$ & $O(N)$ storage & After factorial precomputation \\ \hline
+Compute single $\binom{n}{k}$ naively & $O(k)$ & $O(1)$ & One-off query, no precomputation needed \\ \hline
+Compute $D_n$ (derangement) & $O(N)$ & $O(1)$ & ``No element in original position'' problems \\ \hline
+Compute $C_n$ (Catalan) & $O(N)$ & $O(1)$ & BSTs, parentheses, polygon triangulation \\ \hline
+Stirling $S(n,k)$ via DP & $O(NK)$ & $O(NK)$ & Partition $n$ elements into exactly $k$ groups \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+% ============================================================================
+\section{Glossary of Terms and Symbols}
+% ============================================================================
+
+If you are new to mathematics, some terminology and symbols can feel like a foreign language. Here is a simple, intuitive dictionary for the concepts used in this document:
+
+\subsection*{Core Concepts}
+\begin{itemize}
+    \item \textbf{Combinatorics}: The mathematical study of counting, arranging, and grouping things.
+    \item \textbf{Permutation}: An arrangement where \textbf{order matters}. (A password of "123" is different from "321").
+    \item \textbf{Combination}: A selection where \textbf{order does NOT matter}. (A team of Alice and Bob is the exact same as a team of Bob and Alice).
+    \item \textbf{Dynamic Programming (DP)}: An algorithmic technique where you solve smaller subproblems first, write down the answers in a table, and reuse those answers to solve the bigger problem without repeating any work.
+    \item \textbf{Recurrence Relation}: A mathematical formula that computes a value by combining earlier values in the sequence (for example, Pascal's identity or Fibonacci).
+    \item \textbf{State}: In Dynamic Programming, the specific variables (like $n$ items and $k$ choices) that define a particular subproblem.
+    \item \textbf{Derangement}: A scrambled arrangement where \textit{nobody} ends up in their original starting spot (for example, everyone grabs the wrong coat from a coat rack).
+    \item \textbf{Modulo / Modular Arithmetic}: Math that "wraps around" upon reaching a certain value (like a clock resetting at 12). In programming, we often do math "modulo $10^9+7$" just to stop massive numbers from crashing the computer memory (overflow).
+    \item \textbf{Set}: Just a fancy mathematical word for a "collection" or "group" of unique items.
+\end{itemize}
+
+\subsection*{Mathematical Symbols}
+\begin{itemize}
+    \item $n!$ \textbf{(Factorial)}: Multiply all whole numbers from 1 to $n$. (Example: $4! = 4 \times 3 \times 2 \times 1 = 24$).
+    \item $\sum$ \textbf{(Sigma)}: The Greek letter Sigma simply means \textbf{Sum}. When you see this, it just means "add all these things up in a loop".
+    \item $\binom{n}{k}$ \textbf{(Binomial Coefficient)}: Pronounced "$n$ choose $k$". It is just the mathematical symbol for "the number of ways to choose $k$ items out of a pool of $n$ items".
+    \item $\cap$ \textbf{(Intersection)}: Means "AND". The overlap between two sets.
+    \item $\cup$ \textbf{(Union)}: Means "OR". Combining two sets together.
+    \item $|A|$ \textbf{(Cardinality)}: When you see vertical bars around a set (like $|A|$), it simply means "the number of items inside $A$". It is the equivalent of calling \texttt{.size()} on an array in programming.
+    \item $\lceil x \rceil$ \textbf{(Ceiling)}: Rounding a decimal number \textit{up} to the next whole integer.
+\end{itemize}
+
+% ============================================================================
+\section{Further Reading}
+% ============================================================================
+
+\subsection*{Free Online Resources (Start Here)}
+\begin{itemize}
+    \item \textbf{CP-Algorithms} (\texttt{cp-algorithms.com}) --- A free, well-written reference covering every combinatorics topic in this document with clean code examples. Excellent starting point for competitive programming.
+    \item \textbf{Art of Problem Solving (AoPS)} (\texttt{artofproblemsolving.com/wiki}) --- A free wiki with beginner-friendly explanations of combinatorics topics, built by the competitive math community.
+    \item \textbf{Brilliant.org} (\texttt{brilliant.org/courses/combinatorics}) --- Interactive, visual, puzzle-based introduction to combinatorics. Very good if you prefer learning by doing rather than by reading.
+    \item \textbf{Project Euler} (\texttt{projecteuler.net}) --- A collection of math-heavy programming puzzles. Problems 15 (grid paths), 24 (permutations), 53 (combinations), and 76 (partitions) are directly related to this document.
+\end{itemize}
+
+\subsection*{Books (When You Are Ready to Go Deeper)}
+\begin{itemize}
+    \item K.\ H.\ Rosen, \emph{Discrete Mathematics and Its Applications} --- a very readable undergraduate textbook. Chapters 6 and 8 cover everything in this document from first principles.
+    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- practical guide covering combinatorics problems frequently seen in competitive programming contests. Written by practitioners, not academics.
+    \item T.\ H.\ Cormen, C.\ E.\ Leiserson, R.\ L.\ Rivest, C.\ Stein, \emph{Introduction to Algorithms} (CLRS) --- Appendix C provides a concise reference on counting and probability. Only read this once you are comfortable with the basics.
+    \item D.\ E.\ Knuth, \emph{The Art of Computer Programming, Volume 4A: Combinatorial Algorithms} --- the most thorough treatment of algorithmic combinatorics ever written. Graduate-level reference only.
+\end{itemize}
+
+% --- Version History (always the last section of the document) ---
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Date} & \textbf{Change} \\ \hline
+2026-08-29 & Document created. \\ \hline
+2026-10-03 & Refactored structure to match learning materials skill, removed banned words, added ASCII diagrams, and rewrote examples to be numbered. \\ \hline
+2026-10-03 & Fixed 2x2 grid dimensions error in Example 4.6 and C++ unsigned integer underflow bug in backtracking. \\ \hline
+\end{tabularx}
+
+\end{document}

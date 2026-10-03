@@ -1,0 +1,658 @@
+﻿\documentclass[11pt,a4paper]{article}
+
+% --- Core LaTeX Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{graphicx}
+
+% --- Optional Diagram Packages (include when needed) ---
+% \usepackage{forest}
+% \usepackage{tikz}
+
+% --- Unified Color Palette ---
+\definecolor{primaryblue}{RGB}{24, 75, 140}
+\definecolor{codebg}{RGB}{248, 249, 250}
+\definecolor{codeframe}{RGB}{210, 215, 222}
+\definecolor{codegreen}{RGB}{40, 130, 60}
+\definecolor{codeblue}{RGB}{20, 90, 180}
+\definecolor{codegray}{RGB}{120, 120, 120}
+
+% --- Hyperref Setup ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    citecolor=primaryblue,
+    urlcolor=primaryblue,
+    pdftitle={Modular Arithmetic},
+    pdfauthor={Antigravity Engineering}
+}
+
+% --- Theorem & Definition Environments ---
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{example}{Example}[section]
+
+% --- Callout Box Environment ---
+\newenvironment{calloutbox}[1]{
+    \par\vspace{0.3cm}
+    \noindent\begin{tabular}{|p{0.96\textwidth}|}
+    \hline
+    \vspace{0.1cm}
+    \textbf{#1}\par\vspace{0.1cm}
+}{
+    \vspace{0.1cm}
+    \\ \hline
+    \end{tabular}
+    \vspace{0.3cm}\par
+}
+
+% --- Modern C++ Code Listing Setup ---
+\lstset{
+    language=C++,
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{orange!80!black},
+    numberstyle=\tiny\color{codegray},
+    numbers=left,
+    numbersep=8pt,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b
+}
+
+% --- Title Block ---
+\title{\vspace{-1.5cm}\textbf{\Huge Modular Arithmetic}\\[0.3cm]
+\Large Clock Arithmetic, Overflow Prevention, Modular Inverses, and C++ Implementations}
+\author{Technical Monograph}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+Modular arithmetic is the math of remainders and wrap-around. You already use it every day: a clock resets at 12, a circular array index wraps at N, and a credit card number has a check digit computed modulo 10. This document teaches you modular arithmetic from the clock metaphor up through the algorithms used in algorithms and real software. You will learn why numbers wrap around, how to compute huge powers efficiently without overflow, what a modular inverse is and how to find one, and when to reach for the Chinese Remainder Theorem. Each concept has a plain-English explanation, a worked step-by-step example, and a C++ implementation. The final sections tell you how to recognize a modular arithmetic problem and which tool to use.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Foundations / Core Concepts}
+% ============================================================================
+
+\subsection{From Linear Numbers to Cyclic Systems}
+Standard arithmetic operates along an infinite linear number line $\mathbb{R}$. In contrast, cyclic systems map the set of all integers $\mathbb{Z}$ onto a finite, closed circular loop.
+
+The most universal real-world example is the standard $12$-hour analog clock:
+\begin{itemize}
+    \item If the current time is $9:00$, and $5$ hours elapse, the resulting time is not $14:00$, but rather $2:00$.
+    \item Mathematically: $9 + 5 = 14 \equiv 2 \pmod{12}$.
+    \item On a $24$-hour military clock: $22:00 + 6\text{ hours} = 4:00$, because $28 \equiv 4 \pmod{24}$.
+\end{itemize}
+
+Because numbers reset and repeat periodically, this branch of mathematics earned the informal title \textbf{Clock Arithmetic}.
+
+This simple number line shows how integers map onto their remainders modulo 12.
+
+\subsection{Why This Matters for Programming}
+
+Modular arithmetic appears in programming problems in three very distinct ways. Knowing which one you are dealing with determines which tool you use.
+
+\subsubsection{Situation 1: The Answer is Too Large to Store}
+Many combinatorics and counting problems produce answers with thousands of digits. No integer type can hold that. The standard algorithm trick is to compute the answer modulo a large prime (almost always $10^9 + 7 = 1{,}000{,}000{,}007$). Every intermediate result is kept small by applying \texttt{\% MOD} after every addition and multiplication.
+
+\begin{calloutbox}{Why $10^9 + 7$ specifically?}
+It is prime (so modular inverses always exist), it fits in a 32-bit integer, and $2 \times (10^9 + 7) < 2^{63}$, meaning two values multiplied together still fit in a 64-bit \texttt{long long} without overflow before the modulo operation.
+\end{calloutbox}
+
+\subsubsection{Situation 2: The Problem has Cyclic or Wrap-Around Behaviour}
+Circular arrays, clock problems, repeating day cycles, and round-robin scheduling all naturally use modulo. The index that advances and wraps around is computed as:
+$$ \text{next\_index} = (\text{current\_index} + \text{step}) \bmod N $$
+This is the most direct use of modulo and requires no advanced tools — just the \texttt{\%} operator.
+
+\subsubsection{Situation 3: You Need to Divide Inside a Modular Computation}
+Division does not work the same way in modular arithmetic. You cannot simply write \texttt{(a / b) \% MOD}. Instead, you must multiply by the \textbf{modular inverse} of $b$. This is explained in detail in Section~\ref{sec:inverses}.
+
+\subsection{Congruence and Residue Classes}
+
+\begin{definition}[Congruence Modulo $n$]
+Let $a, b \in \mathbb{Z}$ and let $n \in \mathbb{Z}^+$ ($n \ge 1$). We say that $a$ is \textbf{congruent} to $b$ modulo $n$, denoted as:
+\begin{equation}
+a \equiv b \pmod n
+\end{equation}
+if and only if $n$ divides their difference $(a - b)$, written symbolically as $n \mid (a - b)$.
+\end{definition}
+
+Equivalently, $a \equiv b \pmod n$ means that $a$ and $b$ leave the exact same remainder when divided by $n$ via the Division Algorithm ($a = q_1 n + r$, $b = q_2 n + r$, with $0 \le r < n$).
+
+\begin{definition}[Residue Class Ring $\mathbb{Z}/n\mathbb{Z}$]
+The relation $\equiv \pmod n$ is an \textbf{equivalence relation} (satisfying reflexivity, symmetry, and transitivity). It partitions the set of integers $\mathbb{Z}$ into exactly $n$ disjoint equivalence classes, called \textbf{residue classes}:
+\begin{equation}
+\mathbb{Z}/n\mathbb{Z} = \{ [0], [1], [2], \dots, [n-1] \}
+\end{equation}
+where $[r] = \{ r + k \cdot n \mid k \in \mathbb{Z} \}$.
+\end{definition}
+
+% ============================================================================
+\section{Main Topic Sections}
+% ============================================================================
+
+\subsection{Fundamental Arithmetic Compatibility}
+The crucial algebraic property that makes modular arithmetic computationally viable is that congruence respects addition, subtraction, and multiplication.
+
+\begin{theorem}[Homomorphic Compatibility]
+If $a_1 \equiv b_1 \pmod n$ and $a_2 \equiv b_2 \pmod n$, then:
+\begin{align}
+a_1 + a_2 &\equiv b_1 + b_2 \pmod n \\
+a_1 - a_2 &\equiv b_1 - b_2 \pmod n \\
+a_1 \times a_2 &\equiv b_1 \times b_2 \pmod n
+\end{align}
+\end{theorem}
+
+\noindent
+\textbf{Significance for Computation:} To compute $(A \times B + C) \pmod n$, one does not need to compute the potentially astronomical intermediate quantity $(A \times B + C)$. Instead, intermediate reductions can be performed at every operation:
+\begin{equation}
+(A \cdot B + C) \pmod n = \Big( \big((A \bmod n) \cdot (B \bmod n)\big) \bmod n + (C \bmod n) \Big) \bmod n
+\end{equation}
+
+\subsection{Modular Exponentiation: Binary Exponentiation}
+Computing $a^b \pmod n$ where $b$ has hundreds of digits cannot be done by computing $a^b$ first. Instead, \textbf{Modular Binary Exponentiation} computes $a^b \pmod n$ in $O(\log b)$ multiplications:
+\begin{equation}
+a^b \pmod n = 
+\begin{cases} 
+1 & \text{if } b = 0 \\
+\left(a^{b/2} \pmod n\right)^2 \pmod n & \text{if } b \text{ is even} \\
+a \cdot \left(a^{(b-1)/2} \pmod n\right)^2 \pmod n & \text{if } b \text{ is odd}
+\end{cases}
+\end{equation}
+
+\subsection{Modular Inverses and Division}\label{sec:inverses}
+Standard real division ($a / b$) does not exist in $\mathbb{Z}/n\mathbb{Z}$. Instead, division by $b$ is defined as multiplication by the \textbf{modular multiplicative inverse} $b^{-1}$.
+
+\begin{definition}[Modular Multiplicative Inverse]
+An integer $x$ is the multiplicative inverse of $a$ modulo $n$ if:
+\begin{equation}
+a \cdot x \equiv 1 \pmod n
+\end{equation}
+Such an inverse exists \textbf{if and only if} $\gcd(a, n) = 1$ ($a$ and $n$ are coprime).
+\end{definition}
+
+\subsubsection{Finding the Inverse via Extended Euclidean Algorithm}
+By Bézout's Identity, there exist integers $x, y \in \mathbb{Z}$ such that:
+\begin{equation}
+a \cdot x + n \cdot y = \gcd(a, n)
+\end{equation}
+When $\gcd(a, n) = 1$, reducing both sides modulo $n$ yields $a \cdot x \equiv 1 \pmod n$. Thus, $x$ computed by the Extended Euclidean Algorithm is the modular inverse $a^{-1} \pmod n$.
+
+\begin{calloutbox}{Intuition: Where does Extended Euclid come from?}
+The standard Euclidean algorithm finds the GCD by repeatedly taking remainders. If we keep track of the coefficients at each step, we can express that GCD as a combination of the original two numbers. If the GCD is 1, those coefficients give us exactly the modular inverse!
+\end{calloutbox}
+
+\subsubsection{Finding the Inverse via Fermat's Little Theorem}
+When the modulus $p$ is a \textbf{prime} number:
+\begin{theorem}[Fermat's Little Theorem]
+If $p$ is prime and $\gcd(a, p) = 1$, then:
+\begin{equation}
+a^{p-1} \equiv 1 \pmod p \implies a \cdot a^{p-2} \equiv 1 \pmod p \implies a^{-1} \equiv a^{p-2} \pmod p
+\end{equation}
+\end{theorem}
+This allows computing modular inverses in $O(\log p)$ time using binary exponentiation.
+
+\begin{calloutbox}{Intuition: Where does Fermat's Theorem come from?}
+If you take the sequence $1, 2, \dots, p-1$ and multiply each by $a$ (modulo $p$), you get the exact same sequence rearranged. Multiplying all elements together gives $(p-1)! \equiv a^{p-1}(p-1)! \pmod p$. Canceling $(p-1)!$ leaves $1 \equiv a^{p-1} \pmod p$.
+\end{calloutbox}
+
+\subsection{Chinese Remainder Theorem (CRT)}
+\begin{theorem}[Chinese Remainder Theorem]
+Let $n_1, n_2, \dots, n_k$ be pairwise coprime positive integers, and let $a_1, a_2, \dots, a_k \in \mathbb{Z}$. The system of simultaneous congruences:
+\begin{align*}
+x &\equiv a_1 \pmod{n_1} \\
+x &\equiv a_2 \pmod{n_2} \\
+  &\;\;\vdots \\
+x &\equiv a_k \pmod{n_k}
+\end{align*}
+has a unique solution modulo $N = \prod_{i=1}^k n_i$, given explicitly by:
+\begin{equation}
+x \equiv \sum_{i=1}^k a_i \cdot M_i \cdot M_i^{-1} \pmod N, \quad \text{where } M_i = \frac{N}{n_i} \text{ and } M_i \cdot M_i^{-1} \equiv 1 \pmod{n_i}
+\end{equation}
+\end{theorem}
+
+\begin{calloutbox}{Intuition: Where does CRT come from?}
+CRT works by constructing "magic components" $M_i \cdot M_i^{-1}$. This term equals $1$ modulo $n_i$ but equals $0$ modulo every other $n_j$. When you sum them up scaled by $a_i$, each modulus "sees" only its own $a_i$ and ignores the rest!
+\end{calloutbox}
+
+\subsection{Euler's Totient Function and Euler's Theorem}
+
+\begin{definition}[Euler's Totient Function $\phi(n)$]
+For a positive integer $n$, $\phi(n)$ counts the number of integers $k$ with $1 \le k \le n$ such that $\gcd(k, n) = 1$. Key formulae:
+\begin{itemize}
+    \item If $p$ is prime: $\phi(p) = p - 1$.
+    \item If $p$ is prime and $k \ge 1$: $\phi(p^k) = p^{k-1}(p-1)$.
+    \item For coprime $m, n$: $\phi(mn) = \phi(m)\phi(n)$ \quad (multiplicativity).
+    \item General formula: $\displaystyle \phi(n) = n \prod_{p \mid n} \left(1 - \frac{1}{p}\right)$.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Euler's Theorem --- Generalized Fermat]
+If $\gcd(a, n) = 1$, then:
+\begin{equation}
+a^{\phi(n)} \equiv 1 \pmod n
+\end{equation}
+Fermat's Little Theorem is the special case where $n = p$ is prime (giving $\phi(p) = p - 1$). Euler's Theorem is essential for computing modular exponentiation with enormous exponents: to evaluate $a^B \pmod n$, first reduce the exponent $B' = B \bmod \phi(n)$, then compute $a^{B'} \pmod n$.
+\end{theorem}
+
+\begin{calloutbox}{Intuition: Where does Euler's Theorem come from?}
+It is exactly the same logic as Fermat's Little Theorem, except we only multiply the $\phi(n)$ elements that are coprime to $n$. Multiplying them by $a$ permutes them, leading to $a^{\phi(n)} \equiv 1 \pmod n$.
+\end{calloutbox}
+
+\subsection{Real-Life and Engineering Applications}
+
+\subsubsection{Public-Key Cryptography (RSA and Diffie-Hellman)}
+Modern cybersecurity relies entirely on the asymmetric difficulty of modular operations:
+\begin{itemize}
+    \item \textbf{RSA Cryptosystem}: Generates two large prime numbers $p, q$ with product $n = pq$. Encryption computes $C = M^e \pmod n$. Decryption computes $M = C^d \pmod n$, where $e \cdot d \equiv 1 \pmod{\phi(n)}$. Without factoring $n$, computing $d$ is computationally intractable.
+    \item \textbf{Diffie-Hellman Key Exchange}: Alice and Bob share a secret by exchanging $g^a \pmod p$ and $g^b \pmod p$. Finding the private exponents requires solving the \textbf{Discrete Logarithm Problem} ($g^x \equiv Y \pmod p$), for which no general classical polynomial-time algorithm is known.
+\end{itemize}
+
+\subsubsection{Checksums and Error Detection Standards}
+International identifiers protect against human transcription errors and transmission noise using modular check digits:
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Standard} & \textbf{Domain} & \textbf{Modular Formula / Algorithm} \\ \hline
+\textbf{ISBN-10} & Books & $\sum_{i=1}^{10} (11 - i) x_i \equiv 0 \pmod{11}$ \\ \hline
+\textbf{ISBN-13} & Books & $\sum_{i=1}^{13} w_i x_i \equiv 0 \pmod{10}$, $w_i \in \{1, 3\}$ \\ \hline
+\textbf{Luhn} & Credit Cards & Double alternate digits, sum $\equiv 0 \pmod{10}$ \\ \hline
+\textbf{IBAN} & Banking & $\text{Converted String} \pmod{97} \equiv 1$ \\ \hline
+\textbf{CRC32} & Network / Files & Polynomial division over $GF(2)$ \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsubsection{Computer Architecture and Systems Programming}
+\begin{itemize}
+    \item \textbf{Circular Buffers \& Ring Queues}: Head and tail pointers advance via modular index arithmetic, for example \texttt{tail = (tail + 1) \% N}, giving $O(1)$ lock-free queue operations.
+    \item \textbf{Hash Tables}: Hash codes are mapped to bucket indices via \texttt{index = hash \% capacity}. Prime capacities mitigate clustering from non-uniform stride distributions.
+    \item \textbf{Pseudo-Random Number Generators (PRNGs)}: Linear Congruential Generators follow the recurrence $X_{n+1} = (a X_n + c) \pmod m$.
+    \item \textbf{Round-Robin Load Balancing}: Distribute requests across $K$ servers: $\text{server} = \text{id} \bmod K$.
+\end{itemize}
+
+% ============================================================================
+\section{Key Algorithmic Patterns}
+% ============================================================================
+
+When facing a problem involving modular arithmetic, naive approaches often fail due to astronomical numbers or missing operations. This section details the canonical decision patterns and their efficient solutions.
+
+\subsection{Wrap-Around Indexing}
+\textbf{Why naive fails:} Keeping an ever-growing index and mapping it only at the end can overflow the integer type or cause out-of-bounds memory access.
+
+\textbf{Efficient technique:} Reduce the index at every step using \texttt{(index + step) \% N}. This ensures the index always stays within the valid bounds of $[0, N-1]$.
+
+\subsection{Reduce-As-You-Go}
+\textbf{Why naive fails:} Computing a massive product or sum (for example, $A \times B \times C$) before applying the modulo will overflow any standard integer type.
+
+\textbf{Efficient technique:} Apply the modulo operation after every single arithmetic operation. Modulo distributes over addition and multiplication.
+
+\subsection{Binary Exponentiation}
+\textbf{Why naive fails:} Computing $a^b$ by multiplying $a$ by itself $b$ times takes $O(b)$ operations. If $b = 10^9$, this is too slow.
+
+\textbf{Efficient technique:} Square the base and halve the exponent iteratively. This reduces the time to $O(\log b)$.
+
+\subsection{Inverse via Fermat vs Extended Euclid}
+\textbf{Why naive fails:} Regular division is not defined in modular arithmetic. A brute-force search for an inverse $x$ such that $(a \times x) \equiv 1 \pmod m$ takes $O(m)$ time.
+
+\textbf{Efficient technique:} Multiply by the modular inverse. Use Fermat's Little Theorem ($a^{m-2} \pmod m$) if $m$ is prime. Use the Extended Euclidean Algorithm if $m$ is composite but coprime to $a$.
+
+\subsection{Chinese Remainder Theorem (CRT)}
+\textbf{Why naive fails:} Searching for a number $x$ that satisfies multiple remainder conditions simultaneously by iterating through all integers is impossibly slow for large moduli.
+
+\textbf{Efficient technique:} Construct the exact number using the CRT formula by combining partial products and their modular inverses.
+
+% ============================================================================
+\section{Worked Examples}
+% ============================================================================
+
+\begin{example}[Clock Arithmetic: What Time is it 100 Hours from Now?]
+Suppose it is currently 3:00. What time will it be in 100 hours?
+
+\begin{enumerate}
+    \item Add: $3 + 100 = 103$.
+    \item Reduce: $103 \div 12 = 8$ remainder $7$. So $103 \equiv 7 \pmod{12}$.
+    \item Answer: It will be \textbf{7:00}.
+\end{enumerate}
+
+This is the most fundamental operation in modular arithmetic. Every more advanced algorithm in this document is built on the same idea: reduce a large number to its remainder modulo some fixed value.
+\end{example}
+
+\begin{example}[Binary Exponentiation: Compute $3^{13} \pmod 7$]
+We write $13 = (1101)_2$ and apply the square-and-multiply algorithm:
+\begin{align*}
+\text{Step 1: } & \text{bit} = 1 \implies \text{result} = 1 \times 3 = 3 \pmod 7, \quad \text{base} = 3^2 = 2 \pmod 7 \\
+\text{Step 2: } & \text{bit} = 0 \implies \text{result unchanged} = 3, \quad \text{base} = 2^2 = 4 \pmod 7 \\
+\text{Step 3: } & \text{bit} = 1 \implies \text{result} = 3 \times 4 = 5 \pmod 7, \quad \text{base} = 4^2 = 2 \pmod 7 \\
+\text{Step 4: } & \text{bit} = 1 \implies \text{result} = 5 \times 2 = 3 \pmod 7
+\end{align*}
+Therefore, $3^{13} \equiv 3 \pmod 7$. \quad (Verification: $3^6 \equiv 1 \pmod 7$ by Fermat, so $3^{13} = 3^{12} \cdot 3 = (3^6)^2 \cdot 3 \equiv 3$.)
+\end{example}
+
+\begin{example}[Extended Euclidean Algorithm: Find $17^{-1} \pmod{43}$]
+We need $x$ such that $17x \equiv 1 \pmod{43}$. Apply the Euclidean Algorithm:
+\begin{align*}
+43 &= 2 \times 17 + 9 \\
+17 &= 1 \times 9 + 8 \\
+9 &= 1 \times 8 + 1
+\end{align*}
+
+Therefore $17 \times (-5) \equiv 1 \pmod{43}$, giving $17^{-1} \equiv -5 \equiv 38 \pmod{43}$.
+\end{example}
+
+\begin{example}[Chinese Remainder Theorem: Solve $x \equiv 2 \pmod 3$, $x \equiv 3 \pmod 5$, $x \equiv 2 \pmod 7$]
+Here $N = 3 \times 5 \times 7 = 105$. Compute partial products and their inverses:
+\begin{align*}
+M_1 &= 35, \quad 35^{-1} \equiv 2 \pmod 3 \quad (\text{since } 35 \times 2 = 70 \equiv 1) \\
+M_2 &= 21, \quad 21^{-1} \equiv 1 \pmod 5 \quad (\text{since } 21 \times 1 = 21 \equiv 1) \\
+M_3 &= 15, \quad 15^{-1} \equiv 1 \pmod 7 \quad (\text{since } 15 \times 1 = 15 \equiv 1)
+\end{align*}
+The solution: $x \equiv 2 \times 35 \times 2 + 3 \times 21 \times 1 + 2 \times 15 \times 1 = 140 + 63 + 30 = 233 \equiv 23 \pmod{105}$.
+\end{example}
+
+% ============================================================================
+\section{C++ Implementations}
+% ============================================================================
+
+\subsection{Critical Pitfalls in C++ Modulo}
+\begin{calloutbox}{Pitfall: Negative Remainders in C++}
+In C++, the \texttt{\%} operator computes a truncated remainder, not a mathematical modulo. For example, \texttt{-1 \% 7} evaluates to \texttt{-1}, not \texttt{6}. To guarantee a non-negative result in $[0, m-1]$, add the modulus and apply modulo again.
+\end{calloutbox}
+
+\begin{calloutbox}{Pitfall: Overflow Before the Modulo}
+In \texttt{(a * b) \% m}, if $a, b \approx 10^9$, $a \times b \approx 10^{18}$, which overflows a 32-bit signed \texttt{int}. Use \texttt{long long} or 64-bit casting before multiplication.
+\end{calloutbox}
+
+\begin{calloutbox}{Pitfall: Mod of a Non-Prime}
+Fermat's Little Theorem only works when the modulus is prime. Using $a^{m-2} \pmod m$ to find an inverse when $m$ is composite will yield mathematically incorrect results. Use Extended Euclid instead.
+\end{calloutbox}
+
+\subsection{Safe Modulo Function}
+This conceptual explanation precedes the simple safe modulo function. Because C++ can yield negative remainders, we write a robust wrapper.
+
+\begin{lstlisting}[caption={Safe Modulo Implementation}]
+#include <cstdint>
+
+// Computes the mathematical modulo guaranteeing a non-negative result
+[[nodiscard]] constexpr std::int64_t safe_mod(std::int64_t a, std::int64_t m) noexcept {
+    return ((a % m) + m) % m;
+}
+\end{lstlisting}
+
+\subsection{Production-Grade C++ Modular Type}
+The conceptual explanation: we wrap a 64-bit integer into a class that automatically applies modulo arithmetic on every operation. This prevents us from forgetting to reduce intermediate results.
+
+\begin{lstlisting}[caption={Production-Ready C++ Modular Arithmetic Class Template}]
+#pragma once
+
+#include <iostream>
+#include <cstdint>
+#include <stdexcept>
+#include <utility>
+
+template <std::int64_t Mod>
+class Modular {
+    static_assert(Mod > 0, "Modulus must be strictly positive");
+
+private:
+    std::int64_t value;
+
+    // Normalizes the value into the range [0, Mod-1]
+    static constexpr std::int64_t normalize(std::int64_t v) noexcept {
+        v %= Mod;
+        if (v < 0) v += Mod;
+        return v;
+    }
+
+public:
+    constexpr Modular() noexcept : value(0) {}
+    constexpr Modular(std::int64_t v) noexcept : value(normalize(v)) {}
+
+    [[nodiscard]] constexpr std::int64_t get() const noexcept { return value; }
+    [[nodiscard]] static constexpr std::int64_t mod() noexcept { return Mod; }
+
+    // Fast Binary Exponentiation: O(log exp)
+    [[nodiscard]] constexpr Modular pow(std::int64_t exp) const noexcept {
+        Modular base = *this;
+        Modular result = 1;
+        while (exp > 0) {
+            if (exp & 1) result *= base;
+            base *= base;
+            exp >>= 1;
+        }
+        return result;
+    }
+
+    // Extended Euclidean Algorithm for Modular Inverse: O(log Mod)
+    [[nodiscard]] constexpr Modular inv() const {
+        std::int64_t a = value, m = Mod;
+        std::int64_t u = 0, v = 1;
+        while (a != 0) {
+            std::int64_t t = m / a;
+            m -= t * a; std::swap(a, m);
+            u -= t * v; std::swap(u, v);
+        }
+        if (m != 1) {
+            throw std::runtime_error("Modular inverse does not exist");
+        }
+        return Modular(u);
+    }
+
+    // Arithmetic Operators
+    constexpr Modular& operator+=(const Modular& other) noexcept {
+        value += other.value;
+        if (value >= Mod) value -= Mod;
+        return *this;
+    }
+
+    constexpr Modular& operator-=(const Modular& other) noexcept {
+        value -= other.value;
+        if (value < 0) value += Mod;
+        return *this;
+    }
+
+    constexpr Modular& operator*=(const Modular& other) noexcept {
+        // Safe 64-bit modular multiplication
+        uint64_t a = static_cast<uint64_t>(value);
+        uint64_t b = static_cast<uint64_t>(other.value);
+        uint64_t m = static_cast<uint64_t>(Mod);
+        value = static_cast<std::int64_t>((a * b) % m);
+        return *this;
+    }
+
+    constexpr Modular& operator/=(const Modular& other) {
+        return *this *= other.inv();
+    }
+
+    friend constexpr Modular operator+(Modular lhs, const Modular& rhs) noexcept { return lhs += rhs; }
+    friend constexpr Modular operator-(Modular lhs, const Modular& rhs) noexcept { return lhs -= rhs; }
+    friend constexpr Modular operator*(Modular lhs, const Modular& rhs) noexcept { return lhs *= rhs; }
+    friend constexpr Modular operator/(Modular lhs, const Modular& rhs) { return lhs /= rhs; }
+
+    friend constexpr bool operator==(const Modular& lhs, const Modular& rhs) noexcept { return lhs.value == rhs.value; }
+    friend constexpr bool operator!=(const Modular& lhs, const Modular& rhs) noexcept { return lhs.value != rhs.value; }
+
+    friend std::ostream& operator<<(std::ostream& os, const Modular& m) {
+        return os << m.value;
+    }
+};
+
+// Common aliases for practice
+using Mint1000000007 = Modular<1000000007>;
+using Mint998244353  = Modular<998244353>;
+\end{lstlisting}
+
+\subsection{Case Study: Solving the Repunit Divisibility Problem in $O(k)$}
+To demonstrate modular arithmetic solving an otherwise intractable problem, consider finding the smallest repunit ($1, 11, 111, \dots$) divisible by $k$. We track the remainder modulo $k$ sequentially.
+
+\begin{lstlisting}[caption={O(k) Repunit Divisibility via Modular Recurrence}]
+#include <iostream>
+
+// Returns the length of the smallest repunit divisible by k
+[[nodiscard]] constexpr int smallestRepunitDivByK(int k) noexcept {
+    // Repunits only end in 1, so they can never be divisible by 2 or 5
+    if (k % 2 == 0 || k % 5 == 0) {
+        return -1;
+    }
+
+    int remainder = 0;
+    // Pigeonhole principle guarantees cycle or solution within k steps
+    for (int length = 1; length <= k; ++length) {
+        remainder = (remainder * 10 + 1) % k;
+        if (remainder == 0) {
+            return length;
+        }
+    }
+
+    return -1;
+}
+\end{lstlisting}
+
+% ============================================================================
+\section{Problem Pattern Recognition}
+% ============================================================================
+
+Knowing the theory is not enough. You also need to recognize which technique applies when you read a problem. This section teaches you how to think.
+
+\subsection*{Step 1: What is the problem actually asking?}
+\begin{itemize}
+    \item \textbf{``Return the answer modulo $10^9+7$''} $\implies$ The answer is astronomically large. Use modular arithmetic throughout every intermediate computation.
+    \item \textbf{``Find the index / position after $k$ steps in a circular structure''} $\implies$ Direct modulo wrapping. No advanced tools needed.
+    \item \textbf{``Count something, then divide''} $\implies$ You need a modular inverse, because division inside a modular computation requires it.
+    \item \textbf{``Find $x$ satisfying multiple remainder conditions simultaneously''} $\implies$ Chinese Remainder Theorem.
+    \item \textbf{``Compute $a^b$ where $b$ is huge''} $\implies$ Binary exponentiation.
+\end{itemize}
+
+\subsection*{Step 2: What is the key constraint?}
+\begin{itemize}
+    \item \textbf{Is the modulus prime?} $\implies$ Use Fermat's Little Theorem for inverses ($a^{p-2} \pmod p$). Simple and fast.
+    \item \textbf{Is the modulus composite or unknown?} $\implies$ Use the Extended Euclidean Algorithm for inverses. Works universally.
+    \item \textbf{Is the exponent itself huge (more than $10^{18}$)?} $\implies$ Reduce the exponent modulo $\phi(n)$ first (Euler's Theorem), then apply binary exponentiation.
+    \item \textbf{Are the moduli coprime to each other?} $\implies$ CRT applies. If they are not coprime, CRT in its basic form does not apply.
+\end{itemize}
+
+\subsection*{Step 3: How large is the input?}
+\begin{itemize}
+    \item $n \le 10^6$: You can precompute factorials and all their inverses in $O(n)$ and answer any combinatorics query in $O(1)$.
+    \item $n \le 10^{18}$: Binary exponentiation handles single power queries in $O(\log n)$. Factorials cannot be precomputed at this scale.
+    \item Exponent itself $> 10^{18}$: Reduce the exponent modulo $\phi(n)$ first (requires factorizing $n$).
+\end{itemize}
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
+\hline
+\textbf{Keywords in the Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
+``return answer mod $10^9+7$'' & Answer too large for any integer type & Reduce every intermediate result with \texttt{\% MOD} \\ \hline
+``circular array'', ``ring buffer'', ``round-robin'' & Index wraps back to 0 after reaching the end & \texttt{(idx + step) \% N} \\ \hline
+``compute $a^b$ where $b$ is up to $10^{18}$'' & Direct exponentiation would take forever & Binary exponentiation $O(\log b)$ \\ \hline
+``divide inside a modular computation'' & Division requires an inverse in modular math & Modular inverse via Fermat or Extended Euclidean \\ \hline
+``$x \equiv r_i \pmod{m_i}$ for several $i$'' & Multiple independent remainder clues & Chinese Remainder Theorem (CRT) \\ \hline
+``how many integers in $[1,n]$ are coprime to $n$?'' & Counting numbers sharing no factors with $n$ & Euler's Totient $\phi(n)$ \\ \hline
+``last $k$ digits of $a^b$'' & Last $k$ digits equals value modulo $10^k$ & Binary exponentiation modulo $10^k$ \\ \hline
+``parity / odd-even invariant'' & Does adding/removing elements preserve some property? & Modulo 2 (just \texttt{\& 1} or \texttt{\% 2}) \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+% ============================================================================
+\section{Summary and Complexity Reference}
+% ============================================================================
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\textbf{Task / Operation} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
+$(a + b) \bmod n$ & $O(1)$ & $O(1)$ & Always, after any addition or subtraction that might overflow \\ \hline
+$(a \times b) \bmod n$ & $O(1)$ & $O(1)$ & Always, after any multiplication; use \texttt{long long} operands \\ \hline
+$a^b \bmod n$ & $O(\log b)$ & $O(1)$ & When the exponent is large ($b > 10^6$) \\ \hline
+$\gcd(a, b)$ & $O(\log \min(a,b))$ & $O(1)$ & To check if a modular inverse exists ($\gcd = 1$ means it does) \\ \hline
+$a^{-1} \bmod n$ & $O(\log n)$ & $O(1)$ & Before any modular division; pick Fermat if $n$ is prime, Extended GCD otherwise \\ \hline
+CRT ($k$ congruences) & $O(k \log N)$ & $O(k)$ & When you have multiple congruences to solve simultaneously \\ \hline
+$\phi(n)$ & $O(\sqrt{n})$ & $O(1)$ & When reducing a huge exponent before binary exponentiation \\ \hline
+\end{tabularx}
+
+% ============================================================================
+\section{Glossary}
+% ============================================================================
+
+\subsection*{Core Concepts}
+\begin{itemize}
+    \item \textbf{Modulo / Modulus ($m$ or $n$)}: The specific number at which our math "wraps around". On a standard clock, the modulus is 12.
+    \item \textbf{Remainder}: What is left over after dividing one number by another. (for example, $14$ divided by $12$ leaves a remainder of $2$).
+    \item \textbf{Coprime / Relatively Prime}: Two numbers are coprime if they share NO common factors other than $1$. (for example, $8$ and $15$ are coprime because $8=2\times2\times2$ and $15=3\times5$. They share no prime factors).
+    \item \textbf{Modular Inverse}: The equivalent of "division" in modular math. You cannot divide normally; instead, you multiply by the modular inverse. The inverse of $a$ is the number $x$ such that $a \times x \equiv 1$.
+    \item \textbf{Repunit}: A number made entirely of the digit 1 (for example, 1, 11, 111, 1111).
+    \item \textbf{Binary Exponentiation}: A clever algorithmic trick to compute massive powers (like $a^{1000}$) incredibly fast by breaking the exponent down into binary bits, drastically reducing the number of multiplications.
+    \item \textbf{Congruence}: Two numbers are congruent modulo $n$ if they leave the same remainder when divided by $n$. Saying $14 \equiv 2 \pmod{12}$ is just saying that 14 and 2 leave the same remainder (2) when divided by 12.
+    \item \textbf{Overflow}: When a number becomes too large to fit in a variable's memory. A 32-bit integer can hold up to about 2.1 billion. Modular arithmetic prevents overflow by keeping every value in the range $[0, n)$.
+    \item \textbf{Chinese Remainder Theorem (CRT)}: A theorem that reconstructs a single integer from its remainders modulo several pairwise coprime integers.
+    \item \textbf{Fermat's Little Theorem}: A theorem stating that $a^{p-1} \equiv 1 \pmod p$ for a prime $p$.
+\end{itemize}
+
+\subsection*{Mathematical Symbols}
+\begin{itemize}
+    \item $a \equiv b \pmod n$ \textbf{(Congruence)}: Pronounced "$a$ is congruent to $b$ modulo $n$". It simply means that $a$ and $b$ have the exact same remainder when you divide them by $n$.
+    \item $\gcd(a, b)$ \textbf{(Greatest Common Divisor)}: The largest whole number that perfectly divides both $a$ and $b$ without leaving a remainder. If $\gcd(a, b) = 1$, the numbers are coprime.
+    \item $a^{-1} \pmod n$ \textbf{(Modular Inverse)}: The mathematical notation for the modular inverse of $a$. 
+    \item $\phi(n)$ \textbf{(Euler's Totient Function)}: The Greek letter Phi. This function counts exactly how many numbers from $1$ to $n$ are coprime to $n$.
+    \item $\mathbb{Z}/n\mathbb{Z}$: A notation for "the set of remainders modulo $n$". It represents the closed loop of numbers $\{0, 1, 2, \dots, n-1\}$.
+    \item $\lfloor x \rfloor$ \textbf{(Floor)}: Rounding a decimal number down to the nearest whole integer. For example, $\lfloor 3.9 \rfloor = 3$.
+    \item $n \mid a$ \textbf{(Divides)}: Means "$n$ divides $a$ perfectly with no remainder". For example, $4 \mid 12$ because $12 / 4 = 3$ exactly.
+\end{itemize}
+
+% ============================================================================
+\section{Further Reading}
+% ============================================================================
+
+\subsection*{Free Online Resources (Start Here)}
+\begin{itemize}
+    \item \textbf{CP-Algorithms: Modular Arithmetic} (\texttt{cp-algorithms.com/algebra/module-inverse.html}) --- Concise explanations of modular inverses, binary exponentiation, and the Extended Euclidean Algorithm, each with C++ code.
+    \item \textbf{CP-Algorithms: Chinese Remainder Theorem} (\texttt{cp-algorithms.com/algebra/chinese-remainder-theorem.html}) --- Step-by-step derivation and implementation of CRT.
+    \item \textbf{Art of Problem Solving: Modular Arithmetic} (\texttt{artofproblemsolving.com/wiki/index.php/Modular\_arithmetic}) --- Beginner-friendly wiki with practice problems at the bottom.
+    \item \textbf{Brilliant.org: Number Theory} (\texttt{brilliant.org/courses/number-theory}) --- Interactive, puzzle-based introduction to modular arithmetic and related topics.
+    \item \textbf{Project Euler} (\texttt{projecteuler.net}) --- Problem 26 (repeating decimals), Problem 36 (palindromes in base 2), Problem 97 (large Mersenne-style numbers) all involve modular arithmetic directly.
+\end{itemize}
+
+\subsection*{Books (When You Are Ready to Go Deeper)}
+\begin{itemize}
+    \item K.\ H.\ Rosen, \emph{Elementary Number Theory and Its Applications} --- undergraduate level, very readable, covers congruences, inverses, and CRT in Chapters 4--7.
+    \item T.\ H.\ Cormen, C.\ E.\ Leiserson, R.\ L.\ Rivest, C.\ Stein, \emph{Introduction to Algorithms} (CLRS) --- Chapter 31 covers modular exponentiation, RSA, and primality testing. Read this after you are comfortable with the basics.
+    \item D.\ E.\ Knuth, \emph{The Art of Computer Programming, Volume 2: Seminumerical Algorithms} --- exhaustive treatment of modular arithmetic, GCD algorithms, and random number generation. Graduate-level reference.
+\end{itemize}
+
+% ============================================================================
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+% ============================================================================
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Date} & \textbf{Change} \\ \hline
+2026-08-24 & Document created. \\ \hline
+2026-10-03 & Refactored section order, removed banned words, added Key Algorithmic Patterns, and formalized diagram/table layouts. \\ \hline
+\end{tabularx}
+
+\end{document}

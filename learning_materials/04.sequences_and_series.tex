@@ -1,0 +1,729 @@
+﻿\documentclass[11pt,a4paper]{article}
+
+% --- Core LaTeX Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{graphicx}
+
+% --- Optional Diagram Packages (include when needed) ---
+% \usepackage{forest}
+% \usepackage{tikz}
+
+% --- Unified Color Palette ---
+\definecolor{primaryblue}{RGB}{24, 75, 140}
+\definecolor{codebg}{RGB}{248, 249, 250}
+\definecolor{codeframe}{RGB}{210, 215, 222}
+\definecolor{codegreen}{RGB}{40, 130, 60}
+\definecolor{codeblue}{RGB}{20, 90, 180}
+\definecolor{codegray}{RGB}{120, 120, 120}
+
+% --- Hyperref Setup ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    citecolor=primaryblue,
+    urlcolor=primaryblue,
+    pdftitle={Sequences, Series, and Prefix Sums},
+    pdfauthor={Antigravity Engineering}
+}
+
+% --- Theorem & Definition Environments ---
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{example}{Example}[section]
+
+% --- Callout Box Environment ---
+\newenvironment{calloutbox}[1]{
+    \par\vspace{0.3cm}
+    \noindent\begin{tabular}{|p{0.96\textwidth}|}
+    \hline
+    \vspace{0.1cm}
+    \textbf{#1}\par\vspace{0.1cm}
+}{
+    \vspace{0.1cm}
+    \\ \hline
+    \end{tabular}
+    \vspace{0.3cm}\par
+}
+
+% --- Modern C++ Code Listing Setup ---
+\lstset{
+    language=C++,
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{orange!80!black},
+    numberstyle=\tiny\color{codegray},
+    numbers=left,
+    numbersep=8pt,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b
+}
+
+% --- Document Information ---
+\title{\vspace{-1.5cm}\textbf{\Huge Sequences, Series, and Prefix Sums}\\[0.3cm]
+\Large Arithmetic and Geometric Sums, Closed-Form Formulas, and Range Query Techniques}
+\author{Technical Monograph}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\begin{abstract}
+\noindent
+This document explains sequences, series, and prefix sums starting from absolute zero. It introduces concepts using simple examples and builds toward algorithmic problem solving. You will learn to identify patterns, write efficient range queries, and apply difference arrays. The final sections provide decision tables to help select the right approach for any given task.
+\end{abstract}
+
+\section{Foundations}
+A \textbf{sequence} is an ordered list of items, like an array in programming. The position of an item in the list is called its \textbf{index}. We often use a letter with a small index to talk about a specific term in the list, like $a_1$ for the first term, $a_2$ for the second term, and so on.
+
+A \textbf{series} is the total sum you get when you add the numbers in a sequence together. If the sequence is $2, 4, 6, 8$, the series is $2 + 4 + 6 + 8$. The result is 20. In programming, this is exactly what happens when you write a loop to keep a running total of the elements in an array. 
+
+The mathematical symbol for this loop is $\sum$ (Sigma). It defines a start point and an end point. Just as a \texttt{for (int i = 1; i <= n; ++i)} loop iterates and accumulates, $\sum_{i=1}^{n} a_i$ means starting index $i$ at 1 and adding every term $a_i$ until index $n$.
+
+Sometimes, adding things up one by one takes too long. If you want to add up a million numbers, a loop has to do a million steps. But if those numbers follow a predictable pattern, you might be able to use a formula to find the sum in a single step. We call a formula that gives you the answer instantly, without a loop, a \textbf{closed-form formula}.
+
+\section{Main Topics}
+
+\subsection{Arithmetic Progressions}
+An arithmetic progression is a sequence where the gap between consecutive numbers is always the exact same amount. For example, $3, 7, 11, 15$ is an arithmetic progression because you add $4$ to get the next number every single time.
+
+Let $a$ be the very first number in the sequence. Let $d$ be the difference you add each time (called the common difference). The sequence looks like this:
+$$a, a + d, a + 2d, a + 3d, \dots$$
+
+To find the $n$-th term of this sequence without computing all the ones before it, you start at $a$ and you take $n-1$ steps of size $d$. 
+$$a_n = a + (n-1)d$$
+
+How do you detect if a sequence of numbers is an arithmetic progression? You simply check the difference between every adjacent pair. If all differences are identical, it is an arithmetic progression.
+
+\textbf{Worked Example:} What is the 100th term of the sequence $5, 8, 11, 14, \dots$?
+\begin{enumerate}
+    \item Identify the first term: $a = 5$.
+    \item Find the common difference by subtracting adjacent terms: $d = 8 - 5 = 3$.
+    \item Apply the $n$-th term formula for $n = 100$:
+    $$ a_{100} = a + (n - 1)d = 5 + (100 - 1) \times 3 = 5 + 99 \times 3 = 5 + 297 = \mathbf{302}. $$
+\end{enumerate}
+
+\subsection{Arithmetic Series}
+An arithmetic series is the sum of an arithmetic progression. 
+
+The story goes that when the famous mathematician Carl Friedrich Gauss was a young boy in school, his teacher asked the class to add all the numbers from 1 to 100, hoping to keep them quiet for a long time. Gauss answered almost immediately: 5050. 
+
+Where does this come from? Gauss noticed a pattern. Instead of adding $1 + 2 + 3 + \dots$, he grouped the numbers from the ends towards the middle:
+$1 + 100 = 101$
+$2 + 99 = 101$
+$3 + 98 = 101$
+... and so on. Since there are 100 numbers, there are 50 pairs, and each pair sums to 101. So the total is $50 \times 101 = 5050$.
+
+From this, we get the formula for the sum of the first $n$ integers:
+$$ \sum_{i=1}^{n} i = \frac{n(n+1)}{2} $$
+
+This works for any arithmetic series, not just $1, 2, 3, \dots$. If you want to add $n$ terms, you take the average of the first term and the last term, and multiply by the number of terms.
+$$ \text{Sum} = \frac{n}{2} \times (\text{first} + \text{last}) $$
+
+If you do not know the last term, you can plug in the formula for the $n$-th term ($a + (n-1)d$) to get:
+$$ \text{Sum} = \frac{n}{2} (2a + (n-1)d) $$
+
+\textbf{Worked Example:} Find the sum of the first 50 odd numbers: $1 + 3 + 5 + \dots$
+\begin{enumerate}
+    \item We want to sum $n = 50$ terms.
+    \item The first term is $a = 1$. The common difference is $d = 2$.
+    \item Plug into the formula: $\text{Sum} = \frac{50}{2} (2(1) + (50-1)2)$.
+    \item Calculate the inside of the parentheses: $2 + 49 \times 2 = 2 + 98 = 100$.
+    \item Multiply by $n/2$: $25 \times 100 = 2500$.
+    \item The sum is 2500. (Fun fact: the sum of the first $n$ odd numbers is always $n^2$, and $50^2 = 2500$.)
+\end{enumerate}
+
+\begin{calloutbox}{The Gauss Pairing Trick}
+Whenever you have a sequence of items evenly spaced out, you can often pair the smallest with the largest, the second-smallest with the second-largest, and so on. They will all have the exact same sum.
+
+For example, summing 1 to 10 pairs 1 with 10, 2 with 9, 3 with 8, 4 with 7, and 5 with 6. Every pair sums to 11. For $n = 10$, there are $10 / 2 = 5$ pairs. The total is $5 \times 11 = 55$. This is why the arithmetic sum formula takes the average of the ends and multiplies by the count.
+\end{calloutbox}
+
+\subsection{Sum of Squares}
+What if you want to add up squares? $1^2 + 2^2 + 3^2 + \dots + n^2$. 
+
+The formula for the sum of the first $n$ squares is:
+$$ \sum_{i=1}^{n} i^2 = \frac{n(n+1)(2n+1)}{6} $$
+
+Where does this come from? The intuition involves thinking about building a pyramid of blocks.
+
+If you stack a 1x1 block on top of a 2x2 square, on top of a 3x3 square, you get a stepped pyramid. If you make six identical copies of this pyramid, you can interlock them to form a solid rectangular box of dimensions $n \times (n+1) \times (2n+1)$. Since the six pyramids perfectly make up the box, the volume of one pyramid (the sum of squares) is exactly one-sixth of the volume of the box.
+
+\textbf{Worked Example:} Find the sum $1^2 + 2^2 + 3^2 + 4^2$.
+\begin{enumerate}
+    \item Here, $n = 4$.
+    \item Plug into the formula: $\frac{4 \times (4+1) \times (2(4)+1)}{6}$.
+    \item Compute the factors: $4 \times 5 \times 9 = 180$.
+    \item Divide by 6: $180 / 6 = 30$.
+    \item Check manually: $1 + 4 + 9 + 16 = 30$. It matches.
+\end{enumerate}
+
+\subsection{Sum of Cubes}
+What if you want to add up cubes? $1^3 + 2^3 + 3^3 + \dots + n^3$.
+
+The formula for the sum of the first $n$ cubes is:
+$$ \sum_{i=1}^{n} i^3 = \left( \frac{n(n+1)}{2} \right)^2 $$
+
+There is a remarkable fact here: the sum of the cubes is exactly equal to the square of the sum of the integers. For example, $1^3 + 2^3 + 3^3 = 36$, and $(1 + 2 + 3)^2 = 6^2 = 36$.
+
+\textbf{Worked Example:} Find the sum $1^3 + 2^3 + 3^3 + 4^3 + 5^3$.
+\begin{enumerate}
+    \item Here, $n = 5$.
+    \item First, compute the sum of the first 5 integers: $\frac{5 \times 6}{2} = 15$.
+    \item Now square that result: $15^2 = 225$.
+    \item The sum is 225.
+\end{enumerate}
+
+\subsection{Geometric Series}
+A geometric progression is a sequence where each term is multiplied by a constant factor, called the ratio $r$, to get the next term. For example, $3, 6, 12, 24$ is a geometric progression with a ratio of 2.
+
+The sum of a geometric series is:
+$$ \sum_{i=0}^{n} a r^i = a + ar + ar^2 + \dots + ar^n = a \frac{r^{n+1} - 1}{r - 1} $$
+
+Where does this come from? If you call the sum $S$, and you multiply the entire sum by $r$, you get a new sum $rS$. Almost all the terms in $rS$ match the terms in $S$, just shifted over by one position. If you subtract $S$ from $rS$, all the middle terms cancel out, leaving only the very last term of $rS$ and the very first term of $S$. Solving for $S$ gives the formula.
+
+A very important special case is when $r = 2$. In computing, powers of two are everywhere. If $a=1$ and $r=2$, the sum is $1 + 2 + 4 + \dots + 2^n = 2^{n+1} - 1$. This is why the maximum value of an 8-bit unsigned integer is $2^8 - 1 = 255$.
+
+What happens if the ratio $r$ is between -1 and 1, meaning $|r| < 1$? The terms get smaller and smaller. If you keep adding terms forever (an infinite series), the term $r^{n+1}$ gets closer and closer to 0. The formula simplifies to exactly $\frac{a}{1 - r}$. This means an infinite sum can add up to a finite number!
+
+\begin{calloutbox}{What happens when $r = 1$?}
+If the common ratio is $r = 1$, every term in the sequence is identical ($a, a, a, \dots$). You are adding $a$ to itself $n + 1$ times (from index $0$ to $n$). The sum is simply:
+$$ \text{Sum} = a(n + 1) $$
+You cannot use the formula $\frac{r^{n+1}-1}{r-1}$ here because the denominator becomes $1 - 1 = 0$. In C++, always check \texttt{if (r == 1)} first before evaluating the division.
+\end{calloutbox}
+
+\textbf{Worked Example:} What is the sum of $3 + 6 + 12 + 24 + 48$?
+\begin{enumerate}
+    \item Identify the first term $a = 3$ and the ratio $r = 2$.
+    \item Identify the power of the last term. $48$ is $3 \times 16$, which is $3 \times 2^4$. So $n = 4$.
+    \item Plug into the formula: $3 \times \frac{2^{4+1} - 1}{2 - 1}$.
+    \item Calculate the numerator: $2^5 - 1 = 32 - 1 = 31$.
+    \item The denominator is $2 - 1 = 1$.
+    \item The total is $3 \times 31 = 93$.
+    \item Check manually: $3 + 6 + 12 + 24 + 48 = 9 + 12 + 24 + 48 = 21 + 24 + 48 = 45 + 48 = 93$.
+\end{enumerate}
+
+\section{Key Algorithmic Patterns}
+
+\subsection{Prefix Sums}
+Why the naive/brute-force approach fails: 
+Imagine you have an array of 100,000 numbers representing daily sales. The user asks you "What were the total sales between day 50,000 and day 60,000?" To answer, you loop over those 10,000 days and add them up. If the user asks 100,000 different questions like this, you will perform one billion addition operations. This is far too slow.
+
+What the efficient technique is:
+We use a technique called \textbf{Prefix Sums}. We create a new array where each position stores the running total of all items up to that point. The 5th element in the prefix array stores the sum of items 1 through 5. To find the sum of items between an arbitrary start point and end point, you just take the prefix sum up to the end point, and subtract the prefix sum just before the start point. This answers the query in a single step, no matter how wide the range is.
+
+\textbf{Worked Trace:}
+Let our original array be: $A = [3, 1, 4, 1, 5, 9]$
+We want to answer queries fast.
+\begin{enumerate}
+    \item First, we build the prefix sum array $P$. We add an extra 0 at the beginning to make the math easy for ranges that start at the very first element.
+    \item $P[0] = 0$
+    \item $P[1] = 0 + 3 = 3$
+    \item $P[2] = 3 + 1 = 4$
+    \item $P[3] = 4 + 4 = 8$
+    \item $P[4] = 8 + 1 = 9$
+    \item $P[5] = 9 + 5 = 14$
+    \item $P[6] = 14 + 9 = 23$
+    \item Prefix array $P = [0, 3, 4, 8, 9, 14, 23]$
+\end{enumerate}
+
+
+
+\begin{enumerate}
+    \setcounter{enumi}{9}
+    \item Now, what is the sum from index 2 to index 4 (values: 4, 1, 5)?
+    \item We want $A[2] + A[3] + A[4]$. The formula is $P[\text{end} + 1] - P[\text{start}]$.
+    \item Here, end is 4, start is 2. So we want $P[5] - P[2]$.
+    \item Look up $P[5]$ which is 14. Look up $P[2]$ which is 4.
+    \item $14 - 4 = 10$. Check manually: $4 + 1 + 5 = 10$. It works instantly!
+\end{enumerate}
+
+\begin{calloutbox}{Why is the Prefix Array Size $N + 1$?}
+By allocating $P$ with length $N + 1$ and defining $P[0] = 0$:
+\begin{itemize}
+    \item Entry $P[k]$ stores the sum of the first $k$ elements (indices $0$ through $k - 1$).
+    \item The sum of any range $[L, R]$ is always $P[R + 1] - P[L]$.
+    \item When $L = 0$ (starting at the first item), the formula evaluates to $P[R + 1] - P[0] = P[R + 1] - 0 = P[R + 1]$.
+\end{itemize}
+This eliminates any need for an \texttt{if (left == 0)} branch in your code, keeping the query a single unconditional subtraction.
+\end{calloutbox}
+
+\subsection{Telescoping Sums}
+Why the naive/brute-force approach fails:
+If a problem asks you to calculate the sum of many complex fractions or terms, doing the floating-point math directly could lose precision or take too long for a million terms.
+
+What the efficient technique is:
+A telescoping sum is a series where every term can be broken into two pieces, such that the second piece of one term perfectly cancels out the first piece of the next term. Like a collapsing pirate telescope, all the middle parts disappear, leaving only the very beginning and the very end.
+
+\textbf{Worked Trace:}
+Evaluate the sum $\frac{1}{1 \times 2} + \frac{1}{2 \times 3} + \frac{1}{3 \times 4} + \dots + \frac{1}{99 \times 100}$.
+\begin{enumerate}
+    \item Notice that $\frac{1}{n(n+1)}$ can be rewritten as $\frac{1}{n} - \frac{1}{n+1}$.
+    \item Rewrite the entire sum: $(\frac{1}{1} - \frac{1}{2}) + (\frac{1}{2} - \frac{1}{3}) + (\frac{1}{3} - \frac{1}{4}) + \dots + (\frac{1}{99} - \frac{1}{100})$.
+    \item Notice how the terms cancel: the $-\frac{1}{2}$ cancels with the $+\frac{1}{2}$, the $-\frac{1}{3}$ cancels with the $+\frac{1}{3}$, and so on.
+    \item Everything disappears except the first part of the first term ($1$) and the second part of the last term ($-\frac{1}{100}$).
+    \item The total is exactly $1 - \frac{1}{100} = \frac{99}{100}$.
+\end{enumerate}
+
+\begin{calloutbox}{The Unifying Idea: Prefix Sums and Telescoping Are Duals}
+Prefix sums and telescoping sums are two faces of the exact same principle:
+\begin{itemize}
+    \item In a \textbf{telescoping sum}, adding consecutive differences causes all internal terms to cancel:
+    $$ \sum_{i=L}^{R} (P[i+1] - P[i]) = P[R+1] - P[L] $$
+    \item In a \textbf{prefix sum query}, you evaluate the sum of elements by converting it into a difference of two prefix markers:
+    $$ \sum_{i=L}^{R} A[i] = P[R+1] - P[L] $$
+    \item In a \textbf{difference array}, you record only where values start and stop changing. Summing those changes recovers the modified array.
+\end{itemize}
+Whenever a problem involves ranges and sums, remember: differencing turns range operations into $O(1)$ boundary markers, and prefix summation turns them back into values.
+\end{calloutbox}
+
+\subsection{\texorpdfstring{Difference Arrays (Range Updates in $O(1)$)}{Difference Arrays (Range Updates in O(1))}}
+Why the naive approach fails:
+Suppose you have an array of size $N = 100{,}000$, initially all zeros. A process requests $Q = 100{,}000$ operations of the form: ``add $v$ to every element from index $L$ to index $R$''. If you run a loop from $L$ to $R$ for each update, each update takes up to $O(N)$ operations. In total, this requires $Q \times N = 10^{10}$ steps, causing Time Limit Exceeded (TLE).
+
+What the efficient technique is:
+Instead of modifying every number in the range, you mark only the two endpoints in a \textbf{difference array} $D$:
+\begin{enumerate}
+    \item Add $v$ at the starting index: $D[L] \mathrel{+}= v$. This indicates that starting at index $L$, all future elements increase by $v$.
+    \item Subtract $v$ just past the ending index: $D[R + 1] \mathrel{-}= v$. This cancels the $+v$ increase for all elements beyond $R$.
+\end{enumerate}
+Each update takes only two operations ($O(1)$ time). After finishing all $Q$ updates, you compute the prefix sum of $D$ in a single pass. That single pass propagates the changes and reconstructs the final values for all $N$ elements in $O(N)$ total time.
+
+\textbf{Worked Trace:}
+Let our initial array have length $N = 5$, with all elements $0$.
+We create a difference array $D$ of size $N + 1 = 6$ initialized to zero:
+$$ D = [0, 0, 0, 0, 0, 0] $$
+We receive two updates:
+\begin{enumerate}
+    \item Update 1: Add $+3$ to range $[1, 3]$:
+    \begin{itemize}
+        \item Add $+3$ at index 1: $D[1] \mathrel{+}= 3$.
+        \item Subtract $3$ at index $3 + 1 = 4$: $D[4] \mathrel{-}= 3$.
+        \item State of $D$: $[0, 3, 0, 0, -3, 0]$.
+    \end{itemize}
+    \item Update 2: Add $+2$ to range $[2, 4]$:
+    \begin{itemize}
+        \item Add $+2$ at index 2: $D[2] \mathrel{+}= 2$.
+        \item Subtract $2$ at index $4 + 1 = 5$: $D[5] \mathrel{-}= 2$.
+        \item State of $D$: $[0, 3, 2, 0, -3, -2]$.
+    \end{itemize}
+\end{enumerate}
+
+
+
+\begin{enumerate}
+    \setcounter{enumi}{2}
+    \item Reconstruction pass: compute prefix sums of $D$ for indices $0$ to $4$:
+    \begin{itemize}
+        \item $A[0] = D[0] = \mathbf{0}$
+        \item $A[1] = A[0] + D[1] = 0 + 3 = \mathbf{3}$
+        \item $A[2] = A[1] + D[2] = 3 + 2 = \mathbf{5}$
+        \item $A[3] = A[2] + D[3] = 5 + 0 = \mathbf{5}$
+        \item $A[4] = A[3] + D[4] = 5 + (-3) = \mathbf{2}$
+    \end{itemize}
+    \item Final reconstructed array: $A = [0, 3, 5, 5, 2]$.
+    \item Verification: Index 1 received $+3$. Index 2 received $+3 + 2 = 5$. Index 3 received $+3 + 2 = 5$. Index 4 received $+2$. The reconstruction matches perfectly in $O(N)$ operations.
+\end{enumerate}
+
+\section{Worked Examples}
+
+\begin{example}[The Staircase Problem]
+You have $N = 15$ blocks. Can you build a staircase where step 1 has 1 block, step 2 has 2 blocks, and so on?
+\begin{enumerate}
+    \item A staircase of height $k$ requires $1 + 2 + \dots + k$ blocks.
+    \item We know this is an arithmetic series with sum $k(k+1)/2$.
+    \item We need to solve $k(k+1)/2 = 15$.
+    \item Multiply by 2: $k(k+1) = 30$.
+    \item We need two consecutive integers that multiply to 30. We test $5 \times 6 = 30$.
+    \item So $k = 5$. You can build a complete staircase of height 5.
+\end{enumerate}
+\end{example}
+
+\begin{example}[2D Matrix Block Sum: Range Queries in a Grid]
+You have a grid of numbers and you frequently need to find the sum of all numbers in a specific rectangle within the grid. How do you answer queries in $O(1)$ time?
+\begin{enumerate}
+    \item Use a 2D prefix sum. A cell $(r, c)$ in the 2D prefix sum array stores the total sum of the rectangle from the top-left corner $(0,0)$ down to $(r-1, c-1)$.
+    \item To build it, you use the inclusion-exclusion principle: $P[r][c] = \text{Grid}[r-1][c-1] + P[r-1][c] + P[r][c-1] - P[r-1][c-1]$. You subtract the diagonal because you added that overlapping area twice.
+    \item To query the sum of a rectangle from $(r_1, c_1)$ to $(r_2, c_2)$, you take the big rectangle $P[r_2+1][c_2+1]$, subtract the rectangle above it $P[r_1][c_2+1]$, subtract the rectangle to its left $P[r_2+1][c_1]$, and add back the top-left piece you subtracted twice $P[r_1][c_1]$.
+\end{enumerate}
+
+
+
+\begin{enumerate}
+    \setcounter{enumi}{3}
+    \item This mathematically perfectly isolates region D.
+    \item Because evaluating the formula requires only 4 array lookups and arithmetic, any 2D rectangle query takes $O(1)$ time.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Sum of Multiples: Project Euler \#1]
+Find the sum of all multiples of 3 or 5 strictly below 1000.
+\begin{enumerate}
+    \item Summing multiples of 3 means $3 + 6 + 9 + \dots + 999 = 3 \times (1 + 2 + 3 + \dots + 333)$.
+    \item Summing multiples of 5 means $5 + 10 + 15 + \dots + 995 = 5 \times (1 + 2 + 3 + \dots + 199)$.
+    \item If we add these two sums, we double-count the numbers that are multiples of both 3 and 5 (multiples of 15). We must subtract the sum of multiples of 15, which is $15 \times (1 + 2 + \dots + 66)$.
+    \item We can use our arithmetic series formula $n(n+1)/2$ for each part:
+    \begin{itemize}
+        \item Multiples of 3: $3 \times \frac{333 \times 334}{2} = 3 \times 55611 = 166833$.
+        \item Multiples of 5: $5 \times \frac{199 \times 200}{2} = 5 \times 19900 = 99500$.
+        \item Multiples of 15: $15 \times \frac{66 \times 67}{2} = 15 \times 2211 = 33165$.
+    \end{itemize}
+    \item Final answer: $166833 + 99500 - 33165 = \mathbf{233168}$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Finding the Missing Number]
+Given an array containing $n$ distinct numbers taken from the range $[0, n]$, find the one number that is missing.
+\begin{enumerate}
+    \item Suppose the array is $[3, 0, 1]$. Here $n = 3$, so numbers should be from $0$ to $3$.
+    \item The expected sum of all numbers from $0$ to $n$ is given by Gauss's sum formula:
+    $$ S_{\text{expected}} = \frac{n(n+1)}{2} = \frac{3 \times 4}{2} = 6. $$
+    \item Compute the actual sum of the elements present in the array:
+    $$ S_{\text{actual}} = 3 + 0 + 1 = 4. $$
+    \item The missing number is:
+    $$ \text{Missing} = S_{\text{expected}} - S_{\text{actual}} = 6 - 4 = \mathbf{2}. $$
+    \item By using the sum formula, we solved the problem in $O(n)$ time and $O(1)$ extra space without sorting or allocating a hash set.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Static Range Sum Queries]
+Given an array of integers:
+$$ \text{nums} = [-2, 0, 3, -5, 2, -1] $$
+compute the sum of elements between indices $i$ and $j$ inclusive for multiple queries.
+\begin{enumerate}
+    \item Build prefix sum array $P$ of length $n + 1 = 7$, with $P[0] = 0$:
+    \begin{itemize}
+        \item $P[0] = 0$
+        \item $P[1] = 0 + (-2) = -2$
+        \item $P[2] = -2 + 0 = -2$
+        \item $P[3] = -2 + 3 = 1$
+        \item $P[4] = 1 + (-5) = -4$
+        \item $P[5] = -4 + 2 = -2$
+        \item $P[6] = -2 + (-1) = -3$
+    \end{itemize}
+    Prefix array: $P = [0, -2, -2, 1, -4, -2, -3]$.
+    \item Query 1: sum from index 0 to 2 $\implies P[3] - P[0] = 1 - 0 = \mathbf{1}$.
+    \item Query 2: sum from index 2 to 5 $\implies P[6] - P[2] = -3 - (-2) = \mathbf{-1}$.
+    \item Query 3: sum from index 0 to 5 $\implies P[6] - P[0] = -3 - 0 = \mathbf{-3}$.
+    \item Every query evaluates in $O(1)$ operations with zero loops.
+\end{enumerate}
+\end{example}
+
+\section{C++ Implementations}
+
+\subsection{Computing Sum Formulas Safely}
+Before showing the code, we must consider how large our numbers get. If $n$ is $10^9$, computing $n(n+1)/2$ means computing $10^9 \times 10^9$, which is $10^{18}$. A standard 32-bit integer overflows at about $2 \times 10^9$. Therefore, whenever computing these formulas in C++, we must use 64-bit integers (\texttt{std::int64\_t} or \texttt{long long}) to prevent overflow. Furthermore, division by 2 or 6 happens after multiplication, so the intermediate step can get very large.
+
+\begin{lstlisting}[caption={Closed-form Sum Formulas and C++23 Ranges}]
+#include <cstdint>
+#include <ranges>
+#include <algorithm>
+
+// 1. We take a 64-bit integer 'n'.
+// 2. We compute n * (n + 1) / 2 using 64-bit math to prevent overflow.
+// 3. We return the result.
+[[nodiscard]] constexpr std::int64_t sum_first_n(std::int64_t n) noexcept {
+    return n * (n + 1) / 2;
+}
+
+// 1. For contrast, here is the same sum computed in O(N) using C++23 ranges.
+// 2. We generate a lazy sequence from 1 to n using std::views::iota.
+// 3. We fold the sequence using std::ranges::fold_left with 0LL.
+[[nodiscard]] constexpr std::int64_t sum_first_n_loop(std::int64_t n) noexcept {
+    auto r = std::views::iota(1LL, n + 1);
+    return std::ranges::fold_left(r, 0LL, std::plus<>{});
+}
+
+// 1. We compute the sum of squares.
+// 2. We use 64-bit math. The numerator fits in 64 bits for n up to about 10^6.
+// 3. We divide by 6 at the very end.
+[[nodiscard]] constexpr std::int64_t sum_squares(std::int64_t n) noexcept {
+    return n * (n + 1) * (2 * n + 1) / 6;
+}
+
+// 1. Sum of cubes equals the square of the sum of integers.
+// 2. We compute sum_first_n(n) and then square it.
+[[nodiscard]] constexpr std::int64_t sum_cubes(std::int64_t n) noexcept {
+    std::int64_t s = sum_first_n(n);
+    return s * s;
+}
+
+// 1. Geometric sum: a * (r^(n+1) - 1) / (r - 1) for r != 1.
+// 2. Uses a simple loop to compute r^(n+1) since n is typically small.
+// 3. Returns a * n when r == 1 (all terms equal a).
+[[nodiscard]] constexpr std::int64_t geometric_sum(
+        std::int64_t a, std::int64_t r, std::int64_t n) noexcept {
+    if (r == 1) return a * (n + 1);
+    std::int64_t r_power = 1;
+    for (std::int64_t i = 0; i <= n; ++i) r_power *= r;
+    return a * (r_power - 1) / (r - 1);
+}
+\end{lstlisting}
+
+\subsection{What is a Prefix Sum?}
+A prefix sum array is the algorithmic equivalent of a running total. Imagine you are a cashier keeping a receipt tape. After each item, the tape shows the total so far. If a customer asks ``What was the subtotal for items 3 through 7?'', you do not need to re-scan those items. You just look at the running total after item 7 and subtract the running total after item 2. The difference is exactly the cost of items 3 through 7.
+
+In code, you build one array of running totals in $O(N)$ time, and from then on, every range sum query is answered in $O(1)$ --- just one subtraction.
+
+\subsection{1D Prefix Sum Array}
+A prefix sum array takes an input vector and produces a new vector of size $N+1$. We build it by keeping a running total. We provide a helper function to answer queries so the user does not have to remember the index math.
+
+\begin{lstlisting}[caption={1D Prefix Sum Data Structure}]
+#include <vector>
+#include <span>
+#include <cstdint>
+#include <stdexcept>
+
+class PrefixSum1D {
+private:
+    std::vector<std::int64_t> prefix;
+
+public:
+    // 1. Pre-condition: We receive a view over integers (std::span accepts std::vector, std::array, etc.).
+    // 2. We create a prefix array with one extra element initialized to 0.
+    // 3. We loop through the input, adding the current element to the running total.
+    // 4. Post-condition: The prefix array is ready for O(1) queries.
+    explicit PrefixSum1D(std::span<const int> data) {
+        prefix.resize(data.size() + 1, 0);
+        for (std::size_t i = 0; i < data.size(); ++i) {
+            prefix[i + 1] = prefix[i] + data[i];
+        }
+    }
+
+    // 1. Pre-condition: User requests sum from 'left' index to 'right' index (inclusive).
+    // 2. We use the formula P[right+1] - P[left] to get the sum instantly.
+    // 3. Post-condition: The sum is returned.
+    [[nodiscard]] std::int64_t query(std::size_t left, std::size_t right) const {
+        if (left > right || right >= prefix.size() - 1) {
+            throw std::out_of_range("Invalid range");
+        }
+        return prefix[right + 1] - prefix[left];
+    }
+};
+\end{lstlisting}
+
+\subsection{What is a 2D Prefix Sum?}
+A 2D prefix sum extends the running-total idea to a grid. In a matrix, cell $(r+1, c+1)$ in the prefix table stores the sum of all cells in the rectangular subgrid from the top-left $(0, 0)$ down to $(r, c)$.
+
+To compute any subgrid sum from row $r_1$ to $r_2$ and column $c_1$ to $c_2$, we take the entire rectangle from $(0,0)$ to $(r_2, c_2)$, subtract the rectangle above $r_1$, subtract the rectangle left of $c_1$, and add back the top-left corner that was subtracted twice (the inclusion-exclusion principle).
+
+\subsection{2D Prefix Sum Array}
+\begin{lstlisting}[caption={2D Prefix Sum Data Structure}]
+#include <vector>
+#include <cstdint>
+#include <stdexcept>
+
+class PrefixSum2D {
+private:
+    std::vector<std::vector<std::int64_t>> prefix;
+
+public:
+    // 1. Pre-condition: We receive a 2D grid of numbers.
+    // 2. We allocate (rows + 1) x (cols + 1) filled with zeros.
+    // 3. We fill prefix table using inclusion-exclusion.
+    // 4. Post-condition: Subgrid queries are ready for O(1) evaluation.
+    explicit PrefixSum2D(const std::vector<std::vector<int>>& grid) {
+        if (grid.empty() || grid[0].empty()) return;
+        const std::size_t rows = grid.size();
+        const std::size_t cols = grid[0].size();
+        prefix.assign(rows + 1, std::vector<std::int64_t>(cols + 1, 0));
+
+        for (std::size_t r = 0; r < rows; ++r) {
+            for (std::size_t c = 0; c < cols; ++c) {
+                prefix[r + 1][c + 1] = grid[r][c]
+                                     + prefix[r][c + 1]
+                                     + prefix[r + 1][c]
+                                     - prefix[r][c];
+            }
+        }
+    }
+
+    // 1. Query rectangle from (r1, c1) to (r2, c2) inclusive.
+    // 2. Uses inclusion-exclusion in O(1) time.
+    [[nodiscard]] std::int64_t query(std::size_t r1, std::size_t c1,
+                                     std::size_t r2, std::size_t c2) const {
+        if (prefix.empty() || r1 > r2 || c1 > c2 || r2 + 1 >= prefix.size() || c2 + 1 >= prefix[0].size()) {
+            throw std::out_of_range("Invalid 2D range");
+        }
+        return prefix[r2 + 1][c2 + 1]
+             - prefix[r1][c2 + 1]
+             - prefix[r2 + 1][c1]
+             + prefix[r1][c1];
+    }
+};
+\end{lstlisting}
+
+\subsection{What is a Difference Array?}
+A difference array allows you to apply bulk additions to any subsegment $[L, R]$ in $O(1)$ time without iterating over the segment. Instead of updating every number, you place two ``markers'': $+v$ at the start index $L$, and $-v$ at index $R+1$.
+
+When all updates are finished, running a single cumulative sum (a prefix scan) pushes each $+v$ forward across its range until the $-v$ cancels it out. This replaces $Q \times O(N)$ loops with $Q \times O(1)$ marker placements followed by a single $O(N)$ prefix pass.
+
+\subsection{Difference Array Implementation}
+\begin{lstlisting}[caption={Difference Array for O(1) Range Updates}]
+#include <vector>
+#include <cstdint>
+#include <stdexcept>
+
+class DifferenceArray {
+private:
+    std::vector<std::int64_t> diff;
+    std::size_t n;
+
+public:
+    // 1. Pre-condition: Initialize difference array for an array of size n.
+    // 2. Allocate n + 1 cells initialized to 0 to safely support R + 1 indexing.
+    // 3. Post-condition: Ready for O(1) range updates.
+    explicit DifferenceArray(std::size_t size) : diff(size + 1, 0), n(size) {}
+
+    // 1. Pre-condition: Add value 'val' to all elements in [left, right] inclusive.
+    // 2. Mark +val at left boundary, -val at right + 1 boundary.
+    // 3. Post-condition: Range updated in O(1) time.
+    void add_range(std::size_t left, std::size_t right, std::int64_t val) {
+        if (left > right || right >= n) {
+            throw std::out_of_range("Invalid range for update");
+        }
+        diff[left] += val;
+        diff[right + 1] -= val;
+    }
+
+    // 1. Pre-condition: All range updates have been applied.
+    // 2. Run a prefix sum pass over the difference array.
+    // 3. Post-condition: Returns the final reconstructed array of size n.
+    [[nodiscard]] std::vector<std::int64_t> reconstruct() const {
+        std::vector<std::int64_t> result(n, 0);
+        std::int64_t running = 0;
+        for (std::size_t i = 0; i < n; ++i) {
+            running += diff[i];
+            result[i] = running;
+        }
+        return result;
+    }
+};
+\end{lstlisting}
+
+\section{Problem Pattern Recognition}
+\subsection*{Step 1: What does the problem ask for?}
+\begin{itemize}
+   \item \textbf{``Find the total sum of this range''}: Points to Prefix Sums if the array is static.
+   \item \textbf{``Apply many interval additions, then query the final array''}: Points to Difference Arrays.
+   \item \textbf{``Sum numbers that follow a strict pattern (like multiples)''}: Points to Arithmetic Series formulas.
+   \item \textbf{``Sum powers of a number''}: Points to Geometric Series formulas.
+\end{itemize}
+
+\subsection*{Step 2: What is the key constraint?}
+\begin{itemize}
+   \item \textbf{Number of Queries:} If you need to sum a range once, a simple loop is fine. If you have $10^5$ queries, you absolutely must use Prefix Sums.
+   \item \textbf{Range Updates vs Point Queries:} If you must update intervals repeatedly in batch, use a Difference Array ($O(1)$ update, $O(N)$ rebuild).
+   \item \textbf{Value of $N$:} If you need the sum of $10^{12}$ items, you cannot afford a loop at all. You must find a closed-form formula. A computer does about $10^8$ operations per second.
+\end{itemize}
+
+\subsection*{Quick Reference Table}
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
+\hline
+\textbf{Keywords in the Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
+``sum of a subsegment'', ``total cost between days X and Y'' & Add a contiguous slice of an array many times. & Prefix Sums \\ \hline
+``add $v$ to range $[L, R]$'', ``interval additions'', ``batch range updates'' & Apply batch interval additions without loops. & Difference Array \\ \hline
+``sum of all multiples'', ``sum of an arithmetic progression'' & The elements grow by a constant addition. & Arithmetic Sum Formula \\ \hline
+``double each day'', ``powers of 2'', ``sum of geometric progression'' & The elements grow by a constant multiplication. & Geometric Sum Formula \\ \hline
+``sum of terms like 1/(x(x+1))'', ``fraction series'' & The terms might cancel each other out. & Telescoping Sum \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsection*{Step 3: Is the input too large for a direct solution?}
+\begin{itemize}
+   \item If $N \le 10^7$, a direct loop in C++ takes less than a second.
+   \item If $N > 10^8$, a loop will Time Out on most coding platforms. You must use math formulas.
+   \item If array sizes are $> 10^6$ and queries are $> 10^5$, Prefix Sums are required.
+\end{itemize}
+
+\section{Summary and Complexity Reference}
+
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\textbf{Task / Operation} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
+Direct Loop Sum & $O(N)$ & $O(1)$ & One-off sums where $N$ is small enough to run quickly. \\ \hline
+Arithmetic Sum Formula & $O(1)$ & $O(1)$ & Summing sequences that grow by constant additions. \\ \hline
+Geometric Sum Formula & $O(1)$ & $O(1)$ & Summing sequences that grow by constant multiplications. \\ \hline
+Build 1D Prefix Sum & $O(N)$ & $O(N)$ & Once at the start of a program to prepare for 1D range queries. \\ \hline
+1D Prefix Sum Query & $O(1)$ & $O(1)$ & Whenever you need to sum a subarray in $O(1)$ time. \\ \hline
+Build 2D Prefix Sum & $O(R \times C)$ & $O(R \times C)$ & Once at the start to prepare a grid for submatrix queries. \\ \hline
+2D Prefix Sum Query & $O(1)$ & $O(1)$ & Whenever you need to sum a rectangular submatrix in $O(1)$ time. \\ \hline
+Difference Array Range Update & $O(1)$ & $O(1)$ & Apply $+v$ to range $[L, R]$ during batch updates. \\ \hline
+Difference Array Reconstruct & $O(N)$ & $O(N)$ & Single prefix pass to recover final modified array. \\ \hline
+\end{tabularx}
+
+\section{Glossary of Terms and Symbols}
+
+\subsection{Core Concepts}
+\begin{itemize}
+    \item \textbf{Sequence:} An ordered list of numbers. Like an array.
+    \item \textbf{Series:} The total value you get when you add the numbers of a sequence together.
+    \item \textbf{Arithmetic Progression:} A sequence where the gap between consecutive numbers is constant (for example, $+3$ each time).
+    \item \textbf{Geometric Progression:} A sequence where you multiply by a constant to get the next number (for example, $\times 2$ each time).
+    \item \textbf{Prefix Sum:} An array where each position stores the running total of all elements up to that point.
+    \item \textbf{Difference Array:} An auxiliary array that records boundary changes ($+v$ at start, $-v$ after end) so that a prefix sum recovers interval modifications in $O(N)$ total time.
+    \item \textbf{Telescoping Sum:} A sum where adjacent parts of the terms cancel each other out, leaving only the ends.
+    \item \textbf{Closed-form Formula:} A mathematical expression that gives the answer directly without needing a loop.
+    \item \textbf{Common Difference:} The amount you add in an arithmetic progression.
+\end{itemize}
+
+\subsection{Mathematical Symbols}
+\begin{itemize}
+    \item $a$: Usually the first term in a sequence.
+    \item $d$: The common difference in an arithmetic sequence.
+    \item $r$: The constant ratio in a geometric sequence.
+    \item $n$: The number of terms we are dealing with.
+    \item $a_n$: The $n$-th specific item in a sequence.
+    \item $S_n$: The sum of the first $n$ terms of a sequence ($a_1 + a_2 + \dots + a_n$).
+    \item $P[i]$: The $i$-th entry in a prefix sum array, storing the cumulative sum up to index $i-1$.
+    \item $D[i]$: An entry in a difference array storing the net change starting at index $i$.
+    \item $\sum$ (Sigma): The mathematical symbol for a loop that adds things up. $\sum_{i=1}^{n}$ means "start $i$ at 1, go up to $n$, and add them all together".
+    \item $|r|$ (Absolute Value): The distance of a number from zero, ignoring its sign. $|-0.5| = 0.5$.
+\end{itemize}
+
+\section{Further Reading}
+
+\subsection{Free Online Resources (Start Here)}
+\begin{itemize}
+    \item \textbf{cp-algorithms.com}: Excellent resource for competitive programming techniques, including prefix sums and 2D prefix sums.
+    \item \textbf{Project Euler (projecteuler.net)}: Problem 1 (Multiples of 3 and 5) and Problem 6 (Sum square difference) are perfect practice for these formulas.
+    \item \textbf{Art of Problem Solving (AoPS)} (\texttt{artofproblemsolving.com/wiki}) --- Free wiki with beginner-friendly explanations of sequences and series, written by the competitive mathematics community.
+\end{itemize}
+
+\subsection{Books (When You Are Ready to Go Deeper)}
+\begin{itemize}
+    \item \textbf{Concrete Mathematics by Ronald Graham, Donald Knuth, and Oren Patashnik}: A fantastic but challenging book covering discrete math, sums, and sequences. Good for intermediate to advanced readers.
+    \item \textbf{Competitive Programming 4 by Steven Halim}: Covers algorithmic uses of sequences and sums, including complex range queries.
+\end{itemize}
+
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Date} & \textbf{Change} \\ \hline
+2026-09-27 & Document created. \\ \hline
+2026-10-03 & Audited and refactored against skill guidelines; added intuition diagrams, worked steps, C++23 ranges, and corrected table layouts. \\ \hline
+2026-10-03 & Fixed empty grid segfault in 2D Prefix Sum query method. \\ \hline
+\end{tabularx}
+
+\end{document}
