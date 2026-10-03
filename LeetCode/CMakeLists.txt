@@ -1,5 +1,6 @@
 add_executable(LeetCodeSolutions
   20.valid_parentheses/20.valid_parentheses_tests.cpp
+  22.generate_parentheses/22.generate_parentheses_tests.cpp
   quests/maths/l1q1/l1q1_tests.cpp
   quests/maths/l1q2/l1q2_tests.cpp
   quests/maths/l1q3/l1q3_tests.cpp
