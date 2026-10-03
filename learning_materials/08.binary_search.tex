@@ -1,0 +1,983 @@
+﻿\documentclass[11pt,a4paper]{article}
+
+% --- Core LaTeX Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{graphicx}
+
+% --- Unified Color Palette ---
+\definecolor{primaryblue}{RGB}{24, 75, 140}
+\definecolor{codebg}{RGB}{248, 249, 250}
+\definecolor{codeframe}{RGB}{210, 215, 222}
+\definecolor{codegreen}{RGB}{40, 130, 60}
+\definecolor{codeblue}{RGB}{20, 90, 180}
+\definecolor{codegray}{RGB}{120, 120, 120}
+
+% --- Hyperref Setup ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    citecolor=primaryblue,
+    urlcolor=primaryblue,
+    pdftitle={Binary Search},
+    pdfauthor={Antigravity Engineering}
+}
+
+% --- Theorem & Definition Environments ---
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{example}{Example}[section]
+
+% --- Callout Box Environment ---
+\newenvironment{calloutbox}[1]{
+    \par\vspace{0.3cm}
+    \noindent\begin{tabular}{|p{0.96\textwidth}|}
+    \hline
+    \vspace{0.1cm}
+    \textbf{#1}\par\vspace{0.1cm}
+}{
+    \vspace{0.1cm}
+    \\ \hline
+    \end{tabular}
+    \vspace{0.3cm}\par
+}
+
+% --- Modern C++ Code Listing Setup ---
+\lstset{
+    language=C++,
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{orange!80!black},
+    numberstyle=\tiny\color{codegray},
+    numbers=left,
+    numbersep=8pt,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b
+}
+
+% --- Title Block ---
+\title{\vspace{-1.5cm}\textbf{\Huge Binary Search}\\[0.3cm]
+\Large Interval Halving, Predicate Monotonicity, and Searching on the Answer Space}
+\author{Technical Monograph}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+Binary search is the algorithm of systematic interval halving. Whenever a candidate space exhibits monotonicity---meaning a condition holds for all values past a certain transition point---a single test eliminates half of the remaining possibilities. This monograph guides you from the elementary high-low guessing game to boundary lookups, rotated array searches, and binary search on abstract answer spaces. You will learn the exact invariant rules that eliminate off-by-one errors and infinite loops, how to design monotonic feasibility predicates, and how to recognize when optimization problems can be reframed as decision problems.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Foundations and Intuition}
+% ============================================================================
+
+\subsection{The High-Low Guessing Game}
+
+Imagine playing a parlor game where someone picks a secret integer between $1$ and $100$. With each guess you make, you are told only whether the secret number is higher, lower, or equal to your guess.
+
+If you guess linearly ($1, 2, 3, 4, \dots$), you might need up to $100$ questions. But if you begin by guessing the exact midpoint, $50$:
+\begin{itemize}
+    \item If the answer is ``higher'', the secret number must be in the range $[51, 100]$. You have eliminated $50$ numbers in a single question.
+    \item If the answer is ``lower'', the secret number must be in the range $[1, 49]$. Again, $51$ numbers are eliminated immediately.
+\end{itemize}
+
+By repeatedly testing the midpoint of whatever range remains, the size of the search interval decreases by half with every question:
+\begin{equation*}
+    100 \longrightarrow 50 \longrightarrow 25 \longrightarrow 12 \longrightarrow 6 \longrightarrow 3 \longrightarrow 1
+\end{equation*}
+You will always find the secret number in at most $\lceil \log_2(100) \rceil = 7$ guesses. This principle of systematic elimination is the engine of binary search.
+
+\subsection{Logarithmic Growth: The Power of \texorpdfstring{$O(\log N)$}{O(log N)}}
+
+To appreciate the efficiency of logarithmic time, consider how the operation count scales as the input size expands to planetary proportions:
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Search Space ($N$)} & \textbf{Linear Scan ($O(N)$)} & \textbf{Binary Search ($\lceil \log_2 N \rceil$)} \\ \hline
+$10^3$ (One thousand) & $1{,}000$ operations & $\approx 10$ operations \\ \hline
+$10^6$ (One million) & $1{,}000{,}000$ operations & $\approx 20$ operations \\ \hline
+$10^9$ (One billion) & $1{,}000{,}000{,}000$ ops (Times out!) & $\approx 30$ operations (Instantaneous) \\ \hline
+$10^{18}$ (Quintillion) & Millions of years of compute & $\approx 60$ operations (Microseconds) \\ \hline
+\end{tabularx}
+\vspace{0.2cm}
+
+A linear scan across a billion items exceeds the standard one-second execution budget ($\approx 10^8$ operations per second). In contrast, binary search resolves the answer across a quintillion candidates in just 60 comparisons.
+
+\subsection{The Arithmetic Midpoint and Integer Overflow}
+
+The mathematical midpoint between two integers $L$ and $R$ is $\frac{L + R}{2}$. In software, writing this directly as \texttt{(L + R) / 2} contains a notorious defect that lay unnoticed in standard libraries for decades.
+
+When $L$ and $R$ are positive 32-bit signed integers, their sum $L + R$ can exceed the maximum representable 32-bit integer:
+\begin{equation*}
+    2^{31} - 1 = 2{,}147{,}483{,}647
+\end{equation*}
+If $L = 1{,}500{,}000{,}000$ and $R = 1{,}800{,}000{,}000$, their mathematical sum is $3{,}300{,}000{,}000$. In signed 32-bit arithmetic, this wraps around to a negative value ($-994{,}967{,}296$), producing an illegal negative array index.
+
+\begin{calloutbox}{Safe Midpoint Computation}
+To compute the midpoint without any danger of integer overflow, use the algebraically equivalent difference formula:
+\begin{equation*}
+    \text{mid} = L + \frac{R - L}{2}
+\end{equation*}
+Because $R \ge L$, the difference $R - L$ is always non-negative and fits safely within the integer type. In modern C++20 and later, the standard library provides \texttt{std::midpoint(L, R)}, which handles signed, unsigned, and pointer types safely.
+\end{calloutbox}
+
+\subsection{Search Invariants: Closed vs. Half-Open Intervals}
+
+Every binary search implementation maintains a \textbf{loop invariant}---a logical condition regarding where the target value is guaranteed to lie if it exists. There are two standard conventions:
+
+\begin{enumerate}
+    \item \textbf{The Closed Interval $[L, R]$}:
+    \begin{itemize}
+        \item Both endpoints $L$ and $R$ are valid candidate indices.
+        \item Loop condition: \texttt{while (L <= R)}.
+        \item When target is strictly smaller than midpoint: $R = \text{mid} - 1$.
+        \item When target is strictly larger than midpoint: $L = \text{mid} + 1$.
+        \item Loop terminates when the interval is empty ($L > R$).
+    \end{itemize}
+    
+    \item \textbf{The Half-Open Interval $[L, R)$}:
+    \begin{itemize}
+        \item $L$ is inclusive; $R$ is exclusive (one past the last valid candidate).
+        \item Loop condition: \texttt{while (L < R)}.
+        \item When condition requires narrowing the right side: $R = \text{mid}$.
+        \item When condition requires narrowing the left side: $L = \text{mid} + 1$.
+        \item Loop terminates when $L == R$. This style aligns naturally with C++ standard iterators (\texttt{begin()}, \texttt{end()}).
+    \end{itemize}
+\end{enumerate}
+
+Choosing one convention and adhering to its pointer adjustments prevents the two most common implementation bugs: infinite loops (where $L$ and $R$ stop moving) and off-by-one boundary misses.
+
+% ============================================================================
+\section{Main Topics and Techniques}
+% ============================================================================
+
+\subsection{Classic Value Search in Sorted Arrays}
+
+The simplest formulation of binary search tests whether a specific target value exists in a strictly sorted array of distinct elements.
+
+\noindent \textbf{Worked Step-by-Step Example}:
+Consider the sorted array of $N = 10$ integers:
+\begin{equation*}
+    A = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91], \quad \text{Target } = 23
+\end{equation*}
+
+Total comparisons required: $3$. A linear scan from the beginning would have required $6$ comparisons.
+
+\subsection{Boundary Lookups: Lower Bound and Upper Bound}
+
+Real-world datasets frequently contain duplicate values. When an array has repeated elements, asking ``find the target'' is ambiguous. We instead formulate two precise boundary queries:
+
+\begin{definition}[Lower Bound]
+The \textbf{lower bound} of a value $X$ in a sorted range is the first index $i$ such that $A[i] \ge X$. If all elements are strictly smaller than $X$, it returns the range length $N$.
+\end{definition}
+
+\begin{definition}[Upper Bound]
+The \textbf{upper bound} of a value $X$ in a sorted range is the first index $i$ such that $A[i] > X$. If no element is strictly greater than $X$, it returns $N$.
+\end{definition}
+
+\noindent \textbf{Worked Step-by-Step Example}:
+Let $A = [1, 2, 4, 4, 4, 6, 7]$ with target $X = 4$.
+
+\begin{calloutbox}{The Frequency Counting Identity}
+Using lower and upper bounds, you can count the exact number of occurrences of any target value in a sorted array in $O(\log N)$ time without traversing elements:
+\begin{equation*}
+    \text{count}(X) = \text{upper\_bound}(X) - \text{lower\_bound}(X)
+\end{equation*}
+For $X = 4$ in the example above: $\text{count}(4) = 5 - 2 = 3$.
+\end{calloutbox}
+
+\subsection{Predicate Monotonicity: The True Foundation}
+
+The most transformative insight regarding binary search is that \textbf{an array does not need to be sorted}. Binary search requires only one mathematical property: \textbf{predicate monotonicity}.
+
+\begin{definition}[Monotonic Predicate]
+A boolean function $P(x) \to \{\text{false}, \text{true}\}$ defined on a domain is monotonic if whenever $P(x_1) = \text{true}$ for some $x_1$, then $P(x_2) = \text{true}$ for all $x_2 > x_1$.
+\end{definition}
+
+Such a domain partitions neatly into two contiguous segments:
+\begin{equation*}
+    [\text{false}, \text{false}, \text{false}, \dots, \text{false}, \mathbf{\text{true}}, \text{true}, \dots, \text{true}]
+\end{equation*}
+
+The goal of binary search is to find the exact boundary: the first $x$ for which $P(x)$ evaluates to $\text{true}$ (or the last $x$ for which $P(x)$ evaluates to $\text{false}$).
+
+Whenever you can devise a verification function $P(x)$ that is monotonic and runs in $O(C)$ time, you can locate the transition point in $O(C \cdot \log(\text{domain size}))$ time.
+
+\subsection{Binary Search on the Answer Space}
+
+Many optimization problems ask:
+\begin{quote}
+``What is the \textbf{minimum} capacity such that a workload can be completed in $K$ days?''\\
+``What is the \textbf{maximum} speed that allows a vehicle to reach its destination safely?''
+\end{quote}
+
+A naive algorithm attempts to test every answer $x = 1, 2, 3, \dots$ until it succeeds. But notice the monotonic property:
+\begin{itemize}
+    \item If a ship of capacity $C = 15$ can transport all cargo within $K$ days, then any ship of capacity $C \ge 15$ can also succeed.
+    \item If capacity $C = 10$ fails, then any capacity $C \le 10$ is guaranteed to fail.
+\end{itemize}
+
+This transforms an optimization problem into a series of decision queries:
+\begin{equation*}
+    \text{Optimize}(x) \iff \text{Find the boundary of } P(x)
+\end{equation*}
+
+\noindent \textbf{Worked Step-by-Step Example (Capacity Allocation)}:
+Suppose $N = 5$ packages have weights $[1, 2, 3, 4, 5]$ and must be shipped across $D = 3$ days. Packages must be shipped in the given order. What is the minimum ship capacity required?
+
+\begin{enumerate}
+    \item \textbf{Identify Search Bounds}:
+    \begin{itemize}
+        \item The minimum conceivable capacity is the weight of the heaviest single package: $L = \max(A) = 5$ (otherwise that package could never be loaded).
+        \item The maximum conceivable capacity is the sum of all packages: $R = \sum A = 1 + 2 + 3 + 4 + 5 = 15$ (everything shipped in 1 day).
+    \end{itemize}
+    
+    \item \textbf{Formulate Feasibility Predicate $P(C)$}:
+    Given capacity $C$, greedily pack as many consecutive packages into the current day as possible without exceeding $C$. If the total days needed $\le 3$, return \texttt{true}; otherwise \texttt{false}.
+    
+    \item \textbf{Binary Search Trace on Range $[5, 15]$}:
+    \begin{itemize}
+        \item Step 1: $L = 5, R = 15 \implies \text{mid} = 10$.
+        Pack with capacity 10: Day 1: $[1, 2, 3, 4]$ (sum 10); Day 2: $[5]$ (sum 5). Total days = 2 $\le 3$. Success! $P(10) = \text{true}$. Record candidate 10, search left: $R = 9$.
+        
+        \item Step 2: $L = 5, R = 9 \implies \text{mid} = 7$.
+        Pack with capacity 7: Day 1: $[1, 2, 3]$ (sum 6); Day 2: $[4]$ (sum 4); Day 3: $[5]$ (sum 5). Total days = 3 $\le 3$. Success! $P(7) = \text{true}$. Record candidate 7, search left: $R = 6$.
+        
+        \item Step 3: $L = 5, R = 6 \implies \text{mid} = 5$.
+        Pack with capacity 5: Day 1: $[1, 2]$ (sum 3); Day 2: $[3]$ (sum 3); Day 3: $[4]$ (sum 4); Day 4: $[5]$ (sum 5). Total days = 4 $> 3$. Failure! $P(5) = \text{false}$. Search right: $L = 6$.
+        
+        \item Step 4: $L = 6, R = 6 \implies \text{mid} = 6$.
+        Pack with capacity 6: Day 1: $[1, 2, 3]$ (sum 6); Day 2: $[4]$ (sum 4); Day 3: $[5]$ (sum 5). Total days = 3 $\le 3$. Success! $P(6) = \text{true}$. Record candidate 6, search left: $R = 5$.
+    \end{itemize}
+    \item Loop terminates ($L = 6 > R = 5$). The minimum capacity is $\mathbf{6}$.
+\end{enumerate}
+
+\subsection{Search in Rotated Sorted Arrays}
+
+A sorted array can be cyclically shifted by an offset. For instance, rotating the sorted sequence $[0, 1, 2, 4, 5, 6, 7]$ by $4$ positions produces $[4, 5, 6, 7, 0, 1, 2]$.
+
+Although the complete array is no longer sorted, it retains a powerful invariant:
+\begin{calloutbox}{The Rotated Sorted Invariant}
+For any chosen midpoint, dividing the array into two halves ($[L, \text{mid}]$ and $[\text{mid}, R]$) guarantees that \textbf{at least one of the two halves is strictly sorted}.
+\end{calloutbox}
+
+We test which half is sorted by comparing $A[L]$ with $A[\text{mid}]$:
+\begin{itemize}
+    \item If $A[L] \le A[\text{mid}]$, the left half is cleanly sorted. We can determine if the target lies within the left half simply by checking $A[L] \le \text{target} < A[\text{mid}]$.
+    \item Otherwise, the right half is cleanly sorted. We check if the target lies within the right half: $A[\text{mid}] < \text{target} \le A[R]$.
+\end{itemize}
+In either case, one half is preserved and the other discarded, maintaining $O(\log N)$ time.
+
+\noindent \textbf{Worked Step-by-Step Example}:
+Search for Target $0$ in $A = [4, 5, 6, 7, 0, 1, 2]$.
+
+\subsection{Finding Peak Elements via Slope Analysis}
+
+An array element is a \textbf{peak element} if it is strictly greater than its immediate neighbors. Given an array where adjacent elements are never equal, we can locate a peak in $O(\log N)$ time without inspecting all elements.
+
+The decision is governed by local slope:
+\begin{itemize}
+    \item If $A[\text{mid}] < A[\text{mid} + 1]$, the sequence is rising to the right. A peak is guaranteed to exist somewhere to the right of $\text{mid}$ (at least at the maximum of that ascending sequence). Move right: $L = \text{mid} + 1$.
+    \item If $A[\text{mid}] > A[\text{mid} + 1]$, the sequence is falling. A peak exists at $\text{mid}$ or to its left. Move left: $R = \text{mid}$.
+\end{itemize}
+
+\noindent \textbf{Worked Step-by-Step Example}:
+Find a peak in $A = [1, 2, 1, 3, 5, 6, 4]$.
+
+\subsection{Continuous (Floating-Point) Binary Search}
+
+Binary search applies equally to continuous mathematical functions. When finding a root $x$ such that $f(x) = 0$ for a strictly increasing continuous function, the search space is an interval of real numbers $[L, R]$.
+
+Instead of integer increments, two termination strategies are used:
+\begin{enumerate}
+    \item \textbf{Epsilon Threshold}: Loop while $R - L > \epsilon$ (for example, $\epsilon = 10^{-7}$).
+    \item \textbf{Fixed Iteration Count}: Execute a fixed loop of $60$ to $100$ iterations. Because $\frac{R - L}{2^{100}} \approx 0$, 100 iterations achieves precision far surpassing standard 64-bit IEEE 754 double precision, eliminating floating-point rounding loop stalls entirely.
+\end{enumerate}
+
+\noindent \textbf{Worked Step-by-Step Example}:
+Compute $\sqrt{2}$ by finding the positive root of $f(x) = x^2 - 2 = 0$ on $[1.0, 2.0]$.
+
+% ============================================================================
+\section{Key Algorithmic Patterns}
+% ============================================================================
+
+\subsection{Why Naive Approaches Fail}
+
+In algorithmic problem solving, binary search is the primary antidote to linear scan timeouts. Beginners often stumble into performance bottlenecks by overlooking the underlying monotonicity:
+
+\begin{enumerate}
+    \item \textbf{Linear Answer Incrementing}:
+    When asked to find the minimum capacity, speed, or divisor, a naive program tests $x = 1, 2, 3, \dots$ sequentially. If the answer space reaches $10^9$ and verification takes $O(N)$ with $N = 10^5$, linear scanning requires $10^9 \times 10^5 = 10^{14}$ operations, causing an immediate Time Limit Exceeded (TLE) error. Binary search evaluates at most $\lceil \log_2(10^9) \rceil \approx 30$ candidates, executing only $30 \times 10^5 = 3 \times 10^6$ operations (under 5 milliseconds).
+    
+    \item \textbf{Brute-Force Pair Search}:
+    To find if two elements sum to a target in a sorted array, checking all pairs takes $O(N^2)$ time. For each element $A[i]$, binary searching for $\text{target} - A[i]$ reduces the complexity to $O(N \log N)$.
+    
+    \item \textbf{Floating-Point Rounding Loops}:
+    When performing continuous binary search, terminating with \texttt{while (left < right)} on floating-point numbers causes infinite loops because finite-precision IEEE 754 arithmetic cannot distinguish between numbers that differ by less than machine epsilon.
+\end{enumerate}
+
+\subsection{The Core Efficient Pattern}
+
+Every binary search on the answer follows a universal four-step structural pattern:
+
+\begin{enumerate}
+    \item \textbf{Identify Monotonicity}: Prove that if candidate $x$ is feasible, then all $x' > x$ (or all $x' < x$) are also feasible.
+    \item \textbf{Bracket the Search Domain $[L, R]$}: Establish a guaranteed lower bound $L$ (a value known to be too small, or the theoretical minimum) and an upper bound $R$ (a value known to be sufficient, or the theoretical maximum).
+    \item \textbf{Implement the Feasibility Predicate \texttt{isFeasible(mid)}}: Design a greedy or simulation check that verifies whether candidate $\text{mid}$ satisfies the problem constraints, usually running in $O(N)$ time.
+    \item \textbf{Narrow the Interval}: If $\text{mid}$ is feasible, record it as a potential solution and shrink the interval toward tighter candidates; otherwise, discard the infeasible half.
+\end{enumerate}
+
+\subsection{Worked Trace: Locating the Minimal Feasible Rate}
+
+\noindent \textbf{Problem}: A machine processes $N = 4$ batches of data with sizes $[3, 6, 7, 11]$. Total processing time must not exceed $H = 8$ hours. A processing speed of $K$ units per hour processes a batch of size $S$ in $\lceil S / K \rceil$ hours. Find the minimum integer speed $K$.
+
+\begin{calloutbox}{Ceiling Division Without Floating-Point Types}
+When computing $\lceil A / B \rceil$ for positive integers $A$ and $B$, never use \texttt{std::ceil(static\_cast<double>(A) / B)}. Floating-point conversion introduces precision loss for large 64-bit integers. Instead, use the exact integer identity:
+\begin{equation*}
+    \left\lceil \frac{A}{B} \right\rceil = \frac{A + B - 1}{B}
+\end{equation*}
+\end{calloutbox}
+
+% ============================================================================
+\section{Worked Examples}
+% ============================================================================
+
+\begin{example}[Counting Target Frequencies in a Range with Duplicates]
+\textbf{Problem Statement}: Given a sorted array $A = [1, 3, 5, 7, 7, 7, 9, 11]$ of length $8$, determine how many times target $X = 7$ appears using $O(\log N)$ boundary searches.
+
+\begin{enumerate}
+    \item \textbf{Strategy}: Find the first index where $A[i] \ge 7$ (\texttt{lower\_bound}) and the first index where $A[i] > 7$ (\texttt{upper\_bound}). The difference between these two indices equals the count.
+    
+    \item \textbf{Compute Lower Bound for 7}:
+    \begin{itemize}
+        \item $L = 0, R = 7 \implies \text{mid} = 3$. $A[3] = 7 \ge 7$. Set $R = 2$, candidate $= 3$.
+        \item $L = 0, R = 2 \implies \text{mid} = 1$. $A[1] = 3 < 7$. Set $L = 2$.
+        \item $L = 2, R = 2 \implies \text{mid} = 2$. $A[2] = 5 < 7$. Set $L = 3$.
+        \item $L = 3 > R = 2$. Loop ends. First index with value $\ge 7$ is $\mathbf{3}$.
+    \end{itemize}
+    
+    \item \textbf{Compute Upper Bound for 7}:
+    \begin{itemize}
+        \item $L = 0, R = 7 \implies \text{mid} = 3$. $A[3] = 7 \ngtr 7$. Set $L = 4$.
+        \item $L = 4, R = 7 \implies \text{mid} = 5$. $A[5] = 7 \ngtr 7$. Set $L = 6$.
+        \item $L = 6, R = 7 \implies \text{mid} = 6$. $A[6] = 9 > 7$. Set $R = 5$, candidate $= 6$.
+        \item $L = 6 > R = 5$. Loop ends. First index with value $> 7$ is $\mathbf{6}$.
+    \end{itemize}
+    
+    \item \textbf{Calculate Frequency}:
+    \begin{equation*}
+        \text{Frequency} = \text{upper\_bound} - \text{lower\_bound} = 6 - 3 = \mathbf{3}
+    \end{equation*}
+    Element $7$ appears exactly $3$ times.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Minimizing the Maximum Workload (Painter's Partition)]
+\textbf{Problem Statement}: We have $N = 4$ boards of lengths $[12, 34, 67, 90]$. We must paint all boards using $K = 2$ painters. A painter can only paint contiguous boards, and painting takes $1$ unit of time per unit of board length. Find the minimum possible maximum workload assigned to any single painter.
+
+\begin{enumerate}
+    \item \textbf{Establish Answer Bounds}:
+    \begin{itemize}
+        \item Minimum possible maximum: $L = \max([12, 34, 67, 90]) = 90$.
+        \item Maximum possible maximum: $R = \sum [12, 34, 67, 90] = 203$.
+    \end{itemize}
+    
+    \item \textbf{Feasibility Predicate $P(W)$}:
+    Can we partition the array into at most $K = 2$ contiguous subarrays such that each subarray sum is $\le W$?
+    
+    \item \textbf{Trace on Search Domain $[90, 203]$}:
+    \begin{itemize}
+        \item Step 1: $L = 90, R = 203 \implies \text{mid} = 146$.
+        Greedy simulation with limit 146:
+        Painter 1: $12 + 34 + 67 = 113$ (adding 90 would give $203 > 146$).
+        Painter 2: $90$.
+        Total painters needed = 2 $\le 2$. Feasible! Set $R = 145$, record 146.
+        
+        \item Step 2: $L = 90, R = 145 \implies \text{mid} = 117$.
+        Greedy simulation with limit 117:
+        Painter 1: $12 + 34 + 67 = 113 \le 117$.
+        Painter 2: $90 \le 117$.
+        Total painters needed = 2 $\le 2$. Feasible! Set $R = 116$, record 117.
+        
+        \item Step 3: $L = 90, R = 116 \implies \text{mid} = 103$.
+        Greedy simulation with limit 103:
+        Painter 1: $12 + 34 = 46$ (adding 67 gives $113 > 103$).
+        Painter 2: $67$ (adding 90 gives $157 > 103$).
+        Painter 3: $90$.
+        Total painters needed = 3 $> 2$. Infeasible! Set $L = 104$.
+        
+        \item Step 4: $L = 104, R = 116 \implies \text{mid} = 110$.
+        Painter 1: $12 + 34 = 46$. Painter 2: $67$. Painter 3: $90$. Needs 3 painters $> 2$. Infeasible! Set $L = 111$.
+        
+        \item Step 5: $L = 111, R = 116 \implies \text{mid} = 113$.
+        Painter 1: $12 + 34 + 67 = 113 \le 113$. Painter 2: $90 \le 113$. Needs 2 painters $\le 2$. Feasible! Set $R = 112$, record 113.
+        
+        \item Step 6: $L = 111, R = 112 \implies \text{mid} = 111$.
+        Painter 1: $12 + 34 = 46$. Painter 2: $67$. Painter 3: $90$. Needs 3 painters $> 2$. Infeasible! Set $L = 112$.
+        
+        \item Step 7: $L = 112, R = 112 \implies \text{mid} = 112$.
+        Needs 3 painters. Infeasible! Set $L = 113$.
+    \end{itemize}
+    \item Search terminates with $L = 113 > R = 112$. The optimal maximum workload is $\mathbf{113}$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Search in a Rotated Array with Unique Elements]
+\textbf{Problem Statement}: Search for target $X = 3$ in the cyclically rotated array $A = [6, 7, 1, 2, 3, 4, 5]$ of length $7$.
+
+\begin{enumerate}
+    \item \textbf{Initialize}: $L = 0, R = 6$.
+    
+    \item \textbf{Step 1}:
+    $\text{mid} = 0 + (6 - 0) / 2 = 3$. $A[3] = 2$.
+    Does $A[3] == 3$? No.
+    Determine which half is sorted:
+    $A[L] = A[0] = 6$ and $A[\text{mid}] = A[3] = 2$.
+    Because $A[L] > A[\text{mid}]$, the left half is broken by the rotation pivot.
+    Therefore, the \textbf{right half} $[2, 3, 4, 5]$ is strictly sorted.
+    Does target $3$ lie within the right sorted range $(A[\text{mid}], A[R]] = (2, 5]$?
+    Yes, $2 < 3 \le 5$.
+    Discard the left half: $L = \text{mid} + 1 = 4$.
+    
+    \item \textbf{Step 2}:
+    $L = 4, R = 6 \implies \text{mid} = 5$. $A[5] = 4$.
+    Does $A[5] == 3$? No.
+    Check sorted half: $A[L] = A[4] = 3 \le A[5] = 4$. Left half $[3, 4]$ is sorted.
+    Does target $3$ lie in $[A[L], A[\text{mid}]) = [3, 4)$?
+    Yes, $3 \le 3 < 4$.
+    Discard the right half: $R = \text{mid} - 1 = 4$.
+    
+    \item \textbf{Step 3}:
+    $L = 4, R = 4 \implies \text{mid} = 4$. $A[4] = 3$.
+    Match found! Target $3$ is located at index $\mathbf{4}$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Integer Square Root Without Floating-Point Functions]
+\textbf{Problem Statement}: Given a positive 32-bit integer $N = 2{,}147{,}395{,}600$, find the largest integer $k$ such that $k^2 \le N$ without calling \texttt{std::sqrt}.
+
+\begin{enumerate}
+    \item \textbf{Set Interval}: $L = 0, R = N$. Since $N \le 2^{31} - 1$, we can clamp $R = 46{,}340$ because $(46{,}341)^2 > 2^{31} - 1$. Alternatively, use a general bound $R = N$ with 64-bit integer types (\texttt{long long}) to avoid overflow during squaring.
+    
+    \item \textbf{Monotonic Condition}: $P(k) = (k^2 \le N)$.
+    For $k = 0, 1, 2, \dots, \lfloor \sqrt{N} \rfloor$, $P(k)$ is \texttt{true}.
+    For all $k > \lfloor \sqrt{N} \rfloor$, $P(k)$ is \texttt{false}.
+    We seek the \textbf{last true} value.
+    
+    \item \textbf{Search Trace (Representative Steps)}:
+    \begin{itemize}
+        \item $L = 1, R = 46{,}340$.
+        \item Midpoint $\text{mid} = 23{,}170$. Compute $\text{mid}^2 = 536{,}848{,}900 \le N$. Feasible! Record $23{,}170$, test higher: $L = 23{,}171$.
+        \item Halving repeatedly narrows the range to $L = 46{,}339, R = 46{,}340$.
+        \item Testing $46{,}340$: $(46{,}340)^2 = 2{,}147{,}395{,}600 \le N$. Exactly equal!
+    \end{itemize}
+    \item Result: $\lfloor \sqrt{2{,}147{,}395{,}600} \rfloor = \mathbf{46{,}340}$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Aggressive Element Placement: Maximizing the Minimum Gap]
+\textbf{Problem Statement}: We have $N = 5$ stall locations along a line at coordinates $X = [1, 2, 4, 8, 9]$. We must place $C = 3$ items into distinct stalls such that the minimum distance between any two assigned items is as large as possible.
+
+\begin{enumerate}
+    \item \textbf{Model the Problem}: We want to find the largest distance $D$ such that at least $C = 3$ items can be placed with mutual separation $\ge D$.
+    
+    \item \textbf{Verify Monotonicity}: If we can place $3$ items with distance $\ge D$, we can also place them with any smaller distance $D' < D$. The predicate $P(D)$ is true for small $D$ and false for large $D$:
+    \begin{equation*}
+        [\text{true}, \text{true}, \dots, \text{true}, \mathbf{\text{true}}, \text{false}, \text{false}]
+    \end{equation*}
+    
+    \item \textbf{Search Domain}:
+    $L = 1$ (minimum possible distance between adjacent stalls).
+    $R = X[N-1] - X[0] = 9 - 1 = 8$ (maximum possible distance).
+    
+    \item \textbf{Feasibility Function \texttt{canPlace(D)}}:
+    Greedily place the first item at $X[0]$. For every subsequent stall $X[i]$, if $X[i] - \text{last\_placed} \ge D$, place an item and update $\text{last\_placed} = X[i]$. Return true if total placed $\ge C$.
+    
+    \item \textbf{Binary Search Trace}:
+    \begin{itemize}
+        \item $L = 1, R = 8 \implies \text{mid} = 4$.
+        Place at $1$. Next stall with diff $\ge 4$ is $8$ ($8 - 1 = 7 \ge 4$). Placed 2 items. Next is none. Total placed = $2 < 3$. Infeasible! Set $R = 3$.
+        
+        \item $L = 1, R = 3 \implies \text{mid} = 2$.
+        Place at $1$. Next $\ge 1 + 2 = 3$ is $4$. Placed at $4$. Next $\ge 4 + 2 = 6$ is $8$. Placed at $8$. Total placed = 3. Feasible! Record candidate $2$, search higher: $L = 3$.
+        
+        \item $L = 3, R = 3 \implies \text{mid} = 3$.
+        Place at $1$. Next $\ge 1 + 3 = 4$ is $4$. Next $\ge 4 + 3 = 7$ is $8$. Placed at $1, 4, 8$. Total placed = 3 $\ge 3$. Feasible! Record candidate $3$, search higher: $L = 4$.
+    \end{itemize}
+    \item Loop ends with $L = 4 > R = 3$. The maximum minimum distance is $\mathbf{3}$.
+\end{enumerate}
+\end{example}
+% ============================================================================
+\section{Practical C++ Implementations}
+% ============================================================================
+
+This section presents robust, production-grade C++23 implementations of foundational binary search patterns. All functions avoid global state, adhere to modern C++ conventions (\texttt{[[nodiscard]]}, \texttt{noexcept} where appropriate, \texttt{std::ranges}), and document every step with numbered comments.
+
+\subsection{What is the Search Invariant and Midpoint Calculation?}
+
+A classic binary search on a sorted contiguous array maintains the invariant that the target, if present, resides within the closed index range $[L, R]$.
+
+To ensure correctness and avoid bugs:
+\begin{enumerate}
+    \item Use \texttt{L <= R} as the loop condition so the single-element case $L == R$ is evaluated.
+    \item Compute the midpoint as $L + (R - L) / 2$ to prevent integer overflow.
+    \item If $A[\text{mid}]$ does not match the target, strictly shrink the boundary to $\text{mid} - 1$ or $\text{mid} + 1$ to guarantee progress and avoid infinite loops.
+\end{enumerate}
+
+\begin{lstlisting}[language=C++, caption={Classic Binary Search in a Sorted Array}]
+#include <vector>
+#include <optional>
+#include <cstddef>
+
+// Searches for target in a sorted vector.
+// Returns the index of target if found; std::nullopt otherwise.
+[[nodiscard]] std::optional<std::size_t> binarySearch(
+    const std::vector<int>& nums,
+    int target
+) noexcept {
+    if (nums.empty()) return std::nullopt;
+
+    std::size_t left = 0;
+    std::size_t right = nums.size() - 1;
+
+    // 1. Maintain closed interval [left, right]
+    while (left <= right) {
+        // 2. Safe midpoint calculation avoiding integer overflow
+        std::size_t mid = left + (right - left) / 2;
+
+        if (nums[mid] == target) {
+            return mid; // Target found
+        }
+
+        if (nums[mid] < target) {
+            left = mid + 1; // Discard left half
+        } else {
+            if (mid == 0) break; // Guard against underflow with unsigned size_t
+            right = mid - 1; // Discard right half
+        }
+    }
+
+    return std::nullopt; // Target not present
+}
+\end{lstlisting}
+
+\subsection{What is the First-True Monotonic Boundary?}
+
+Lower bound and upper bound locate the boundary where a boolean condition changes from false to true:
+\begin{itemize}
+    \item \textbf{Lower Bound}: Predicate is $P(i) = (A[i] \ge \text{target})$.
+    \item \textbf{Upper Bound}: Predicate is $P(i) = (A[i] > \text{target})$.
+\end{itemize}
+
+Whenever $P(\text{mid})$ is true, $\text{mid}$ is a valid candidate for the first occurrence, but an earlier occurrence may exist to the left. We record $\text{mid}$ and search left ($R = \text{mid} - 1$). If $P(\text{mid})$ is false, the answer must lie strictly to the right ($L = \text{mid} + 1$).
+
+\begin{lstlisting}[language=C++, caption={Custom Lower Bound and Upper Bound Implementations}]
+#include <vector>
+#include <cstddef>
+
+// Finds the first index i such that nums[i] >= target.
+// Returns nums.size() if all elements are strictly less than target.
+[[nodiscard]] std::size_t lowerBound(
+    const std::vector<int>& nums,
+    int target
+) noexcept {
+    std::size_t left = 0;
+    std::size_t right = nums.size(); // Half-open range [0, nums.size())
+
+    while (left < right) {
+        std::size_t mid = left + (right - left) / 2;
+        if (nums[mid] >= target) {
+            right = mid; // Candidate found; search left half
+        } else {
+            left = mid + 1; // Infeasible; search right half
+        }
+    }
+    return left;
+}
+
+// Finds the first index i such that nums[i] > target.
+// Returns nums.size() if no element is strictly greater than target.
+[[nodiscard]] std::size_t upperBound(
+    const std::vector<int>& nums,
+    int target
+) noexcept {
+    std::size_t left = 0;
+    std::size_t right = nums.size();
+
+    while (left < right) {
+        std::size_t mid = left + (right - left) / 2;
+        if (nums[mid] > target) {
+            right = mid; // Candidate found; search left half
+        } else {
+            left = mid + 1; // Infeasible; search right half
+        }
+    }
+    return left;
+}
+\end{lstlisting}
+
+\subsection{What is Binary Search on the Answer Space?}
+
+In optimization problems (minimizing the maximum capacity or partition), we do not search through an existing array. Instead, we search over the abstract mathematical range of possible answers $[L, R]$.
+
+A helper function \texttt{isFeasible(mid)} validates each guess:
+\begin{enumerate}
+    \item If \texttt{isFeasible(mid)} is true, capacity \texttt{mid} works. We record \texttt{mid} as our best known answer and try even smaller capacities ($R = \text{mid} - 1$).
+    \item If \texttt{isFeasible(mid)} is false, capacity \texttt{mid} is too small. We must test larger capacities ($L = \text{mid} + 1$).
+\end{enumerate}
+
+\begin{lstlisting}[language=C++, caption={Minimizing Maximum Partition Allocation}]
+#include <vector>
+#include <numeric>
+#include <algorithm>
+
+namespace detail {
+    // Greedy check: Can we partition nums into at most max_partitions subarrays
+    // such that no subarray sum exceeds max_allowed_sum?
+    [[nodiscard]] bool canPartition(
+        const std::vector<int>& nums,
+        int max_partitions,
+        long long max_allowed_sum
+    ) noexcept {
+        int partitions_used = 1;
+        long long current_sum = 0;
+
+        for (int x : nums) {
+            if (current_sum + x <= max_allowed_sum) {
+                current_sum += x;
+            } else {
+                ++partitions_used;
+                current_sum = x;
+                if (partitions_used > max_partitions) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+
+// Minimizes the maximum subarray sum when partitioning into k contiguous parts.
+[[nodiscard]] long long splitArrayMinMax(
+    const std::vector<int>& nums,
+    int k
+) {
+    if (nums.empty()) return 0;
+
+    // 1. Lower bound is the maximum single element; upper bound is the sum of all elements
+    long long left = *std::ranges::max_element(nums);
+    long long right = std::accumulate(nums.begin(), nums.end(), 0LL);
+    long long answer = right;
+
+    // 2. Binary search on the answer space
+    while (left <= right) {
+        long long mid = left + (right - left) / 2;
+
+        if (detail::canPartition(nums, k, mid)) {
+            answer = mid; // Feasible; record and search for a smaller maximum
+            right = mid - 1;
+        } else {
+            left = mid + 1; // Infeasible; increase allowed capacity
+        }
+    }
+
+    return answer;
+}
+\end{lstlisting}
+
+\subsection{How Does Rotated Array Partitioning Work?}
+
+When an array is cyclically rotated, at least one half of the array relative to the midpoint remains strictly sorted.
+
+We exploit this property to preserve logarithmic complexity:
+\begin{enumerate}
+    \item Determine which half is sorted by evaluating $A[L] \le A[\text{mid}]$.
+    \item If the left half is sorted, check if the target falls within its bounds $[A[L], A[\text{mid}])$. If it does, narrow the search to the left; otherwise, search the right.
+    \item If the right half is sorted, check if the target falls within $(A[\text{mid}], A[R]]$. If it does, search the right; otherwise, search the left.
+\end{enumerate}
+
+\begin{lstlisting}[language=C++, caption={Search in a Rotated Sorted Array}]
+#include <vector>
+#include <optional>
+#include <cstddef>
+
+// Searches for target in a cyclically rotated sorted array of unique elements.
+[[nodiscard]] std::optional<std::size_t> searchRotatedArray(
+    const std::vector<int>& nums,
+    int target
+) noexcept {
+    if (nums.empty()) return std::nullopt;
+
+    std::size_t left = 0;
+    std::size_t right = nums.size() - 1;
+
+    while (left <= right) {
+        std::size_t mid = left + (right - left) / 2;
+
+        if (nums[mid] == target) {
+            return mid;
+        }
+
+        // 1. Check if the left half [left, mid] is sorted
+        if (nums[left] <= nums[mid]) {
+            // 2. Check if target lies within the sorted left half
+            if (nums[left] <= target && target < nums[mid]) {
+                if (mid == 0) break;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        } else {
+            // 3. Right half [mid, right] is sorted
+            if (nums[mid] < target && target <= nums[right]) {
+                left = mid + 1;
+            } else {
+                if (mid == 0) break;
+                right = mid - 1;
+            }
+        }
+    }
+
+    return std::nullopt;
+}
+\end{lstlisting}
+
+\subsection{What is the Discrete Derivative Peak Test?}
+
+To find a peak in an array where adjacent elements are never equal ($A[i] \ne A[i+1]$), we compare $A[\text{mid}]$ with $A[\text{mid} + 1]$:
+\begin{equation*}
+    \Delta A = A[\text{mid} + 1] - A[\text{mid}]
+\end{equation*}
+If $\Delta A > 0$, the sequence is increasing, meaning at least one local maximum exists to the right ($L = \text{mid} + 1$). If $\Delta A < 0$, the sequence is decreasing, meaning a local maximum exists at $\text{mid}$ or to its left ($R = \text{mid}$).
+
+\begin{lstlisting}[language=C++, caption={Finding a Peak Element in Logarithmic Time}]
+#include <vector>
+#include <cstddef>
+
+// Returns the index of any peak element in nums (where nums[i] > nums[i+1]).
+// Assumes nums[i] != nums[i+1] for all valid adjacent pairs.
+[[nodiscard]] std::size_t findPeakElement(const std::vector<int>& nums) noexcept {
+    if (nums.empty()) return 0;
+    
+    std::size_t left = 0;
+    std::size_t right = nums.size() - 1;
+
+    // Use half-open style termination left < right
+    while (left < right) {
+        std::size_t mid = left + (right - left) / 2;
+
+        if (nums[mid] < nums[mid + 1]) {
+            // Upward slope: a peak must exist to the right
+            left = mid + 1;
+        } else {
+            // Downward slope: mid itself or an element to the left is a peak
+            right = mid;
+        }
+    }
+
+    return left; // left == right points to a peak
+}
+\end{lstlisting}
+
+\subsection{How Does Fixed-Iteration Floating-Point Search Avoid Precision Pitfalls?}
+
+When searching for real-valued roots or thresholds, comparing floating-point numbers with \texttt{while (left < right)} or an overly tiny $\epsilon$ can loop indefinitely due to precision limits.
+
+A fixed iteration loop (for instance, $80$ or $100$ iterations) is superior:
+\begin{equation*}
+    \text{Interval Width after } 80 \text{ iterations} = \frac{R_0 - L_0}{2^{80}} \approx \frac{R_0 - L_0}{1.2 \times 10^{24}}
+\end{equation*}
+This guarantees exact convergence without branching hazards.
+
+\begin{lstlisting}[language=C++, caption={Continuous Floating-Point Binary Search}]
+#include <functional>
+
+// Finds the root x of a monotonically increasing continuous function f such that f(x) = 0.
+[[nodiscard]] double continuousBinarySearch(
+    double left,
+    double right,
+    const std::function<double(double)>& f
+) {
+    // 1. Run exactly 80 iterations for sub-nanometer numerical precision
+    for (int iter = 0; iter < 80; ++iter) {
+        double mid = left + (right - left) / 2.0;
+
+        if (f(mid) < 0.0) {
+            left = mid; // Root lies to the right
+        } else {
+            right = mid; // Root lies to the left
+        }
+    }
+
+    return left + (right - left) / 2.0;
+}
+\end{lstlisting}
+
+% ============================================================================
+\section{Problem Pattern Recognition}
+% ============================================================================
+
+When reading an algorithmic problem, determining whether binary search applies follows a disciplined three-step decision process.
+
+\subsection*{Step 1: What is the Problem Asking For?}
+
+\begin{itemize}
+    \item \textbf{Exact Target Lookup}: Does the problem ask to find a specific element or its index in sorted data? Use \textbf{Classic Binary Search}.
+    \item \textbf{Frequency / Boundary Query}: Does it ask for the first occurrence, last occurrence, or count of a value? Use \textbf{Lower Bound} and \textbf{Upper Bound}.
+    \item \textbf{Minimizing a Maximum / Maximizing a Minimum}: Does the problem ask for the ``minimum capacity to finish in $K$ days'', ``maximum speed to arrive on time'', or ``maximize the minimum distance between items''? Use \textbf{Binary Search on the Answer Space}.
+    \item \textbf{Local Extremum in Unsorted Data}: Does it ask for any peak element or mountain peak? Use \textbf{Slope Analysis Binary Search}.
+    \item \textbf{Search in Cyclically Shifted Data}: Is the input a rotated sorted array? Use \textbf{Rotated Array Binary Search}.
+\end{itemize}
+
+\subsection*{Step 2: What is the Key Constraint?}
+
+\begin{itemize}
+    \item \textbf{Is the condition monotonic?} Can you prove that if candidate value $x$ satisfies the requirement, every value $x' > x$ (or $x' < x$) also satisfies it? If yes, binary search is immediately applicable.
+    \item \textbf{Can feasibility be verified efficiently?} A binary search with $60$ steps running an $O(N)$ verification executes in $O(N \log(\text{range}))$, which easily passes within $1$ second for $N \le 10^5$.
+    \item \textbf{Are elements distinct?} In rotated sorted arrays, duplicate values ($[1, 0, 1, 1, 1]$) prevent determining which half is sorted in $O(1)$ time, degrading worst-case time to $O(N)$.
+\end{itemize}
+
+\subsection*{Step 3: How Large is the Input?}
+
+\begin{itemize}
+    \item \textbf{Answer Range up to $10^{18}$}: Binary search requires at most $\lceil \log_2(10^{18}) \rceil \approx 60$ iterations. Use 64-bit integers (\texttt{long long}) for $L$, $R$, and $\text{mid}$.
+    \item \textbf{Static Array Queries $Q \le 10^5, N \le 10^5$}: Sorting once takes $O(N \log N)$; each query takes $O(\log N)$. Total time $O((N + Q) \log N)$, which completes in under 50 milliseconds.
+    \item \textbf{Matrix of Size $M \times N$}: If each row and column is sorted, binary search on range takes $O(M \log N)$ or saddleback search in $O(M + N)$.
+\end{itemize}
+
+\subsection*{Quick Reference: Keyword-to-Tool Mapping}
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
+\hline
+\textbf{Keywords in Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
+``find minimum capacity to complete in time'' & Monotonic capacity threshold: larger capacities also succeed & Binary Search on the Answer \\ \hline
+``maximize minimum distance between items'' & Feasibility condition: can we place $K$ items with distance $\ge D$? & Binary Search on the Answer \\ \hline
+``first element $\ge target$ in sorted array'' & Locate the starting boundary of a value & Lower Bound \\ \hline
+``count occurrences of $X$ in sorted array'' & Count identical elements without a linear scan & $\text{upper\_bound} - \text{lower\_bound}$ \\ \hline
+``search target in rotated sorted array'' & Cyclically shifted sorted data & Rotated Binary Search \\ \hline
+``find any peak element ($A[i] > A[i+1]$)'' & Find local extremum in logarithmic time & Slope Analysis Binary Search \\ \hline
+``find integer square root $\lfloor \sqrt{N} \rfloor$'' & Find largest $k$ such that $k^2 \le N$ & Monotonic Predicate Search \\ \hline
+``minimize maximum subarray sum in $K$ splits'' & Painter's partition / allocation & Binary Search on Answer + Greedy \\ \hline
+``smallest divisor giving sum $\le$ threshold'' & Monotonic divisor: larger divisors decrease total sum & Binary Search on the Answer \\ \hline
+``k-th smallest element in sorted matrix'' & Count elements $\le mid$ in each row & Binary Search on Matrix Values \\ \hline
+``find real root with precision $10^{-7}$'' & Continuous bisection on continuous domain & Floating-Point Binary Search \\ \hline
+``median of two sorted arrays'' & Partition both arrays simultaneously & Dual-Array Binary Search \\ \hline
+``first bad version / earliest failure'' & Monotonic failure: once broken, all later revisions are broken & First-True Binary Search \\ \hline
+``minimum days to make $M$ bouquets'' & Days elapsed monotonically increases available flowers & Binary Search on Answer \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+% ============================================================================
+\section{Summary and Complexity Reference}
+% ============================================================================
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\textbf{Task / Operation} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
+Classic Binary Search & $O(\log N)$ & $O(1)$ & Finding exact target in sorted contiguous array \\ \hline
+Lower Bound & $O(\log N)$ & $O(1)$ & First index where element $\ge target$ \\ \hline
+Upper Bound & $O(\log N)$ & $O(1)$ & First index where element $> target$ \\ \hline
+Frequency Count & $O(\log N)$ & $O(1)$ & Counting target duplicates in sorted array \\ \hline
+Binary Search on Answer & $O(C \cdot \log R)$ & $O(1)$ & Min-max or max-min problems with monotonic check $C$ \\ \hline
+Rotated Array Search & $O(\log N)$ & $O(1)$ & Cyclically shifted sorted array with unique elements \\ \hline
+Peak Element Search & $O(\log N)$ & $O(1)$ & Finding any local maximum in array with distinct neighbors \\ \hline
+Continuous Binary Search & $O(\text{iters} \cdot C)$ & $O(1)$ & Real-valued root or threshold search on continuous domain \\ \hline
+2D Matrix Binary Search & $O(M \log N)$ & $O(1)$ & Counting elements $\le \text{mid}$ in row-sorted matrix \\ \hline
+\end{tabularx}
+
+% ============================================================================
+\section{Glossary}
+% ============================================================================
+
+\subsection*{Core Concepts}
+
+\begin{itemize}
+    \item \textbf{Binary Search}: A divide-and-conquer search algorithm that eliminates half of the remaining search space with each comparison.
+    \item \textbf{Feasibility Predicate}: A boolean function $P(x)$ testing whether candidate solution $x$ satisfies all constraints.
+    \item \textbf{Half-Open Interval}: A range $[L, R)$ where lower index $L$ is inclusive and upper index $R$ is exclusive.
+    \item \textbf{Integer Overflow}: An arithmetic error occurring when the sum of two integers exceeds the maximum value representable by their data type.
+    \item \textbf{Invariant}: A condition that remains true throughout the execution of an algorithm (such as ``target is within $[L, R]$'').
+    \item \textbf{Lower Bound}: The first index in a sorted sequence where the element is greater than or equal to a target.
+    \item \textbf{Monotonicity}: The property of a sequence or function that preserves order (either entirely non-decreasing or non-increasing).
+    \item \textbf{Peak Element}: An array element strictly greater than its adjacent neighbors.
+    \item \textbf{Predicate}: A function that evaluates an input and returns a boolean value (\texttt{true} or \texttt{false}).
+    \item \textbf{Rotated Sorted Array}: A sorted array whose elements have been cyclically shifted by an offset.
+    \item \textbf{Search Space}: The range of candidate indices or values within which the desired answer is known to exist.
+    \item \textbf{Upper Bound}: The first index in a sorted sequence where the element is strictly greater than a target.
+\end{itemize}
+
+\subsection*{Mathematical Symbols}
+
+\begin{itemize}
+    \item $\lfloor x \rfloor$: Floor function; the greatest integer less than or equal to $x$.
+    \item $\lceil x \rceil$: Ceiling function; the smallest integer greater than or equal to $x$.
+    \item $\log_2 N$: The base-2 logarithm of $N$; the number of times $N$ can be halved before reaching 1.
+    \item $O(\log N)$: Logarithmic time complexity.
+    \item $[L, R]$: A closed interval where both endpoints $L$ and $R$ are included.
+    \item $[L, R)$: A half-open interval where $L$ is included and $R$ is excluded.
+    \item $\epsilon$: Epsilon; a small positive threshold used to terminate floating-point searches.
+    \item $\le, \ge$: Less than or equal to, and greater than or equal to.
+\end{itemize}
+
+% ============================================================================
+\section{Further Reading}
+% ============================================================================
+
+\subsection*{Free Online Resources (Start Here)}
+
+\begin{itemize}
+    \item \textbf{cp-algorithms.com}: Binary Search and Continuous Bisection section. Provides clear derivations and numerical analysis: \url{https://cp-algorithms.com}.
+    \item \textbf{Community Educational Articles}: ``Binary Search'' --- A classic monograph discussing the First-True monotonic formulation.
+    \item \textbf{Project Euler}: Practice problems. Problem 71 (Ordered fractions), Problem 73 (Counting fractions in a range).
+    \item \textbf{Art of Problem Solving (AoPS) Wiki}: Clear explanations of bisection search and intermediate value theorem applications.
+    \item \textbf{Brilliant.org}: Interactive visualizations of divide-and-conquer search algorithms.
+\end{itemize}
+
+\subsection*{Books (When You Are Ready to Go Deeper)}
+
+\begin{itemize}
+    \item J.\ Bentley, \emph{Programming Pearls}, 2nd Edition --- Chapter 4 (``Writing Correct Programs'') is the seminal text on binary search loop invariants and verification.
+    \item T.\ H.\ Cormen, C.\ E.\ Leiserson, R.\ L.\ Rivest, C.\ Stein, \emph{Introduction to Algorithms} (CLRS), 4th Edition --- Chapters 2 and 28 cover divide-and-conquer analysis and root-finding algorithms.
+    \item S.\ S.\ Skiena, \emph{The Algorithm Design Manual}, 3rd Edition --- Chapter 4 provides extensive coverage of binary search applications and search-by-bisection patterns.
+\end{itemize}
+
+% ============================================================================
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+% ============================================================================
+
+\noindent
+\begin{tabularx}{\textwidth}{|p{3cm}|X|}
+\hline
+\textbf{Date} & \textbf{Change Description} \\ \hline
+2026-10-03 & Document created. \\ \hline
+2026-10-03 & Fixed integer underflow in \texttt{findPeakElement} on empty array. \\ \hline
+2026-10-03 & Removed banned word and competitive programming platform names. \\ \hline
+\end{tabularx}
+
+\end{document}

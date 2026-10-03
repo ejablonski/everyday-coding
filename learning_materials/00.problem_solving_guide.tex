@@ -1,0 +1,496 @@
+﻿\documentclass[11pt,a4paper]{article}
+
+% --- Core LaTeX Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{graphicx}
+
+% --- Unified Color Palette ---
+\definecolor{primaryblue}{RGB}{24, 75, 140}
+\definecolor{codebg}{RGB}{248, 249, 250}
+\definecolor{codeframe}{RGB}{210, 215, 222}
+\definecolor{codegreen}{RGB}{40, 130, 60}
+\definecolor{codeblue}{RGB}{20, 90, 180}
+\definecolor{codegray}{RGB}{120, 120, 120}
+
+% --- Hyperref Setup ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    citecolor=primaryblue,
+    urlcolor=primaryblue,
+    pdftitle={Problem-Solving Decision Guide},
+    pdfauthor={Antigravity Engineering}
+}
+
+% --- Theorem & Definition Environments ---
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{example}{Example}[section]
+
+% --- Callout Box Environment ---
+\newenvironment{calloutbox}[1]{
+    \par\vspace{0.3cm}
+    \noindent\begin{tabular}{|p{0.96\textwidth}|}
+    \hline
+    \vspace{0.1cm}
+    \textbf{#1}\par\vspace{0.1cm}
+}{
+    \vspace{0.1cm}
+    \\ \hline
+    \end{tabular}
+    \vspace{0.3cm}\par
+}
+
+% --- Modern C++ Code Listing Setup ---
+\lstset{
+    language=C++,
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{orange!80!black},
+    numberstyle=\tiny\color{codegray},
+    numbers=left,
+    numbersep=8pt,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b
+}
+
+% --- Title Block ---
+\title{\vspace{-1.5cm}\textbf{\Huge Problem-Solving Decision Guide}\\[0.3cm]
+\Large From ``What Is This Problem Asking?'' to ``Which Technique Do I Open?''}
+\author{Technical Monograph}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+This is the one document you open when you face a problem and do not know where to start. It does not teach any technique in depth. Instead, it helps you diagnose the problem: what kind of answer is being asked for, how large the input is, and which topic document contains the tool you need. It contains a decision tree, a single lookup table that merges the pattern recognition rules of every topic document, a table that maps input size to feasible algorithms, and a registry of all topic documents (finished and still under construction). You already know how to program; this guide teaches you to choose.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{How to Use This Guide}
+% ============================================================================
+
+You read a problem statement. Within the first minute you want to answer three questions:
+
+\begin{enumerate}
+    \item \textbf{What kind of answer is required?} A single number, a yes/no, a list of every valid configuration, or one best configuration? (Section~\ref{sec:tree})
+    \item \textbf{How large is the input?} The input size decides whether a simple loop is enough or whether you need a smarter technique. (Section~\ref{sec:size})
+    \item \textbf{Which words in the statement point to a known technique?} Search the index in Section~\ref{sec:index} for the phrase that matches your problem, then open the topic document named in the last column.
+\end{enumerate}
+
+\begin{calloutbox}{The Fastest Way to Use This Document}
+Do not read it from start to finish. Jump straight to Section~\ref{sec:index}, find the row whose \emph{Problem Signal} resembles your problem, and read the \emph{Technique} and \emph{Module} columns. If no row matches, walk through the decision tree in Section~\ref{sec:tree} to narrow down the category first.
+\end{calloutbox}
+
+% ============================================================================
+\section{Step 1: Classify the Problem}
+\label{sec:tree}
+% ============================================================================
+
+Every problem asks for one of five kinds of answer. Identifying which one you face removes most of the guessing.
+
+\begin{center}
+{\footnotesize
+
+}
+\end{center}
+
+\noindent\emph{Figure: Top-level triage tree. Start at the quoted phrase that resembles your problem and follow the branch to a technique family.}
+
+\begin{calloutbox}{When Two Branches Both Seem to Fit}
+Counting problems and enumeration problems are often confused. The rule of thumb: if you must \emph{produce} the configurations, use backtracking. If you only need \emph{how many} there are, use a formula or dynamic programming. Generating configurations you never look at wastes exponential time.
+\end{calloutbox}
+
+% ============================================================================
+\section{Step 2: Check the Input Size}
+\label{sec:size}
+% ============================================================================
+
+A modern computer performs roughly $10^8$ simple operations per second. The input size therefore tells you which complexity classes are feasible before you write a line of code.
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3cm}|p{3cm}|X|}
+\hline
+\textbf{Input Size $N$} & \textbf{Feasible Complexity} & \textbf{What It Usually Means} \\ \hline
+$N \le 10$ & $O(N!)$ & Try every ordering. Plain backtracking over permutations is fine. \\ \hline
+$N \le 20$ & $O(2^N)$ & Try every subset. Backtracking over subsets or bitmask enumeration. \\ \hline
+$N \le 500$ & $O(N^3)$ & Three nested loops, or a cubic dynamic programming table. \\ \hline
+$N \le 5{,}000$ & $O(N^2)$ & Two nested loops, or a two-dimensional table. \\ \hline
+$N \le 10^6$ & $O(N \log N)$ or $O(N)$ & Sorting, sieves, prefix sums, a single pass. \\ \hline
+$N \le 10^8$ & $O(N)$ with a tiny constant & One simple loop only. Anything heavier times out. \\ \hline
+$N \ge 10^9$ & $O(\log N)$ or $O(1)$ & A closed-form formula, binary search, or fast exponentiation is required. \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\begin{calloutbox}{Reading the Table Backwards}
+If a problem states $N \le 20$ and asks you to list things, the author expects exponential backtracking. If it states $N \le 10^{18}$, the author expects a formula or an $O(\log N)$ technique. The constraint is a hint about the intended solution.
+\end{calloutbox}
+
+% ============================================================================
+\section{Step 3: Match the Problem Signal}
+\label{sec:index}
+% ============================================================================
+
+This is the unified pattern recognition index. Each row merges the quick-reference tables of the finished topic documents. Rows are grouped by the kind of problem, not by document, so you can scan by symptom.
+
+\subsection{Counting Arrangements and Selections (Module 01)}
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
+``how many ways to arrange $n$ distinct items?'' & Count sequences where order matters. & $n!$ (factorial) & 01. Combinatorics \\ \hline
+``how many ways to choose $k$ items from $n$?'' & Count groups where order does not matter. & $\binom{n}{k}$ & 01. Combinatorics \\ \hline
+``unique permutations'', ``array with duplicates'' & Some swaps produce identical results. & Multiset permutation: $\frac{n!}{n_1!\,n_2!\cdots}$ & 01. Combinatorics \\ \hline
+``distribute $n$ identical items into $k$ groups'' & Split identical objects into distinct buckets. & Stars and Bars: $\binom{n+k-1}{k-1}$ & 01. Combinatorics \\ \hline
+``nobody gets their own item'' & Every item must be displaced. & Derangements $D_n$ & 01. Combinatorics \\ \hline
+``seating around a circular table'' & Rotations count as the same arrangement. & Circular permutations $(n-1)!$ & 01. Combinatorics \\ \hline
+``how many valid parenthesis strings?'', ``how many unique binary search trees?'' & Problems with a recursive left/right split. & Catalan number $C_n$ & 01. Combinatorics \\ \hline
+``shortest grid paths from $(0,0)$ to $(m,n)$'' & Moving only right and down on a grid. & $\binom{m+n}{m}$ & 01. Combinatorics \\ \hline
+``how many integers divisible by at least one of these primes?'' & Overlapping groups that need de-duplication. & Inclusion-Exclusion & 01. Combinatorics \\ \hline
+``partition a set into $k$ non-empty groups'' & Split distinct objects into identical buckets. & Stirling numbers $S(n,k)$ & 01. Combinatorics \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsection{Huge Numbers, Remainders, and Wrap-Around (Module 02)}
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
+``return the answer modulo $10^9+7$'' & The answer is too large for any integer type. & Reduce every intermediate result with \texttt{\% MOD} & 02. Modular Arithmetic \\ \hline
+``circular array'', ``ring buffer'', ``round-robin'' & Index wraps back to $0$ after the end. & \texttt{(idx + step) \% N} & 02. Modular Arithmetic \\ \hline
+``compute $a^b$'' with $b$ up to $10^{18}$ & Direct multiplication would take forever. & Binary exponentiation $O(\log b)$ & 02. Modular Arithmetic \\ \hline
+``divide inside a modular computation'' & Division requires an inverse in modular math. & Modular inverse (Fermat or Extended Euclidean) & 02. Modular Arithmetic \\ \hline
+``$x \equiv r_i \pmod{m_i}$ for several $i$'' & Several independent remainder clues. & Chinese Remainder Theorem & 02. Modular Arithmetic \\ \hline
+``last $k$ digits of $a^b$'' & Last $k$ digits equal the value modulo $10^k$. & Binary exponentiation modulo $10^k$ & 02. Modular Arithmetic \\ \hline
+``parity'', ``odd/even invariant'' & Does a change preserve some property? & Modulo $2$ & 02. Modular Arithmetic \\ \hline
+``answer modulo a prime'' for combinations & Combinations need division. & Precomputed factorials and modular inverses & 01. Combinatorics; 02. Modular Arithmetic \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsection{Primes, Divisors, and Factors (Module 03)}
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
+``is $N$ prime?'' (single query) & Test whether any number divides $N$. & Trial division up to $\sqrt{N}$ (using $6k \pm 1$) & 03. Number Theory \\ \hline
+``count primes up to $N$'' ($N \le 10^7$) & Find all primes in a large range. & Sieve of Eratosthenes & 03. Number Theory \\ \hline
+``primes in range $[L, R]$'', $R \le 10^{12}$ & Memory too small for a full sieve. & Segmented Sieve & 03. Number Theory \\ \hline
+``all divisors of $N$'' & Pairs of numbers multiplying to $N$. & $O(\sqrt{N})$ pair collection & 03. Number Theory \\ \hline
+``number of divisors of $N$'' & Count divisors without listing them. & Prime factorize, then $\prod (a_i + 1)$ & 03. Number Theory \\ \hline
+``greatest common divisor'', ``reduce a fraction'' & Largest factor shared by two numbers. & Euclidean Algorithm (\texttt{std::gcd}) & 03. Number Theory \\ \hline
+``events repeat every $A$ and $B$ days'' & Smallest time when both events align. & Least Common Multiple (\texttt{std::lcm}) & 03. Number Theory \\ \hline
+``count numbers $\le N$ coprime to $N$'' & Numbers sharing no prime factor with $N$. & Euler's Totient $\phi(N)$ & 03. Number Theory; 02. Modular Arithmetic \\ \hline
+``factorize $10^5$ different numbers'' & Separate $O(\sqrt{N})$ tests would time out. & Precompute smallest-prime-factor array & 03. Number Theory \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsection{Sums, Ranges, and Series (Module 04)}
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
+``sum of a subsegment'', ``total between days $X$ and $Y$'' & Add a contiguous slice of an array many times. & Prefix Sums & 04. Sequences and Series \\ \hline
+``add $v$ to range $[L, R]$'' & Apply batch interval additions without loops. & Difference Array & 04. Sequences and Series \\ \hline
+``sum of all multiples'', ``arithmetic progression'' & Elements grow by a constant addition. & Arithmetic Sum Formula & 04. Sequences and Series \\ \hline
+``double each day'', ``powers of 2'', ``geometric progression'' & Elements grow by a constant multiplication. & Geometric Sum Formula & 04. Sequences and Series \\ \hline
+``sum of terms like $\frac{1}{x(x+1)}$'' & Consecutive terms may cancel out. & Telescoping Sum & 04. Sequences and Series \\ \hline
+``sum of a rectangle in a grid'' & Prefix sums extended to two dimensions. & 2D Prefix Sums & 04. Sequences and Series \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsection{Generating Every Valid Configuration (Module 05)}
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
+``return all valid parenthesis strings'' & Build every correct bracket string. & Backtracking with constraint pruning & 05. Recursion and Backtracking \\ \hline
+``find all subsets'', ``power set'' & For every element, choose yes or no. & Backtracking (include/exclude) & 05. Recursion and Backtracking \\ \hline
+``return all permutations'' & Find every distinct ordering. & Backtracking with a \texttt{used} array, or \texttt{next\_permutation} & 05. Recursion; 01. Combinatorics \\ \hline
+``return all combinations of size $k$'' & Pick exactly $k$ of $n$ without order. & Backtracking with a \texttt{start} index & 05. Recursion and Backtracking \\ \hline
+``N-Queens'', ``fill the board so no rule is violated'' & Constraint satisfaction puzzle. & Backtracking with pruning & 05. Recursion and Backtracking \\ \hline
+``find any one valid arrangement'' & Stop as soon as a single solution exists. & Backtracking with early return & 05. Recursion and Backtracking \\ \hline
+``unique permutations'', ``input contains duplicates'' & Find orderings without producing repeated results. & Backtracking: sort, then skip identical elements & 05. Recursion and Backtracking \\ \hline
+``subsets with duplicates'' & Find subsets without producing repeated results. & Backtracking: sort, then skip equal siblings & 05. Recursion and Backtracking \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsection{Overlapping Subproblems and State Transitions (Module 06)}
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
+``number of ways to reach'' & Counting paths or combinations. & DP (add transitions) & 06. Dynamic Programming \\ \hline
+``number of distinct subsequences'', ``ways to form a string'' & Counting matches between characters. & DP on Strings & 06. Dynamic Programming \\ \hline
+``minimum cost / minimum number of \dots'' & Shortest path in state graph. & DP (min transition) & 06. Dynamic Programming \\ \hline
+``minimum coins / steps to reach a target'' & Shortest path bounded by transitions. & 1D Coin Change & 06. Dynamic Programming \\ \hline
+``maximum value without exceeding capacity'' & Choose items with a budget. & 0/1 Knapsack & 06. Dynamic Programming \\ \hline
+``maximum sum of a non-adjacent selection'' & Pick separated elements. & House Robber (1D) & 06. Dynamic Programming \\ \hline
+``longest common subsequence'' & Match characters in order. & Two-Sequence DP & 06. Dynamic Programming \\ \hline
+``longest palindromic subsequence/substring'' & Palindrome check in a window. & Interval DP (expand) & 06. Dynamic Programming \\ \hline
+``minimum edits to transform'' & Insert/Delete/Replace operations. & Edit Distance DP & 06. Dynamic Programming \\ \hline
+``longest increasing subsequence'' & Pick elements strictly increasing. & 1D DP (LIS) & 06. Dynamic Programming \\ \hline
+``can we split into equal sum halves'' & Target sum is exactly half total. & Subset-Sum (Knapsack) & 06. Dynamic Programming \\ \hline
+``partition into $k$ groups with minimum cost'' & Cost grouped by elements. & DP (Index and $k$) & 06. Dynamic Programming \\ \hline
+``minimum cost to merge/multiply a sequence'' & Cost depends on final merge point. & Interval DP & 06. Dynamic Programming \\ \hline
+``stock-style buy/sell with states'' & State transitions with multiple roles. & State-Machine DP & 06. Dynamic Programming \\ \hline
+``unbounded reuse of items'' & Take the same item infinitely. & Unbounded Knapsack (forward loop) & 06. Dynamic Programming \\ \hline
+``visit every node exactly once, $n \le 20$'' & Traveling Salesman style. & Bitmask DP & 06. Dynamic Programming \\ \hline
+``count ways modulo'' & Answers get too large. & DP (apply \% at additions) & 06. Dynamic Programming \\ \hline
+``grid paths with obstacles'' & Navigating 2D array. & 2D Grid DP & 06. Dynamic Programming \\ \hline
+``no two adjacent chosen'' & House robber constraint. & 1D DP & 06. Dynamic Programming \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsection{Graphs, Traversals, and Networks (Module 07)}
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
+``shortest path in unweighted maze / grid'' & Find minimum steps from start to target cell. & BFS with FIFO queue & 07. Graph Algorithms \\ \hline
+``minimum word transformations'' & Each valid 1-letter change is an unweighted edge. & BFS from start word & 07. Graph Algorithms \\ \hline
+``number of islands / clusters'' & Count disconnected subgraphs in grid or graph. & DFS or BFS flood fill & 07. Graph Algorithms \\ \hline
+``network delay / shortest path with weights $\ge 0$'' & Find cheapest path where each edge has non-negative cost. & Dijkstra with min-heap & 07. Graph Algorithms \\ \hline
+``course schedule / task dependencies'' & Find a valid execution order respecting all prerequisites. & Kahn's Topological Sort & 07. Graph Algorithms \\ \hline
+``detect cycle in directed dependencies'' & Determine if deadlocks or circular prerequisites exist. & Kahn's in-degree count & 07. Graph Algorithms \\ \hline
+``redundant connection / cycle in undirected graph'' & Find the edge connecting nodes already in the same component. & DSU with path compression & 07. Graph Algorithms \\ \hline
+``minimum cost to connect all nodes'' & Connect every node with minimum total edge weight. & Kruskal's MST (DSU) & 07. Graph Algorithms \\ \hline
+``split people into two teams without conflicts'' & Color graph using two colors so adjacent nodes differ. & Bipartite 2-coloring & 07. Graph Algorithms \\ \hline
+``shortest path between all pairs, $V \le 400$'' & Compute all-pairs distance matrix. & Floyd-Warshall & 07. Graph Algorithms \\ \hline
+``graph has negative edge weights'' & Find shortest path with negative edges or detect negative cycle. & Bellman-Ford & 07. Graph Algorithms \\ \hline
+``dynamically query connectivity as edges added'' & Incrementally merge sets and check connectivity. & Disjoint Set Union (DSU) & 07. Graph Algorithms \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsection{Interval Halving and Answer Spaces (Module 08)}
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
+``find minimum capacity to complete in time'' & Monotonic capacity threshold: larger capacities also succeed. & Binary Search on Answer & 08. Binary Search \\ \hline
+``maximize minimum distance between items'' & Feasibility condition: can we place $K$ items with gap $\ge D$? & Binary Search on Answer & 08. Binary Search \\ \hline
+``first element $\ge target$ in sorted array'' & Locate the starting boundary of a value. & Lower Bound & 08. Binary Search \\ \hline
+``count occurrences of $X$ in sorted array'' & Count identical elements without a linear scan. & Upper Bound $-$ Lower Bound & 08. Binary Search \\ \hline
+``search target in rotated sorted array'' & Cyclically shifted sorted data. & Rotated Binary Search & 08. Binary Search \\ \hline
+``find any peak element ($A[i] > A[i+1]$)'' & Find local extremum in logarithmic time. & Slope Analysis Binary Search & 08. Binary Search \\ \hline
+``find integer square root $\lfloor \sqrt{N} \rfloor$'' & Find largest $k$ such that $k^2 \le N$. & Monotonic Predicate Search & 08. Binary Search \\ \hline
+``minimize maximum subarray sum in $K$ splits'' & Painter's partition / allocation. & Binary Search on Answer + Greedy & 08. Binary Search \\ \hline
+``smallest divisor giving sum $\le$ threshold'' & Monotonic divisor: larger divisors decrease total sum. & Binary Search on Answer & 08. Binary Search \\ \hline
+``find real root with precision $10^{-7}$'' & Continuous bisection on continuous domain. & Floating-Point Binary Search & 08. Binary Search \\ \hline
+``first bad version / earliest failure'' & Monotonic failure: once broken, all later revisions broken. & First-True Binary Search & 08. Binary Search \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsection{Cross-Cutting Decisions}
+
+These decisions appear inside many problems regardless of topic.
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
+``count the ways'' (not ``list the ways'') & You only need an integer, so avoid generating the configurations. & Formula or Dynamic Programming instead of backtracking & 01. Combinatorics; 05. Recursion; 06. DP \\ \hline
+``$N$ too large for a loop ($N \ge 10^9$)'' & Any $O(N)$ pass times out. & Closed-form formula or $O(\log N)$ technique & 02. Modular Arithmetic; 04. Sequences \\ \hline
+``many queries on static data'' & Repeating the same scan wastes time. & Precompute once, answer in $O(1)$ & 03. Number Theory; 04. Sequences \\ \hline
+``deep recursion ($N > 10^4$)'' & The call stack may overflow. & Convert to an iterative loop with an explicit stack & 05. Recursion and Backtracking \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+% ============================================================================
+\section{Module Registry}
+\label{sec:registry}
+% ============================================================================
+
+This section lists every topic document in the library. Finished documents are marked $\checkmark$ and contain a full pattern recognition section. Planned documents are marked \textbf{Under Construction}. Their problem signals will be merged into Section~\ref{sec:index} as soon as they are written.
+
+\subsection{Available Modules}
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.8cm}|p{1.6cm}|X|}
+\hline
+\textbf{Module} & \textbf{Status} & \textbf{What It Covers} \\ \hline
+00. C++ Reference & $\checkmark$ Available & Quick reference for modern C++ syntax and standard library idioms used throughout the library. \\ \hline
+01. Combinatorics and Permutations & $\checkmark$ Available & Factorials, permutations, combinations, Stars and Bars, derangements, Catalan numbers, Stirling numbers, Inclusion-Exclusion, counting modulo a prime. \\ \hline
+02. Modular Arithmetic & $\checkmark$ Available & Clock arithmetic, overflow prevention, binary exponentiation, modular inverses, Extended Euclidean Algorithm, Chinese Remainder Theorem. \\ \hline
+03. Number Theory & $\checkmark$ Available & Primes, sieves, divisors, factorization, GCD and LCM, Euler's Totient, segmented sieve. \\ \hline
+04. Sequences, Series, and Prefix Sums & $\checkmark$ Available & Arithmetic and geometric sums, sum of squares and cubes, prefix sums in one and two dimensions, difference arrays, telescoping sums. \\ \hline
+05. Recursion and Backtracking & $\checkmark$ Available & Call stack, recursion trees, the make-a-choice/explore/undo pattern, pruning, subsets, permutations, combinations, N-Queens. \\ \hline
+06. Dynamic Programming & $\checkmark$ Available & State definition, transitions, memoization vs tabulation, 1D/2D grids, knapsack family, two-sequence (LCS/edit distance), interval DP, space optimization, and bitmask DP. \\ \hline
+07. Graph Algorithms & $\checkmark$ Available & Graph representations, BFS, DFS, 2D grid flood fill, Dijkstra shortest paths, Kahn's topological sort, Disjoint Set Union (DSU), Kruskal's MST, Bellman-Ford, Floyd-Warshall, and bipartite 2-coloring. \\ \hline
+08. Binary Search & $\checkmark$ Available & Interval halving, search invariants, lower/upper bounds, binary search on the answer, rotated array searches, peak element finding, and continuous floating-point bisection. \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsection{Planned Modules (Under Construction)}
+
+Each planned module lists the scope it is expected to cover. Nothing below is final.
+
+\begin{calloutbox}{09. String Algorithms --- Under Construction}
+\textbf{Status:} TODO. \textbf{Expected scope:} Knuth-Morris-Pratt pattern matching, tries, sliding window technique, hashing of substrings. \textbf{Why it matters:} problems about substrings, prefixes, repeated patterns, and text search.
+\end{calloutbox}
+
+% ============================================================================
+\section{Summary and Complexity Reference}
+% ============================================================================
+
+The table below collects the most commonly needed techniques across all available modules in one place.
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.4cm}|p{2.6cm}|p{2.2cm}|X|}
+\hline
+\textbf{Task} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
+Direct loop sum & $O(N)$ & $O(1)$ & One-off sum with small $N$. \\ \hline
+Arithmetic or geometric formula & $O(1)$ & $O(1)$ & Sum follows a constant-difference or constant-ratio pattern. \\ \hline
+Build prefix sums & $O(N)$ & $O(N)$ & Many range-sum queries on a static array. \\ \hline
+Difference array update & $O(1)$ per update & $O(N)$ & Many range additions, one final readout. \\ \hline
+Binary exponentiation & $O(\log b)$ & $O(1)$ & Large power, usually modulo a number. \\ \hline
+Modular inverse & $O(\log n)$ & $O(1)$ & Division inside a modular computation. \\ \hline
+Trial division primality & $O(\sqrt{N})$ & $O(1)$ & Single number up to about $10^{12}$. \\ \hline
+Sieve of Eratosthenes & $O(N \log\log N)$ & $O(N)$ & All primes up to about $10^7$. \\ \hline
+Precomputed factorials & $O(N)$ build, $O(1)$ query & $O(N)$ & Many $\binom{n}{k}$ queries modulo a prime. \\ \hline
+Generate all subsets & $O(N \cdot 2^N)$ & $O(N)$ & ``Return all subsets'' with $N \le 20$. \\ \hline
+Generate all permutations & $O(N \cdot N!)$ & $O(N)$ & ``Return all orderings'' with $N \le 8$. \\ \hline
+N-Queens backtracking & $O(N!)$ worst case & $O(N)$ & Constraint puzzle with $N \le 13$. \\ \hline
+1D DP (Stairs, Robber) & $O(N)$ & $O(1)$ or $O(N)$ & Optimal or count problem depending on immediate prior states. \\ \hline
+2D Grid DP & $O(N \times M)$ & $O(\min(N, M))$ & Path optimization on a grid moving down/right. \\ \hline
+0/1 Knapsack & $O(N \times W)$ & $O(W)$ & Maximize value within weight/capacity limit $W$. \\ \hline
+Longest Common Subsequence & $O(N \times M)$ & $O(N \times M)$ & Matching subsequences across two strings. \\ \hline
+Interval DP & $O(N^3)$ & $O(N^2)$ & Merging contiguous segments (such as matrix chain). \\ \hline
+Bitmask DP & $O(2^N \times N^2)$ & $O(2^N \times N)$ & Visiting all items/subsets with $N \le 20$. \\ \hline
+BFS (unweighted) & $O(V + E)$ & $O(V)$ & Unweighted shortest paths, level-order traversal. \\ \hline
+DFS / Flood fill & $O(V + E)$ & $O(V)$ & Component counting, path existence, grid reachability. \\ \hline
+Dijkstra & $O((V + E) \log V)$ & $O(V + E)$ & Shortest paths with non-negative edge weights. \\ \hline
+Topological sort (Kahn) & $O(V + E)$ & $O(V)$ & Task scheduling with prerequisites, DAG cycle check. \\ \hline
+Disjoint Set Union (DSU) & $O(\alpha(V))$ amort. & $O(V)$ & Dynamic connectivity, incremental cycle detection. \\ \hline
+Kruskal's MST & $O(E \log E)$ & $O(V)$ & Minimum Spanning Tree for sparse graphs. \\ \hline
+Binary search (exact) & $O(\log N)$ & $O(1)$ & Finding target in sorted contiguous array. \\ \hline
+Lower bound / Upper bound & $O(\log N)$ & $O(1)$ & First index where element $\ge target$ or $> target$. \\ \hline
+Binary search on answer & $O(C \cdot \log R)$ & $O(1)$ & Optimization over monotonic domain with check $C$. \\ \hline
+Rotated array search & $O(\log N)$ & $O(1)$ & Cyclically shifted sorted unique array. \\ \hline
+Peak element search & $O(\log N)$ & $O(1)$ & Finding local maximum in array with distinct neighbors. \\ \hline
+Continuous binary search & $O(\text{iters} \cdot C)$ & $O(1)$ & Real-valued root or threshold on continuous function. \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+% ============================================================================
+\section{Glossary of Terms and Symbols}
+% ============================================================================
+
+\subsection{Core Concepts}
+\begin{itemize}
+    \item \textbf{Enumeration}: Producing every valid configuration, one by one. The answer is a list.
+    \item \textbf{Counting}: Determining how many valid configurations exist. The answer is a single number.
+    \item \textbf{Decision problem}: A problem whose answer is yes or no.
+    \item \textbf{Optimization}: Finding the best configuration according to some measure, such as the smallest cost or longest length.
+    \item \textbf{Query}: One question asked about the input. Many problems ask thousands of queries against one fixed input.
+    \item \textbf{Precomputation}: Doing work once at the start so that each later query is cheap. The programming equivalent of building a lookup table.
+    \item \textbf{Closed-form formula}: A formula that computes the answer directly, without a loop that grows with the input size.
+    \item \textbf{Time Limit Exceeded (TLE)}: Your program is correct but too slow for the allowed time.
+    \item \textbf{Constraint}: A limit stated in the problem, such as $N \le 10^5$. It reveals the intended complexity.
+    \item \textbf{Module}: One topic document in this library, for example Number Theory.
+    \item \textbf{Backtracking}: Building a solution step by step and undoing a step as soon as it cannot lead to a valid answer.
+    \item \textbf{Dynamic Programming}: Solving small subproblems once, storing their answers in a table, and reusing them for larger problems.
+    \item \textbf{Modular arithmetic}: Arithmetic that wraps around after reaching a fixed value, like a clock resetting at 12.
+    \item \textbf{Graph}: A collection of vertices (nodes) and edges connecting pairs of vertices.
+    \item \textbf{Disjoint Set Union (DSU)}: A data structure that tracks elements partitioned into disjoint subsets, supporting near-constant time union and find operations.
+    \item \textbf{Topological order}: A linear ordering of vertices in a directed acyclic graph where every dependency precedes its target.
+    \item \textbf{Binary Search}: Systematic interval halving over a sorted array or monotonic answer space.
+    \item \textbf{Monotonicity}: The property where a condition preserves truth value after a transition point ($FF\dots FTT\dots T$).
+    \item \textbf{Lower / Upper Bound}: Boundary indices locating the first element $\ge target$ or strictly $> target$.
+\end{itemize}
+
+\subsection{Mathematical Symbols}
+\begin{itemize}
+    \item $N$: The size of the input, usually the number of elements.
+    \item $V, E$: The number of vertices and edges in a graph.
+    \item $O(\cdot)$: Big-O notation. It describes how the running time grows with the input size. $O(N)$ means ``proportional to $N$'', like one pass through a \texttt{std::vector}.
+    \item $\log N$: How many times you can halve $N$ before reaching $1$. For $N = 10^9$ it is about $30$.
+    \item $N!$: ``$N$ factorial'', the product $1 \cdot 2 \cdots N$. It is the number of orderings of $N$ distinct items.
+    \item $2^N$: Two multiplied by itself $N$ times. It is the number of subsets of $N$ items.
+    \item $\binom{n}{k}$: ``$n$ choose $k$'', the number of ways to pick $k$ items from $n$ when order does not matter.
+    \item $\sqrt{N}$: The square root of $N$, the number that multiplied by itself gives $N$.
+    \item $\lfloor \cdot \rfloor, \lceil \cdot \rceil$: Floor and ceiling rounding functions.
+    \item $\bmod$ or \texttt{\%}: The remainder after division. $14 \bmod 12 = 2$.
+    \item $\phi(N)$: Euler's totient, the count of numbers from $1$ to $N$ that share no prime factor with $N$.
+    \item $C_n$: The $n$-th Catalan number, which counts valid parenthesis strings of $n$ pairs and many similar structures.
+    \item $\alpha(N)$: The inverse Ackermann function, an extraordinarily slow-growing function ($\le 4$ for all practical inputs).
+    \item $\prod$: ``Product of'', the multiplication analogue of the summation sign.
+    \item $\checkmark$: Marks a module that is complete.
+\end{itemize}
+
+% ============================================================================
+\section{Further Reading}
+% ============================================================================
+
+\subsection*{Free Online Resources (Start Here)}
+\begin{itemize}
+    \item \textbf{CP-Algorithms} (\texttt{cp-algorithms.com}) --- Free, code-heavy reference that organizes techniques by topic. A good second stop once this guide has pointed you to a technique.
+    \item \textbf{Art of Problem Solving Wiki} (\texttt{artofproblemsolving.com/wiki}) --- Beginner-friendly explanations of the mathematics behind many techniques in this guide.
+    \item \textbf{Brilliant.org} (\texttt{brilliant.org}) --- Interactive, visual courses on algorithms, number theory, and combinatorics.
+\end{itemize}
+
+\subsection*{Books (When You Are Ready to Go Deeper)}
+\begin{itemize}
+    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- Organizes problem types by technique, very similar in spirit to this guide. Intermediate; read after you are comfortable with the topic documents.
+    \item S.\ Skiena, \emph{The Algorithm Design Manual} --- Contains a ``catalog of algorithmic problems'' that maps problem types to techniques. Intermediate; a good companion for building problem-recognition skill.
+    \item T.\ H.\ Cormen, C.\ E.\ Leiserson, R.\ L.\ Rivest, C.\ Stein, \emph{Introduction to Algorithms} --- The standard rigorous reference. Advanced; use it as a dictionary, not as a first read.
+\end{itemize}
+
+% ============================================================================
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+% ============================================================================
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Date} & \textbf{Change} \\ \hline
+2026-10-03 & Document created: decision tree, input size table, unified problem signal index for the five finished modules, module registry with four planned modules, summary, glossary, further reading. \\ \hline
+2026-10-03 & Added Version History section. \\ \hline
+2026-10-03 & Added index rows for unique permutations and subsets with duplicates, synced from the refactored Recursion and Backtracking module. \\ \hline
+2026-10-03 & Added Dynamic Programming module to Available registry, synced 19 pattern recognition rows, and added DP complexity entries. \\ \hline
+2026-10-03 & Added Graph Algorithms module to Available registry, synced 12 pattern recognition rows, and added graph algorithm complexity entries. \\ \hline
+2026-10-03 & Added Binary Search module to Available registry, synced 11 pattern recognition rows, and added binary search complexity entries. \\ \hline
+\end{tabularx}
+
+\end{document}

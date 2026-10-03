@@ -1,0 +1,885 @@
+﻿\documentclass[11pt,a4paper]{article}
+
+% --- Core LaTeX Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{graphicx}
+
+% --- Optional Diagram Packages (include when needed) ---
+% \usepackage{forest}
+% \usepackage{tikz}
+
+% --- Unified Color Palette ---
+\definecolor{primaryblue}{RGB}{24, 75, 140}
+\definecolor{codebg}{RGB}{248, 249, 250}
+\definecolor{codeframe}{RGB}{210, 215, 222}
+\definecolor{codegreen}{RGB}{40, 130, 60}
+\definecolor{codeblue}{RGB}{20, 90, 180}
+\definecolor{codegray}{RGB}{120, 120, 120}
+
+% --- Hyperref Setup ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    citecolor=primaryblue,
+    urlcolor=primaryblue,
+    pdftitle={Number Theory},
+    pdfauthor={Antigravity Engineering}
+}
+
+% --- Theorem & Definition Environments ---
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{example}{Example}[section]
+
+% --- Callout Box Environment ---
+\newenvironment{calloutbox}[1]{
+    \par\vspace{0.3cm}
+    \noindent\begin{tabular}{|p{0.96\textwidth}|}
+    \hline
+    \vspace{0.1cm}
+    \textbf{#1}\par\vspace{0.1cm}
+}{
+    \vspace{0.1cm}
+    \\ \hline
+    \end{tabular}
+    \vspace{0.3cm}\par
+}
+
+% --- Modern C++ Code Listing Setup ---
+\lstset{
+    language=C++,
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{orange!80!black},
+    numberstyle=\tiny\color{codegray},
+    numbers=left,
+    numbersep=8pt,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b
+}
+
+% --- Title Block ---
+\title{\vspace{-1.5cm}\textbf{\Huge Number Theory}\\[0.3cm]
+\Large Primes, Divisors, Factorization, GCD, and Euler's Totient Function}
+\author{Technical Monograph}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+Number theory is the study of whole numbers and how they divide, multiply, and combine. At its foundation are prime numbers---the indestructible atomic building blocks from which all integers are constructed. This guide starts from absolute zero: what it means for one number to divide another, how to test if a number is prime without checking every possibility, and how to break composite numbers into their unique prime factors. We then explore the Greatest Common Divisor (GCD), the Euclidean Algorithm, divisor-counting formulas, and Euler's Totient function. Each concept includes plain-English explanations, step-by-step worked traces, and modern C++23 implementations designed for solving problems in algorithmic contests.
+\end{abstract}
+
+\tableofcontents
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+% ============================================================================
+\section{Foundations: Divisibility and Integers}
+% ============================================================================
+
+All of number theory is built on integer division: what happens when you divide one whole number by another, and whether there is anything left over.
+
+\subsection{Divisibility and Remainders}
+When you divide an integer $a$ by a positive integer $b$, you get a quotient $q$ and a remainder $r$:
+\begin{equation}
+a = q \cdot b + r, \quad \text{where } 0 \le r < b
+\end{equation}
+
+If the remainder $r$ is $0$, we say that \textbf{$b$ divides $a$} (or $b$ is a divisor of $a$, or $a$ is a multiple of $b$). In mathematical notation, we write:
+$$ b \mid a \quad \text{(read: ``$b$ divides $a$'')} $$
+If $b$ does not divide $a$, we write $b \nmid a$.
+
+\noindent \textbf{Example:} $4 \mid 12$ because $12 = 3 \times 4 + 0$. However, $5 \nmid 12$ because $12 = 2 \times 5 + 2$ (remainder 2).
+
+\subsection{Prime and Composite Numbers}
+Every positive integer greater than 1 belongs to one of two categories:
+
+\begin{definition}[Prime Number]
+An integer $p > 1$ is \textbf{prime} if its only positive divisors are $1$ and $p$.
+\end{definition}
+
+\begin{definition}[Composite Number]
+An integer $n > 1$ is \textbf{composite} if it has at least one positive divisor other than $1$ and itself. That is, $n = a \times b$ where $1 < a, b < n$.
+\end{definition}
+
+\begin{calloutbox}{What about 0 and 1?}
+The number $1$ is \textbf{neither prime nor composite}---it is called a \textbf{unit}. Excluding 1 from being prime is not an arbitrary rule; it is required so that prime factorizations remain unique. (If 1 were prime, you could write $6 = 2 \times 3 = 1 \times 2 \times 3 = 1 \times 1 \times 2 \times 3$, ruining uniqueness). The number $0$ has infinitely many divisors and is neither prime nor composite.
+\end{calloutbox}
+
+\noindent The first few prime numbers are:
+$$ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, \dots $$
+Notice that \textbf{2 is the only even prime number}. Every other even number is divisible by 2 and therefore composite.
+
+% ============================================================================
+\section{Core Concepts: Divisors, Factors, and Factorization}
+% ============================================================================
+
+\subsection{The Symmetry of Divisors: The $\sqrt{n}$ Rule}
+Suppose you want to find all divisors of $n = 36$. You could test every number from $1$ to $36$. But notice how divisors always appear in pairs:
+
+
+
+If $d$ divides $n$, then $n/d$ must also divide $n$. One of these two factors must be less than or equal to $\sqrt{n}$, and the other must be greater than or equal to $\sqrt{n}$. (If both were larger than $\sqrt{n}$, their product would exceed $n$).
+
+\begin{calloutbox}{Where does this come from?}
+Think of factors as rectangles. If you have 36 blocks, you can arrange them as a $1 \times 36$ rectangle, a $2 \times 18$ rectangle, and so on. As you make the rectangle wider, it must get shorter. The most "square-like" rectangle you can make is $6 \times 6$. Once you pass the square root (6), the rectangles just repeat but rotated (for example, $9 \times 4$ is just $4 \times 9$ rotated). Therefore, every unique pair is discovered before or exactly at the square root!
+\end{calloutbox}
+
+\begin{calloutbox}{The $\sqrt{n}$ Breakthrough}
+To find \textbf{all} divisors or to test if a number is prime, you never need to check beyond $\sqrt{n}$. For $n = 1{,}000{,}000$, instead of checking a million numbers, you only check up to $\sqrt{10^6} = 1000$. This changes an impossible problem into an instantaneous calculation.
+\end{calloutbox}
+
+\subsection{The Fundamental Theorem of Arithmetic}
+Primes are the ``atoms'' of multiplication. Every positive integer greater than 1 can be broken down into a product of primes in exactly one way (ignoring the order of factors).
+
+\begin{theorem}[Fundamental Theorem of Arithmetic]
+Every integer $n \ge 2$ can be uniquely expressed in prime-power form:
+\begin{equation}
+n = p_1^{a_1} \cdot p_2^{a_2} \cdot \dots \cdot p_k^{a_k}
+\end{equation}
+where $p_1 < p_2 < \dots < p_k$ are distinct prime numbers and $a_i \ge 1$ are positive integer exponents.
+\end{theorem}
+
+\noindent \textbf{Example:} For $n = 360$:
+$$ 360 = 2^3 \cdot 3^2 \cdot 5^1 $$
+There is no other combination of prime powers that multiplies to 360.
+
+\subsection{Counting Divisors: The $\tau(n)$ Function}
+How many total divisors does a number have? Instead of listing them all, you can count them directly from the prime factorization.
+
+Any divisor $d$ of $n = p_1^{a_1} p_2^{a_2} \dots p_k^{a_k}$ must take the form:
+$$ d = p_1^{b_1} p_2^{b_2} \dots p_k^{b_k}, \quad \text{where } 0 \le b_i \le a_i $$
+For each prime $p_i$, you have $(a_i + 1)$ choices for the exponent $b_i$ (from $0$ up to $a_i$). By the Rule of Product, the total number of divisors $\tau(n)$ is:
+\begin{equation}
+\tau(n) = (a_1 + 1)(a_2 + 1) \dots (a_k + 1) = \prod_{i=1}^k (a_i + 1)
+\end{equation}
+
+\begin{calloutbox}{Where does this come from?}
+Think of picking a divisor as ordering a meal from a menu. For $360 = 2^3 \cdot 3^2 \cdot 5^1$, you must choose how many $2$s to include (0, 1, 2, or 3), how many $3$s (0, 1, or 2), and how many $5$s (0 or 1). That gives exactly $4 \times 3 \times 2 = 24$ possible combinations. Every unique combination forms a unique divisor.
+\end{calloutbox}
+
+\noindent \textbf{Worked Example: Find $\tau(360)$}
+\begin{enumerate}
+    \item Factorize: $360 = 2^3 \cdot 3^2 \cdot 5^1$.
+    \item Add 1 to each exponent: $(3+1), (2+1), (1+1)$.
+    \item Multiply: $4 \times 3 \times 2 = \mathbf{24}$ divisors.
+\end{enumerate}
+
+\subsection{Sum of Divisors: The $\sigma(n)$ Function}
+The sum of all divisors of $n$, denoted $\sigma(n)$, is also directly computable from its prime powers:
+\begin{equation}
+\sigma(n) = \prod_{i=1}^k \left( 1 + p_i + p_i^2 + \dots + p_i^{a_i} \right) = \prod_{i=1}^k \frac{p_i^{a_i + 1} - 1}{p_i - 1}
+\end{equation}
+
+\begin{calloutbox}{Where does this come from?}
+If you expand the product $(1 + p_1 + p_1^2)(1 + p_2)$, you get $1 + p_2 + p_1 + p_1 p_2 + p_1^2 + p_1^2 p_2$. This algebraic expansion perfectly generates every possible divisor exactly once! So, the sum of all divisors is just the product of the sums of prime powers. Since $1 + p + p^2 + \dots + p^a$ is a geometric series, we can use the formula $(p^{a+1} - 1)/(p - 1)$ to compute it instantly.
+\end{calloutbox}
+
+\noindent \textbf{Worked Example: Find $\sigma(360)$}
+\begin{enumerate}
+    \item Factorize: $360 = 2^3 \cdot 3^2 \cdot 5^1$.
+    \item Evaluate for $p=2$: $(2^4 - 1)/(2 - 1) = 15 / 1 = 15$.
+    \item Evaluate for $p=3$: $(3^3 - 1)/(3 - 1) = 26 / 2 = 13$.
+    \item Evaluate for $p=5$: $(5^2 - 1)/(5 - 1) = 24 / 4 = 6$.
+    \item Multiply: $15 \times 13 \times 6 = \mathbf{1170}$.
+\end{enumerate}
+
+\subsection{Perfect Numbers: When $\sigma(n) = 2n$}
+A \textbf{perfect number} is a positive integer equal to the sum of all its \textbf{proper} divisors (every divisor except the number itself). Equivalently, $n$ is perfect when $\sigma(n) = 2n$ --- because the sum of \emph{all} divisors equals $n$ (the number itself) plus the sum of the proper divisors.
+
+\noindent \textbf{Example: Is 28 a perfect number?}
+\begin{enumerate}
+    \item Factorize: $28 = 2^2 \cdot 7$.
+    \item Find all divisors: $1, 2, 4, 7, 14, 28$. Proper divisors (excluding 28): $\{1, 2, 4, 7, 14\}$.
+    \item Sum of proper divisors: $1 + 2 + 4 + 7 + 14 = \mathbf{28}$. Yes, 28 is perfect.
+    \item Verification using $\sigma$: $\sigma(28) = (1+2+4)(1+7) = 7 \times 8 = 56 = 2 \times 28$. Confirmed.
+\end{enumerate}
+
+\begin{calloutbox}{The Perfect Number Test in Code}
+To test if $n$ is perfect, compute the sum of divisors using the $O(\sqrt{n})$ pair-collection method (stopping before adding $n$ itself), then check if the sum equals $n$. By convention, 1 is not considered perfect because it has no proper divisors (the sum is 0).
+\end{calloutbox}
+
+The first four perfect numbers are $6, 28, 496, 8128$. All known even perfect numbers come from the formula $2^{p-1}(2^p - 1)$ when $2^p - 1$ is prime (a \textbf{Mersenne prime}). Whether any odd perfect numbers exist is one of the oldest unsolved problems in mathematics.
+
+% ============================================================================
+\section{Greatest Common Divisor (GCD) and LCM}
+% ============================================================================
+
+\subsection{Greatest Common Divisor (GCD)}
+The \textbf{Greatest Common Divisor} of two integers $a$ and $b$ (written $\gcd(a, b)$) is the largest positive integer that divides both $a$ and $b$ with zero remainder.
+
+\noindent \textbf{Worked Example: Find $\gcd(24, 36)$}
+\begin{enumerate}
+    \item Divisors of 24: $1, 2, 3, 4, 6, 8, 12, 24$
+    \item Divisors of 36: $1, 2, 3, 4, 6, 9, 12, 18, 36$
+    \item Common divisors: $1, 2, 3, 4, 6, 12$. The largest is $\mathbf{12}$.
+\end{enumerate}
+
+\begin{definition}[Coprime / Relatively Prime]
+Two integers $a$ and $b$ are \textbf{coprime} (or relatively prime) if their only common divisor is $1$:
+\begin{equation}
+\gcd(a, b) = 1
+\end{equation}
+\end{definition}
+
+\noindent \textbf{Example:} $\gcd(8, 15) = 1$. Even though neither 8 nor 15 is prime, they share no common prime factors ($8 = 2^3$, $15 = 3 \times 5$). Thus, they are coprime.
+
+\subsection{The Euclidean Algorithm}
+The naive way to find $\gcd(a, b)$ is to factorize both numbers, which takes $O(\sqrt{n})$ time. The \textbf{Euclidean Algorithm} finds the GCD in logarithmic time $O(\log \min(a, b))$ using a simple observation:
+\begin{equation}
+\gcd(a, b) = \gcd(b, a \bmod b), \quad \text{with base case } \gcd(a, 0) = a
+\end{equation}
+
+\textbf{Why does this work?} If a number $d$ divides both $a$ and $b$, then $d$ must also divide their difference $a - q \cdot b$, which is the remainder $a \bmod b$. The set of common divisors does not change when replacing $a$ with $a \bmod b$.
+
+\begin{calloutbox}{Where does this come from?}
+Imagine a $252 \times 105$ rectangle. You want to tile it perfectly with the largest possible square tiles. First, you place two $105 \times 105$ squares. The uncovered part is a $105 \times 42$ rectangle. Now tile that with $42 \times 42$ squares. You fit two, leaving a $42 \times 21$ rectangle. Finally, you fit two $21 \times 21$ squares perfectly. The side length of the final square that perfectly tiles the space (21) is the GCD! This geometric process perfectly mirrors $\gcd(252, 105) \to \gcd(105, 42) \to \gcd(42, 21) \to \gcd(21, 0)$.
+\end{calloutbox}
+
+\noindent \textbf{Worked Example: Euclidean Algorithm Trace for $\gcd(252, 105)$}
+
+\begin{enumerate}
+    \item $a = 252, b = 105$. $252 \bmod 105 = 42$. Next step: $\gcd(105, 42)$.
+    \item $a = 105, b = 42$. $105 \bmod 42 = 21$. Next step: $\gcd(42, 21)$.
+    \item $a = 42, b = 21$. $42 \bmod 21 = 0$. Next step: $\gcd(21, 0)$.
+    \item Since $b = 0$, the GCD is $\mathbf{21}$.
+\end{enumerate}
+
+\subsection{Least Common Multiple (LCM)}
+The \textbf{Least Common Multiple} of $a$ and $b$ (written $\operatorname{lcm}(a, b)$) is the smallest positive integer that is a multiple of both $a$ and $b$.
+
+There is a fundamental connection between GCD and LCM:
+\begin{equation}
+\gcd(a, b) \times \operatorname{lcm}(a, b) = a \times b
+\end{equation}
+Rearranging gives the standard formula used in code:
+\begin{equation}
+\operatorname{lcm}(a, b) = \frac{a \times b}{\gcd(a, b)} = \frac{a}{\gcd(a, b)} \times b
+\end{equation}
+In programming, always divide by the GCD \emph{before} multiplying to prevent integer overflow.
+
+\begin{calloutbox}{The GCD×LCM Identity: The Most Useful Shortcut}
+For any two positive integers $a$ and $b$:
+$$ \gcd(a, b) \times \operatorname{lcm}(a, b) = a \times b $$
+This means if you know any two of the three values (GCD, LCM, or the product), you can compute the third instantly. In code: always compute $\operatorname{lcm}(a, b) = (a / \gcd(a, b)) \times b$ --- divide \emph{first}, then multiply, to avoid overflow.
+\end{calloutbox}
+
+\begin{calloutbox}{Pitfall: Integer Overflow in LCM}
+Even if $a$ and $b$ fit in 32-bit integers, their product $a \times b$ might exceed $2^{31}-1$. Computing $(a \times b) / \gcd(a, b)$ can overflow during the multiplication step. By calculating $(a / \gcd(a, b)) \times b$, you keep the intermediate values as small as possible. However, the final LCM can still exceed 32 bits, so always use 64-bit integers (\texttt{int64\_t} or \texttt{long long}) when computing LCM.
+\end{calloutbox}
+
+\noindent \textbf{Worked Example: Compute $\operatorname{lcm}(252, 105)$}
+\begin{enumerate}
+    \item We know $\gcd(252, 105) = 21$.
+    \item Divide first: $252 / 21 = 12$.
+    \item Multiply: $12 \times 105 = \mathbf{1260}$.
+    \item Therefore, $1260$ is the smallest number divisible by both $252$ and $105$.
+\end{enumerate}
+
+\begin{calloutbox}{Real-World Analogy: GCD as Simplification}
+Imagine you have the fraction $\frac{12}{18}$ and you want to simplify it. You divide both numerator and denominator by their GCD (which is 6): $\frac{12}{18} = \frac{12/6}{18/6} = \frac{2}{3}$. The GCD is exactly the largest number by which you can shrink both sides without creating fractions. In code, you do this any time you reduce a ratio or check if one thing divides another cleanly.
+\end{calloutbox}
+
+% ============================================================================
+\section{Euler's Totient Function $\phi(n)$}
+% ============================================================================
+
+\subsection{What Does the Totient Function Count?}
+For any positive integer $n$, \textbf{Euler's Totient Function}, written $\phi(n)$ (Greek letter Phi), counts how many integers in the range $[1, n]$ are \textbf{coprime to $n$}:
+\begin{equation}
+\phi(n) = \big| \{ k \in \{1, 2, \dots, n\} \mid \gcd(k, n) = 1 \} \big|
+\end{equation}
+
+\noindent \textbf{Small Example:} What is $\phi(9)$?
+The numbers from 1 to 9 are: $\{1, 2, 3, 4, 5, 6, 7, 8, 9\}$.
+\begin{itemize}
+    \item Numbers sharing a factor with 9 (multiples of 3): $\{3, 6, 9\}$.
+    \item Numbers coprime to 9: $\{1, 2, 4, 5, 7, 8\}$.
+\end{itemize}
+There are 6 such numbers, so $\phi(9) = \mathbf{6}$.
+
+\subsection{The Formula for $\phi(n)$}
+Calculating $\phi(n)$ by checking $\gcd(k, n)$ for every $k$ takes $O(n \log n)$ time. Instead, Euler proved an exact product formula based on prime factorization:
+
+\begin{theorem}[Euler's Totient Formula]
+For an integer $n$ with prime factorization $n = p_1^{a_1} p_2^{a_2} \dots p_k^{a_k}$:
+\begin{equation}
+\phi(n) = n \cdot \prod_{p \mid n} \left( 1 - \frac{1}{p} \right) = n \cdot \left(1 - \frac{1}{p_1}\right) \left(1 - \frac{1}{p_2}\right) \dots \left(1 - \frac{1}{p_k}\right)
+\end{equation}
+\end{theorem}
+
+\begin{calloutbox}{Where does this come from?}
+Think in terms of probabilities or fractions:
+\begin{itemize}
+    \item A fraction $1/p$ of all numbers up to $n$ are multiples of $p$.
+    \item Therefore, a fraction $(1 - 1/p)$ are \emph{not} divisible by $p$.
+    \item Multiplying these fractions across all distinct prime factors removes all numbers that share any prime factor with $n$.
+\end{itemize}
+\end{calloutbox}
+
+\noindent \textbf{Worked Example: Computing $\phi(72)$ from Prime Factorization}
+\begin{enumerate}
+    \item Factorize: $72 = 2^3 \cdot 3^2$. Distinct primes: $\{2, 3\}$.
+    \item Apply the product formula:
+    $$ \phi(72) = 72 \cdot \left(1 - \frac{1}{2}\right) \cdot \left(1 - \frac{1}{3}\right) = 72 \cdot \frac{1}{2} \cdot \frac{2}{3} = 72 \cdot \frac{1}{3} = \mathbf{24}. $$
+    \item Verification: Check a few values. Numbers from 1 to 72 that share a factor with 72 are multiples of 2 ($36$ of them) plus multiples of 3 not already counted ($12$ of them), totalling $48$ excluded. So $72 - 48 = 24$ remain coprime to 72.
+\end{enumerate}
+
+\subsection{Special Cases and Key Properties}
+\begin{enumerate}
+    \item \textbf{If $p$ is prime:} All numbers from $1$ to $p-1$ are coprime to $p$:
+    $$ \phi(p) = p - 1 $$
+    \item \textbf{Prime powers:} Only multiples of $p$ share a factor with $p^k$. There are $p^k / p = p^{k-1}$ multiples:
+    $$ \phi(p^k) = p^k - p^{k-1} = p^k \left( 1 - \frac{1}{p} \right) $$
+    \item \textbf{Multiplicative Property:} If $\gcd(a, b) = 1$, then:
+    $$ \phi(a \cdot b) = \phi(a) \cdot \phi(b) $$
+    \item \textbf{Sum of Totients of Divisors:} Summing $\phi(d)$ over all divisors of $n$ returns $n$:
+    $$ \sum_{d \mid n} \phi(d) = n $$
+\end{enumerate}
+
+% ============================================================================
+\section{Key Algorithmic Patterns and Techniques}
+% ============================================================================
+
+In algorithmic problem-solving, numbers can reach $10^9$ or $10^{18}$. A naive algorithm that counts one-by-one will immediately cause Time Limit Exceeded (TLE). Here are the foundational algorithmic patterns of number theory.
+
+\begin{calloutbox}{The One Idea Behind Every Efficient Number Theory Algorithm}
+If $n$ has any factor other than 1 and itself, it must have at least one factor that is $\le \sqrt{n}$. This single observation is the engine behind trial division, the Sieve of Eratosthenes, prime factorization, and the segmented sieve. Every efficient algorithm in this section exploits it. When you see a loop that runs up to $\sqrt{n}$, this is why.
+\end{calloutbox}
+
+\subsection{Why Naive Approaches Fail}
+\begin{itemize}
+    \item \textbf{Checking every number up to $n$:} Testing if $n = 10^9 + 7$ is prime by dividing by all numbers up to $n$ requires $10^9$ operations ($\approx 1$ second in C++). Doing this for 100 queries takes minutes.
+    \item \textbf{Generating primes individually:} Calling an $O(\sqrt{n})$ primality test on every number up to $N = 10^7$ takes $O(N \sqrt{N}) \approx 10^{10}$ operations.
+    \item \textbf{Factoring repeatedly:} If a problem asks you to factorize $10^5$ queries, running $O(\sqrt{n})$ on each query takes $10^5 \times 10^4 = 10^9$ operations.
+\end{itemize}
+
+\subsection{Pattern 1: The Sieve of Eratosthenes (Batch Prime Finding)}
+Instead of testing each number for primality, start with an array of numbers from $2$ to $N$ marked as prime. Find the first prime (2), and cross out all of its multiples ($4, 6, 8, \dots$). Move to the next uncrossed number (3), and cross out its multiples ($6, 9, 12, \dots$). Repeat until $\sqrt{N}$.
+
+\vspace{0.2cm}
+\noindent \textbf{Key Optimization:} When crossing out multiples of $p$, start at $p^2$ rather than $2p$, because all smaller multiples ($2p, 3p, \dots$) have already been crossed out by smaller prime factors!
+
+\begin{calloutbox}{Pitfall: Inner Loop Starting at $i \times i$}
+A common mistake is writing the inner loop as \texttt{for (int j = i * 2; ...)}. This does unnecessary work. Starting at \texttt{i * i} is correct and drastically faster, but beware of integer overflow if \texttt{i} is near $10^5$. Always use \texttt{int64\_t} for the loop variables if $N$ is large!
+\end{calloutbox}
+
+\vspace{0.2cm}
+\noindent \textbf{Complexity:} $O(N \log \log N)$ time, which is practically linear. For $N = 10^7$, this runs in under 0.1 seconds in C++.
+
+\noindent \textbf{Worked Trace: Sieve of Eratosthenes for $N = 30$}
+{\footnotesize
+
+}
+We stop because the next prime is $7 > \sqrt{30}$. Remaining primes: $\mathbf{2, 3, 5, 7, 11, 13, 17, 19, 23, 29}$.
+
+\subsection{Pattern 2: The Smallest Prime Factor (SPF) / Linear Sieve}
+When you have multiple factorization queries ($Q \le 10^6$), you can precompute the \textbf{Smallest Prime Factor} (SPF) for every number up to $N$.
+\begin{itemize}
+    \item \texttt{spf[x]} stores the smallest prime that divides $x$.
+    \item To factorize any number $x$, repeatedly divide by \texttt{spf[x]}:
+    $$ x \leftarrow x / \texttt{spf}[x] $$
+    \item Each division takes $O(1)$ time, so factorization takes $O(\log x)$ time!
+\end{itemize}
+
+\noindent \textbf{Worked Trace: Factorize 60 using the SPF array (with $N = 60$)}
+
+
+After running the SPF sieve, the relevant entries are: \texttt{spf[60]=2}, \texttt{spf[30]=2}, \texttt{spf[15]=3}, \texttt{spf[5]=5}.
+\begin{enumerate}
+    \item $x = 60$. \texttt{spf[60] = 2}. Divide: $60 / 2 = 30$, $30 / 2 = 15$. Factor $2^2$ extracted. $x = 15$.
+    \item $x = 15$. \texttt{spf[15] = 3}. Divide: $15 / 3 = 5$. Factor $3^1$ extracted. $x = 5$.
+    \item $x = 5$. \texttt{spf[5] = 5}. Divide: $5 / 5 = 1$. Factor $5^1$ extracted. $x = 1$.
+    \item Result: $60 = 2^2 \cdot 3 \cdot 5$. Total steps: 4 divisions.
+\end{enumerate}
+Compare this to trial division on 60, which would test divisors $2, 3, 5, 7 (> \sqrt{60})$ --- 4 candidates. For larger $x$ (say $x = 2^{20}$), SPF takes only 20 lookups versus trial division's $\sqrt{2^{20}} \approx 1024$ attempts.
+
+\subsection{Pattern 3: The Segmented Sieve (Primes in Range $[L, R]$)}
+What if you need to find primes in the range $[L, R]$ where $L, R \le 10^{12}$, but the range length $R - L \le 10^6$?
+\begin{itemize}
+    \item You cannot allocate an array of size $10^{12}$ (Memory Limit Exceeded).
+    \item But any composite number in $[L, R]$ must have a prime factor $\le \sqrt{R} \le 10^6$.
+    \item \textbf{Technique:} Sieve the small primes up to $\sqrt{R} = 10^6$ first. Then allocate an array of size $(R - L + 1)$ and use the small primes to cross out multiples inside $[L, R]$.
+\end{itemize}
+
+\noindent \textbf{Worked Trace: Segmented Sieve Concept for Primes in {$[20, 35]$}}
+\begin{enumerate}
+    \item Find small primes up to $\lfloor \sqrt{35} \rfloor = 5$. Small primes are $\{2, 3, 5\}$.
+    \item Create a boolean array of length $R - L + 1 = 35 - 20 + 1 = 16$ representing indices $0$ to $15$ (values $20$ to $35$), initially all marked as prime.
+    \item Strike multiples of $p = 2$: First multiple $\ge 20$ is $20$. Multiples: $20, 22, 24, 26, 28, 30, 32, 34$.
+    \item Strike multiples of $p = 3$: First multiple $\ge 20$ is $21$. Multiples: $21, 24, 27, 30, 33$.
+    \item Strike multiples of $p = 5$: First multiple $\ge 20$ is $20$. Multiples: $20, 25, 30, 35$.
+    \item Remaining uncrossed values in $[20, 35]$ are: $\mathbf{23, 29, 31}$.
+\end{enumerate}
+
+% ============================================================================
+\section{Worked Examples with Step-by-Step Traces}
+% ============================================================================
+
+\begin{example}[Finding All Divisors of $n = 36$]
+Find all positive divisors of $36$ using the square root pairing method.
+\begin{enumerate}
+    \item Compute limit: $\lfloor \sqrt{36} \rfloor = 6$.
+    \item Iterate $i$ from $1$ to $6$:
+    \begin{itemize}
+        \item $i = 1$: $36 \bmod 1 = 0 \implies$ pair is $(1, 36/1) = (\mathbf{1}, \mathbf{36})$.
+        \item $i = 2$: $36 \bmod 2 = 0 \implies$ pair is $(2, 36/2) = (\mathbf{2}, \mathbf{18})$.
+        \item $i = 3$: $36 \bmod 3 = 0 \implies$ pair is $(3, 36/3) = (\mathbf{3}, \mathbf{12})$.
+        \item $i = 4$: $36 \bmod 4 = 0 \implies$ pair is $(4, 36/4) = (\mathbf{4}, \mathbf{9})$.
+        \item $i = 5$: $36 \bmod 5 = 1 \implies$ not a divisor.
+        \item $i = 6$: $36 \bmod 6 = 0 \implies$ pair is $(6, 36/6) = (6, 6) \implies$ add $\mathbf{6}$ once.
+    \end{itemize}
+    \item Sorted list of divisors: $[1, 2, 3, 4, 6, 9, 12, 18, 36]$. Total = 9 divisors.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Prime Factorization and Divisor Analysis for $n = 360$]
+Factorize $360$ into prime powers, then compute its total number and sum of divisors.
+\begin{enumerate}
+    \item Divide out 2: $360 / 2 = 180 \implies 180 / 2 = 90 \implies 90 / 2 = 45$. Count of 2s = 3.
+    \item Divide out 3: $45 / 3 = 15 \implies 15 / 3 = 5$. Count of 3s = 2.
+    \item Divide out 5: $5 / 5 = 1$. Count of 5s = 1.
+    \item Prime factorization: $360 = 2^3 \cdot 3^2 \cdot 5^1$.
+    \item Count of divisors $\tau(360) = (3 + 1)(2 + 1)(1 + 1) = 4 \times 3 \times 2 = \mathbf{24}$.
+    \item Sum of divisors $\sigma(360) = (1+2+4+8)(1+3+9)(1+5) = 15 \times 13 \times 6 = \mathbf{1170}$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Euclidean Algorithm Trace: $\gcd(252, 105)$ and $\operatorname{lcm}(252, 105)$]
+Compute the GCD and LCM of $252$ and $105$ using Euclidean modulo reduction.
+\begin{enumerate}
+    \item $\gcd(252, 105)$: $252 \bmod 105 = 42 \implies \gcd(105, 42)$.
+    \item $\gcd(105, 42)$: $105 \bmod 42 = 21 \implies \gcd(42, 21)$.
+    \item $\gcd(42, 21)$: $42 \bmod 21 = 0 \implies \gcd(21, 0) = \mathbf{21}$.
+    \item Compute LCM using $\operatorname{lcm}(a, b) = (a / \gcd(a, b)) \times b$:
+    $$ \operatorname{lcm}(252, 105) = \left( \frac{252}{21} \right) \times 105 = 12 \times 105 = \mathbf{1260}. $$
+\end{enumerate}
+\end{example}
+
+\begin{example}[Computing Euler's Totient $\phi(36)$]
+Find how many integers in $[1, 36]$ are coprime to $36$.
+\begin{enumerate}
+    \item Find distinct prime factors of $36$: $36 = 2^2 \cdot 3^2$. The distinct primes are $p = 2$ and $p = 3$.
+    \item Apply Euler's product formula:
+    $$ \phi(36) = 36 \cdot \left(1 - \frac{1}{2}\right) \left(1 - \frac{1}{3}\right) = 36 \cdot \frac{1}{2} \cdot \frac{2}{3} = 36 \cdot \frac{1}{3} = \mathbf{12}. $$
+    \item Verification by listing: The 12 coprime integers are $1, 5, 7, 11, 13, 17, 19, 23, 25, 29, 31, 35$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Segmented Sieve Concept: Primes in {$[20, 35]$}]
+Find all prime numbers between $L = 20$ and $R = 35$.
+\begin{enumerate}
+    \item Find small primes up to $\lfloor \sqrt{35} \rfloor = 5$. Small primes are $\{2, 3, 5\}$.
+    \item Create a boolean array of length $R - L + 1 = 35 - 20 + 1 = 16$ representing indices $0$ to $15$ (values $20$ to $35$), initially all marked as prime.
+    \item Strike multiples of $p = 2$: First multiple $\ge 20$ is $20$. Multiples: $20, 22, 24, 26, 28, 30, 32, 34$.
+    \item Strike multiples of $p = 3$: First multiple $\ge 20$ is $21$. Multiples: $21, 24, 27, 30, 33$.
+    \item Strike multiples of $p = 5$: First multiple $\ge 20$ is $20$. Multiples: $20, 25, 30, 35$.
+    \item Remaining uncrossed values in $[20, 35]$ are: $\mathbf{23, 29, 31}$.
+\end{enumerate}
+\end{example}
+
+% ============================================================================
+\section{C++ Implementations for Algorithmic Challenges}
+% ============================================================================
+
+All implementations use modern \textbf{C++23} standards, avoiding obsolete practices like raw pointers or global variables.
+
+\subsection{What is Trial Division?}
+Trial division is the direct process of testing whether a candidate factor divides $n$. Instead of checking all numbers up to $n$, we check only up to $\sqrt{n}$. Furthermore, after checking 2 and 3, any remaining prime must be of the form $6k \pm 1$ ($5, 7, 11, 13, 17, 19, \dots$), allowing us to skip all other even numbers and multiples of 3.
+
+\begin{lstlisting}[caption={$O(\sqrt{n})$ Primality Testing with 6k+-1 Optimization}]
+#include <cstdint>
+
+[[nodiscard]] constexpr bool isPrime(int64_t n) noexcept {
+    // 1. Handle base edge cases
+    if (n <= 1) return false;
+    if (n <= 3) return true; // 2 and 3 are prime
+    if (n % 2 == 0 || n % 3 == 0) return false; // Exclude multiples of 2 and 3
+
+    // 2. Test candidate factors of the form 6k - 1 and 6k + 1 up to sqrt(n)
+    for (int64_t i = 5; i * i <= n; i += 6) {
+        if (n % i == 0 || n % (i + 2) == 0) {
+            return false;
+        }
+    }
+    return true;
+}
+\end{lstlisting}
+
+\subsection{What is the Divisor Extraction Algorithm?}
+By iterating from $1$ up to $\sqrt{n}$, each time we find a divisor $i$, we automatically obtain its matching partner $n / i$. Collecting both and sorting yields all divisors.
+
+\begin{lstlisting}[caption={Extracting All Divisors in $O(\sqrt{n})$ Sorted Order}]
+#include <vector>
+#include <algorithm>
+#include <cstdint>
+
+[[nodiscard]] std::vector<int64_t> getDivisors(int64_t n) {
+    std::vector<int64_t> divisors;
+    if (n <= 0) return divisors;
+
+    // 1. Iterate up to sqrt(n)
+    for (int64_t i = 1; i * i <= n; ++i) {
+        if (n % i == 0) {
+            divisors.push_back(i);
+            if (i * i != n) { // Avoid adding the square root twice for perfect squares
+                divisors.push_back(n / i);
+            }
+        }
+    }
+
+    // 2. Sort to return in ascending order (using C++23 ranges)
+    std::ranges::sort(divisors);
+    return divisors;
+}
+\end{lstlisting}
+
+\subsection{What is Prime Factorization?}
+To factorize $n$, divide out 2 until $n$ is odd, then check odd candidates $3, 5, 7, \dots$ up to $\sqrt{n}$. Whenever a candidate divides $n$, divide it out completely and count the exponent. If $n > 1$ remains after the loop, that remaining value is itself a prime.
+
+\begin{lstlisting}[caption={Prime Factorization in $O(\sqrt{n})$ Time}]
+#include <vector>
+#include <utility>
+#include <cstdint>
+
+[[nodiscard]] std::vector<std::pair<int64_t, int>> primeFactorize(int64_t n) {
+    std::vector<std::pair<int64_t, int>> factors;
+
+    // 1. Extract power of 2
+    if (n % 2 == 0) {
+        int count = 0;
+        while (n % 2 == 0) {
+            ++count;
+            n /= 2;
+        }
+        factors.emplace_back(2, count);
+    }
+
+    // 2. Extract odd prime factors up to sqrt(n)
+    for (int64_t d = 3; d * d <= n; d += 2) {
+        if (n % d == 0) {
+            int count = 0;
+            while (n % d == 0) {
+                ++count;
+                n /= d;
+            }
+            factors.emplace_back(d, count);
+        }
+    }
+
+    // 3. If n > 1 remains, the remaining number is prime
+    if (n > 1) {
+        factors.emplace_back(n, 1);
+    }
+
+    return factors;
+}
+\end{lstlisting}
+
+\subsection{How Does the Euclidean Algorithm Work in Code?}
+The Euclidean algorithm replaces $(a, b)$ with $(b, a \bmod b)$ until $b = 0$. In C++17 onward, \texttt{std::gcd} and \texttt{std::lcm} are included in \texttt{<numeric>}. Here is the production implementation showing the internal logic.
+
+\begin{lstlisting}[caption={Iterative Euclidean Algorithm for GCD and LCM}]
+#include <cstdint>
+
+[[nodiscard]] constexpr int64_t gcd(int64_t a, int64_t b) noexcept {
+    while (b != 0) {
+        int64_t rem = a % b;
+        a = b;
+        b = rem;
+    }
+    return a < 0 ? -a : a; // Return non-negative GCD
+}
+
+[[nodiscard]] constexpr int64_t lcm(int64_t a, int64_t b) noexcept {
+    if (a == 0 || b == 0) return 0;
+    // Divide before multiplying to prevent 64-bit integer overflow
+    return (a / gcd(a, b)) * b;
+}
+\end{lstlisting}
+
+\subsection{What is the Sieve of Eratosthenes?}
+The Sieve creates a boolean table representing numbers $0 \dots N$. Starting from 2, whenever an uncrossed prime $p$ is encountered, its multiples $p^2, p^2 + p, p^2 + 2p, \dots$ are crossed out.
+
+\begin{lstlisting}[caption={Sieve of Eratosthenes Generating Primes up to N}]
+#include <vector>
+#include <cstdint>
+
+[[nodiscard]] std::vector<int> sievePrimes(int max_n) {
+    if (max_n < 2) return {};
+
+    // 1. Initialize boolean vector: true means potentially prime
+    std::vector<bool> is_prime(max_n + 1, true);
+    is_prime[0] = is_prime[1] = false;
+
+    // 2. Mark multiples from p^2 onwards
+    for (long long p = 2; p * p <= max_n; ++p) {
+        if (is_prime[p]) {
+            for (long long multiple = p * p; multiple <= max_n; multiple += p) {
+                is_prime[multiple] = false;
+            }
+        }
+    }
+
+    // 3. Collect all primes
+    std::vector<int> primes;
+    for (int i = 2; i <= max_n; ++i) {
+        if (is_prime[i]) primes.push_back(i);
+    }
+    return primes;
+}
+\end{lstlisting}
+
+\subsection{What is the Smallest Prime Factor (SPF) Precomputation?}
+For applications where you must factorize thousands of numbers up to $N \le 10^7$, we compute an array where \texttt{spf[x]} stores the smallest prime dividing $x$. This enables instant $O(\log x)$ prime factorization.
+
+\begin{lstlisting}[caption={Linear Sieve with Smallest Prime Factor (SPF) for Fast Queries}]
+#include <vector>
+#include <utility>
+
+class FastFactorizer {
+private:
+    std::vector<int> spf; // spf[x] = smallest prime factor of x
+
+public:
+    explicit FastFactorizer(int max_n) : spf(max_n + 1) {
+        // 1. Initialize spf[i] = i
+        for (int i = 0; i <= max_n; ++i) spf[i] = i;
+
+        // 2. Mark smallest prime factors
+        for (long long i = 2; i * i <= max_n; ++i) {
+            if (spf[i] == i) { // i is prime
+                for (long long j = i * i; j <= max_n; j += i) {
+                    if (spf[j] == j) { // Only set if not already set by a smaller prime
+                        spf[j] = i;
+                    }
+                }
+            }
+        }
+    }
+
+    // O(log x) factorization query
+    [[nodiscard]] std::vector<std::pair<int, int>> factorize(int x) const {
+        std::vector<std::pair<int, int>> factors;
+        while (x > 1) {
+            int p = spf[x];
+            int count = 0;
+            while (x % p == 0) {
+                ++count;
+                x /= p;
+            }
+            factors.emplace_back(p, count);
+        }
+        return factors;
+    }
+};
+\end{lstlisting}
+
+\subsection{What is the Euler Totient Calculation?}
+To compute $\phi(n)$ for a single number in $O(\sqrt{n})$ time, apply the formula $\phi(n) = n \prod (1 - 1/p)$. To compute $\phi$ for all numbers up to $N$, adapt the Sieve: initialize $\phi[i] = i$, and whenever a prime $p$ is seen, multiply all its multiples by $(1 - 1/p) = (p - 1)/p$.
+
+\begin{lstlisting}[caption={Single Query $\phi(n)$ and Batch Totient Sieve}]
+#include <vector>
+#include <cstdint>
+
+// O(sqrt(n)) single query
+[[nodiscard]] int64_t computeTotient(int64_t n) {
+    int64_t result = n;
+    for (int64_t p = 2; p * p <= n; ++p) {
+        if (n % p == 0) {
+            while (n % p == 0) n /= p;
+            result -= result / p; // Equivalent to result * (1 - 1/p)
+        }
+    }
+    if (n > 1) {
+        result -= result / n;
+    }
+    return result;
+}
+
+// O(N log log N) batch precomputation for phi(1) ... phi(N)
+[[nodiscard]] std::vector<int> totientSieve(int max_n) {
+    std::vector<int> phi(max_n + 1);
+    for (int i = 0; i <= max_n; ++i) phi[i] = i;
+
+    for (int p = 2; p <= max_n; ++p) {
+        if (phi[p] == p) { // p is prime
+            for (int multiple = p; multiple <= max_n; multiple += p) {
+                phi[multiple] -= phi[multiple] / p;
+            }
+        }
+    }
+    return phi;
+}
+\end{lstlisting}
+
+% ============================================================================
+\section{Problem Pattern Recognition}
+% ============================================================================
+
+When facing an algorithmic problem, use this step-by-step decision framework to choose the correct number theory tool.
+
+\subsection*{Step 1: What is the Problem Asking For?}
+\begin{itemize}
+    \item \textbf{``Is this number prime?''} $\implies$ Single query: $O(\sqrt{n})$ trial division with $6k \pm 1$. Range query: Sieve of Eratosthenes.
+    \item \textbf{``Find all divisors / count divisors''} $\implies$ Small single number: extract pairs up to $\sqrt{n}$. Counting only: factorize and compute $\prod (a_i + 1)$.
+    \item \textbf{``Find the Greatest Common Factor / Simplify Fractions''} $\implies$ Euclidean Algorithm (\texttt{std::gcd}).
+    \item \textbf{``Find the smallest number divisible by both $A$ and $B$''} $\implies$ Least Common Multiple (\texttt{std::lcm}).
+    \item \textbf{``Count how many numbers $\le N$ share no factors with $N$''} $\implies$ Euler's Totient function $\phi(n)$.
+    \item \textbf{``Many queries to factorize numbers''} $\implies$ Precompute SPF array with Sieve, then factorize each in $O(\log n)$.
+\end{itemize}
+
+\subsection*{Step 2: What is the Key Constraint?}
+\begin{itemize}
+    \item \textbf{Query Count vs. Input Size:} Single query with $n \le 10^{12} \implies$ Trial division $O(\sqrt{n})$ runs in $10^6$ steps. Multiple queries ($Q \approx 10^5$) with $n \le 10^7 \implies$ Sieve / SPF precomputation is mandatory.
+    \item \textbf{Range $[L, R]$ with large bounds ($R \le 10^{12}$):} If $R - L \le 10^6$, use a Segmented Sieve. Never allocate an array of size $10^{12}$.
+    \item \textbf{Extremely large $N \ge 10^{18}$:} Standard trial division fails. Specialized randomized methods (Miller-Rabin for primality, Pollard's Rho for factorization) are required.
+\end{itemize}
+
+\subsection*{Quick Reference: Keyword-to-Tool Mapping}
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
+\hline
+\textbf{Keywords in the Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
+``is $N$ prime?'' (single query) & Test if any number divides $N$ & Trial division up to $\sqrt{N}$ ($6k \pm 1$) \\ \hline
+``count primes up to $N$'' ($N \le 10^7$) & Find all primes in a large range & Sieve of Eratosthenes \\ \hline
+``primes in range $[L, R]$'' ($R \le 10^{12}$) & Memory too small for full sieve & Segmented Sieve ($O(\sqrt{R})$ base primes) \\ \hline
+``all divisors of $N$'' & Pairs of numbers multiplying to $N$ & $O(\sqrt{N})$ pair collection \\ \hline
+``number of divisors of $N$'' & Count total divisors without listing & Prime factorize $\implies \prod (a_i + 1)$ \\ \hline
+``greatest common divisor / reduce fraction'' & Largest shared factor between two numbers & Euclidean Algorithm (\texttt{std::gcd}) \\ \hline
+``events repeat every $A$ and $B$ days'' & Smallest time when both events align & Least Common Multiple (\texttt{std::lcm}) \\ \hline
+``count numbers $\le N$ coprime to $N$'' & Numbers sharing no common prime factors & Euler's Totient $\phi(N) = N \prod (1 - 1/p)$ \\ \hline
+``factorize $10^5$ different numbers'' & Individual $O(\sqrt{N})$ tests would TLE & Precompute SPF array, query in $O(\log N)$ \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsection*{Step 3: Is the Input Too Large for Direct Computation?}
+\begin{itemize}
+    \item $N \le 10^7$: Array allocation ($10^7$ booleans $\approx 10$ MB) fits in memory. Use a \textbf{standard Sieve}.
+    \item $10^7 < N \le 10^{14}$: Array will cause Memory Limit Exceeded. A single query using \textbf{$O(\sqrt{N})$ trial division} takes $\le 10^7$ iterations and runs in $\approx 0.02$ seconds.
+    \item $N > 10^{14}$: Trial division reaches $10^8$ operations and risks Time Limit Exceeded. Use Miller-Rabin deterministic primality testing for 64-bit integers.
+\end{itemize}
+
+% ============================================================================
+\section{Summary and Complexity Reference}
+% ============================================================================
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\textbf{Task} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
+Primality Test ($6k \pm 1$) & $O(\sqrt{N})$ & $O(1)$ & Single number $N \le 10^{12}$ \\ \hline
+All Divisors & $O(\sqrt{N})$ & $O(\sqrt{N})$ & Finding all factors of a single number \\ \hline
+Prime Factorization & $O(\sqrt{N})$ & $O(\log N)$ & Single number factorization \\ \hline
+$\gcd(a, b)$ / $\operatorname{lcm}(a, b)$ & $O(\log \min(a, b))$ & $O(1)$ & Computing common factors or multiples \\ \hline
+Sieve of Eratosthenes & $O(N \log \log N)$ & $O(N)$ & Finding all primes up to $N \le 10^7$ \\ \hline
+SPF Precomputation & $O(N \log \log N)$ & $O(N)$ & $Q \ge 10^4$ factorization queries on $N \le 10^7$ \\ \hline
+SPF Query Factorization & $O(\log N)$ & $O(\log N)$ & After precomputing SPF array \\ \hline
+Euler's Totient $\phi(N)$ & $O(\sqrt{N})$ & $O(1)$ & Single number totient query \\ \hline
+Totient Sieve & $O(N \log \log N)$ & $O(N)$ & Computing $\phi(1) \dots \phi(N)$ in batch \\ \hline
+Segmented Sieve & $O((R - L) \log \log R)$ & $O(R - L)$ & Primes in $[L, R]$ with $R \le 10^{12}$, $R-L \le 10^6$ \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+% ============================================================================
+\section{Glossary of Terms and Symbols}
+% ============================================================================
+
+If you are new to number theory, this dictionary provides plain-English definitions for every term and symbol used in this document:
+
+\subsection*{Core Concepts}
+\begin{itemize}
+    \item \textbf{Prime Number}: A whole number greater than 1 that cannot be formed by multiplying two smaller whole numbers.
+    \item \textbf{Composite Number}: A whole number that has divisors other than 1 and itself (for example, $6 = 2 \times 3$).
+    \item \textbf{Factor / Divisor}: A whole number that divides another evenly without leaving a remainder.
+    \item \textbf{Coprime (Relatively Prime)}: Two numbers that share no common factors other than 1 (for example, 8 and 15).
+    \item \textbf{Prime Factorization}: Writing a number as a product of prime powers (for example, $12 = 2^2 \times 3$).
+    \item \textbf{Greatest Common Divisor (GCD)}: The largest positive integer that divides both numbers evenly.
+    \item \textbf{Least Common Multiple (LCM)}: The smallest positive integer that is a multiple of both numbers.
+    \item \textbf{Trial Division}: The direct method of testing whether a number $n$ is prime by dividing it by every candidate factor from 2 up to $\sqrt{n}$. The $6k \pm 1$ optimization skips all multiples of 2 and 3, reducing the number of tests by two thirds.
+    \item \textbf{Sieve of Eratosthenes}: An algorithm that finds all primes up to $N$ by systematically crossing out multiples. Much faster than calling trial division on every number individually.
+    \item \textbf{Segmented Sieve}: A variant of the Sieve of Eratosthenes that works on a range $[L, R]$ without allocating memory proportional to $R$. Used when $R$ is too large for a standard sieve array but $R - L$ is manageable.
+    \item \textbf{Smallest Prime Factor (SPF)}: The smallest prime number that divides $x$. Used to factorize numbers in $O(\log x)$.
+    \item \textbf{Euler's Totient Function $\phi(n)$}: Counts how many numbers from 1 to $n$ share no common factors with $n$.
+    \item \textbf{Multiplicative Function}: A number-theoretic function where $f(a \cdot b) = f(a) \cdot f(b)$ whenever $\gcd(a, b) = 1$. Both $\phi(n)$, $\tau(n)$, and $\sigma(n)$ are multiplicative.
+\end{itemize}
+
+\subsection*{Mathematical Symbols}
+\begin{itemize}
+    \item $a \mid b$ \textbf{(Divides)}: Means ``$a$ divides $b$ with zero remainder'' (for example, $3 \mid 12$).
+    \item $a \nmid b$ \textbf{(Does Not Divide)}: Means ``$a$ does not divide $b$ evenly'' (for example, $5 \nmid 12$).
+    \item $\gcd(a, b)$: The Greatest Common Divisor of $a$ and $b$.
+    \item $\operatorname{lcm}(a, b)$: The Least Common Multiple of $a$ and $b$.
+    \item $\phi(n)$ \textbf{(Euler's Totient)}: The count of integers in $[1, n]$ coprime to $n$.
+    \item $\tau(n)$ or $d(n)$ \textbf{(Number of Divisors)}: The total count of positive divisors of $n$.
+    \item $\sigma(n)$ \textbf{(Sum of Divisors)}: The sum of all positive divisors of $n$.
+    \item $\prod$ \textbf{(Product Notation)}: The Greek letter capital Pi. Means ``multiply all these terms together in a loop'' (just as $\sum$ means add).
+    \item $\lfloor x \rfloor$ \textbf{(Floor)}: Rounding a decimal down to the nearest whole integer (for example, $\lfloor 3.8 \rfloor = 3$).
+    \item $\sqrt{n}$ \textbf{(Square Root)}: The number that, when multiplied by itself, equals $n$.
+\end{itemize}
+
+% ============================================================================
+\section{Further Reading}
+% ============================================================================
+
+\subsection*{Free Online Resources (Start Here)}
+\begin{itemize}
+    \item \textbf{CP-Algorithms: Number Theory} (\url{https://cp-algorithms.com}) --- High-performance implementations of the Sieve, Linear Sieve, GCD, and Euler's Totient function with rigorous algorithmic complexity notes.
+    \item \textbf{Art of Problem Solving (AoPS) Number Theory Wiki} (\url{https://artofproblemsolving.com/wiki}) --- Clear, intuitive explanations of divisibility, prime factorization, and modular arithmetic from competitive math trainers.
+    \item \textbf{Brilliant.org: Number Theory} (\url{https://brilliant.org}) --- Interactive, visual puzzles covering primes, factorization, and modular arithmetic from intuition to mastery.
+    \item \textbf{Project Euler} (\url{https://projecteuler.net}) --- The premier training ground for number theory. Highly recommended starter problems directly solved by this guide:
+    \begin{itemize}
+        \item \textbf{Problem 3}: Largest Prime Factor (Trial division / factorization).
+        \item \textbf{Problem 5}: Smallest Multiple (LCM across an array).
+        \item \textbf{Problem 7}: 10001st Prime (Sieve of Eratosthenes).
+        \item \textbf{Problem 10}: Summation of Primes (Sieve summation).
+        \item \textbf{Problem 12}: Highly Divisible Triangular Number (Divisor counting $\tau(n)$ via prime factorization).
+        \item \textbf{Problem 69}: Totient Maximum (Euler's totient function properties).
+        \item \textbf{Problem 72}: Counting Fractions (Sum of Euler's totient values).
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Books (When You Are Ready to Go Deeper)}
+\begin{itemize}
+    \item K.\ H.\ Rosen, \emph{Elementary Number Theory and Its Applications} --- an approachable, well-written undergraduate text covering prime numbers, divisibility, the Euclidean algorithm, and cryptography from scratch.
+    \item G.\ H.\ Hardy and E.\ M.\ Wright, \emph{An Introduction to the Theory of Numbers} --- the timeless classic of mathematical number theory. Dense, elegant, and exhaustive in its coverage of primes and divisors. Read this after Rosen, not before.
+    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- dedicated chapter on Mathematics covers sieves, GCD, and number-theoretic algorithms with contest-tested C++ snippets.
+\end{itemize}
+
+% --- Version History (always the last section of the document) ---
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Date} & \textbf{Change} \\ \hline
+2026-09-05 & Document created. \\ \hline
+2026-10-03 & Refactored against the learning materials skill: canonical preamble, worked examples added to GCD, LCM, divisor-count and divisor-sum subsections, traces merged into Key Algorithmic Patterns, intuition callouts and text diagrams added, banned phrases and platform names removed. \\ \hline
+2026-10-03 & Fixed integer overflow bugs in Sieve of Eratosthenes and FastFactorizer loops. \\ \hline
+\end{tabularx}
+
+\end{document}

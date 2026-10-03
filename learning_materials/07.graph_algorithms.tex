@@ -1,0 +1,1102 @@
+﻿\documentclass[11pt,a4paper]{article}
+
+% --- Core LaTeX Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{graphicx}
+
+% --- Unified Color Palette ---
+\definecolor{primaryblue}{RGB}{24, 75, 140}
+\definecolor{codebg}{RGB}{248, 249, 250}
+\definecolor{codeframe}{RGB}{210, 215, 222}
+\definecolor{codegreen}{RGB}{40, 130, 60}
+\definecolor{codeblue}{RGB}{20, 90, 180}
+\definecolor{codegray}{RGB}{120, 120, 120}
+
+% --- Hyperref Setup ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    citecolor=primaryblue,
+    urlcolor=primaryblue,
+    pdftitle={Graph Algorithms},
+    pdfauthor={Antigravity Engineering}
+}
+
+% --- Theorem & Definition Environments ---
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{example}{Example}[section]
+
+% --- Callout Box Environment ---
+\newenvironment{calloutbox}[1]{
+    \par\vspace{0.3cm}
+    \noindent\begin{tabular}{|p{0.96\textwidth}|}
+    \hline
+    \vspace{0.1cm}
+    \textbf{#1}\par\vspace{0.1cm}
+}{
+    \vspace{0.1cm}
+    \\ \hline
+    \end{tabular}
+    \vspace{0.3cm}\par
+}
+
+% --- Modern C++ Code Listing Setup ---
+\lstset{
+    language=C++,
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{orange!80!black},
+    numberstyle=\tiny\color{codegray},
+    numbers=left,
+    numbersep=8pt,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b
+}
+
+% --- Title Block ---
+\title{\vspace{-1.5cm}\textbf{\Huge Graph Algorithms}\\[0.3cm]
+\Large Representations, Traversals, Shortest Paths, Topological Sorting, and Minimum Spanning Trees}
+\author{Technical Monograph}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+Graph algorithms model and solve problems involving networks, pairwise relationships, and state transitions. This guide builds your understanding of graphs from concrete foundations up through standard algorithmic patterns used in software engineering. You will learn how to choose between adjacency lists and matrices, how breadth-first and depth-first searches explore frontiers, how Dijkstra's algorithm finds optimal paths, and how topological sorting detects cycles in dependency structures. Every concept includes an intuitive analogy, a step-by-step worked trace, a modern C++23 implementation, and an actionable decision framework for pattern recognition.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Foundations}
+% ============================================================================
+
+\subsection{What is a Graph?}
+A \textbf{graph} is a non-linear data structure consisting of two fundamental ingredients:
+\begin{itemize}
+    \item \textbf{Vertices} (also called \textbf{nodes}): Individual points, entities, or states. The collection of all vertices is denoted by $V$.
+    \item \textbf{Edges}: Connections or relationships between pairs of vertices. The collection of all edges is denoted by $E$.
+\end{itemize}
+We write $G = (V, E)$ to denote a graph with vertex set $V$ and edge set $E$. 
+
+In software engineering, graphs represent real-world networks:
+\begin{itemize}
+    \item \textbf{Transportation Networks}: Vertices are cities or intersections; edges are highways or streets.
+    \item \textbf{Social Networks}: Vertices are people; edges are friendships or follower relationships.
+    \item \textbf{Task Scheduling and Build Systems}: Vertices are software modules or compilation jobs; directed edges represent prerequisite dependencies.
+    \item \textbf{2D Matrix Grids}: Each cell $(r, c)$ in a maze or image is a vertex; traversable steps to neighboring cells (up, down, left, right) are edges.
+\end{itemize}
+
+\subsection{Core Classifications}
+Graphs differ based on edge direction, weights, and cycles:
+
+\begin{enumerate}
+    \item \textbf{Directed vs Undirected}:
+    In an \textbf{undirected graph}, edges are two-way symmetric links. If an edge connects node $u$ and node $v$, one can travel freely from $u$ to $v$ and from $v$ to $u$. In a \textbf{directed graph} (or \textbf{digraph}), each edge has a specific arrow pointing from source $u$ to destination $v$ ($u \to v$).
+    
+    \item \textbf{Weighted vs Unweighted}:
+    In an \textbf{unweighted graph}, all edges carry the same uniform traversal cost (effectively 1). In a \textbf{weighted graph}, each edge has an associated numerical cost, length, latency, or capacity.
+    
+    \item \textbf{Cyclic vs Acyclic}:
+    A \textbf{path} is a sequence of vertices connected by edges. A \textbf{cycle} is a path of positive length that starts and ends at the exact same vertex without repeating edges. A graph without any cycles is \textbf{acyclic}. A directed graph containing zero cycles is called a \textbf{Directed Acyclic Graph} (\textbf{DAG}).
+    
+    \item \textbf{Trees as Special Graphs}:
+    A \textbf{tree} is a connected, undirected acyclic graph. Any tree with $|V|$ vertices contains exactly $|V| - 1$ edges. Adding any single edge creates a cycle; removing any single edge disconnects the graph.
+\end{enumerate}
+
+\subsection{Degrees and the Handshaking Lemma}
+The \textbf{degree} of a vertex $v$, denoted $\deg(v)$, is the number of edges incident to $v$.
+\begin{itemize}
+    \item In an \textbf{undirected graph}, each edge contributes 1 to the degree of two distinct endpoints.
+    \item In a \textbf{directed graph}, we distinguish between the \textbf{in-degree} $\deg^-(v)$ (number of edges pointing into $v$) and the \textbf{out-degree} $\deg^+(v)$ (number of edges pointing out of $v$).
+\end{itemize}
+
+\begin{theorem}[Handshaking Lemma]
+In any undirected graph $G = (V, E)$, the sum of degrees over all vertices equals twice the total number of edges:
+$$ \sum_{v \in V} \deg(v) = 2|E| $$
+\end{theorem}
+
+\noindent \textbf{Worked Example: Verifying the Handshaking Lemma}\par
+Consider a 4-node undirected graph with edges $(0, 1)$, $(0, 2)$, $(1, 2)$, and $(2, 3)$. Total edges $|E| = 4$.
+\begin{itemize}
+    \item $\deg(0) = 2$ (connected to 1, 2)
+    \item $\deg(1) = 2$ (connected to 0, 2)
+    \item $\deg(2) = 3$ (connected to 0, 1, 3)
+    \item $\deg(3) = 1$ (connected to 2)
+\end{itemize}
+Sum of degrees $= 2 + 2 + 3 + 1 = 8 = 2 \times 4$. The identity holds.
+
+\subsection{Graph Representations in Code}
+Choosing the correct memory representation determines whether an algorithm runs efficiently or times out.
+
+\begin{enumerate}
+    \item \textbf{Adjacency List}:
+    An array or vector of size $|V|$, where index $u$ stores a list of all neighbors of $u$. In modern C++:
+    \begin{itemize}
+        \item Unweighted: \texttt{std::vector<std::vector<int>> adj(V);}
+        \item Weighted: \texttt{std::vector<std::vector<std::pair<int, int>>> adj(V);} (storing target vertex and weight).
+    \end{itemize}
+    \textbf{Space Complexity}: $O(V + E)$. Iterating through neighbors of vertex $u$ takes $O(\deg(u))$ time. This is the optimal default for sparse graphs where $|E| \ll |V|^2$.
+
+    \item \textbf{Adjacency Matrix}:
+    A 2D array of size $|V| \times |V|$, where cell \texttt{matrix[u][v]} stores 1 (or the edge weight) if an edge exists from $u$ to $v$, and 0 (or infinity) otherwise.
+    \begin{itemize}
+        \item \texttt{std::vector<std::vector<int>> matrix(V, std::vector<int>(V, 0));}
+    \end{itemize}
+    \textbf{Space Complexity}: $O(V^2)$. Checking whether edge $(u, v)$ exists takes $O(1)$ time. This is optimal for dense graphs where $|E| \approx |V|^2$, or when $|V| \le 500$ (such as in Floyd-Warshall).
+
+    \item \textbf{Edge List}:
+    A single flat list storing all edges as triples $(u, v, w)$.
+    \begin{itemize}
+        \item \texttt{struct Edge \{ int u, v, weight; \};}
+        \item \texttt{std::vector<Edge> edges;}
+    \end{itemize}
+    \textbf{Space Complexity}: $O(E)$. Sorting all edges takes $O(E \log E)$. This representation is ideal for Kruskal's Minimum Spanning Tree algorithm and Bellman-Ford.
+\end{enumerate}
+
+\noindent \textbf{Visual Representation of a 4-Node Weighted Graph}\par
+Below is a 4-node directed graph and its three C++ representations:
+
+\begin{calloutbox}{Default Rule of Thumb for Graph Storage}
+Always default to an \textbf{Adjacency List} (\texttt{std::vector<std::vector<int>>}). In almost all programming problems, $|V| \le 10^5$ and $|E| \le 2 \times 10^5$. An adjacency matrix for $|V| = 10^5$ requires $10^{10}$ integers (40 GB of RAM), which causes an immediate Out Of Memory error. Use an adjacency matrix only when $|V| \le 500$.
+\end{calloutbox}
+
+% ============================================================================
+\section{Main Topics}
+% ============================================================================
+
+\subsection{Breadth-First Search (BFS)}
+\textbf{Breadth-First Search (BFS)} explores a graph in concentric ripples starting from a designated source vertex. It visits all vertices at distance 1 before any vertex at distance 2, and all vertices at distance 2 before any vertex at distance 3.
+
+\begin{itemize}
+    \item \textbf{Underlying Data Structure}: First-In, First-Out Queue (\texttt{std::queue<int>}).
+    \item \textbf{Exploration Order}: Level-by-level (FIFO queue ensures earliest discovered nodes are expanded first).
+    \item \textbf{Primary Invariant}: The first time BFS visits any node $v$ in an unweighted graph, the path from source to $v$ contains the minimum possible number of edges.
+\end{itemize}
+
+\noindent \textbf{Worked Example: Step-by-Step BFS Trace}\par
+Consider an undirected graph with 6 vertices ($0, 1, 2, 3, 4, 5$) and edges: $(0, 1)$, $(0, 2)$, $(1, 3)$, $(2, 4)$, $(3, 5)$, $(4, 5)$.
+We start BFS from node $0$. We track the queue contents, the visited set, and the distance array $\text{dist}$:
+
+\begin{calloutbox}{Why BFS Guarantees Shortest Path in Unweighted Graphs}
+Because each edge adds exactly 1 to path length, the queue expands nodes in non-decreasing order of their true distance: all distance 0 nodes, then all distance 1 nodes, then all distance 2 nodes. Any alternate path discovered later must traverse at least as many edges, so the first arrival is guaranteed to be optimal.
+\end{calloutbox}
+
+\subsection{Depth-First Search (DFS) and Cycle Detection}
+\textbf{Depth-First Search (DFS)} dives as deep as possible along each branch before backtracking. It follows a path until it reaches a node with no unvisited neighbors or a dead end, then retreats to the most recent branching point.
+
+\begin{itemize}
+    \item \textbf{Underlying Data Structure}: Call stack via recursion, or an explicit \texttt{std::stack<int>}.
+    \item \textbf{Exploration Order}: Branch-by-branch (LIFO exploration).
+    \item \textbf{Primary Use Cases}: Connected components, topological sorting, path existence, and cycle detection.
+\end{itemize}
+
+\subsubsection{Cycle Detection in Undirected Graphs}
+In an undirected graph, an edge connects two vertices symmetrically. While running DFS, if we encounter an adjacent neighbor $v$ that is already marked as visited, this constitutes a cycle \textbf{unless} $v$ is the direct parent node from which we just arrived.
+
+\noindent \textbf{Worked Example: Cycle in an Undirected Triangle}\par
+Vertices $A, B, C$ with edges $(A, B)$, $(B, C)$, $(C, A)$.
+\begin{enumerate}
+    \item Start at $A$. Mark $A$ as visited. Parent of $A = \text{none}$.
+    \item Move to neighbor $B$. Mark $B$ as visited. Parent of $B = A$.
+    \item Move to neighbor $C$. Mark $C$ as visited. Parent of $C = B$.
+    \item From $C$, examine neighbors:
+    \begin{itemize}
+        \item Neighbor $B$ is visited, but $B$ is the direct parent of $C$ (the edge we came from). Skip.
+        \item Neighbor $A$ is visited, and $A \ne \text{parent}(C)$. We have encountered an already visited non-parent node!
+    \end{itemize}
+    \item Conclusion: A cycle exists ($A - B - C - A$).
+\end{enumerate}
+
+\subsubsection{Cycle Detection in Directed Graphs: The Three-Color Algorithm}
+In a directed graph, parent tracking is insufficient because two independent paths can converge on the same node without forming a cycle (for example, a diamond DAG: $0 \to 1 \to 3$ and $0 \to 2 \to 3$). 
+
+To detect directed cycles correctly, we maintain three states for every vertex:
+\begin{itemize}
+    \item \textbf{White (0 - Unvisited)}: The vertex has not yet been encountered.
+    \item \textbf{Gray (1 - Visiting)}: The vertex is currently active on the recursion call stack. We are actively exploring its descendants.
+    \item \textbf{Black (2 - Visited)}: The vertex and all of its descendants have been fully explored and backtracked.
+\end{itemize}
+
+\begin{theorem}[Back-Edge Cycle Criterion]
+A directed graph contains a cycle if and only if DFS encounters a directed edge pointing to a \textbf{Gray} vertex.
+\end{theorem}
+
+\noindent \textbf{Worked Example: Three-Color Trace on a Directed Graph}\par
+Graph with directed edges: $0 \to 1$, $1 \to 2$, $2 \to 0$, $2 \to 3$.
+
+\begin{calloutbox}{Why Black Nodes Do Not Cause Cycles}
+If an edge points to a \textbf{Black} node, that node was already finished in an earlier, independent branch. Its search has unwound and cannot lead back to the current node. Only an edge pointing to a \textbf{Gray} node forms a closed loop back to an active ancestor.
+\end{calloutbox}
+
+\subsection{Connected Components and Implicit Grid Graphs (Flood Fill)}
+Many algorithmic problems present a graph implicitly as a 2D matrix (a grid). Each cell $(r, c)$ is a vertex, and adjacent passable cells (usually 4 directions: Up, Down, Left, Right) share an undirected edge.
+
+\begin{itemize}
+    \item \textbf{Row and Column Offsets}:
+    
+    \item \textbf{Boundary Check}: A neighbor $(r + \text{dr}[k], c + \text{dc}[k])$ is valid if and only if $0 \le r < \text{rows}$ and $0 \le c < \text{cols}$ and the cell is passable and unvisited.
+\end{itemize}
+
+\noindent \textbf{Worked Example: Counting Connected Components (Islands)}\par
+Consider a $4 \times 4$ binary grid where \texttt{1} denotes land and \texttt{0} denotes water. Two land cells are connected if they share an edge horizontally or vertically:
+
+\subsection{Topological Sorting (DAGs)}
+A \textbf{topological sort} of a directed acyclic graph is a linear ordering of its vertices such that for every directed edge $u \to v$, vertex $u$ comes strictly before vertex $v$ in the sequence.
+
+\begin{itemize}
+    \item \textbf{Precondition}: The graph must be a Directed Acyclic Graph (DAG). If the graph contains a cycle, no valid topological order exists because dependencies contradict one another.
+    \item \textbf{Application}: Build compilation sequences, task prerequisite ordering, spreadsheet evaluation order.
+\end{itemize}
+
+\subsubsection{Kahn's Algorithm (In-Degree BFS)}
+Kahn's algorithm resolves dependencies by repeatedly removing nodes that have no remaining incoming prerequisites:
+\begin{enumerate}
+    \item Calculate the in-degree ($\deg^-(v)$) of every vertex.
+    \item Push all vertices with $\text{in-degree} = 0$ into a queue.
+    \item While the queue is not empty:
+    \begin{itemize}
+        \item Pop vertex $u$ from the queue and append $u$ to the topological order.
+        \item For each outgoing neighbor $v$ of $u$, decrement $\text{in-degree}[v]$ by 1 (simulating the removal of edge $u \to v$).
+        \item If $\text{in-degree}[v]$ drops to 0, push $v$ into the queue.
+    \end{itemize}
+    \item If the resulting topological order contains fewer than $|V|$ vertices, the graph contains a cycle.
+\end{enumerate}
+
+\noindent \textbf{Worked Example: Software Module Build Order}\par
+Five software packages ($0, 1, 2, 3, 4$) with build dependencies:
+$0 \to 1$ (0 must build before 1), $0 \to 2$, $1 \to 3$, $2 \to 3$, $3 \to 4$.
+
+\subsection{Dijkstra's Algorithm (Non-Negative Weighted Shortest Path)}
+When edges have different non-negative weights, BFS no longer finds the shortest path because a path with fewer edges can have a much larger total weight than a path with multiple small edges.
+
+\textbf{Dijkstra's algorithm} solves the single-source shortest path problem on graphs with non-negative edge weights using a greedy min-heap strategy:
+\begin{itemize}
+    \item Maintain a distance array $\text{dist}$, initialized to $\infty$, with $\text{dist}[\text{start}] = 0$.
+    \item Maintain a min-priority queue storing pairs: $(\text{distance}, \text{vertex})$.
+    \item In each iteration, extract the vertex $u$ with the smallest tentative distance.
+    \item For each outgoing edge $(u, v, w)$, perform \textbf{relaxation}:
+    $$ \text{if } \text{dist}[u] + w < \text{dist}[v] \implies \text{dist}[v] = \text{dist}[u] + w, \quad \text{push } (\text{dist}[v], v) $$
+\end{itemize}
+
+\noindent \textbf{Worked Example: Step-by-Step Dijkstra Trace}\par
+Consider a directed graph with 5 vertices ($0, 1, 2, 3, 4$) and edges:
+$(0, 1, 4)$, $(0, 2, 2)$, $(2, 1, 1)$, $(1, 3, 2)$, $(2, 3, 8)$, $(3, 4, 3)$.
+Start at vertex $0$.
+
+\begin{calloutbox}{Why Negative Edge Weights Break Dijkstra's Algorithm}
+Dijkstra operates on the greedy assumption that once a node is extracted from the min-heap, its shortest distance is finalized and can never be improved. Negative edge weights invalidate this premise. 
+
+Consider three vertices $A, B, C$ with edges $A \to B$ (wt 5), $A \to C$ (wt 2), and $C \to B$ (wt $-4$). Starting at $A$, Dijkstra extracts $C$ (dist 2) and then $B$ (dist 5). Dijkstra considers $B$ finalized at distance 5. But traversing $A \to C \to B$ yields a smaller distance of $2 + (-4) = -2$. For graphs with negative weights, use the \textbf{Bellman-Ford} algorithm instead.
+\end{calloutbox}
+
+\subsection{Bipartite Graph Checking (2-Coloring)}
+A graph is \textbf{bipartite} if its vertices can be partitioned into two disjoint sets $U$ and $V$ such that every edge connects a vertex in $U$ to a vertex in $V$. No two vertices within the same set share an edge.
+
+\begin{theorem}[Odd-Cycle Equivalence]
+An undirected graph is bipartite if and only if it contains no cycle of odd length.
+\end{theorem}
+
+\noindent To verify if a graph is bipartite, we attempt to color every vertex with one of two colors (say, 0 and 1) using BFS or DFS:
+\begin{enumerate}
+    \item Assign color 0 to an arbitrary uncolored starting vertex.
+    \item For each neighbor $v$ of current vertex $u$:
+    \begin{itemize}
+        \item If $v$ has not been colored, assign it color $1 - \text{color}[u]$.
+        \item If $v$ is already colored with the same color as $u$ ($\text{color}[v] == \text{color}[u]$), a color conflict has occurred. The graph is \textbf{not bipartite}.
+    \end{itemize}
+    \item Repeat for all connected components. If no conflicts arise, the graph is bipartite.
+\end{enumerate}
+
+\noindent \textbf{Worked Example: 4-Cycle (Bipartite) vs 3-Cycle (Non-Bipartite)}\par
+\begin{itemize}
+    \item \textbf{Square (4-cycle)}: Vertices $0-1-2-3-0$.
+    Color(0)=0 $\implies$ Color(1)=1 $\implies$ Color(2)=0 $\implies$ Color(3)=1.
+    Edge $(3, 0)$ connects Color(3)=1 and Color(0)=0. No conflict. \textbf{Bipartite!}
+    
+    \item \textbf{Triangle (3-cycle)}: Vertices $0-1-2-0$.
+    Color(0)=0 $\implies$ Color(1)=1 $\implies$ Color(2)=0.
+    Edge $(2, 0)$ connects Color(2)=0 and Color(0)=0. Conflict! \textbf{Not bipartite!}
+\end{itemize}
+
+\subsection{Minimum Spanning Tree (MST) and Disjoint Set Union (DSU)}
+Given a connected, undirected, weighted graph, a \textbf{Spanning Tree} is a subgraph that is a tree and connects all $|V|$ vertices. Because it is a tree, it contains exactly $|V| - 1$ edges with no cycles. The \textbf{Minimum Spanning Tree (MST)} is the spanning tree that minimizes the sum of edge weights.
+
+\begin{theorem}[MST Cut Property]
+For any partition of a graph's vertices into two disjoint sets, the minimum-weight edge crossing the cut between the two sets belongs to the Minimum Spanning Tree. Kruskal's algorithm relies on this property to guarantee correctness: by processing edges in increasing order of weight, it safely adds the smallest edge connecting two previously disjoint components, which is necessarily the minimum-weight edge crossing the cut between them.
+\end{theorem}
+
+\subsubsection{Disjoint Set Union (DSU / Union-Find)}
+Kruskal's algorithm requires testing whether adding an edge creates a cycle. The \textbf{Disjoint Set Union (DSU)} data structure maintains a collection of disjoint partitions with two near-$O(1)$ operations:
+\begin{itemize}
+    \item \texttt{find(i)}: Returns the representative identifier of the set containing element $i$.
+    \item \textbf{Path Compression}: Inside \texttt{find}, we re-point every visited node directly to the root: \texttt{parent[i] = find(parent[i])}.
+    \item \texttt{unite(i, j)}: Merges the set containing $i$ with the set containing $j$.
+    \item \textbf{Union by Rank / Size}: Attach the smaller tree under the root of the larger tree to keep tree height bounded.
+\end{itemize}
+With both optimizations, any sequence of $M$ operations on $N$ elements runs in $O(M \cdot \alpha(N))$, where $\alpha$ is the inverse Ackermann function (practically $\alpha(N) \le 4$ for all realistic inputs).
+
+\subsubsection{Kruskal's Algorithm}
+\begin{enumerate}
+    \item Put all edges in a flat list and sort them in non-decreasing order of weight.
+    \item Initialize DSU with $|V|$ distinct sets (each vertex is its own root).
+    \item Iterate through sorted edges $(u, v, w)$:
+    \begin{itemize}
+        \item If $\text{find}(u) \ne \text{find}(v)$, adding this edge does not create a cycle.
+        \item Merge sets using $\text{unite}(u, v)$, add $w$ to total MST weight, and record the edge.
+        \item Stop once $|V| - 1$ edges have been added.
+    \end{itemize}
+\end{enumerate}
+
+\noindent \textbf{Worked Example: Kruskal's MST on a 4-Node Graph}\par
+Graph with 4 nodes ($0, 1, 2, 3$) and 5 edges:
+$e_1 = (0, 1, \text{wt } 1)$, $e_2 = (1, 2, \text{wt } 2)$, $e_3 = (0, 2, \text{wt } 3)$, $e_4 = (2, 3, \text{wt } 4)$, $e_5 = (1, 3, \text{wt } 5)$.
+
+\subsection{Bellman-Ford and Floyd-Warshall Summary}
+
+\begin{enumerate}
+    \item \textbf{Bellman-Ford Algorithm} (Single-Source Shortest Path with Negative Weights):
+    \begin{itemize}
+        \item Runs $|V| - 1$ full relaxation sweeps over all edges.
+        \item \textbf{Time Complexity}: $O(V \cdot E)$.
+        \item \textbf{Negative Cycle Detection}: If a further relaxation is possible on the $|V|$-th sweep, a negative weight cycle exists in the graph.
+    \end{itemize}
+
+    \item \textbf{Floyd-Warshall Algorithm} (All-Pairs Shortest Path):
+    \begin{itemize}
+        \item Computes shortest paths between every pair of vertices $(i, j)$ using dynamic programming.
+        \item Recurrence: $\text{dp}[i][j] = \min(\text{dp}[i][j], \text{dp}[i][k] + \text{dp}[k][j])$.
+        \item \textbf{Time Complexity}: $O(V^3)$. \textbf{Space Complexity}: $O(V^2)$.
+        \item Feasible only for small graphs where $|V| \le 400$.
+        \item Crucial loop order: the intermediate node $k$ must be the \textbf{outermost} loop!
+    \end{itemize}
+\end{enumerate}
+
+\begin{calloutbox}{Shortest Path Algorithm Selector}
+\begin{itemize}
+    \item \textbf{Unweighted edges}: Use \textbf{BFS} ($O(V + E)$).
+    \item \textbf{Weighted edges ($\ge 0$)}: Use \textbf{Dijkstra} with a min-heap ($O((V + E) \log V)$).
+    \item \textbf{Weighted edges with negative weights}: Use \textbf{Bellman-Ford} ($O(V \cdot E)$).
+    \item \textbf{All-pairs shortest paths ($|V| \le 400$)}: Use \textbf{Floyd-Warshall} ($O(V^3)$).
+\end{itemize}
+\end{calloutbox}
+
+% ============================================================================
+\section{Key Algorithmic Patterns}
+% ============================================================================
+
+\subsection{Why Naive Approaches Fail}
+
+When encountering graph problems, beginners frequently attempt brute-force path enumeration or unmemoized exploration. These naive strategies fail catastrophically:
+
+\begin{enumerate}
+    \item \textbf{Factorial Path Explosion}:
+    In a dense or complete graph with $V$ vertices, the total number of simple paths between two nodes can reach $O(V!)$. For $V = 20$, $20! \approx 2.43 \times 10^{18}$ paths. Any algorithm that attempts to list all paths to find the shortest one will run for centuries.
+    
+    \item \textbf{Infinite Loops on Cycles}:
+    A naive recursive search that does not track visited vertices will bounce back and forth across undirected edges ($u \to v \to u \to v$) or loop endlessly around directed cycles, triggering a call stack overflow.
+    
+    \item \textbf{Redundant Pairwise Scans for Components}:
+    To count how many disconnected groups exist, testing reachability between every pair of vertices independently takes $\binom{V}{2} \times O(V + E) = O(V^3 + V^2 E)$ operations. In contrast, a single component flood fill visits every vertex and edge exactly once in $O(V + E)$ time.
+\end{enumerate}
+
+\subsection{The Core Efficient Techniques}
+
+All efficient graph algorithms replace brute force with three fundamental principles:
+
+\begin{itemize}
+    \item \textbf{The Visited Frontier (State Memoization)}: Every vertex is marked as visited upon first discovery. Because no node is expanded twice, traversals execute in linear $O(V + E)$ time.
+    \item \textbf{Greedy Frontier Prioritization}: BFS uses a FIFO queue to guarantee minimum-edge distance. Dijkstra uses a priority queue (min-heap) to guarantee minimum-weight distance.
+    \item \textbf{Disjoint Set Partitioning}: DSU compresses path trees to answer connectivity and cycle queries in near-$O(1)$ amortized time.
+\end{itemize}
+
+\subsection{Worked Trace: 2D Grid Shortest Path BFS}
+
+\noindent \textbf{Problem}: A robot starts at top-left cell $(0, 0)$ in a $3 \times 3$ grid and must reach bottom-right cell $(2, 2)$. Cells with \texttt{0} are open; cells with \texttt{1} are impassable obstacles. Diagonal moves are prohibited. Find the minimum steps.
+
+\begin{calloutbox}{The Graph Pattern Taxonomy}
+\begin{itemize}
+    \item \textbf{Reachability / Component Counting} $\implies$ DFS or BFS with a boolean \texttt{visited} array.
+    \item \textbf{Shortest Path, Unweighted (Uniform Cost)} $\implies$ BFS with a FIFO queue.
+    \item \textbf{Shortest Path, Non-Negative Weights} $\implies$ Dijkstra with a min-priority queue.
+    \item \textbf{Ordering with Dependencies (Prerequisites)} $\implies$ Kahn's In-Degree Topological Sort.
+    \item \textbf{Dynamic Merging / Cycle Checks on Evolving Edges} $\implies$ Disjoint Set Union (DSU).
+    \item \textbf{Bipartite Conflict Division (2 Groups)} $\implies$ 2-Coloring via BFS or DFS.
+\end{itemize}
+\end{calloutbox}
+
+% ============================================================================
+\section{Worked Examples}
+% ============================================================================
+
+\begin{example}[Counting Connected Components in an Infrastructure Network]
+\textbf{Problem Statement}: A telecommunications network consists of $n = 6$ servers labeled $0$ through $5$. There are $4$ bidirectional communication links: $(0, 1)$, $(1, 2)$, $(3, 4)$, and $(4, 5)$. Server $2$ is not connected to server $3$. How many isolated network clusters exist?
+
+\begin{enumerate}
+    \item \textbf{Model the Problem}: Vertices $V = \{0, 1, 2, 3, 4, 5\}$. Edges are undirected. We need to find the number of connected components.
+    \item \textbf{Initialize}: Maintain a boolean array \texttt{visited} of size $6$, all initialized to \texttt{false}. Initialize \texttt{component\_count = 0}.
+    \item \textbf{Scan Node 0}: Node $0$ is unvisited. Increment \texttt{component\_count} to $1$.
+    \item \textbf{Traverse Component 1}: Launch DFS or BFS from $0$:
+    \begin{itemize}
+        \item From $0$, visit neighbor $1$.
+        \item From $1$, visit neighbor $2$.
+        \item Vertices $\{0, 1, 2\}$ are all marked \texttt{visited = true}.
+    \end{itemize}
+    \item \textbf{Scan Node 1 and Node 2}: Both are already visited. Skip.
+    \item \textbf{Scan Node 3}: Node $3$ is unvisited. Increment \texttt{component\_count} to $2$.
+    \item \textbf{Traverse Component 2}: Launch DFS or BFS from $3$:
+    \begin{itemize}
+        \item From $3$, visit neighbor $4$.
+        \item From $4$, visit neighbor $5$.
+        \item Vertices $\{3, 4, 5\}$ are all marked \texttt{visited = true}.
+    \end{itemize}
+    \item \textbf{Scan Nodes 4 and 5}: Both are already visited.
+    \item \textbf{Conclusion}: The network contains exactly $\mathbf{2}$ isolated clusters.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Shortest Path in a Binary Matrix with Obstacles]
+\textbf{Problem Statement}: Given an $N \times M$ grid, find the minimum steps from $(0, 0)$ to $(N-1, M-1)$ moving only up, down, left, and right through cells with value $0$. Return $-1$ if no path exists.
+
+\begin{enumerate}
+    \item \textbf{Choose the Tool}: Every valid step between adjacent open cells has uniform cost $1$. Use Breadth-First Search (BFS).
+    \item \textbf{Initialize}: Distance matrix \texttt{dist[N][M]} initialized to $-1$. Set \texttt{dist[0][0] = 0} and push $(0, 0)$ to the queue.
+    \item \textbf{Frontier Expansion}: While the queue is non-empty, pop current coordinate $(r, c)$. If $(r, c) == (N-1, M-1)$, return \texttt{dist[r][c]}.
+    \item \textbf{Explore Neighbors}: For each direction vector $(dr[k], dc[k])$:
+    \begin{itemize}
+        \item Compute $(nr, nc) = (r + dr[k], c + dc[k])$.
+        \item Verify boundaries: $0 \le nr < N$ and $0 \le nc < M$.
+        \item Verify cell status: \texttt{grid[nr][nc] == 0} and \texttt{dist[nr][nc] == -1}.
+        \item If valid, set \texttt{dist[nr][nc] = dist[r][c] + 1} and push $(nr, nc)$ into the queue.
+    \end{itemize}
+    \item \textbf{Termination}: If queue becomes empty without reaching the target, return $-1$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Course Prerequisite Scheduling with Cycle Detection]
+\textbf{Problem Statement}: A university student must take $n = 4$ courses ($0, 1, 2, 3$). The prerequisites are represented as directed pairs $[u, v]$ meaning course $u$ must be completed before course $v$: $[0, 1]$, $[1, 2]$, $[2, 3]$, $[3, 1]$. Can the student graduate?
+
+\begin{enumerate}
+    \item \textbf{Model the Problem}: Build a directed graph where an edge points from prerequisite to dependent course: $0 \to 1$, $1 \to 2$, $2 \to 3$, $3 \to 1$.
+    \item \textbf{Compute In-Degrees}:
+    \begin{itemize}
+        \item Node 0 has incoming: none $\implies \text{in-degree}[0] = 0$.
+        \item Node 1 has incoming: from 0 and 3 $\implies \text{in-degree}[1] = 2$.
+        \item Node 2 has incoming: from 1 $\implies \text{in-degree}[2] = 1$.
+        \item Node 3 has incoming: from 2 $\implies \text{in-degree}[3] = 1$.
+    \end{itemize}
+    \item \textbf{Kahn's Queue Execution}:
+    \begin{itemize}
+        \item Queue initially contains nodes with in-degree 0: $[0]$. Processed count $= 0$.
+        \item Pop $0$. Processed count becomes $1$. Outgoing edge $0 \to 1$ is removed: $\text{in-degree}[1] = 2 - 1 = 1$.
+        \item Queue is now empty. No other node has in-degree 0.
+    \end{itemize}
+    \item \textbf{Evaluate Result}: Only $1$ course was processed out of $4$. The remaining nodes $\{1, 2, 3\}$ form a directed cycle ($1 \to 2 \to 3 \to 1$).
+    \item \textbf{Answer}: The student \textbf{cannot graduate} because of circular dependencies.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Network Packet Propagation Delay using Dijkstra]
+\textbf{Problem Statement}: A network has $n = 4$ servers ($1, 2, 3, 4$). Directed transmission latencies: $(2 \to 1, \text{time } 1)$, $(2 \to 3, \text{time } 1)$, $(3 \to 4, \text{time } 1)$. A signal is broadcast from server $2$. How long does it take for all servers to receive the signal?
+
+\begin{enumerate}
+    \item \textbf{Model the Problem}: Directed graph with non-negative edge weights. Find the shortest path from source $2$ to all nodes using Dijkstra. The total time for all nodes to receive the signal is $\max_{v} \text{dist}[v]$.
+    \item \textbf{Initialize}: $\text{dist} = [\infty, \infty, 0, \infty, \infty]$ (1-indexed). Min-heap contains $(0, \text{node } 2)$.
+    \item \textbf{Step 1}: Pop $(0, 2)$.
+    \begin{itemize}
+        \item Edge $2 \to 1$ (time 1): $\text{dist}[1] = 0 + 1 = 1$. Push $(1, 1)$.
+        \item Edge $2 \to 3$ (time 1): $\text{dist}[3] = 0 + 1 = 1$. Push $(1, 3)$.
+    \end{itemize}
+    \item \textbf{Step 2}: Pop $(1, 1)$. No outgoing edges from node 1.
+    \item \textbf{Step 3}: Pop $(1, 3)$.
+    \begin{itemize}
+        \item Edge $3 \to 4$ (time 1): $\text{dist}[4] = 1 + 1 = 2$. Push $(2, 4)$.
+    \end{itemize}
+    \item \textbf{Step 4}: Pop $(2, 4)$. No outgoing edges from node 4.
+    \item \textbf{Heap becomes empty}: Final arrival times: $\text{dist}[1] = 1$, $\text{dist}[2] = 0$, $\text{dist}[3] = 1$, $\text{dist}[4] = 2$.
+    \item \textbf{Calculate Answer}: All nodes reached. Maximum latency $= \max(1, 0, 1, 2) = \mathbf{2}$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Finding the Redundant Connection with DSU]
+\textbf{Problem Statement}: A graph started as a tree with $n$ vertices. Exactly one additional edge was added, creating a cycle. Given the edge list in order of addition, find the edge that created the cycle.
+
+\begin{enumerate}
+    \item \textbf{Algorithm Choice}: A tree on $n$ vertices has $n-1$ edges and zero cycles. The edge that creates the cycle connects two vertices that were already connected in the same component. Use Disjoint Set Union (DSU).
+    \item \textbf{Process Edges Incrementally}:
+    For each edge $(u, v)$:
+    \begin{itemize}
+        \item Query root of $u$: $\text{root}_u = \text{find}(u)$.
+        \item Query root of $v$: $\text{root}_v = \text{find}(v)$.
+        \item If $\text{root}_u == \text{root}_v$: Nodes $u$ and $v$ already share a path! This edge closes a cycle and is the redundant connection.
+        \item If $\text{root}_u \ne \text{root}_v$: Merge their sets via $\text{unite}(u, v)$.
+    \end{itemize}
+    \item \textbf{Complexity}: For $E$ edges and $V$ vertices, this runs in $O(E \cdot \alpha(V))$ time, which is effectively $O(E)$ operations.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Bipartite Graph Division into Two Independent Teams]
+\textbf{Problem Statement}: We have $n = 4$ people ($0, 1, 2, 3$). People who dislike each other cannot be on the same team. Dislike pairs: $(0, 1)$, $(0, 3)$, $(1, 2)$, $(2, 3)$. Can all 4 people be split into two valid teams?
+
+\begin{enumerate}
+    \item \textbf{Model the Problem}: Each person is a vertex; dislike pairs are undirected edges. We must color vertices using two colors ($0$ and $1$) such that no edge connects two vertices of the same color.
+    \item \textbf{Initialize Colors}: \texttt{color = [-1, -1, -1, -1]}.
+    \item \textbf{Coloring Trace}:
+    \begin{itemize}
+        \item Start at person $0$: set \texttt{color[0] = 0}.
+        \item Person $0$ dislikes $1$ and $3$: set \texttt{color[1] = 1} and \texttt{color[3] = 1}.
+        \item Person $1$ dislikes $2$: set \texttt{color[2] = 1 - color[1] = 0}.
+        \item Examine person $3$'s dislike pair with $2$: \texttt{color[3] is 1}, \texttt{color[2] is 0}. Different colors! No conflict.
+    \end{itemize}
+    \item \textbf{Conclusion}: All vertices successfully 2-colored without conflict. Team 0: $\{0, 2\}$. Team 1: $\{1, 3\}$. Division is \textbf{possible}.
+\end{enumerate}
+\end{example}
+% ============================================================================
+\section{Practical C++ Implementations}
+% ============================================================================
+
+This section presents robust, production-grade C++23 implementations of foundational graph algorithms. Every implementation avoids global state, adheres to modern C++ conventions (\texttt{[[nodiscard]]}, \texttt{noexcept} where appropriate, \texttt{std::ranges}), and documents every step with numbered comments.
+
+\subsection{What is BFS Queue Frontier Exploration?}
+
+In an unweighted graph, finding the shortest path from a starting node to all other nodes requires exploring outward in concentric circles (layers). The first layer contains nodes at distance 1, the second layer contains nodes at distance 2, and so forth.
+
+A First-In, First-Out (FIFO) queue guarantees this layer-by-layer traversal order:
+\begin{enumerate}
+    \item Every node pushed into the queue has a distance equal to or greater than previously pushed nodes.
+    \item When a vertex $u$ is popped, exploring its unvisited neighbors discovers them at distance $\text{dist}[u] + 1$.
+    \item The first time an unvisited vertex is discovered, the path along which it was reached is guaranteed to have the minimum possible number of edges.
+\end{enumerate}
+
+\begin{lstlisting}[language=C++, caption={Breadth-First Search for Unweighted Shortest Paths}]
+#include <vector>
+#include <queue>
+#include <limits>
+#include <cstddef>
+
+// Computes shortest path distances from a source node in an unweighted graph.
+// Returns a vector where dist[i] is the minimum edge count, or -1 if unreachable.
+[[nodiscard]] std::vector<int> breadthFirstSearch(
+    int vertex_count,
+    const std::vector<std::vector<int>>& adj,
+    int source
+) {
+    // 1. Initialize distance vector with -1 sentinel representing unreachable
+    std::vector<int> dist(vertex_count, -1);
+    std::queue<int> q;
+
+    // 2. Base case: distance to source is 0
+    dist[source] = 0;
+    q.push(source);
+
+    // 3. Process frontier nodes in FIFO order
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+
+        // 4. Inspect all adjacent neighbors
+        for (int v : adj[u]) {
+            // 5. If neighbor has not been visited yet, relax distance and enqueue
+            if (dist[v] == -1) {
+                dist[v] = dist[u] + 1;
+                q.push(v);
+            }
+        }
+    }
+
+    return dist;
+}
+\end{lstlisting}
+
+\subsection{What is Grid Flood Fill with Direction Offsets?}
+
+In 2D grid problems (mazes, terrain maps, islands), each cell $(r, c)$ is a vertex, and adjacent passable cells are connected by implicit edges. Writing separate conditional statements for up, down, left, and right is repetitive and error-prone.
+
+A cleaner, idiomatic pattern uses direction delta arrays:
+\begin{align*}
+\Delta \text{row} &= [-1, 1, 0, 0] \\
+\Delta \text{col} &= [0, 0, -1, 1]
+\end{align*}
+Iterating through $k \in \{0, 1, 2, 3\}$ generates each neighbor coordinate $(r + \Delta \text{row}[k], c + \Delta \text{col}[k])$ concisely. Boundary validation and impassable cell checks are handled in a single unified conditional.
+
+\begin{lstlisting}[language=C++, caption={2D Grid Shortest Path BFS with Direction Offsets}]
+#include <vector>
+#include <queue>
+#include <array>
+#include <utility>
+
+// Finds the shortest path length from (0, 0) to (rows-1, cols-1) in a binary grid.
+// 0 represents passable cells; 1 represents obstacles. Returns -1 if no path exists.
+[[nodiscard]] int shortestPathBinaryGrid(const std::vector<std::vector<int>>& grid) {
+    if (grid.empty() || grid[0].empty()) return -1;
+    
+    const int rows = static_cast<int>(grid.size());
+    const int cols = static_cast<int>(grid[0].size());
+
+    // 1. Guard against blocked start or target cells
+    if (grid[0][0] == 1 || grid[rows - 1][cols - 1] == 1) return -1;
+
+    // 2. Initialize distance matrix with -1 sentinel
+    std::vector<std::vector<int>> dist(rows, std::vector<int>(cols, -1));
+    std::queue<std::pair<int, int>> q;
+
+    // 3. Direction vectors for 4-directional cardinal movement
+    constexpr std::array<int, 4> dr{-1, 1, 0, 0};
+    constexpr std::array<int, 4> dc{0, 0, -1, 1};
+
+    // 4. Enqueue starting coordinate
+    dist[0][0] = 0;
+    q.emplace(0, 0);
+
+    // 5. Expand BFS frontier
+    while (!q.empty()) {
+        auto [r, c] = q.front();
+        q.pop();
+
+        // 6. Early return when destination reached
+        if (r == rows - 1 && c == cols - 1) {
+            return dist[r][c];
+        }
+
+        // 7. Check all four cardinal neighbors
+        for (std::size_t k = 0; k < 4; ++k) {
+            int nr = r + dr[k];
+            int nc = c + dc[k];
+
+            // 8. Boundary check and validity check
+            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols &&
+                grid[nr][nc] == 0 && dist[nr][nc] == -1) {
+                dist[nr][nc] = dist[r][c] + 1;
+                q.emplace(nr, nc);
+            }
+        }
+    }
+
+    return -1; // Target unreachable
+}
+\end{lstlisting}
+
+\subsection{What is Connected Component DFS Labeling?}
+
+A graph may be composed of several disconnected pieces. To count these components and assign every vertex a unique cluster identifier, we scan through all vertices from $0$ to $V-1$. Whenever an unvisited vertex is encountered, it marks the root of a newly discovered component. A Depth-First Search (DFS) or BFS traversal is launched to paint all reachable vertices with the current component identifier.
+
+\begin{lstlisting}[language=C++, caption={Connected Component Identification via DFS}]
+#include <vector>
+
+namespace detail {
+    // Recursive DFS helper to paint an entire connected component
+    void dfsComponent(
+        int u,
+        int current_id,
+        const std::vector<std::vector<int>>& adj,
+        std::vector<int>& component_id
+    ) {
+        component_id[u] = current_id;
+        for (int v : adj[u]) {
+            if (component_id[v] == -1) {
+                dfsComponent(v, current_id, adj, component_id);
+            }
+        }
+    }
+}
+
+// Labels all connected components in an undirected graph.
+// component_id[i] receives the 0-indexed ID of the component containing vertex i.
+// Returns the total count of connected components.
+[[nodiscard]] int labelConnectedComponents(
+    int vertex_count,
+    const std::vector<std::vector<int>>& adj,
+    std::vector<int>& component_id
+) {
+    component_id.assign(vertex_count, -1);
+    int component_count = 0;
+
+    for (int i = 0; i < vertex_count; ++i) {
+        if (component_id[i] == -1) {
+            detail::dfsComponent(i, component_count, adj, component_id);
+            ++component_count;
+        }
+    }
+
+    return component_count;
+}
+\end{lstlisting}
+
+\subsection{What is In-Degree Queueing in Kahn's Algorithm?}
+
+In dependency graphs, tasks with an in-degree of 0 have no outstanding prerequisites and can be scheduled immediately. 
+
+Kahn's algorithm operates iteratively:
+\begin{enumerate}
+    \item Compute the in-degree of every vertex.
+    \item Push all vertices with an in-degree of 0 into a queue.
+    \item While the queue is non-empty, pop vertex $u$ and append it to the topological ordering.
+    \item For each outgoing neighbor $v$ of $u$, simulate the removal of edge $u \to v$ by decrementing $\text{in-degree}[v]$.
+    \item If $\text{in-degree}[v]$ reaches 0, all prerequisites for $v$ have been satisfied; push $v$ into the queue.
+    \item If the resulting topological ordering contains fewer than $V$ vertices, the graph contains at least one directed cycle.
+\end{enumerate}
+
+\begin{lstlisting}[language=C++, caption={Topological Sort and Cycle Detection via Kahn's Algorithm}]
+#include <vector>
+#include <queue>
+
+// Computes a valid topological ordering of a Directed Acyclic Graph (DAG).
+// Returns an empty vector if a directed cycle is detected.
+[[nodiscard]] std::vector<int> topologicalSortKahn(
+    int vertex_count,
+    const std::vector<std::vector<int>>& adj
+) {
+    // 1. Compute in-degree for every vertex
+    std::vector<int> in_degree(vertex_count, 0);
+    for (int u = 0; u < vertex_count; ++u) {
+        for (int v : adj[u]) {
+            ++in_degree[v];
+        }
+    }
+
+    // 2. Initialize queue with all source nodes (in-degree 0)
+    std::queue<int> q;
+    for (int i = 0; i < vertex_count; ++i) {
+        if (in_degree[i] == 0) {
+            q.push(i);
+        }
+    }
+
+    // 3. Process vertices in topological order
+    std::vector<int> order;
+    order.reserve(vertex_count);
+
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        order.push_back(u);
+
+        // 4. Decrement in-degree of all outgoing neighbors
+        for (int v : adj[u]) {
+            --in_degree[v];
+            if (in_degree[v] == 0) {
+                q.push(v);
+            }
+        }
+    }
+
+    // 5. If processed node count does not equal vertex_count, a cycle exists
+    if (static_cast<int>(order.size()) != vertex_count) {
+        return {}; // Cycle detected: valid topological ordering impossible
+    }
+
+    return order;
+}
+\end{lstlisting}
+
+\subsection{What is Min-Heap Relaxation in Dijkstra's Algorithm?}
+
+When edges have non-negative weights, a simple FIFO queue is insufficient because the first path to reach a node is not guaranteed to be the cheapest.
+
+Dijkstra's algorithm resolves this by using a priority queue (min-heap) that always extracts the unvisited vertex with the smallest tentative distance:
+\begin{enumerate}
+    \item The priority queue stores pairs of the form $(\text{distance}, \text{vertex})$.
+    \item When a pair $(d, u)$ is extracted, we check whether $d > \text{dist}[u]$. If it is, this entry is stale (a shorter path to $u$ was discovered and processed earlier) and must be discarded immediately.
+    \item For each outgoing edge $(u, v, w)$, if $\text{dist}[u] + w < \text{dist}[v]$, we update $\text{dist}[v] = \text{dist}[u] + w$ and push the new pair $(\text{dist}[v], v)$ into the heap.
+\end{enumerate}
+
+\begin{lstlisting}[language=C++, caption={Dijkstra's Single-Source Shortest Path Algorithm}]
+#include <vector>
+#include <queue>
+#include <utility>
+#include <limits>
+
+struct Edge {
+    int to;
+    int weight;
+};
+
+// Computes shortest paths from source in a weighted graph with non-negative edges.
+// Unreachable vertices retain std::numeric_limits<int>::max().
+[[nodiscard]] std::vector<int> dijkstra(
+    int vertex_count,
+    const std::vector<std::vector<Edge>>& adj,
+    int source
+) {
+    constexpr int INF = std::numeric_limits<int>::max();
+    std::vector<int> dist(vertex_count, INF);
+
+    // 1. Min-heap storing pairs of (distance, vertex)
+    using Element = std::pair<int, int>;
+    std::priority_queue<Element, std::vector<Element>, std::greater<Element>> pq;
+
+    // 2. Base case: distance to source is 0
+    dist[source] = 0;
+    pq.emplace(0, source);
+
+    // 3. Process vertices greedily by increasing tentative distance
+    while (!pq.empty()) {
+        auto [d, u] = pq.top();
+        pq.pop();
+
+        // 4. Discard stale entries
+        if (d > dist[u]) {
+            continue;
+        }
+
+        // 5. Relax all outgoing incident edges
+        for (const auto& edge : adj[u]) {
+            if (dist[u] != INF && dist[u] + edge.weight < dist[edge.to]) {
+                dist[edge.to] = dist[u] + edge.weight;
+                pq.emplace(dist[edge.to], edge.to);
+            }
+        }
+    }
+
+    return dist;
+}
+\end{lstlisting}
+
+\subsection{What is Path Compression and Union by Rank in DSU?}
+
+Disjoint Set Union (DSU) maintains a collection of disjoint sets represented as directed trees. Each element points to its parent; the root element of a tree points to itself and serves as the canonical representative of the set.
+
+Without optimization, repeated unions can degrade trees into long chains of depth $O(N)$, causing lookups to take linear time. Two optimizations eliminate this inefficiency:
+\begin{enumerate}
+    \item \textbf{Path Compression}: During a $\text{find}(x)$ operation, we recursively update each visited node's parent pointer to point directly to the set's root:
+    \begin{equation*}
+        \text{parent}[x] = \text{find}(\text{parent}[x])
+    \end{equation*}
+    Subsequent lookups along that path execute in $O(1)$ time.
+    \item \textbf{Union by Rank (or Size)}: When merging two sets, the root with the smaller tree depth (rank) is attached beneath the root with the larger depth. This keeps tree height logarithmic even before path compression flattens it.
+\end{enumerate}
+
+Combined, these two optimizations achieve an amortized time complexity of $O(\alpha(N))$ per operation, where $\alpha$ is the inverse Ackermann function ($\alpha(N) \le 4$ for all conceivable inputs).
+
+\begin{lstlisting}[language=C++, caption={Disjoint Set Union with Path Compression and Union by Rank}]
+#include <vector>
+#include <numeric>
+#include <utility>
+
+class DisjointSetUnion {
+public:
+    // 1. Constructor: each element starts in its own independent set
+    explicit DisjointSetUnion(int n)
+        : parent_(n), rank_(n, 0), component_count_(n) {
+        std::iota(parent_.begin(), parent_.end(), 0);
+    }
+
+    // 2. Find representative with recursive path compression
+    [[nodiscard]] int find(int x) noexcept {
+        if (parent_[x] == x) {
+            return x;
+        }
+        return parent_[x] = find(parent_[x]); // Path compression
+    }
+
+    // 3. Union by rank: attaches smaller tree under larger tree
+    // Returns true if sets were merged, false if elements were already connected.
+    bool unite(int x, int y) noexcept {
+        int root_x = find(x);
+        int root_y = find(y);
+
+        if (root_x == root_y) {
+            return false; // Already in the same component
+        }
+
+        // Attach smaller rank tree under larger rank tree
+        if (rank_[root_x] < rank_[root_y]) {
+            std::swap(root_x, root_y);
+        }
+        parent_[root_y] = root_x;
+
+        if (rank_[root_x] == rank_[root_y]) {
+            ++rank_[root_x];
+        }
+
+        --component_count_;
+        return true;
+    }
+
+    // 4. Query whether two elements share the same component
+    [[nodiscard]] bool connected(int x, int y) noexcept {
+        return find(x) == find(y);
+    }
+
+    // 5. Query total number of active disjoint components
+    [[nodiscard]] int componentCount() const noexcept {
+        return component_count_;
+    }
+
+private:
+    std::vector<int> parent_;
+    std::vector<int> rank_;
+    int component_count_;
+};
+\end{lstlisting}
+
+% ============================================================================
+\section{Problem Pattern Recognition}
+% ============================================================================
+
+When reading a graph problem, determining the correct algorithm follows a disciplined three-step decision process.
+
+\subsection*{Step 1: What is the Problem Asking For?}
+
+\begin{itemize}
+    \item \textbf{Shortest Path or Minimum Steps}: If edge weights are uniform (all 1), use \textbf{BFS}. If weights are non-negative and arbitrary, use \textbf{Dijkstra}. If edges can have negative weights, use \textbf{Bellman-Ford}.
+    \item \textbf{Connectivity or Reachability}: Can node $A$ reach node $B$? How many separate islands exist? Use \textbf{DFS} or \textbf{BFS} with a boolean visited array.
+    \item \textbf{Incremental / Dynamic Merging}: If edges are added one by one and you must query connectivity or cycle creation after each addition, use \textbf{Disjoint Set Union (DSU)}.
+    \item \textbf{Dependency Order / Prerequisite Resolution}: Is there an ordering such that every prerequisite comes before its dependent task? Use \textbf{Kahn's Topological Sort}.
+    \item \textbf{Separating into Two Conflicting Groups}: Can vertices be split into two sets such that no two conflicting nodes share a group? Use \textbf{Bipartite 2-Coloring}.
+    \item \textbf{Connecting All Nodes at Minimum Total Cost}: Use \textbf{Kruskal's Algorithm} with DSU.
+\end{itemize}
+
+\subsection*{Step 2: What is the Key Constraint?}
+
+\begin{itemize}
+    \item \textbf{Are edge weights uniform ($w = 1$)?} Do not use Dijkstra. Standard BFS is faster ($O(V + E)$ vs $O((V + E) \log V)$) and simpler.
+    \item \textbf{Are edge weights non-negative?} Dijkstra's greedy invariant holds. If negative edge weights exist, Dijkstra fails; switch to Bellman-Ford ($O(V \cdot E)$).
+    \item \textbf{Is the graph directed or undirected?} In an undirected graph, an edge $(u, v)$ implies $(v, u)$. Avoid infinite cycles by verifying that the neighbor is not the immediate parent. In directed graphs, cycle detection requires 3-state coloring (unvisited, visiting, visited).
+    \item \textbf{Is the graph a tree?} A tree with $V$ vertices has exactly $V - 1$ edges and is acyclic. Adding any edge creates exactly one cycle.
+\end{itemize}
+
+\subsection*{Step 3: How Large is the Input?}
+
+\begin{itemize}
+    \item \textbf{$V, E \le 10^5$}: Linear-time or log-linear algorithms are required. Use BFS, DFS, Kahn's algorithm ($O(V + E)$), or Dijkstra / Kruskal ($O(E \log V)$).
+    \item \textbf{$V \le 400$}: An $O(V^3)$ algorithm is feasible. If you need shortest paths between all pairs of vertices, use \textbf{Floyd-Warshall}.
+    \item \textbf{$V \le 20$}: Exponential algorithms like TSP (Held-Karp) using bitmask dynamic programming in $O(V^2 2^V)$ are viable.
+\end{itemize}
+
+\subsection*{Quick Reference: Keyword-to-Tool Mapping}
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
+\hline
+\textbf{Keywords in Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
+``shortest path in unweighted maze / grid'' & Find minimum steps from start to target cell & BFS with FIFO queue \\ \hline
+``minimum word transformations'' & Each valid 1-letter change is an unweighted edge & BFS from start word \\ \hline
+``number of islands / clusters'' & Count disconnected subgraphs in grid or graph & DFS or BFS flood fill \\ \hline
+``network delay / shortest path with weights $\ge 0$'' & Find cheapest path where each edge has a positive transmission cost & Dijkstra with min-heap \\ \hline
+``course schedule / task dependencies'' & Find a valid execution order respecting all prerequisites & Kahn's Topological Sort \\ \hline
+``detect cycle in directed dependencies'' & Determine if deadlocks or circular prerequisites exist & Kahn's in-degree count or 3-color DFS \\ \hline
+``redundant connection / cycle in undirected graph'' & Find the edge that connects two nodes already in the same component & DSU with path compression \\ \hline
+``minimum cost to connect all nodes'' & Connect every node with minimum total edge weight & Kruskal's MST (sort edges + DSU) \\ \hline
+``split people into two teams without conflicts'' & Color graph using two colors so adjacent nodes have different colors & Bipartite 2-coloring (BFS/DFS) \\ \hline
+``shortest path between every pair of nodes, $V \le 400$'' & Compute all-pairs distance matrix & Floyd-Warshall $O(V^3)$ \\ \hline
+``graph has negative edge weights'' & Find shortest path when edges can reduce cost & Bellman-Ford $O(V \cdot E)$ \\ \hline
+``detect negative weight cycle'' & Check if an infinite negative cost loop exists & Bellman-Ford ($V$-th iteration update) \\ \hline
+``surrounded regions / flood fill from boundary'' & Mark exterior-connected cells to isolate enclosed components & Multi-source BFS from grid border \\ \hline
+``dynamically query connectivity as edges are added'' & Incrementally merge sets and check if two nodes share a set & Disjoint Set Union (DSU) \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+% ============================================================================
+\section{Summary and Complexity Reference}
+% ============================================================================
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\textbf{Task / Operation} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
+BFS (Breadth-First Search) & $O(V + E)$ & $O(V)$ & Unweighted shortest paths, level-order traversal \\ \hline
+DFS (Depth-First Search) & $O(V + E)$ & $O(V)$ & Component counting, path existence, backtracking \\ \hline
+Grid Flood Fill & $O(R \cdot C)$ & $O(R \cdot C)$ & Island counting, maze reachability on 2D matrices \\ \hline
+Dijkstra's Algorithm & $O((V + E) \log V)$ & $O(V + E)$ & Single-source shortest path with non-negative edge weights \\ \hline
+Kahn's Topological Sort & $O(V + E)$ & $O(V)$ & Task scheduling with prerequisites, DAG cycle detection \\ \hline
+Disjoint Set Union (DSU) & $O(\alpha(V))$ amort. & $O(V)$ & Dynamic connectivity, incremental cycle detection \\ \hline
+Kruskal's MST & $O(E \log E)$ & $O(V)$ & Minimum Spanning Tree for sparse graphs \\ \hline
+Bellman-Ford & $O(V \cdot E)$ & $O(V)$ & Shortest paths with negative weights, negative cycle check \\ \hline
+Floyd-Warshall & $O(V^3)$ & $O(V^2)$ & All-pairs shortest paths when $V \le 400$ \\ \hline
+Bipartite 2-Coloring & $O(V + E)$ & $O(V)$ & Partitioning nodes into two conflict-free sets \\ \hline
+\end{tabularx}
+
+% ============================================================================
+\section{Glossary}
+% ============================================================================
+
+\subsection*{Core Concepts}
+
+\begin{itemize}
+    \item \textbf{Adjacency List}: A graph representation storing an array or vector of neighbor lists. Space-optimal for sparse graphs ($O(V + E)$).
+    \item \textbf{Adjacency Matrix}: A 2D array where entry $(u, v)$ stores edge existence or weight. Allows $O(1)$ edge queries but requires $O(V^2)$ memory.
+    \item \textbf{Bipartite Graph}: A graph whose vertices can be divided into two disjoint sets such that every edge connects a vertex in the first set to one in the second set. Contains no odd-length cycles.
+    \item \textbf{Connected Component}: A maximal subgraph in an undirected graph where every pair of vertices is connected by a path.
+    \item \textbf{Directed Acyclic Graph (DAG)}: A directed graph that contains zero directed cycles. A prerequisite for topological sorting.
+    \item \textbf{Disjoint Set Union (DSU)}: A data structure that tracks elements partitioned into disjoint subsets, supporting near-constant time union and find operations.
+    \item \textbf{In-Degree}: The number of directed edges leading into a vertex.
+    \item \textbf{Minimum Spanning Tree (MST)}: A subset of edges connecting all vertices in an undirected weighted graph with minimum total weight and no cycles.
+    \item \textbf{Out-Degree}: The number of directed edges directed away from a vertex.
+    \item \textbf{Path Compression}: An optimization in DSU that flattens tree structure by pointing nodes directly to the set representative during lookups.
+    \item \textbf{Relaxation}: The process of testing whether an edge from $u$ to $v$ improves the shortest known distance to $v$, updating $\text{dist}[v] = \min(\text{dist}[v], \text{dist}[u] + w)$.
+    \item \textbf{Topological Order}: A linear ordering of vertices in a DAG such that for every directed edge $u \to v$, vertex $u$ comes before vertex $v$.
+    \item \textbf{Union by Rank}: An optimization in DSU that attaches the tree with smaller depth beneath the root of the tree with larger depth to prevent degenerate chains.
+\end{itemize}
+
+\subsection*{Mathematical Symbols}
+
+\begin{itemize}
+    \item $V$, $|V|$: The set of vertices and the total count of vertices in the graph.
+    \item $E$, $|E|$: The set of edges and the total count of edges in the graph.
+    \item $G = (V, E)$: A graph defined by its vertex set $V$ and edge set $E$.
+    \item $\deg(u)$: The degree of vertex $u$ (number of incident edges).
+    \item $\text{in-deg}(u), \text{out-deg}(u)$: The incoming and outgoing degrees of vertex $u$ in a directed graph.
+    \item $u \to v$: A directed edge from vertex $u$ to vertex $v$.
+    \item $u \sim v$: An undirected edge connecting vertex $u$ and vertex $v$.
+    \item $w(u, v)$: The weight or cost assigned to edge $(u, v)$.
+    \item $\alpha(n)$: The inverse Ackermann function, an extraordinarily slow-growing function satisfying $\alpha(n) \le 4$ for all practical input sizes.
+    \item $\infty$: A representation of unreachable distance, implemented in code using a sentinel such as \texttt{std::numeric\_limits<int>::max()}.
+\end{itemize}
+
+% ============================================================================
+\section{Further Reading}
+% ============================================================================
+
+\subsection*{Free Online Resources (Start Here)}
+
+\begin{itemize}
+    \item \textbf{cp-algorithms.com}: Graph Algorithms section (Breadth-First Search, Depth-First Search, Dijkstra's Algorithm, Disjoint Set Union, and Topological Sort). Contains clear derivations and complete C++ implementations.
+    \item \textbf{Project Euler}: Practice problems. Problem 81 (Path sum: two ways), Problem 82 (Path sum: three ways), Problem 83 (Path sum: four ways using Dijkstra on 2D grid), Problem 107 (Minimal network using Minimum Spanning Tree).
+    \item \textbf{Art of Problem Solving (AoPS) Wiki}: Intuitive introductions to graph theory, 2-coloring, bipartite graphs, and tree properties.
+    \item \textbf{Brilliant.org}: Interactive visualizations of graph traversals and shortest path algorithms.
+\end{itemize}
+
+\subsection*{Books (When You Are Ready to Go Deeper)}
+
+\begin{itemize}
+    \item T.\ H.\ Cormen, C.\ E.\ Leiserson, R.\ L.\ Rivest, C.\ Stein, \emph{Introduction to Algorithms} (CLRS), 4th Edition --- Chapters 20--23 cover elementary graph algorithms, minimum spanning trees, and shortest paths with rigorous proofs. Read after mastering BFS and Dijkstra basics.
+    \item S.\ S.\ Skiena, \emph{The Algorithm Design Manual}, 3rd Edition --- Chapters 7 and 8 provide practical problem-driven treatments of graph traversal, weighted graphs, and network flows. Excellent for intuition.
+    \item R.\ Sedgewick and K.\ Wayne, \emph{Algorithms}, 4th Edition --- Chapter 4 is dedicated entirely to graphs, providing clear visual step-by-step traces for BFS, DFS, Dijkstra, and Kruskal.
+\end{itemize}
+
+% ============================================================================
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+% ============================================================================
+
+\noindent
+\begin{tabularx}{\textwidth}{|p{3cm}|X|}
+\hline
+\textbf{Date} & \textbf{Change Description} \\ \hline
+2026-10-03 & Document created. \\ \hline
+2026-10-03 & Added MST Cut Property theorem and Kruskal correctness explanation. \\ \hline
+\end{tabularx}
+
+\end{document}
