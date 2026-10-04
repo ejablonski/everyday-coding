@@ -10,6 +10,7 @@ add_executable(LeetCodeSolutions
   448.find_all_numbers_disappeared_in_an_array/448.find_all_numbers_disappeared_in_an_array_tests.cpp
   485.max_consecutive_ones/485.max_consecutive_ones_tests.cpp
   645.set_mismatch/645.set_mismatch_tests.cpp
+  678.valid_parenthesis_string/678.valid_parenthesis_string_tests.cpp
   724.find_the_pivot_integer/724.find_the_pivot_integer_tests.cpp
   728.self_dividing_numbers/728.self_dividing_numbers_tests.cpp
   1015.smallest_integer_divisible_by_k/1015.smallest_integer_divisible_by_k_tests.cpp
