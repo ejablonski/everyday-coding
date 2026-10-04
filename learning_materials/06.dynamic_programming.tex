@@ -175,6 +175,29 @@ If the outer loop is the amount and the inner loop is the coins, you count \text
 
 Many problems give you a 2D grid and ask you to navigate from the top-left to the bottom-right, only moving right or down. The state \texttt{dp[i][j]} represents the minimum cost or total paths to reach row $i$, col $j$. The transition checks the cell above and the cell to the left.
 
+\subsection{Contiguous Subarrays and Substrings (The `Ends Exactly At'' Pattern)}
+
+Many dynamic programming problems deal with substrings or contiguous subarrays (unlike subsequences, where elements can be skipped). Because a substring must remain perfectly unbroken, tracking the `best answer seen so far'' in \texttt{dp[i]} breaks the DP transition---if you only know the best overall score, you have no way to attach the current character $i$ to it, because the best sequence might have ended several indices ago.
+
+The universal solution to this is the `Ends Exactly At'' pattern. We rigidly define our state:
+\begin{calloutbox}{The Substring DP State Rule}
+\texttt{dp[i]} must represent the optimal answer for a valid sequence that \textbf{stops exactly at index $i$}.
+\end{calloutbox}
+
+By forcing the sequence to end exactly at the current character, we guarantee that any sequence extending it will remain unbroken. 
+
+\textbf{Worked Trace: Kadane's Algorithm for Maximum Subarray Sum} \\
+Given the array [-2, 1, -3, 4, -1, 2]. We define \texttt{dp[i]} as the maximum sum of a contiguous subarray ending \textit{exactly} at $i$. At each step, we have two choices: extend the subarray ending at $i-1$, or start a brand new subarray at $i$.
+\begin{enumerate}
+    \item $i=0$ (val -2): \texttt{dp[0]} = -2. 
+    \item $i=1$ (val 1): Extend (-2 + 1 = -1) or Start fresh (1). Max is 1. \texttt{dp[1]} = 1.
+    \item $i=2$ (val -3): Extend (1 + -3 = -2) or Start fresh (-3). Max is -2. \texttt{dp[2]} = -2.
+    \item $i=3$ (val 4): Extend (-2 + 4 = 2) or Start fresh (4). Max is 4. \texttt{dp[3]} = 4.
+    \item $i=4$ (val -1): Extend (4 + -1 = 3) or Start fresh (-1). Max is 3. \texttt{dp[4]} = 3.
+    \item $i=5$ (val 2): Extend (3 + 2 = 5) or Start fresh (2). Max is 5. \texttt{dp[5]} = 5.
+\end{enumerate}
+Because \texttt{dp[i]} only tracks the sequence ending at $i$, the global optimal answer is simply the maximum value found anywhere in the \texttt{dp} array (which is 5). This identical `ends exactly at'' logic applies to Longest Valid Parentheses, Longest Palindromic Substring, and any contiguous-segment problem.
+
 \subsection{Two-Sequence DP: Longest Common Subsequence and Edit Distance}
 
 When comparing two strings or sequences, the state needs two indices: $i$ for the first string and $j$ for the second.
@@ -963,3 +986,4 @@ Bitmask DP & $O(2^N \times N)$ & $O(2^N \times N)$ & Set of visited items, $N \l
 \end{tabularx}
 
 \end{document}
+

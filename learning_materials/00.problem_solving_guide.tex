@@ -155,166 +155,166 @@ If a problem states $N \le 20$ and asks you to list things, the author expects e
 
 This is the unified pattern recognition index. Each row merges the quick-reference tables of the finished topic documents. Rows are grouped by the kind of problem, not by document, so you can scan by symptom.
 
-\subsection{Counting Arrangements and Selections (Module 01)}
+\subsection{Counting Arrangements and Selections (Module 01: Combinatorics)}
 
 \vspace{0.2cm}
 \noindent
-\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
 \hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
-``how many ways to arrange $n$ distinct items?'' & Count sequences where order matters. & $n!$ (factorial) & 01. Combinatorics \\ \hline
-``how many ways to choose $k$ items from $n$?'' & Count groups where order does not matter. & $\binom{n}{k}$ & 01. Combinatorics \\ \hline
-``unique permutations'', ``array with duplicates'' & Some swaps produce identical results. & Multiset permutation: $\frac{n!}{n_1!\,n_2!\cdots}$ & 01. Combinatorics \\ \hline
-``distribute $n$ identical items into $k$ groups'' & Split identical objects into distinct buckets. & Stars and Bars: $\binom{n+k-1}{k-1}$ & 01. Combinatorics \\ \hline
-``nobody gets their own item'' & Every item must be displaced. & Derangements $D_n$ & 01. Combinatorics \\ \hline
-``seating around a circular table'' & Rotations count as the same arrangement. & Circular permutations $(n-1)!$ & 01. Combinatorics \\ \hline
-``how many valid parenthesis strings?'', ``how many unique binary search trees?'' & Problems with a recursive left/right split. & Catalan number $C_n$ & 01. Combinatorics \\ \hline
-``shortest grid paths from $(0,0)$ to $(m,n)$'' & Moving only right and down on a grid. & $\binom{m+n}{m}$ & 01. Combinatorics \\ \hline
-``how many integers divisible by at least one of these primes?'' & Overlapping groups that need de-duplication. & Inclusion-Exclusion & 01. Combinatorics \\ \hline
-``partition a set into $k$ non-empty groups'' & Split distinct objects into identical buckets. & Stirling numbers $S(n,k)$ & 01. Combinatorics \\ \hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``how many ways to arrange $n$ distinct items?'' & Count sequences where order matters. & $n!$ (factorial) \\ \hline
+``how many ways to choose $k$ items from $n$?'' & Count groups where order does not matter. & $\binom{n}{k}$ \\ \hline
+``unique permutations'', ``array with duplicates'' & Some swaps produce identical results. & Multiset permutation: $\frac{n!}{n_1!\,n_2!\cdots}$ \\ \hline
+``distribute $n$ identical items into $k$ groups'' & Split identical objects into distinct buckets. & Stars and Bars: $\binom{n+k-1}{k-1}$ \\ \hline
+``nobody gets their own item'' & Every item must be displaced. & Derangements $D_n$ \\ \hline
+``seating around a circular table'' & Rotations count as the same arrangement. & Circular permutations $(n-1)!$ \\ \hline
+``how many valid parenthesis strings?'', ``how many unique binary search trees?'' & Problems with a recursive left/right split. & Catalan number $C_n$ \\ \hline
+``shortest grid paths from $(0,0)$ to $(m,n)$'' & Moving only right and down on a grid. & $\binom{m+n}{m}$ \\ \hline
+``how many integers divisible by at least one of these primes?'' & Overlapping groups that need de-duplication. & Inclusion-Exclusion \\ \hline
+``partition a set into $k$ non-empty groups'' & Split distinct objects into identical buckets. & Stirling numbers $S(n,k)$ \\ \hline
 \end{tabularx}
 \vspace{0.3cm}
 
-\subsection{Huge Numbers, Remainders, and Wrap-Around (Module 02)}
+\subsection{Huge Numbers, Remainders, and Wrap-Around (Module 02: Modular Arithmetic)}
 
 \vspace{0.2cm}
 \noindent
-\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
 \hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
-``return the answer modulo $10^9+7$'' & The answer is too large for any integer type. & Reduce every intermediate result with \texttt{\% MOD} & 02. Modular Arithmetic \\ \hline
-``circular array'', ``ring buffer'', ``round-robin'' & Index wraps back to $0$ after the end. & \texttt{(idx + step) \% N} & 02. Modular Arithmetic \\ \hline
-``compute $a^b$'' with $b$ up to $10^{18}$ & Direct multiplication would take forever. & Binary exponentiation $O(\log b)$ & 02. Modular Arithmetic \\ \hline
-``divide inside a modular computation'' & Division requires an inverse in modular math. & Modular inverse (Fermat or Extended Euclidean) & 02. Modular Arithmetic \\ \hline
-``$x \equiv r_i \pmod{m_i}$ for several $i$'' & Several independent remainder clues. & Chinese Remainder Theorem & 02. Modular Arithmetic \\ \hline
-``last $k$ digits of $a^b$'' & Last $k$ digits equal the value modulo $10^k$. & Binary exponentiation modulo $10^k$ & 02. Modular Arithmetic \\ \hline
-``parity'', ``odd/even invariant'' & Does a change preserve some property? & Modulo $2$ & 02. Modular Arithmetic \\ \hline
-``answer modulo a prime'' for combinations & Combinations need division. & Precomputed factorials and modular inverses & 01. Combinatorics; 02. Modular Arithmetic \\ \hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``return the answer modulo $10^9+7$'' & The answer is too large for any integer type. & Reduce every intermediate result with \texttt{\% MOD} \\ \hline
+``circular array'', ``ring buffer'', ``round-robin'' & Index wraps back to $0$ after the end. & \texttt{(idx + step) \% N} \\ \hline
+``compute $a^b$'' with $b$ up to $10^{18}$ & Direct multiplication would take forever. & Binary exponentiation $O(\log b)$ \\ \hline
+``divide inside a modular computation'' & Division requires an inverse in modular math. & Modular inverse (Fermat or Extended Euclidean) \\ \hline
+``$x \equiv r_i \pmod{m_i}$ for several $i$'' & Several independent remainder clues. & Chinese Remainder Theorem \\ \hline
+``last $k$ digits of $a^b$'' & Last $k$ digits equal the value modulo $10^k$. & Binary exponentiation modulo $10^k$ \\ \hline
+``parity'', ``odd/even invariant'' & Does a change preserve some property? & Modulo $2$ \\ \hline
+``answer modulo a prime'' for combinations & Combinations need division. & Precomputed factorials and modular inverses \newline \textit{(Also in: 01. Combinatorics; 02. Modular Arithmetic)} \\ \hline
 \end{tabularx}
 \vspace{0.3cm}
 
-\subsection{Primes, Divisors, and Factors (Module 03)}
+\subsection{Primes, Divisors, and Factors (Module 03: Number Theory)}
 
 \vspace{0.2cm}
 \noindent
-\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
 \hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
-``is $N$ prime?'' (single query) & Test whether any number divides $N$. & Trial division up to $\sqrt{N}$ (using $6k \pm 1$) & 03. Number Theory \\ \hline
-``count primes up to $N$'' ($N \le 10^7$) & Find all primes in a large range. & Sieve of Eratosthenes & 03. Number Theory \\ \hline
-``primes in range $[L, R]$'', $R \le 10^{12}$ & Memory too small for a full sieve. & Segmented Sieve & 03. Number Theory \\ \hline
-``all divisors of $N$'' & Pairs of numbers multiplying to $N$. & $O(\sqrt{N})$ pair collection & 03. Number Theory \\ \hline
-``number of divisors of $N$'' & Count divisors without listing them. & Prime factorize, then $\prod (a_i + 1)$ & 03. Number Theory \\ \hline
-``greatest common divisor'', ``reduce a fraction'' & Largest factor shared by two numbers. & Euclidean Algorithm (\texttt{std::gcd}) & 03. Number Theory \\ \hline
-``events repeat every $A$ and $B$ days'' & Smallest time when both events align. & Least Common Multiple (\texttt{std::lcm}) & 03. Number Theory \\ \hline
-``count numbers $\le N$ coprime to $N$'' & Numbers sharing no prime factor with $N$. & Euler's Totient $\phi(N)$ & 03. Number Theory; 02. Modular Arithmetic \\ \hline
-``factorize $10^5$ different numbers'' & Separate $O(\sqrt{N})$ tests would time out. & Precompute smallest-prime-factor array & 03. Number Theory \\ \hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``is $N$ prime?'' (single query) & Test whether any number divides $N$. & Trial division up to $\sqrt{N}$ (using $6k \pm 1$) \\ \hline
+``count primes up to $N$'' ($N \le 10^7$) & Find all primes in a large range. & Sieve of Eratosthenes \\ \hline
+``primes in range $[L, R]$'', $R \le 10^{12}$ & Memory too small for a full sieve. & Segmented Sieve \\ \hline
+``all divisors of $N$'' & Pairs of numbers multiplying to $N$. & $O(\sqrt{N})$ pair collection \\ \hline
+``number of divisors of $N$'' & Count divisors without listing them. & Prime factorize, then $\prod (a_i + 1)$ \\ \hline
+``greatest common divisor'', ``reduce a fraction'' & Largest factor shared by two numbers. & Euclidean Algorithm (\texttt{std::gcd}) \\ \hline
+``events repeat every $A$ and $B$ days'' & Smallest time when both events align. & Least Common Multiple (\texttt{std::lcm}) \\ \hline
+``count numbers $\le N$ coprime to $N$'' & Numbers sharing no prime factor with $N$. & Euler's Totient $\phi(N)$ \newline \textit{(Also in: 03. Number Theory; 02. Modular Arithmetic)} \\ \hline
+``factorize $10^5$ different numbers'' & Separate $O(\sqrt{N})$ tests would time out. & Precompute smallest-prime-factor array \\ \hline
 \end{tabularx}
 \vspace{0.3cm}
 
-\subsection{Sums, Ranges, and Series (Module 04)}
+\subsection{Sums, Ranges, and Series (Module 04: Sequences and Series)}
 
 \vspace{0.2cm}
 \noindent
-\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
 \hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
-``sum of a subsegment'', ``total between days $X$ and $Y$'' & Add a contiguous slice of an array many times. & Prefix Sums & 04. Sequences and Series \\ \hline
-``add $v$ to range $[L, R]$'' & Apply batch interval additions without loops. & Difference Array & 04. Sequences and Series \\ \hline
-``sum of all multiples'', ``arithmetic progression'' & Elements grow by a constant addition. & Arithmetic Sum Formula & 04. Sequences and Series \\ \hline
-``double each day'', ``powers of 2'', ``geometric progression'' & Elements grow by a constant multiplication. & Geometric Sum Formula & 04. Sequences and Series \\ \hline
-``sum of terms like $\frac{1}{x(x+1)}$'' & Consecutive terms may cancel out. & Telescoping Sum & 04. Sequences and Series \\ \hline
-``sum of a rectangle in a grid'' & Prefix sums extended to two dimensions. & 2D Prefix Sums & 04. Sequences and Series \\ \hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``sum of a subsegment'', ``total between days $X$ and $Y$'' & Add a contiguous slice of an array many times. & Prefix Sums \newline \textit{(Also in: 04. Sequences and Series)} \\ \hline
+``add $v$ to range $[L, R]$'' & Apply batch interval additions without loops. & Difference Array \newline \textit{(Also in: 04. Sequences and Series)} \\ \hline
+``sum of all multiples'', ``arithmetic progression'' & Elements grow by a constant addition. & Arithmetic Sum Formula \newline \textit{(Also in: 04. Sequences and Series)} \\ \hline
+``double each day'', ``powers of 2'', ``geometric progression'' & Elements grow by a constant multiplication. & Geometric Sum Formula \newline \textit{(Also in: 04. Sequences and Series)} \\ \hline
+``sum of terms like $\frac{1}{x(x+1)}$'' & Consecutive terms may cancel out. & Telescoping Sum \newline \textit{(Also in: 04. Sequences and Series)} \\ \hline
+``sum of a rectangle in a grid'' & Prefix sums extended to two dimensions. & 2D Prefix Sums \newline \textit{(Also in: 04. Sequences and Series)} \\ \hline
 \end{tabularx}
 \vspace{0.3cm}
 
-\subsection{Generating Every Valid Configuration (Module 05)}
+\subsection{Generating Every Valid Configuration (Module 05: Recursion and Backtracking)}
 
 \vspace{0.2cm}
 \noindent
-\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
 \hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
-``return all valid parenthesis strings'' & Build every correct bracket string. & Backtracking with constraint pruning & 05. Recursion and Backtracking \\ \hline
-``find all subsets'', ``power set'' & For every element, choose yes or no. & Backtracking (include/exclude) & 05. Recursion and Backtracking \\ \hline
-``return all permutations'' & Find every distinct ordering. & Backtracking with a \texttt{used} array, or \texttt{next\_permutation} & 05. Recursion; 01. Combinatorics \\ \hline
-``return all combinations of size $k$'' & Pick exactly $k$ of $n$ without order. & Backtracking with a \texttt{start} index & 05. Recursion and Backtracking \\ \hline
-``N-Queens'', ``fill the board so no rule is violated'' & Constraint satisfaction puzzle. & Backtracking with pruning & 05. Recursion and Backtracking \\ \hline
-``find any one valid arrangement'' & Stop as soon as a single solution exists. & Backtracking with early return & 05. Recursion and Backtracking \\ \hline
-``unique permutations'', ``input contains duplicates'' & Find orderings without producing repeated results. & Backtracking: sort, then skip identical elements & 05. Recursion and Backtracking \\ \hline
-``subsets with duplicates'' & Find subsets without producing repeated results. & Backtracking: sort, then skip equal siblings & 05. Recursion and Backtracking \\ \hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``return all valid parenthesis strings'' & Build every correct bracket string. & Backtracking with constraint pruning \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
+``find all subsets'', ``power set'' & For every element, choose yes or no. & Backtracking (include/exclude) \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
+``return all permutations'' & Find every distinct ordering. & Backtracking with a \texttt{used} array, or \texttt{next\_permutation} \newline \textit{(Also in: 05. Recursion; 01. Combinatorics)} \\ \hline
+``return all combinations of size $k$'' & Pick exactly $k$ of $n$ without order. & Backtracking with a \texttt{start} index \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
+``N-Queens'', ``fill the board so no rule is violated'' & Constraint satisfaction puzzle. & Backtracking with pruning \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
+``find any one valid arrangement'' & Stop as soon as a single solution exists. & Backtracking with early return \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
+``unique permutations'', ``input contains duplicates'' & Find orderings without producing repeated results. & Backtracking: sort, then skip identical elements \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
+``subsets with duplicates'' & Find subsets without producing repeated results. & Backtracking: sort, then skip equal siblings \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
 \end{tabularx}
 \vspace{0.3cm}
 
-\subsection{Overlapping Subproblems and State Transitions (Module 06)}
+\subsection{Overlapping Subproblems and State Transitions (Module 06: Dynamic Programming)}
 
 \vspace{0.2cm}
 \noindent
-\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
 \hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
-``number of ways to reach'' & Counting paths or combinations. & DP (add transitions) & 06. Dynamic Programming \\ \hline
-``number of distinct subsequences'', ``ways to form a string'' & Counting matches between characters. & DP on Strings & 06. Dynamic Programming \\ \hline
-``minimum cost / minimum number of \dots'' & Shortest path in state graph. & DP (min transition) & 06. Dynamic Programming \\ \hline
-``minimum coins / steps to reach a target'' & Shortest path bounded by transitions. & 1D Coin Change & 06. Dynamic Programming \\ \hline
-``maximum value without exceeding capacity'' & Choose items with a budget. & 0/1 Knapsack & 06. Dynamic Programming \\ \hline
-``maximum sum of a non-adjacent selection'' & Pick separated elements. & House Robber (1D) & 06. Dynamic Programming \\ \hline
-``longest common subsequence'' & Match characters in order. & Two-Sequence DP & 06. Dynamic Programming \\ \hline
-``longest palindromic subsequence/substring'' & Palindrome check in a window. & Interval DP (expand) & 06. Dynamic Programming \\ \hline
-``minimum edits to transform'' & Insert/Delete/Replace operations. & Edit Distance DP & 06. Dynamic Programming \\ \hline
-``longest increasing subsequence'' & Pick elements strictly increasing. & 1D DP (LIS) & 06. Dynamic Programming \\ \hline
-``can we split into equal sum halves'' & Target sum is exactly half total. & Subset-Sum (Knapsack) & 06. Dynamic Programming \\ \hline
-``partition into $k$ groups with minimum cost'' & Cost grouped by elements. & DP (Index and $k$) & 06. Dynamic Programming \\ \hline
-``minimum cost to merge/multiply a sequence'' & Cost depends on final merge point. & Interval DP & 06. Dynamic Programming \\ \hline
-``stock-style buy/sell with states'' & State transitions with multiple roles. & State-Machine DP & 06. Dynamic Programming \\ \hline
-``unbounded reuse of items'' & Take the same item infinitely. & Unbounded Knapsack (forward loop) & 06. Dynamic Programming \\ \hline
-``visit every node exactly once, $n \le 20$'' & Traveling Salesman style. & Bitmask DP & 06. Dynamic Programming \\ \hline
-``count ways modulo'' & Answers get too large. & DP (apply \% at additions) & 06. Dynamic Programming \\ \hline
-``grid paths with obstacles'' & Navigating 2D array. & 2D Grid DP & 06. Dynamic Programming \\ \hline
-``no two adjacent chosen'' & House robber constraint. & 1D DP & 06. Dynamic Programming \\ \hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``number of ways to reach'' & Counting paths or combinations. & DP (add transitions) \\ \hline
+``number of distinct subsequences'', ``ways to form a string'' & Counting matches between characters. & DP on Strings \\ \hline
+``minimum cost / minimum number of \dots'' & Shortest path in state graph. & DP (min transition) \\ \hline
+``minimum coins / steps to reach a target'' & Shortest path bounded by transitions. & 1D Coin Change \\ \hline
+``maximum value without exceeding capacity'' & Choose items with a budget. & 0/1 Knapsack \\ \hline
+``maximum sum of a non-adjacent selection'' & Pick separated elements. & House Robber (1D) \\ \hline
+``longest common subsequence'' & Match characters in order. & Two-Sequence DP \\ \hline
+``longest palindromic subsequence/substring'' & Palindrome check in a window. & Interval DP (expand) \\ \hline
+``minimum edits to transform'' & Insert/Delete/Replace operations. & Edit Distance DP \\ \hline
+``longest increasing subsequence'' & Pick elements strictly increasing. & 1D DP (LIS) \\ \hline
+``can we split into equal sum halves'' & Target sum is exactly half total. & Subset-Sum (Knapsack) \\ \hline
+``partition into $k$ groups with minimum cost'' & Cost grouped by elements. & DP (Index and $k$) \\ \hline
+``minimum cost to merge/multiply a sequence'' & Cost depends on final merge point. & Interval DP \\ \hline
+``stock-style buy/sell with states'' & State transitions with multiple roles. & State-Machine DP \\ \hline
+``unbounded reuse of items'' & Take the same item infinitely. & Unbounded Knapsack (forward loop) \\ \hline
+``visit every node exactly once, $n \le 20$'' & Traveling Salesman style. & Bitmask DP \\ \hline
+``count ways modulo'' & Answers get too large. & DP (apply \% at additions) \\ \hline
+``grid paths with obstacles'' & Navigating 2D array. & 2D Grid DP \\ \hline
+``no two adjacent chosen'' & House robber constraint. & 1D DP \\ \hline
 \end{tabularx}
 \vspace{0.3cm}
 
-\subsection{Graphs, Traversals, and Networks (Module 07)}
+\subsection{Graphs, Traversals, and Networks (Module 07: Graph Algorithms)}
 
 \vspace{0.2cm}
 \noindent
-\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
 \hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
-``shortest path in unweighted maze / grid'' & Find minimum steps from start to target cell. & BFS with FIFO queue & 07. Graph Algorithms \\ \hline
-``minimum word transformations'' & Each valid 1-letter change is an unweighted edge. & BFS from start word & 07. Graph Algorithms \\ \hline
-``number of islands / clusters'' & Count disconnected subgraphs in grid or graph. & DFS or BFS flood fill & 07. Graph Algorithms \\ \hline
-``network delay / shortest path with weights $\ge 0$'' & Find cheapest path where each edge has non-negative cost. & Dijkstra with min-heap & 07. Graph Algorithms \\ \hline
-``course schedule / task dependencies'' & Find a valid execution order respecting all prerequisites. & Kahn's Topological Sort & 07. Graph Algorithms \\ \hline
-``detect cycle in directed dependencies'' & Determine if deadlocks or circular prerequisites exist. & Kahn's in-degree count & 07. Graph Algorithms \\ \hline
-``redundant connection / cycle in undirected graph'' & Find the edge connecting nodes already in the same component. & DSU with path compression & 07. Graph Algorithms \\ \hline
-``minimum cost to connect all nodes'' & Connect every node with minimum total edge weight. & Kruskal's MST (DSU) & 07. Graph Algorithms \\ \hline
-``split people into two teams without conflicts'' & Color graph using two colors so adjacent nodes differ. & Bipartite 2-coloring & 07. Graph Algorithms \\ \hline
-``shortest path between all pairs, $V \le 400$'' & Compute all-pairs distance matrix. & Floyd-Warshall & 07. Graph Algorithms \\ \hline
-``graph has negative edge weights'' & Find shortest path with negative edges or detect negative cycle. & Bellman-Ford & 07. Graph Algorithms \\ \hline
-``dynamically query connectivity as edges added'' & Incrementally merge sets and check connectivity. & Disjoint Set Union (DSU) & 07. Graph Algorithms \\ \hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``shortest path in unweighted maze / grid'' & Find minimum steps from start to target cell. & BFS with FIFO queue \\ \hline
+``minimum word transformations'' & Each valid 1-letter change is an unweighted edge. & BFS from start word \\ \hline
+``number of islands / clusters'' & Count disconnected subgraphs in grid or graph. & DFS or BFS flood fill \\ \hline
+``network delay / shortest path with weights $\ge 0$'' & Find cheapest path where each edge has non-negative cost. & Dijkstra with min-heap \\ \hline
+``course schedule / task dependencies'' & Find a valid execution order respecting all prerequisites. & Kahn's Topological Sort \\ \hline
+``detect cycle in directed dependencies'' & Determine if deadlocks or circular prerequisites exist. & Kahn's in-degree count \\ \hline
+``redundant connection / cycle in undirected graph'' & Find the edge connecting nodes already in the same component. & DSU with path compression \\ \hline
+``minimum cost to connect all nodes'' & Connect every node with minimum total edge weight. & Kruskal's MST (DSU) \\ \hline
+``split people into two teams without conflicts'' & Color graph using two colors so adjacent nodes differ. & Bipartite 2-coloring \\ \hline
+``shortest path between all pairs, $V \le 400$'' & Compute all-pairs distance matrix. & Floyd-Warshall \\ \hline
+``graph has negative edge weights'' & Find shortest path with negative edges or detect negative cycle. & Bellman-Ford \\ \hline
+``dynamically query connectivity as edges added'' & Incrementally merge sets and check connectivity. & Disjoint Set Union (DSU) \\ \hline
 \end{tabularx}
 \vspace{0.3cm}
 
-\subsection{Interval Halving and Answer Spaces (Module 08)}
+\subsection{Interval Halving and Answer Spaces (Module 08: Binary Search)}
 
 \vspace{0.2cm}
 \noindent
-\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
 \hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
-``find minimum capacity to complete in time'' & Monotonic capacity threshold: larger capacities also succeed. & Binary Search on Answer & 08. Binary Search \\ \hline
-``maximize minimum distance between items'' & Feasibility condition: can we place $K$ items with gap $\ge D$? & Binary Search on Answer & 08. Binary Search \\ \hline
-``first element $\ge target$ in sorted array'' & Locate the starting boundary of a value. & Lower Bound & 08. Binary Search \\ \hline
-``count occurrences of $X$ in sorted array'' & Count identical elements without a linear scan. & Upper Bound $-$ Lower Bound & 08. Binary Search \\ \hline
-``search target in rotated sorted array'' & Cyclically shifted sorted data. & Rotated Binary Search & 08. Binary Search \\ \hline
-``find any peak element ($A[i] > A[i+1]$)'' & Find local extremum in logarithmic time. & Slope Analysis Binary Search & 08. Binary Search \\ \hline
-``find integer square root $\lfloor \sqrt{N} \rfloor$'' & Find largest $k$ such that $k^2 \le N$. & Monotonic Predicate Search & 08. Binary Search \\ \hline
-``minimize maximum subarray sum in $K$ splits'' & Painter's partition / allocation. & Binary Search on Answer + Greedy & 08. Binary Search \\ \hline
-``smallest divisor giving sum $\le$ threshold'' & Monotonic divisor: larger divisors decrease total sum. & Binary Search on Answer & 08. Binary Search \\ \hline
-``find real root with precision $10^{-7}$'' & Continuous bisection on continuous domain. & Floating-Point Binary Search & 08. Binary Search \\ \hline
-``first bad version / earliest failure'' & Monotonic failure: once broken, all later revisions broken. & First-True Binary Search & 08. Binary Search \\ \hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``find minimum capacity to complete in time'' & Monotonic capacity threshold: larger capacities also succeed. & Binary Search on Answer \\ \hline
+``maximize minimum distance between items'' & Feasibility condition: can we place $K$ items with gap $\ge D$? & Binary Search on Answer \\ \hline
+``first element $\ge target$ in sorted array'' & Locate the starting boundary of a value. & Lower Bound \\ \hline
+``count occurrences of $X$ in sorted array'' & Count identical elements without a linear scan. & Upper Bound $-$ Lower Bound \\ \hline
+``search target in rotated sorted array'' & Cyclically shifted sorted data. & Rotated Binary Search \\ \hline
+``find any peak element ($A[i] > A[i+1]$)'' & Find local extremum in logarithmic time. & Slope Analysis Binary Search \\ \hline
+``find integer square root $\lfloor \sqrt{N} \rfloor$'' & Find largest $k$ such that $k^2 \le N$. & Monotonic Predicate Search \\ \hline
+``minimize maximum subarray sum in $K$ splits'' & Painter's partition / allocation. & Binary Search on Answer + Greedy \\ \hline
+``smallest divisor giving sum $\le$ threshold'' & Monotonic divisor: larger divisors decrease total sum. & Binary Search on Answer \\ \hline
+``find real root with precision $10^{-7}$'' & Continuous bisection on continuous domain. & Floating-Point Binary Search \\ \hline
+``first bad version / earliest failure'' & Monotonic failure: once broken, all later revisions broken. & First-True Binary Search \\ \hline
 \end{tabularx}
 \vspace{0.3cm}
 
@@ -324,13 +324,13 @@ These decisions appear inside many problems regardless of topic.
 
 \vspace{0.2cm}
 \noindent
-\begin{tabularx}{\textwidth}{|p{3.5cm}|X|p{3.1cm}|p{2.8cm}|}
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
 \hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} & \textbf{Module} \\ \hline
-``count the ways'' (not ``list the ways'') & You only need an integer, so avoid generating the configurations. & Formula or Dynamic Programming instead of backtracking & 01. Combinatorics; 05. Recursion; 06. DP \\ \hline
-``$N$ too large for a loop ($N \ge 10^9$)'' & Any $O(N)$ pass times out. & Closed-form formula or $O(\log N)$ technique & 02. Modular Arithmetic; 04. Sequences \\ \hline
-``many queries on static data'' & Repeating the same scan wastes time. & Precompute once, answer in $O(1)$ & 03. Number Theory; 04. Sequences \\ \hline
-``deep recursion ($N > 10^4$)'' & The call stack may overflow. & Convert to an iterative loop with an explicit stack & 05. Recursion and Backtracking \\ \hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``count the ways'' (not ``list the ways'') & You only need an integer, so avoid generating the configurations. & Formula or Dynamic Programming instead of backtracking \newline \textit{(Also in: 01. Combinatorics; 05. Recursion; 06. DP)} \\ \hline
+``$N$ too large for a loop ($N \ge 10^9$)'' & Any $O(N)$ pass times out. & Closed-form formula or $O(\log N)$ technique \newline \textit{(Also in: 02. Modular Arithmetic; 04. Sequences)} \\ \hline
+``many queries on static data'' & Repeating the same scan wastes time. & Precompute once, answer in $O(1)$ \newline \textit{(Also in: 03. Number Theory; 04. Sequences)} \\ \hline
+``deep recursion ($N > 10^4$)'' & The call stack may overflow. & Convert to an iterative loop with an explicit stack \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
 \end{tabularx}
 \vspace{0.3cm}
 
@@ -391,6 +391,13 @@ Precomputed factorials & $O(N)$ build, $O(1)$ query & $O(N)$ & Many $\binom{n}{k
 Generate all subsets & $O(N \cdot 2^N)$ & $O(N)$ & ``Return all subsets'' with $N \le 20$. \\ \hline
 Generate all permutations & $O(N \cdot N!)$ & $O(N)$ & ``Return all orderings'' with $N \le 8$. \\ \hline
 N-Queens backtracking & $O(N!)$ worst case & $O(N)$ & Constraint puzzle with $N \le 13$. \\ \hline
+\end{tabularx}
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.4cm}|p{2.6cm}|p{2.2cm}|X|}
+\hline
+\textbf{Task} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
 1D DP (Stairs, Robber) & $O(N)$ & $O(1)$ or $O(N)$ & Optimal or count problem depending on immediate prior states. \\ \hline
 2D Grid DP & $O(N \times M)$ & $O(\min(N, M))$ & Path optimization on a grid moving down/right. \\ \hline
 0/1 Knapsack & $O(N \times W)$ & $O(W)$ & Maximize value within weight/capacity limit $W$. \\ \hline
@@ -494,3 +501,4 @@ Continuous binary search & $O(\text{iters} \cdot C)$ & $O(1)$ & Real-valued root
 \end{tabularx}
 
 \end{document}
+
