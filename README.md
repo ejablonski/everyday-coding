@@ -1,80 +1,97 @@
-# Everyday programming
+# Everyday Coding
 
-Daily coding and such. Just for fun.
+A personal repository for daily programming practice, focusing on solving algorithmic challenges, studying data structures, and continuous learning.
 
-## Exercism
+## Build Requirements
 
-- C++
-  - [Hello, World!](./Exercism/cpp/hello-world)
-  - [Leap](./Exercism/cpp/leap)
-  - [Gigasecond](./Exercism/cpp/gigasecond)
-  - [Hamming](./Exercism/cpp/hamming)
-  - [Isogram](./Exercism/cpp/isogram)
-  - [Bob](./Exercism/cpp/bob)
-  - [Anagram](./Exercism/cpp/anagram)
-  - [ETL](./Exercism/cpp/etl)
-  - [Word count](./Exercism/cpp/word-count)
-  - [Difference of squares](./Exercism/cpp/difference-of-squares)
-  - [Nucleotide count](./Exercism/cpp/nucleotide-count)
-  - [Food chain](./Exercism/cpp/food-chain)
-  - [Phone number](./Exercism/cpp/phone-number)
-  - [Grade school](./Exercism/cpp/grade-school)
-  - [Robot name](./Exercism/cpp/robot-name)
-  - [Sum of multiples](./Exercism/cpp/sum-of-multiples)
-  - [Space age](./Exercism/cpp/space-age)
-  - [Scrabble score](./Exercism/cpp/scrabble-score)
-  - [Triangle](./Exercism/cpp/triangle)
-  - [Grains](./Exercism/cpp/grains)
-  - [Raindrops](./Exercism/cpp/raindrops)
-  - [Reverse string](./Exercism/cpp/reverse-string)
-  - [Isogram](./Exercism/cpp/isogram)
-  - [Luhn](./Exercism/cpp/luhn)
-  - [Two fer](./Exercism/cpp/two-fer)
-  - [Binary](./Exercism/cpp/binary)
-  - [Pascal's triangle](./Exercism/cpp/pascals-triangle)
-  - [Trinary](./Exercism/cpp/trinary)
-  - [RNA transcription](./Exercism/cpp/rna-transcription)
-  - [Acronym](./Exercism/cpp/acronym)
-  - [Hexadecimal](./Exercism/cpp/hexadecimal)
-  - [Atbash cipher](./Exercism/cpp/atbash-cipher)
-  - [Armstrong numbers](./Exercism/cpp/armstrong-numbers)
-  - [Pangram](./Exercism/cpp/pangram)
-  - [Secret handshake](./Exercism/cpp/secret-handshake)
-  - [Allergies](./Exercism/cpp/allergies)
-  - [Matching brackets](./Exercism/cpp/matching-brackets)
-  - [Collatz conjecture](./Exercism/cpp/collatz-conjecture)
-  - [Protein translation](./Exercism/cpp/protein-translation)
-  - [Sieve](./Exercism/cpp/sieve)
-  - [Nth prime](./Exercism/cpp/nth-prime)
-  - [All your base](./Exercism/cpp/all-your-base)
-  - [Prime factors](./Exercism/cpp/prime-factors)
-  - [Beer song](./Exercism/cpp/beer-song)
-  - [Clock](./Exercism/cpp/clock)
-  - [Robot simulator](./Exercism/cpp/robot-simulator)
-  - [Series](./Exercism/cpp/series)
-  - [Queen Attack](./Exercism/cpp/queen-attack)
-  - [Binary search](./Exercism/cpp/binary-search)
-  - [Crypto Square](./Exercism/cpp/crypto-square)
-  - [Circular buffer](./Exercism/cpp/circular-buffer)
-  - [Binary search tree](./Exercism/cpp/binary-search-tree)
-  - [Roman numerals](./Exercism/cpp/roman-numerals)
-  - [Darts](./Exercism/cpp/darts)
-  - [ISBN verifier](./Exercism/cpp/isbn-verifier)
-  - [Simple linked list](./Exercism/cpp/simple-linked-list)
-  - [Bank account](./Exercism/cpp/bank-account)
+To compile the C++ test cases, you will need:
 
-## ProjectEuler
+- **CMake** (version 3.28 or higher)
+- A **C++23** compliant compiler (e.g., Clang, GCC, MSVC)
+- A build system generator (e.g., Ninja, Make, MSBuild)
 
-- [Multiples of 3 and 5](./ProjectEuler/multiples-of-3-and-5)
-- [Even Fibonacci numbers](./ProjectEuler/even-fibonacci-numbers)
-- [Largest prime factor](./ProjectEuler/largest-prime-factor)
-- [Largest palidrome product](./ProjectEuler/largest-palidrome-product)
-- [Sum square difference](./ProjectEuler/sum-square-difference)
-- [10001st prime](./ProjectEuler/nth-prime)
-- [Special pythagorean triplet](./ProjectEuler/special-pythagorean-triplet)
-- [Summation of primes](./ProjectEuler/summation-of-primes)
-- [Large sum](./ProjectEuler/large-sum)
-- [Largest product in a series](./ProjectEuler/largest-product-in-a-series)
-- [Smallest multiple](./ProjectEuler/smallest-multiple)
-- [Thousand digit Fibonacci number](./ProjectEuler/thousand-digit-fibonacci-digit)
+*(Note: Catch2 is used as the testing framework, but it is automatically fetched and built by CMake during the configuration step.)*
 
+## Running Tests
+
+First, configure and build the project using CMake:
+
+```sh
+cmake -B build
+cmake --build build
+```
+
+Once compiled, you can run the tests using `ctest` from within the `build` directory:
+
+### Run all test cases:
+
+  ```sh
+  cd build
+  ctest
+  ```
+
+### Run only LeetCode test cases:
+
+  ```sh
+  ctest -R "LeetCode"
+  ```
+
+### Run test cases with specific tags (e.g., `[array]`, `[math]`):
+
+  ```sh
+  ctest -L "array"
+  ```
+
+  *(Alternatively, you can run the Catch2 executable directly with tag filters: `./LeetCodeSolutions "[array]"`)*
+
+## Agent Skills
+
+This repository includes several custom AI agent skills (located in `.agents/skills`) designed to assist with development and studying:
+
+- **`learning-materials`**: Governs the creation, editing, and rigorous formatting of LaTeX-based study guides. Ensures consistent pedagogical structure across notes.
+- **`learning-mentor`**: Acts as a Socratic tutor for algorithmic problems. It strictly enforces a no-copy-paste policy, guiding you through progressive hints and debugging instead of giving direct solutions.
+- **`test-cases`**: Automates the generation and precise formatting of C++ Catch2 test cases for competitive programming problems. Enforces universal naming conventions, tags, and problem source linkage.
+
+## Learning Materials
+
+The `learning_materials/` directory contains comprehensive, LaTeX-based study guides on computer science and mathematics topics, including:
+
+- **C++ Reference & Problem Solving Guides**
+- **Discrete Math & Number Theory** (Combinatorics, Modular Arithmetic, Sequences, Series)
+- **Algorithms & Data Structures** (Recursion, Dynamic Programming, Graphs, Binary Search, Strings)
+
+**How to build them:**
+
+You can compile these study guides into PDFs using `pdflatex`. From the repository root, run:
+
+```sh
+cd learning_materials
+pdflatex <filename>.tex
+```
+
+*(You may need to run the compilation command twice for tables of contents and internal references to generate correctly.)*
+
+## Solved Problems
+
+### LeetCode
+
+- [9. Palindrom Number](./LeetCode/9.palindrom_number)
+- [20. Valid Parentheses](./LeetCode/20.valid_parentheses)
+- [22. Generate Parentheses](./LeetCode/22.generate_parentheses)
+- [32. Longest Valid Parentheses](./LeetCode/32.longest_valid_parentheses)
+- [60. Permutation Sequence](./LeetCode/60.permutation_sequence)
+- [118. Pascals Triangle](./LeetCode/118.pascals_triangle)
+- [204. Count Primes](./LeetCode/204.count_primes)
+- [263. Ugly Number](./LeetCode/263.ugly_number)
+- [448. Find All Numbers Disappeared In An Array](./LeetCode/448.find_all_numbers_disappeared_in_an_array)
+- [485. Max Consecutive Ones](./LeetCode/485.max_consecutive_ones)
+- [645. Set Mismatch](./LeetCode/645.set_mismatch)
+- [678. Valid Parenthesis String](./LeetCode/678.valid_parenthesis_string)
+- [724. Find The Pivot Integer](./LeetCode/724.find_the_pivot_integer)
+- [728. Self Dividing Numbers](./LeetCode/728.self_dividing_numbers)
+- [1015. Smallest Integer Divisible By K](./LeetCode/1015.smallest_integer_divisible_by_k)
+- [1365. How Many Numbers Are Smaller Than The Current Number](./LeetCode/1365.how_many_numbers_are_smaller_than_the_current_number)
+- [1470. Shuffle The Array](./LeetCode/1470.shuffle_the_array)
+- [1502. Can Make Arithmetic Progression From Sequence](./LeetCode/1502.can_make_arithmetic_progression_from_sequence)
+- [1866. Number Of Ways To Rearrange Sticks With K Sticks Visible](./LeetCode/1866.number_of_ways_to_rearrange_sticks_with_k_sticks_visible)
+- [1929. Concatenation Of Array](./LeetCode/1929.concatenation_of_array)

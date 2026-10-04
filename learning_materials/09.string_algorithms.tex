@@ -1,0 +1,373 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Core LaTeX Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{graphicx}
+
+% --- Unified Color Palette ---
+\definecolor{primaryblue}{RGB}{24, 75, 140}
+\definecolor{codebg}{RGB}{248, 249, 250}
+\definecolor{codeframe}{RGB}{210, 215, 222}
+\definecolor{codegreen}{RGB}{40, 130, 60}
+\definecolor{codeblue}{RGB}{20, 90, 180}
+\definecolor{codegray}{RGB}{120, 120, 120}
+
+% --- Hyperref Setup ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    citecolor=primaryblue,
+    urlcolor=primaryblue,
+    pdftitle={String Algorithms},
+    pdfpagemode=UseNone,
+    pdfdisplaydoctitle=true
+}
+
+% --- Code Listing Style ---
+\lstset{
+    language=C++,
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{codeblue}\bfseries,
+    stringstyle=\color{codegreen},
+    commentstyle=\color{codegray}\itshape,
+    numbers=left,
+    numberstyle=\tiny\color{codegray},
+    stepnumber=1,
+    numbersep=10pt,
+    frame=single,
+    rulecolor=\color{codeframe},
+    tabsize=4,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    showstringspaces=false,
+    escapeinside={(*@}{@*)}
+}
+
+% --- Custom Environments ---
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newenvironment{calloutbox}[1]{
+    \vspace{0.3cm}
+    \noindent
+    \begin{tabularx}{\textwidth}{|X|}
+    \hline
+    \rowcolor{codebg}
+    \textbf{#1} \\
+    \hline
+}{
+    \\ \hline
+    \end{tabularx}
+    \vspace{0.3cm}
+}
+
+% ============================================================================
+\begin{document}
+% ============================================================================
+
+\title{\vspace{-2cm}\Huge \textbf{String Algorithms}}
+\author{Everyday Coding \\ \Large \textit{Pattern Matching, Tries, and Hashing}}
+\date{}
+\maketitle
+
+\begin{abstract}
+String algorithms process sequences of characters efficiently. This document covers pattern matching, hashing, and prefix trees. These tools allow rapid searching through vast bodies of text. We will explore how to avoid redundant comparisons and how to structure dictionaries for instantaneous lookup.
+\end{abstract}
+
+% ============================================================================
+\section{Foundations}
+% ============================================================================
+
+A string is a sequence of characters stored in contiguous memory. Each character maps to a numeric value based on an encoding scheme, typically ASCII or UTF-8. Because strings are just arrays of numbers, mathematical operations can be applied to them to enable fast searching.
+
+\subsection{Substrings, Subsequences, and Prefixes}
+Understanding the distinction between these terms is essential before solving any string problem:
+\begin{itemize}
+    \item \textbf{Substring}: A contiguous slice of characters from the string. For example, "app" is a substring of "apple".
+    \item \textbf{Subsequence}: A sequence derived by deleting zero or more characters without changing the order. For example, "ape" is a subsequence of "apple".
+    \item \textbf{Prefix}: A substring that starts at the first character.
+    \item \textbf{Suffix}: A substring that ends at the last character.
+\end{itemize}
+
+% ============================================================================
+\section{Main Topics}
+% ============================================================================
+
+\subsection{Polynomial Rolling Hash}
+Comparing two strings of length $N$ character by character takes $O(N)$ time. By converting a string into a large integer called a hash, we can compare strings in $O(1)$ time. A polynomial rolling hash treats a string as a number in a specific base $B$, evaluated modulo a large prime $M$.
+
+\noindent \textbf{Worked Example: Hashing "cat"} \\
+Let $B = 31$ and $M = 10^9+7$. We map characters to values: 'a'=1, 'b'=2, 'c'=3, 't'=20.
+\begin{enumerate}
+    \item Hash for "c": $3 \pmod{M} = 3$
+    \item Hash for "ca": $(3 \times 31 + 1) \pmod{M} = 94$
+    \item Hash for "cat": $(94 \times 31 + 20) \pmod{M} = 2934$
+\end{enumerate}
+
+\subsection{The KMP Algorithm and Prefix Function}
+The Knuth-Morris-Pratt (KMP) algorithm finds all occurrences of a pattern of length $M$ in a text of length $N$ in $O(N+M)$ time. It does this by preprocessing the pattern to create a $\pi$ array (prefix function). The value $\pi[i]$ stores the length of the longest proper prefix of the pattern that is also a suffix of the pattern up to index $i$.
+
+\noindent \textbf{Worked Example: Computing $\pi$ for "ABABC"}
+\begin{enumerate}
+    \item $i=0$ ('A'): No proper prefix possible. $\pi[0] = 0$.
+    \item $i=1$ ('B'): Suffix is "B", prefix is "A". They do not match. $\pi[1] = 0$.
+    \item $i=2$ ('A'): Suffix is "A", prefix is "A". Match of length 1. $\pi[2] = 1$.
+    \item $i=3$ ('B'): Suffix is "AB", prefix is "AB". Match of length 2. $\pi[3] = 2$.
+    \item $i=4$ ('C'): Suffix is "C", "BC", etc. Prefix is "A", "AB", etc. No match. $\pi[4] = 0$.
+\end{enumerate}
+
+\subsection{Tries (Prefix Trees)}
+A Trie is a tree data structure that stores strings character by character. Every path down the tree represents a prefix. This allows searching for a word of length $L$ among a dictionary of $W$ words in just $O(L)$ time, entirely independent of $W$.
+
+\noindent \textbf{Worked Example: Inserting "car" into a Trie}
+\begin{enumerate}
+    \item Start at the root node.
+    \item Character 'c': No child 'c' exists. Create a new node and move to it.
+    \item Character 'a': No child 'a' exists. Create a new node and move to it.
+    \item Character 'r': No child 'r' exists. Create a new node and move to it.
+    \item Mark the current node as the end of a valid word.
+\end{enumerate}
+
+% ============================================================================
+\section{Key Algorithmic Patterns}
+% ============================================================================
+
+\subsection{Dictionary Prefix Search}
+\textbf{Why Naive Fails:} Given a dictionary of $10^5$ words, checking if a string $S$ of length 10 is a prefix of any word by scanning the entire dictionary takes $O(W \times L)$ time. This will time out on large datasets.
+
+\textbf{The Efficient Technique:} Insert all words into a Trie beforehand. This costs time upfront but reduces each subsequent prefix query to exactly $O(L)$ time. We simply walk down the tree following the characters of $S$. If we hit a dead end, it is not a prefix.
+
+\textbf{Worked Trace: Prefix check for "ca"}
+Given a Trie containing "cat" and "dog".
+1. Start at root.
+2. Read 'c'. Root has a child 'c'. Move to it.
+3. Read 'a'. Node 'c' has a child 'a'. Move to it.
+4. String ends. We are currently at a valid node, meaning "ca" is a prefix of at least one word in the tree.
+
+\subsection{Sliding Window Substring Search (Rabin-Karp)}
+\textbf{Why Naive Fails:} Finding a pattern of length $M$ in a string of length $N$ by checking every starting position takes $O(N \times M)$ time. If a string is a long sequence of identical characters, this degenerates to quadratic time.
+
+\textbf{The Efficient Technique:} Compute the polynomial hash of the pattern. Then, compute the hash of the first window of length $M$ in the text. As you slide the window one character to the right, you can update the hash in $O(1)$ time by subtracting the contribution of the outgoing character, multiplying by the base, and adding the incoming character.
+
+\textbf{Worked Trace: Sliding Hash}
+Window moves from "abc" to "bcd". Base $B$.
+1. Old hash $H = (\text{'a'} \cdot B^2 + \text{'b'} \cdot B + \text{'c'}) \pmod{M}$.
+2. Remove 'a': $H \leftarrow H - (\text{'a'} \cdot B^2)$.
+3. Shift left: $H \leftarrow H \cdot B$.
+4. Add 'd': $H \leftarrow H + \text{'d'}$.
+The new hash perfectly represents "bcd".
+
+% ============================================================================
+\section{Worked Examples}
+% ============================================================================
+
+\begin{enumerate}
+    \item \textbf{Longest Common Prefix among Array of Strings:}
+    Insert all strings into a Trie. Then start at the root and walk down as long as the current node has exactly one child and is not marked as the end of a word.
+    
+    \item \textbf{Finding the period of a string:}
+    Compute the $\pi$ array using KMP. If a string $S$ of length $N$ is made of repeating blocks, the length of the shortest repeating block is $N - \pi[N-1]$. For example, $S=$ "ABABAB", $N=6$, $\pi[5] = 4$. Period is $6-4 = 2$.
+    
+    \item \textbf{Anagram Search in a String:}
+    Instead of a polynomial hash, use an array of 26 integers to count character frequencies. Slide a window of size $M$ over the text, adding the incoming character count and subtracting the outgoing character count. Compare the count array to the target pattern's counts.
+    
+    \item \textbf{Group Shifted Strings:}
+    To group strings that belong to the same shifting sequence (for example, "abc" and "bcd"), map each string to a relative difference string. "abc" becomes "1,1" (since b-a=1, c-b=1). "bcd" also becomes "1,1". Hash this difference sequence to group them in a hash map.
+\end{enumerate}
+
+% ============================================================================
+\section{C++ Implementations}
+% ============================================================================
+
+\subsection{Prefix Tree (Trie)}
+This implementation avoids raw pointers by using indices into a vector of nodes. This is extremely cache-friendly and eliminates memory leak risks.
+
+\begin{lstlisting}
+#include <string_view>
+#include <vector>
+#include <array>
+
+struct TrieNode {
+    std::array<int, 26> next{};
+    bool is_end = false;
+    
+    constexpr TrieNode() {
+        next.fill(-1);
+    }
+};
+
+class Trie {
+    std::vector<TrieNode> nodes;
+
+public:
+    Trie() {
+        nodes.emplace_back(); // Root node
+    }
+
+    void insert(std::string_view word) {
+        int current = 0;
+        for (char c : word) {
+            int index = c - 'a';
+            if (nodes[current].next[index] == -1) {
+                nodes[current].next[index] = static_cast<int>(nodes.size());
+                nodes.emplace_back();
+            }
+            current = nodes[current].next[index];
+        }
+        nodes[current].is_end = true;
+    }
+
+    [[nodiscard]] bool search(std::string_view word) const {
+        int current = 0;
+        for (char c : word) {
+            int index = c - 'a';
+            if (nodes[current].next[index] == -1) {
+                return false;
+            }
+            current = nodes[current].next[index];
+        }
+        return nodes[current].is_end;
+    }
+};
+\end{lstlisting}
+
+\subsection{KMP Prefix Function and Search}
+The $\pi$ array calculation relies on a two-pointer approach, comparing the current character against the character following the longest matching prefix seen so far.
+
+\begin{lstlisting}
+#include <vector>
+#include <string_view>
+
+[[nodiscard]] constexpr std::vector<int> computePi(std::string_view pattern) noexcept {
+    int n = static_cast<int>(pattern.length());
+    std::vector<int> pi(n, 0);
+    for (int i = 1, j = 0; i < n; ++i) {
+        while (j > 0 && pattern[i] != pattern[j]) {
+            j = pi[j - 1]; // Fall back to previous longest valid prefix
+        }
+        if (pattern[i] == pattern[j]) {
+            ++j;
+        }
+        pi[i] = j;
+    }
+    return pi;
+}
+
+[[nodiscard]] std::vector<int> kmpSearch(std::string_view text, std::string_view pattern) {
+    if (pattern.empty()) return {};
+    
+    std::vector<int> pi = computePi(pattern);
+    std::vector<int> matches;
+    
+    for (int i = 0, j = 0; i < text.length(); ++i) {
+        while (j > 0 && text[i] != pattern[j]) {
+            j = pi[j - 1];
+        }
+        if (text[i] == pattern[j]) {
+            ++j;
+        }
+        if (j == pattern.length()) {
+            matches.push_back(i - j + 1); // Record starting index
+            j = pi[j - 1];
+        }
+    }
+    return matches;
+}
+\end{lstlisting}
+
+% ============================================================================
+\section{Problem Pattern Recognition}
+% ============================================================================
+
+\textbf{Step 1: Identify the Goal} \\
+Does the problem ask you to find matches within a large text, group strings by similarity, or search for prefixes?
+
+\textbf{Step 2: Check the Constraints} \\
+If total string length is $10^5$, $O(N^2)$ approaches are invalid. You must use linear time $O(N)$ approaches like KMP or Trie insertion.
+
+\textbf{Step 3: Choose the Tool} \\
+Match the problem signature to the appropriate algorithm.
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``find all occurrences of word $P$ in text $T$'' & Exact string matching in linear time. & KMP or Rabin-Karp \\ \hline
+``check if string is prefix of any dictionary word'' & Search incrementally along the length of the string. & Trie (Prefix Tree) \\ \hline
+``longest common substring between two strings'' & Find matching sequences without order disruptions. & Binary search on hash length, or Rolling Hash \\ \hline
+``minimum characters to add to make a palindrome'' & Find the longest palindromic prefix/suffix. & KMP $\pi$ array on $S + \text{'\#'} + \text{reverse}(S)$ \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+% ============================================================================
+\section{Summary and Complexity Reference}
+% ============================================================================
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.4cm}|p{2.6cm}|p{2.2cm}|X|}
+\hline
+\textbf{Task} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
+Trie Insertion & $O(L)$ & $O(L \times \Sigma)$ & Building a dictionary where $\Sigma$ is alphabet size. \\ \hline
+Trie Search & $O(L)$ & $O(1)$ & Querying exact words or prefixes. \\ \hline
+KMP $\pi$ Array & $O(M)$ & $O(M)$ & Finding internal string periods and fallback points. \\ \hline
+KMP Search & $O(N+M)$ & $O(M)$ & Finding all occurrences of pattern in text. \\ \hline
+Rabin-Karp Search & $O(N+M)$ avg & $O(1)$ & Matching strings, or multi-pattern search with sets. \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+% ============================================================================
+\section{Glossary of Terms and Symbols}
+% ============================================================================
+
+\subsection{Core Concepts}
+\begin{itemize}
+    \item \textbf{Trie}: A tree data structure optimized for fast prefix-based string retrieval.
+    \item \textbf{Rolling Hash}: A hash function designed to be quickly updated when a window slides forward by one position.
+    \item \textbf{Hash Collision}: When two different strings map to the exact same hash value.
+    \item \textbf{Alphabet Size ($\Sigma$)}: The number of distinct characters possible in the strings, often 26 for lowercase English letters.
+\end{itemize}
+
+\subsection{Mathematical Symbols}
+\begin{itemize}
+    \item $\pi[i]$: The prefix function value at index $i$, representing the longest proper prefix that is also a suffix.
+    \item $O(N+M)$: Linear time proportional to the combined lengths of the text and the pattern.
+    \item $M$: Often denotes the length of the pattern string.
+    \item $N$: Often denotes the length of the text string.
+\end{itemize}
+
+% ============================================================================
+\section{Further Reading}
+% ============================================================================
+
+\begin{itemize}
+    \item CP-Algorithms (cp-algorithms.com) --- Excellent reference for KMP, Z-function, and string hashing.
+    \item USACO Guide (usaco.guide) --- Contains thorough training modules on Trie and String Hashing applications.
+    \item \textit{The Algorithm Design Manual} by Steven Skiena --- Read the section on string matching for a deep dive into finite state machines and pattern recognition.
+    \item \textit{Introduction to Algorithms} (CLRS) --- Provides rigorous mathematical proofs for the correctness of KMP and Rabin-Karp bounds.
+\end{itemize}
+
+% ============================================================================
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+% ============================================================================
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3cm}|X|}
+\hline
+\textbf{Date} & \textbf{Change} \\ \hline
+2026-10-03 & Document created. \\ \hline
+\end{tabularx}
+
+\end{document}
