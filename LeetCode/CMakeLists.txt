@@ -13,6 +13,7 @@ add_executable(LeetCodeSolutions
   678.valid_parenthesis_string/678.valid_parenthesis_string_tests.cpp
   724.find_the_pivot_integer/724.find_the_pivot_integer_tests.cpp
   728.self_dividing_numbers/728.self_dividing_numbers_tests.cpp
+  856.score_of_parentheses/856.score_of_parentheses_tests.cpp
   1015.smallest_integer_divisible_by_k/1015.smallest_integer_divisible_by_k_tests.cpp
   1365.how_many_numbers_are_smaller_than_the_current_number/1365.how_many_numbers_are_smaller_than_the_current_number_tests.cpp
   1470.shuffle_the_array/1470.shuffle_the_array_tests.cpp
