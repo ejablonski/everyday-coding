@@ -5,6 +5,7 @@ add_executable(LeetCodeSolutions
   32.longest_valid_parentheses/32.longest_valid_parentheses_tests.cpp
   60.permutation_sequence/60.permutation_sequence_tests.cpp
   118.pascals_triangle/118.pascals_triangle_tests.cpp
+  150.evaluate_reverse_polish_notation/150.evaluate_reverse_polish_notation_tests.cpp
   204.count_primes/204.count_primes_tests.cpp
   263.ugly_number/263.ugly_number_tests.cpp
   448.find_all_numbers_disappeared_in_an_array/448.find_all_numbers_disappeared_in_an_array_tests.cpp
