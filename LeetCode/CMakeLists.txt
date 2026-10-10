@@ -10,6 +10,7 @@ add_executable(LeetCodeSolutions
   263.ugly_number/263.ugly_number_tests.cpp
   448.find_all_numbers_disappeared_in_an_array/448.find_all_numbers_disappeared_in_an_array_tests.cpp
   485.max_consecutive_ones/485.max_consecutive_ones_tests.cpp
+  636.exclusive_time_of_functions/636.exclusive_time_of_functions_test.cpp
   645.set_mismatch/645.set_mismatch_tests.cpp
   678.valid_parenthesis_string/678.valid_parenthesis_string_tests.cpp
   724.find_the_pivot_integer/724.find_the_pivot_integer_tests.cpp
