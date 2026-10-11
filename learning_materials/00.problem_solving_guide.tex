@@ -1,4 +1,4 @@
-﻿\documentclass[11pt,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 
 % --- Core LaTeX Packages ---
 \usepackage[utf8]{inputenc}
@@ -318,6 +318,37 @@ This is the unified pattern recognition index. Each row merges the quick-referen
 \end{tabularx}
 \vspace{0.3cm}
 
+\subsection{Making the Best Local Choice (Module 10: Greedy Algorithms)}
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``maximum number of non-overlapping'', ``attend most events'' & Fit as many independent segments on a timeline as possible. & Sort by end time, pick earliest finish. \\ \hline
+``fractional amounts allowed'', ``divisible goods'' & You can slice items to perfectly fill capacity. & Sort by value-to-weight ratio. \\ \hline
+``minimum cost to connect cables/ropes'' & Merging items pairwise where cost is sum of parts. & Min-heap (Priority Queue), take smallest two. \\ \hline
+``assign tasks to workers'', ``maximize pairs'' & Match items from two groups efficiently. & Sort both groups, use two pointers. \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\subsection{Nearest Extrema, Spans, and Sliding Windows (Module 11: Monotonic Stacks and Queues)}
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``next greater element'', ``first warmer day'' & Find the first larger value to the right of each element. & Decreasing Monotonic Stack \\ \hline
+``stock span'', ``previous smaller element'' & Count consecutive prior days with lower or equal price. & Increasing Monotonic Stack \\ \hline
+``largest rectangle in histogram'' & Expand bar width left and right until a shorter bar appears. & Increasing Monotonic Stack with sentinel \\ \hline
+``maximum/minimum in sliding window of size $K$'' & Query range extremum over a continuously shifting interval. & Monotonic Deque (double-ended eviction) \\ \hline
+``sum of subarray minimums'' & Sum the minimum of every contiguous subarray. & Monotonic Stack with symmetry breaking \\ \hline
+``remove $K$ digits to create smallest number'' & Maintain smallest lexicographical sequence of remaining digits. & Increasing Monotonic Stack with removal quota \\ \hline
+``visible buildings / line of sight'' & Count buildings visible before being blocked by a taller one. & Decreasing Monotonic Stack \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
 \subsection{Cross-Cutting Decisions}
 
 These decisions appear inside many problems regardless of topic.
@@ -357,6 +388,8 @@ This section lists every topic document in the library. Finished documents are m
 06. Dynamic Programming & $\checkmark$ Available & State definition, transitions, memoization vs tabulation, 1D/2D grids, knapsack family, two-sequence (LCS/edit distance), interval DP, space optimization, and bitmask DP. \\ \hline
 07. Graph Algorithms & $\checkmark$ Available & Graph representations, BFS, DFS, 2D grid flood fill, Dijkstra shortest paths, Kahn's topological sort, Disjoint Set Union (DSU), Kruskal's MST, Bellman-Ford, Floyd-Warshall, and bipartite 2-coloring. \\ \hline
 08. Binary Search & $\checkmark$ Available & Interval halving, search invariants, lower/upper bounds, binary search on the answer, rotated array searches, peak element finding, and continuous floating-point bisection. \\ \hline
+10. Greedy Algorithms & $\checkmark$ Available & Greedy choice property, optimal substructure, interval scheduling, fractional knapsack, and Huffman/rope merging. \\ \hline
+11. Monotonic Stacks and Queues & $\checkmark$ Available & Monotonic stacks and deques, Next/Previous Greater/Smaller Element, span calculations, histogram rectangle expansion, sliding window extrema, and subarray contribution accounting. \\ \hline
 \end{tabularx}
 \vspace{0.3cm}
 
@@ -416,6 +449,12 @@ Binary search on answer & $O(C \cdot \log R)$ & $O(1)$ & Optimization over monot
 Rotated array search & $O(\log N)$ & $O(1)$ & Cyclically shifted sorted unique array. \\ \hline
 Peak element search & $O(\log N)$ & $O(1)$ & Finding local maximum in array with distinct neighbors. \\ \hline
 Continuous binary search & $O(\text{iters} \cdot C)$ & $O(1)$ & Real-valued root or threshold on continuous function. \\ \hline
+Greedy interval scheduling & $O(N \log N)$ & $O(1)$ & Maximize non-overlapping timeline events. \\ \hline
+Greedy knapsack/matching & $O(N \log N)$ & $O(1)$ & Sorting-based choices on divisible or pairable items. \\ \hline
+Next / Previous Greater Element & $O(N)$ & $O(N)$ & Nearest larger neighbor needed for each array element. \\ \hline
+Largest Histogram Rectangle & $O(N)$ & $O(N)$ & Finding largest rectangular area bounded by vertical bars. \\ \hline
+Sliding Window Extremum & $O(N)$ & $O(K)$ & Finding running minimum or maximum across a sliding window. \\ \hline
+Subarray Extremum Contributions & $O(N)$ & $O(N)$ & Summing minimum or maximum values over all contiguous subarrays. \\ \hline
 \end{tabularx}
 \vspace{0.3cm}
 
@@ -444,6 +483,8 @@ Continuous binary search & $O(\text{iters} \cdot C)$ & $O(1)$ & Real-valued root
     \item \textbf{Binary Search}: Systematic interval halving over a sorted array or monotonic answer space.
     \item \textbf{Monotonicity}: The property where a condition preserves truth value after a transition point ($FF\dots FTT\dots T$).
     \item \textbf{Lower / Upper Bound}: Boundary indices locating the first element $\ge target$ or strictly $> target$.
+    \item \textbf{Monotonic Stack}: A stack whose elements are strictly or non-strictly sorted, used to find nearest extrema in $O(N)$ amortized time.
+    \item \textbf{Monotonic Deque}: A double-ended queue maintaining sorted elements that enables $O(1)$ amortized sliding window range queries.
 \end{itemize}
 
 \subsection{Mathematical Symbols}
@@ -498,6 +539,8 @@ Continuous binary search & $O(\text{iters} \cdot C)$ & $O(1)$ & Real-valued root
 2026-10-03 & Added Dynamic Programming module to Available registry, synced 19 pattern recognition rows, and added DP complexity entries. \\ \hline
 2026-10-03 & Added Graph Algorithms module to Available registry, synced 12 pattern recognition rows, and added graph algorithm complexity entries. \\ \hline
 2026-10-03 & Added Binary Search module to Available registry, synced 11 pattern recognition rows, and added binary search complexity entries. \\ \hline
+2026-10-10 & Added Greedy Algorithms module to Available registry, synced 4 pattern recognition rows, and added greedy complexity entries. \\ \hline
+2026-10-11 & Added Monotonic Stacks and Queues module to Available registry, synced 7 pattern recognition rows, and added monotonic complexity entries. \\ \hline
 \end{tabularx}
 
 \end{document}

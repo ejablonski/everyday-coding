@@ -1,0 +1,329 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Core LaTeX Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{graphicx}
+
+% --- Optional Diagram Packages (include when needed) ---
+% \usepackage{forest}
+\usepackage{tikz}
+
+% --- Unified Color Palette ---
+\definecolor{primaryblue}{RGB}{24, 75, 140}
+\definecolor{codebg}{RGB}{248, 249, 250}
+\definecolor{codeframe}{RGB}{210, 215, 222}
+\definecolor{codegreen}{RGB}{40, 130, 60}
+\definecolor{codeblue}{RGB}{20, 90, 180}
+\definecolor{codegray}{RGB}{120, 120, 120}
+
+% --- Hyperref Setup ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    citecolor=primaryblue,
+    urlcolor=primaryblue,
+    pdftitle={Greedy Algorithms},
+    pdfauthor={Antigravity Engineering}
+}
+
+% --- Theorem & Definition Environments ---
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{example}{Example}[section]
+
+% --- Callout Box Environment ---
+\newenvironment{calloutbox}[1]{
+    \par\vspace{0.3cm}
+    \noindent\begin{tabular}{|p{0.96\textwidth}|}
+    \hline
+    \vspace{0.1cm}
+    \textbf{#1}\par\vspace{0.1cm}
+}{
+    \vspace{0.1cm}
+    \\ \hline
+    \end{tabular}
+    \vspace{0.3cm}\par
+}
+
+% --- Modern C++ Code Listing Setup ---
+\lstset{
+    language=C++,
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{orange!80!black},
+    numberstyle=\tiny\color{codegray},
+    numbers=left,
+    numbersep=8pt,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b
+}
+
+% --- Title Block ---
+\title{\vspace{-1.5cm}\textbf{\Huge Greedy Algorithms}\\[0.3cm]
+\Large Making the Best Local Choice}
+\author{Technical Monograph}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+This document covers greedy algorithms, a problem-solving strategy that builds a solution step by step, always choosing the immediate best option without looking ahead or revisiting past choices. It is designed for programmers learning to identify when making local, shortsighted decisions is mathematically guaranteed to result in a global, overall best solution. We explore the greedy choice property, optimal substructure, and trace through classic applications like interval scheduling and fractional resource allocation.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Foundations / Core Concepts}
+
+Imagine you are driving and want to find the lowest-cost gas station along your route. A greedy approach would simply pull into the very first station you see that is cheaper than the ones before it, or perhaps stop at the cheapest one in your immediate view. You never check the stations 100 miles ahead, and you never turn back. 
+
+In algorithmic terms, a greedy algorithm constructs a solution step by step. At each step, it makes the choice that looks best right now. 
+It operates on two core concepts:
+\begin{enumerate}
+    \item \textbf{Greedy Choice}: At each step, you can make a local, immediate optimal choice. You don't need to consider all future consequences or all possible scenarios.
+    \item \textbf{Optimal Substructure}: An optimal solution to the entire problem contains optimal solutions to the sub-problems. If you make a greedy choice, what remains is a smaller version of the exact same problem.
+\end{enumerate}
+
+Unlike Dynamic Programming or Backtracking, which explore or store multiple possibilities to guarantee the best outcome, a greedy algorithm commits to a single path. If the problem structure supports it, the greedy path leads to the optimal result much faster. If not, the greedy algorithm produces a sub-optimal result.
+
+\section{Main Topic Sections}
+
+\subsection{Interval Scheduling (Activity Selection)}
+You are given a set of events, each with a start time and an end time. You want to attend as many non-overlapping events as possible. 
+
+A natural thought might be to pick the shortest events, or the events that start the earliest. However, an event that starts early might take up the whole day, preventing you from attending others. The greedy strategy that works is: \textbf{always pick the event that ends earliest}. 
+
+By picking the event that finishes first, you free up your schedule as early as possible to fit in more events.
+
+\subsection{Fractional Knapsack}
+You have a backpack that can hold a maximum weight $W$. You have a set of items, each with a weight and a total value. You can take fractions of an item (like gold dust or liquid).
+
+The greedy strategy is straightforward: calculate the value-to-weight ratio for each item. Sort items from highest ratio to lowest. Take as much of the most valuable item per pound as possible, then move to the next.
+
+\subsection{Minimum Coins (Canonical Systems)}
+Given standard US coin denominations $(1, 5, 10, 25)$, you want to make change for a specific amount using the fewest coins possible.
+
+The greedy approach is to repeatedly take the largest coin denomination that does not exceed the remaining amount. This works perfectly for canonical coin systems (like US currency) but fails for arbitrary systems (e.g., denominations of $1, 3, 4$ where $6$ is best made of $3+3$ rather than $4+1+1$).
+
+\section{Key Algorithmic Patterns}
+
+Why do naive brute-force approaches fail? Trying every possible subset of activities or items requires exponential time, $O(2^N)$. This is impossible for $N \ge 30$.
+
+The efficient technique relies on \textbf{sorting}. By sorting the input data according to a specific greedy criterion (like end time or value ratio), we can construct the answer in a single linear pass $O(N)$. The total time becomes bounded by the sort: $O(N \log N)$.
+
+\begin{calloutbox}{The Sorting Signal}
+Most greedy algorithms begin by sorting the input. If you find yourself asking, ``In what order should I process these items to maximize my advantage?'', you are likely looking for a greedy sorting criterion.
+\end{calloutbox}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.8, every node/.style={transform shape}]
+% Time axis
+\draw[->, thick] (0,0) -- (12,0) node[right] {Time};
+\foreach \x in {1,2,...,11} {
+    \draw (\x, 0.1) -- (\x, -0.1) node[below] {\x};
+}
+
+% Intervals
+\filldraw[fill=blue!20, draw=blue!80!black, thick] (1, 0.5) rectangle (4, 1.0) node[midway] {A};
+\filldraw[fill=red!20, draw=red!80!black, thick] (3, 1.5) rectangle (5, 2.0) node[midway] {B};
+\filldraw[fill=blue!20, draw=blue!80!black, thick] (4.5, 0.5) rectangle (7, 1.0) node[midway] {C};
+\filldraw[fill=red!20, draw=red!80!black, thick] (6, 1.5) rectangle (9, 2.0) node[midway] {D};
+\filldraw[fill=blue!20, draw=blue!80!black, thick] (8, 0.5) rectangle (10, 1.0) node[midway] {E};
+
+% Selection markers (Checkmarks for accepted, Crosses for rejected)
+\node[color=codegreen, font=\bfseries] at (2.5, 1.25) {$\checkmark$ (Pick)};
+\node[color=red, font=\bfseries] at (4.0, 2.25) {$\times$ (Overlap A)};
+\node[color=codegreen, font=\bfseries] at (5.75, 1.25) {$\checkmark$ (Pick)};
+\node[color=red, font=\bfseries] at (7.5, 2.25) {$\times$ (Overlap C)};
+\node[color=codegreen, font=\bfseries] at (9.0, 1.25) {$\checkmark$ (Pick)};
+\end{tikzpicture}
+\caption{Interval Scheduling greedy choice: picking A (ends at 4), C (ends at 7), and E (ends at 10). Conflicting branches B and D are skipped.}
+\end{figure}
+
+\section{Worked Examples}
+
+\subsection{Example 1: Activity Selection Trace}
+Given events $(\text{start}, \text{end})$: $(1,4)$, $(3,5)$, $(0,6)$, $(5,7)$, $(3,9)$, $(5,9)$, $(6,10)$, $(8,11)$, $(8,12)$, $(2,14)$, $(12,16)$.
+
+\textbf{Step 1: Sort by end time.}
+1. $(1, 4)$
+2. $(3, 5)$
+3. $(0, 6)$
+4. $(5, 7)$
+5. $(3, 9)$
+... and so on.
+
+\textbf{Step 2: Initialize.}
+Select the first event in the sorted list: $(1,4)$. Current end time = $4$. Count = $1$.
+
+\textbf{Step 3: Iterate.}
+- Next event $(3,5)$: starts at $3$. $3 < 4$, overlapping. Skip.
+- Next event $(0,6)$: starts at $0$. $0 < 4$, overlapping. Skip.
+- Next event $(5,7)$: starts at $5$. $5 \ge 4$. Accept! New end time = $7$. Count = $2$.
+- Continue in a single pass.
+
+\section{C++ Implementations}
+
+We use C++23 \texttt{std::ranges::sort} to express our greedy criterion clearly.
+
+\begin{lstlisting}[caption=Interval Scheduling / Activity Selection]
+#include <vector>
+#include <algorithm>
+#include <iostream>
+
+struct Event {
+    int start;
+    int end;
+};
+
+[[nodiscard]] int max_events(std::vector<Event> events) {
+    // Greedy choice: sort by earliest finish time
+    std::ranges::sort(events, [](const Event& a, const Event& b) {
+        return a.end < b.end;
+    });
+
+    int count = 0;
+    int current_end = -1;
+
+    for (const auto& ev : events) {
+        if (ev.start >= current_end) {
+            // No overlap, we can attend this event
+            count++;
+            current_end = ev.end;
+        }
+    }
+    return count;
+}
+\end{lstlisting}
+
+Before writing the fraction knapsack, note that we calculate a double-precision ratio to avoid integer division truncation.
+
+\begin{lstlisting}[caption=Fractional Knapsack]
+#include <vector>
+#include <algorithm>
+
+struct Item {
+    double value;
+    double weight;
+};
+
+[[nodiscard]] double max_knapsack_value(double capacity, std::vector<Item> items) {
+    // Greedy choice: highest value per unit of weight
+    // Note: If item.weight is 0.0, division yields +Inf (under IEEE 754),
+    // properly sorting zero-weight (infinite density) items to the front.
+    std::ranges::sort(items, [](const Item& a, const Item& b) {
+        return (a.value / a.weight) > (b.value / b.weight);
+    });
+
+    double total_value = 0.0;
+
+    for (const auto& item : items) {
+        if (capacity >= item.weight) {
+            // Take the whole item
+            total_value += item.value;
+            capacity -= item.weight;
+        } else {
+            // Take a fraction to fill the remaining capacity
+            total_value += item.value * (capacity / item.weight);
+            break; // Backpack is full
+        }
+    }
+    return total_value;
+}
+\end{lstlisting}
+
+\section{Problem Pattern Recognition}
+
+When reading a problem, check for these signals. The three-step process is:
+1. Does the problem ask for an extreme value (max/min count or cost)?
+2. Can I define a simple sorting rule?
+3. Does taking the local best choice prevent me from reaching the global best? If no, it's greedy.
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
+\hline
+\textbf{Keywords in the Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
+``maximum number of non-overlapping'', ``attend most events'' & Fit as many independent segments on a timeline as possible. & Sort by end time, pick earliest finish. \\ \hline
+``fractional amounts allowed'', ``divisible goods'' & You can slice items to perfectly fill capacity. & Sort by value-to-weight ratio. \\ \hline
+``minimum cost to connect cables/ropes'' & Merging items pairwise where cost is sum of parts. & Min-heap (Priority Queue), take smallest two. \\ \hline
+``assign tasks to workers'', ``maximize pairs'' & Match items from two groups efficiently. & Sort both groups, use two pointers. \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\section{Summary and Complexity Reference}
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\textbf{Task / Operation} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
+Interval Scheduling & $O(N \log N)$ & $O(1)$ & Maximize non-overlapping timeline events. \\ \hline
+Fractional Knapsack & $O(N \log N)$ & $O(1)$ & Divisible items with values and weights. \\ \hline
+Huffman/Rope Merging & $O(N \log N)$ & $O(N)$ & Combining items with cost equal to their sum. \\ \hline
+Two-Pointer Greedy Match & $O(N \log N)$ & $O(1)$ & Matching pairs across two sorted arrays. \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+\section{Glossary}
+
+\subsection{Core Concepts}
+\begin{itemize}
+    \item \textbf{Greedy algorithm}: An algorithm that builds a solution step by step by always making the locally optimal choice.
+    \item \textbf{Local optimum}: The best immediate choice available at the current step.
+    \item \textbf{Global optimum}: The best possible overall solution to the problem.
+    \item \textbf{Greedy choice property}: The mathematical guarantee that making a local optimum choice will lead to a global optimum.
+    \item \textbf{Optimal substructure}: A problem where the optimal solution contains optimal solutions to its sub-problems.
+\end{itemize}
+
+\subsection{Mathematical Symbols}
+\begin{itemize}
+    \item $O(N \log N)$: Typical time complexity of a greedy algorithm dominated by the initial sorting step.
+    \item $W$: The maximum weight capacity of a knapsack.
+\end{itemize}
+
+\section{Further Reading}
+
+\subsection*{Free Online Resources (Start Here)}
+\begin{itemize}
+    \item \textbf{CP-Algorithms} (\texttt{cp-algorithms.com}) --- Detailed explanations on greedy scheduling and priority queue applications.
+    \item \textbf{Brilliant.org} (\texttt{brilliant.org}) --- Interactive logic puzzles that build intuition for when greedy strategies fail versus when they succeed.
+\end{itemize}
+
+\subsection*{Books (When You Are Ready to Go Deeper)}
+\begin{itemize}
+    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- Dedicated chapter on Greedy algorithms with categorizations of classical variants.
+    \item J.\ Kleinberg and E.\ Tardos, \emph{Algorithm Design} --- Excellent rigorous proofs on why specific greedy algorithms produce optimal results, highly recommended for the mathematical foundation.
+\end{itemize}
+
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Date} & \textbf{Change} \\ \hline
+2026-10-10 & Document created. \\ \hline
+2026-10-10 & Extended review: improved diagram clarity, added edge-case comment in Fractional Knapsack, and enforced inline LaTeX formatting. \\ \hline
+\end{tabularx}
+
+\end{document}
