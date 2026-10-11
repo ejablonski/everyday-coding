@@ -326,12 +326,19 @@ diagram. Diagrams are strongly recommended for:
 3. **Verbatim ASCII/Unicode text** — Only use this as a last resort or for simple, raw
    console output traces where a graphical layout provides no extra value.
 
-### Diagram Rules
+### Diagram Rules & Visual Styling
+- **Page-Wide Layout**: Diagrams must be designed page-wide, utilizing the available `\textwidth` (or well-proportioned horizontal spans) rather than appearing as cramped, narrow, or squished boxes floating in a sea of white space. Leverage horizontal width for process flows, step-by-step states, multi-column comparisons, timelines, and balanced tree expansions. Avoid diagrams that are either artificially over-shrunk with aggressive scaling or overflowing page margins.
+- **Unified, Restrained Color Palette (Code-Block-Harmonized)**: Diagrams must adhere strictly to a clean, restrained color palette consistent with code listings and callout boxes:
+  - Base backgrounds: `codebg` (`RGB{248, 249, 250}`) or crisp white.
+  - Borders and structural outlines: `codeframe` (`RGB{210, 215, 222}`) or `primaryblue` (`RGB{24, 75, 140}`).
+  - Primary highlights, active elements, headers: `primaryblue` (`RGB{24, 75, 140}`) or `codeblue` (`RGB{20, 90, 180}`).
+  - Success, accepted states, matched elements: `codegreen` (`RGB{40, 130, 60}`).
+  - Annotations, indices, secondary text: `codegray` (`RGB{120, 120, 120}`).
+  - Pruned, aborted, or rolled-back paths: Muted dark red (e.g., `red!70!black`) or `codegray` with dashed lines.
+  - Strictly avoid: Random saturated colors, neon fills, bright yellow, or uncoordinated multi-color rainbows. Visual styling must feel calm, cohesive, and professional across the entire monograph.
 - **Iterative Compilation Expected**: LaTeX graphical packages can be syntactically fragile (e.g., missing a semicolon or brace). **Do not avoid `TikZ` or `forest` out of fear of compilation errors.** If your code fails to build, read the `pdflatex` error log and fix it iteratively until it compiles. The document will not be manually maintained by a human, so agent-led iterative fixing is expected.
 - Every diagram must have a caption or explanatory text directly adjacent to it.
-- In backtracking trees, always visualize **pruning**: show where invalid paths
-  are aborted (e.g., marked with `✗` or dashed branches) so the reader sees
-  how the search space is trimmed.
+- In backtracking trees, always visualize **pruning**: show where invalid paths are aborted (e.g., marked with `✗` or dashed branches) so the reader sees how the search space is trimmed.
 - Compile immediately after adding TikZ/forest diagrams to verify syntax.
 
 ---
@@ -358,7 +365,7 @@ Problem-Solving & Decision Guide** (`learning_materials/00.problem_solving_guide
 
 ---
 
-## LaTeX Build Process
+## LaTeX Build & Visual Inspection Process
 
 - Use the standard `pdflatex` engine from system `PATH`.
 - Always compile **twice** with `-interaction=nonstopmode` inside
@@ -367,9 +374,13 @@ Problem-Solving & Decision Guide** (`learning_materials/00.problem_solving_guide
   pdflatex -interaction=nonstopmode XX.<file>.tex
   pdflatex -interaction=nonstopmode XX.<file>.tex
   ```
-- **Mandatory cleanup**: Immediately after building (whether successful or failed),
-  delete all auxiliary build files (`.aux`, `.log`, `.out`, `.toc`, `.synctex.gz`,
-  etc.) and any scratch files. Only `XX.<file>.tex` and `XX.<file>.pdf` may remain.
+- **Visual Image Inspection Flow (`pdftoppm`)**:
+  Render the compiled PDF pages to PNG images in an external temporary scratch directory:
+  ```bash
+  pdftoppm -png -r 150 XX.<file>.pdf <scratch_dir>/page
+  ```
+  Inspect the generated images to audit for layout quality, label readability, margin compliance, and color harmony.
+- **Mandatory cleanup**: Immediately after building and inspecting (whether successful or failed), delete all rendered temporary PNG images, any scratch directories, and all auxiliary build files (`.aux`, `.log`, `.out`, `.toc`, `.synctex.gz`, etc.). Only `XX.<file>.tex` and `XX.<file>.pdf` may remain.
 - When generating large files (over ~300 lines), use scripts located outside
   `learning_materials/` (such as the agent's external scratch directory) or
   stream content via file-writing tools. Never create or leave generator scripts
@@ -387,29 +398,42 @@ When creating a new learning material:
 3. Check `learning_materials/00.problem_solving_guide.tex` for existing coverage
    and planned scope. Assign the next sequential two-digit prefix `XX.`.
 4. Author the `XX.<topic>.tex` file adhering to all 10 mandatory sections, platform-agnostic
-   rules, and diagram guidelines.
+   rules, and diagram guidelines (page-wide layout, code-block-harmonized palette).
 5. Add the **Version History** section at the end of the document with the
    creation entry (see "Version History" above).
-6. **Mandatory Review Pass**: After creating new learning material document make a review pass for content, code examples, and visual representations (diagrams) in order to find potential errors. If possible spawn strongest agent model possible for such tasks.
-7. Compile twice using `pdflatex`, verify clean exit (code 0, warnings acceptable,
-   zero errors), and immediately remove all auxiliary build files. Verify that the
+6. Compile twice using `pdflatex`, verify clean exit (code 0, warnings acceptable, zero errors).
+7. **Mandatory Multi-Pass Review & Visual Inspection**:
+   - Render PDF pages to PNG using `pdftoppm -png -r 150`.
+   - Visually inspect the rendered images to evaluate spatial collisions, arrow routing, label clarity, page-wide proportions, and color harmony.
+   - Execute mathematical accuracy and C++ code audits.
+   - Iteratively patch any defects in `.tex`, recompile, re-render, and re-inspect until visually and pedagogically excellent.
+8. Remove all auxiliary build files and temporary rendered images. Verify that the
    `learning_materials/` directory contains no scratch directories, build artifacts,
    or temporary scripts.
-8. Update the Master Decision Guide (`00.problem_solving_guide.tex`) with the new
+9. Update the Master Decision Guide (`00.problem_solving_guide.tex`) with the new
    topic's pattern recognition rows and update its module status. Add a Version
    History entry to the Master Decision Guide describing that change.
-9. Recompile the Master Decision Guide cleanly.
-10. Report page counts and compile status to the user.
+10. Recompile the Master Decision Guide cleanly and clean up build artifacts.
+11. Report page counts and compile status to the user.
 
 ---
 
 ## Mandatory Quality and Accuracy Review Pass
 
-After creating new learning material document make a review pass for content, code examples, and visual representations (diagrams) in order to find potential errors. If possible spawn strongest agent model possible for such tasks.
+After creating or significantly revising a learning material document, make a multi-pass review for content, code examples, and visual representations (diagrams) in order to detect and eliminate errors.
 
 - **Pass 1 (Content and Mathematical Accuracy)**: Verify all definitions, mathematical formulas, theorems, step-by-step calculations in worked examples, complexity claims, and table values. Check that all numbers actually match calculations without skipped or erroneous steps.
 - **Pass 2 (C++ Code Examples)**: Thoroughly review every code listing for algorithmic logic, off-by-one errors, bounds safety, integer overflow, sentinel values (such as `INF` without overflow upon addition), container usage (`std::vector`, `std::ranges`), `[[nodiscard]]`, and C++23 idiomatic correctness.
-- **Pass 3 (Visual Representations and Diagrams)**: Double-check all visual representations (ASCII/verbatim text diagrams, recursion trees, decision trees, state tables, grid layouts, call stacks, TikZ/forest figures). Ensure that every node label, cell value, coordinate, and transition matches the accompanying mathematical text and code indexing. For backtracking trees, ensure pruned branches are explicitly marked (`✗` or `PRUNED`). Verify that all tables and diagrams have adjacent explanatory captions or text.
+- **Pass 3 (Visual Representations and Diagrams Logic)**: Double-check all visual representations (ASCII/verbatim text diagrams, recursion trees, decision trees, state tables, grid layouts, call stacks, TikZ/forest figures). Ensure that every node label, cell value, coordinate, and transition matches the accompanying mathematical text and code indexing. For backtracking trees, ensure pruned branches are explicitly marked (`✗` or `PRUNED`). Verify that all tables and diagrams have adjacent explanatory captions or text.
+- **Pass 4 (Visual & Pedagogical Image Inspection Pass via `pdftoppm`)**:
+  - Render generated PDF pages to PNG using `pdftoppm -png -r 150 <pdf> <scratch_prefix>`.
+  - Read and inspect rendered images using image-inspection tools to verify aesthetics and pedagogy directly:
+    1. **Spatial collisions & overlapping labels**: Ensure labels never collide, text stays strictly within node borders, and mathematical subscripts are crisp.
+    2. **Arrow routing and edge readability**: Ensure arrows do not awkwardly cross each other or pass directly through labels without clear clearance.
+    3. **Page-wide proportions**: Ensure diagrams span `\textwidth` naturally, avoiding cramped narrow structures or aggressive artificial downscaling. Verify no elements clip into page margins.
+    4. **Restrained color harmony**: Ensure all diagrams use the code-block-harmonized color palette (`primaryblue`, `codebg`, `codeframe`, `codegreen`, `codeblue`, `codegray`), avoiding distracting or garish colors.
+    5. **Pedagogical impact**: Ensure the diagram conveys the core algorithmic intuition instantly to a visual learner at 100% view scale.
+  - Fix any layout or visual bugs in the `.tex` source, recompile, re-render, and re-verify until pristine. Clean up all PNGs before finishing.
 
 ---
 
