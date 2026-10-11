@@ -26,6 +26,7 @@ add_executable(LeetCodeSolutions
   1866.number_of_ways_to_rearrange_sticks_with_k_sticks_visible/1866.number_of_ways_to_rearrange_sticks_with_k_sticks_visible_tests.cpp
   1929.concatenation_of_array/1929.concatenation_of_array_tests.cpp
   2333.minimum_sum_of_squared_difference/2333.minimum_sum_of_squared_difference_tests.cpp
+  2778.sum_of_squares_of_special_elements/2778.sum_of_squares_of_special_elements_tests.cpp
 )
 
 target_include_directories(LeetCodeSolutions
