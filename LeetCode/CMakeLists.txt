@@ -15,6 +15,7 @@ add_executable(LeetCodeSolutions
   678.valid_parenthesis_string/678.valid_parenthesis_string_tests.cpp
   724.find_the_pivot_integer/724.find_the_pivot_integer_tests.cpp
   728.self_dividing_numbers/728.self_dividing_numbers_tests.cpp
+  739.daily_temperatures/739.daily_temperatures_tests.cpp
   856.score_of_parentheses/856.score_of_parentheses_tests.cpp
   1015.smallest_integer_divisible_by_k/1015.smallest_integer_divisible_by_k_tests.cpp
   1021.remove_outermost_parentheses/1021.remove_outermost_parentheses_tests.cpp
