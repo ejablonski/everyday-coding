@@ -349,6 +349,22 @@ This is the unified pattern recognition index. Each row merges the quick-referen
 \end{tabularx}
 \vspace{0.3cm}
 
+\subsection{Bitwise Invariants, Bitmasks, and State Compression (Module 12: Bit Manipulation and Bitmasks)}
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``every element appears twice except one'', ``single non-duplicate'' & Identical values must annihilate without allocating a frequency hash table. & XOR Accumulator ($A \oplus A = 0$) \\ \hline
+``range XOR sum'', ``subarray XOR equals zero'' & Frequent cumulative XOR queries over intervals $[L, R]$. & 1D Prefix XOR Array ($P[L] \oplus P[R+1]$) \\ \hline
+``visit all $N$ cities'', ``assign $N$ tasks to $N$ workers'', $N \le 20$ & State depends solely on subset of visited items and last location. & Bitmask DP ($O(N^2 \cdot 2^N)$ state compression) \\ \hline
+``all sub-configurations of a configuration'', ``merge sub-clusters'' & Evaluating costs over all sub-partitions for every subset. & Submask Enumeration ($O(3^N)$ loop) \\ \hline
+``is power of two'', ``count set bits'', ``lowest 1-bit'' & Fundamental bit property test in constant time. & $x \ \& \ (x - 1)$, $x \ \& \ (-x)$, or \texttt{std::has\_single\_bit} \\ \hline
+``bitwise operations on pairs to maximize/minimize objective'' & Bitwise operators act independently without carry across columns. & Bit Frequency Ledger (Column-by-column accounting) \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
 \subsection{Cross-Cutting Decisions}
 
 These decisions appear inside many problems regardless of topic.
@@ -390,6 +406,7 @@ This section lists every topic document in the library. Finished documents are m
 08. Binary Search & $\checkmark$ Available & Interval halving, search invariants, lower/upper bounds, binary search on the answer, rotated array searches, peak element finding, and continuous floating-point bisection. \\ \hline
 10. Greedy Algorithms & $\checkmark$ Available & Greedy choice property, optimal substructure, interval scheduling, fractional knapsack, and Huffman/rope merging. \\ \hline
 11. Monotonic Stacks and Queues & $\checkmark$ Available & Monotonic stacks and deques, Next/Previous Greater/Smaller Element, span calculations, histogram rectangle expansion, sliding window extrema, and subarray contribution accounting. \\ \hline
+12. Bit Manipulation and Bitmasks & $\checkmark$ Available & Fundamental bit representations (LSB, MSB, two's complement), bitwise arithmetic identities, Brian Kernighan's algorithm, prefix XOR queries, submask enumeration ($O(3^N)$), Gosper's hack, bit frequency ledgers, and bitmask DP. \\ \hline
 \end{tabularx}
 \vspace{0.3cm}
 
@@ -455,6 +472,9 @@ Next / Previous Greater Element & $O(N)$ & $O(N)$ & Nearest larger neighbor need
 Largest Histogram Rectangle & $O(N)$ & $O(N)$ & Finding largest rectangular area bounded by vertical bars. \\ \hline
 Sliding Window Extremum & $O(N)$ & $O(K)$ & Finding running minimum or maximum across a sliding window. \\ \hline
 Subarray Extremum Contributions & $O(N)$ & $O(N)$ & Summing minimum or maximum values over all contiguous subarrays. \\ \hline
+Prefix XOR Range Query & $O(1)$ & $O(N)$ build & Frequent subarray XOR queries on static array. \\ \hline
+Submask Enumeration (all masks) & $O(3^N)$ & $O(2^N)$ & Exhaustive subset dynamic programming ($N \le 15$). \\ \hline
+Bit Frequency Ledger Accumulation & $O(B \cdot N)$ & $O(B)$ & Independent column analysis ($B \in \{32, 64\}$). \\ \hline
 \end{tabularx}
 \vspace{0.3cm}
 
@@ -485,6 +505,9 @@ Subarray Extremum Contributions & $O(N)$ & $O(N)$ & Summing minimum or maximum v
     \item \textbf{Lower / Upper Bound}: Boundary indices locating the first element $\ge target$ or strictly $> target$.
     \item \textbf{Monotonic Stack}: A stack whose elements are strictly or non-strictly sorted, used to find nearest extrema in $O(N)$ amortized time.
     \item \textbf{Monotonic Deque}: A double-ended queue maintaining sorted elements that enables $O(1)$ amortized sliding window range queries.
+    \item \textbf{Bitmask}: An integer interpreted as a compact boolean array or subset where bit $i = 1$ indicates inclusion of element $i$.
+    \item \textbf{Two's Complement}: The standard binary encoding for signed integers where the MSB has negative weight $-2^{N-1}$.
+    \item \textbf{Self-Inverse}: An algebraic operator that undoes itself, satisfying $x \oplus x = 0$.
 \end{itemize}
 
 \subsection{Mathematical Symbols}
@@ -541,6 +564,7 @@ Subarray Extremum Contributions & $O(N)$ & $O(N)$ & Summing minimum or maximum v
 2026-10-03 & Added Binary Search module to Available registry, synced 11 pattern recognition rows, and added binary search complexity entries. \\ \hline
 2026-10-10 & Added Greedy Algorithms module to Available registry, synced 4 pattern recognition rows, and added greedy complexity entries. \\ \hline
 2026-10-11 & Added Monotonic Stacks and Queues module to Available registry, synced 7 pattern recognition rows, and added monotonic complexity entries. \\ \hline
+2026-10-12 & Added Bit Manipulation and Bitmasks module to Available registry, synced 6 pattern recognition rows, and added bit manipulation complexity entries and glossary definitions. \\ \hline
 \end{tabularx}
 
 \end{document}

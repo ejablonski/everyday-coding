@@ -1,0 +1,981 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Core LaTeX Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{xurl}
+
+% --- Optional Diagram Packages (include when needed) ---
+% \usepackage{forest}
+% \usepackage{tikz}
+
+% --- Unified Color Palette ---
+\definecolor{primaryblue}{RGB}{24, 75, 140}
+\definecolor{codebg}{RGB}{248, 249, 250}
+\definecolor{codeframe}{RGB}{210, 215, 222}
+\definecolor{codegreen}{RGB}{40, 130, 60}
+\definecolor{codeblue}{RGB}{20, 90, 180}
+\definecolor{codegray}{RGB}{120, 120, 120}
+
+% --- Hyperref Setup ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    citecolor=primaryblue,
+    urlcolor=primaryblue,
+    pdftitle={Bit Manipulation and Bitmasks},
+    pdfauthor={Antigravity Engineering}
+}
+
+% --- Theorem & Definition Environments ---
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{example}{Example}[section]
+
+% --- Callout Box Environment ---
+\newenvironment{calloutbox}[1]{
+    \par\vspace{0.3cm}
+    \noindent\begin{tabular}{|p{0.96\textwidth}|}
+    \hline
+    \vspace{0.1cm}
+    \textbf{#1}\par\vspace{0.1cm}
+}{
+    \vspace{0.1cm}
+    \\ \hline
+    \end{tabular}
+    \vspace{0.3cm}\par
+}
+
+% --- Modern C++ Code Listing Setup ---
+\lstset{
+    language=C++,
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{orange!80!black},
+    numberstyle=\tiny\color{codegray},
+    numbers=left,
+    numbersep=8pt,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b
+}
+
+% --- Title Block ---
+\title{\vspace{-1.5cm}\textbf{\Huge Bit Manipulation and Bitmasks}\\[0.3cm]
+\Large Binary Arithmetic, Invariants, Submask Enumeration, and State Compression}
+\author{Technical Monograph}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+This document covers bit manipulation and bitmasks, specialized computational techniques that operate directly on the binary representations of integers to solve search, aggregation, and state-compression problems in minimal time and memory. It is written for programmers seeking a deep, intuitive understanding of binary representation, from foundational physical switch models and two's complement signed arithmetic to advanced algebraic invariants and dynamic programming lattices. We examine bitwise truth tables, isolated bit extractions, self-inverse properties, prefix XOR segment queries, $O(3^N)$ submask enumeration, and subset dynamic programming. Complete, tested modern C++23 implementations utilizing the \texttt{<bit>} standard header and clear, full-width diagrams provide practical templates for high-performance sequence and combinatorial algorithms.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Foundations / Core Concepts}
+% ============================================================================
+
+\subsection{What Is a Bit? The Physical Switch Abstraction}
+
+At the lowest physical level of digital computer hardware, information is stored and processed using electronic transistors. A transistor acts as a microscopic switch that can either conduct electricity or block it. We abstract these physical voltage states into two discrete mathematical symbols:
+\begin{itemize}
+    \item $0$ represents the \textbf{OFF} state (low voltage, ground, or logical false).
+    \item $1$ represents the \textbf{ON} state (high voltage, supply, or logical true).
+\end{itemize}
+
+The word \textbf{bit} is a portmanteau of \emph{binary digit}. A single bit represents the smallest possible unit of digital information, holding an uncertainty of exactly two mutually exclusive outcomes. By grouping multiple independent switches together, we construct positional number systems capable of encoding complex numbers, strings, and data structures.
+
+\begin{calloutbox}{The Bank of Light Switches Analogy}
+Imagine a wall mounted with an ordered row of 8 light switches. Each switch can independently be flipped UP ($1$) or DOWN ($0$). With 1 switch, you can encode 2 configurations ($\text{OFF}, \text{ON}$). With 2 switches, you can encode $2 \times 2 = 4$ configurations ($00, 01, 10, 11$). With $N$ switches, you can encode exactly $2^N$ distinct configurations. A 32-bit integer is simply an ordered row of 32 physical switches capable of representing $2^{32} = 4{,}294{,}967{,}296$ distinct states.
+\end{calloutbox}
+
+\subsection{Positional Number Representation: Base-10 vs. Base-2}
+
+In everyday human mathematics, we use the \textbf{decimal system} (base-10), likely inspired by human anatomy (ten fingers). In base-10, the position of each digit represents an increasing power of $10$, moving from right to left. For example, the decimal integer $743$ is shorthand for the polynomial expansion:
+\[
+743_{10} = (7 \times 10^2) + (4 \times 10^1) + (3 \times 10^0) = 700 + 40 + 3
+\]
+
+Computers do not possess ten physical voltage levels; they possess two. Therefore, computer hardware natively utilizes the \textbf{binary system} (base-2). In base-2, each position represents an increasing power of $2$, moving from right to left. For an $N$-bit binary number represented by the sequence of bits $\langle b_{N-1}, b_{N-2}, \dots, b_1, b_0 \rangle$, where each $b_k \in \{0, 1\}$, its unsigned value $V$ is given by the weighted sum:
+\begin{equation}
+V = \sum_{k=0}^{N-1} b_k \cdot 2^k = b_0 \cdot 2^0 + b_1 \cdot 2^1 + b_2 \cdot 2^2 + \dots + b_{N-1} \cdot 2^{N-1}
+\label{eq:binary_sum}
+\end{equation}
+
+Every non-negative integer has a unique representation as a sum of distinct powers of two. To illustrate, consider the binary sequence $101011_2$:
+\[
+101011_2 = (1 \times 2^5) + (0 \times 2^4) + (1 \times 2^3) + (0 \times 2^2) + (1 \times 2^1) + (1 \times 2^0) = 32 + 0 + 8 + 0 + 2 + 1 = 43_{10}
+\]
+
+Table~\ref{tab:powers_of_two} catalogs the first 32 powers of two, their bit indices, and their decimal magnitudes.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{|c|r|l||c|r|l|}
+\hline
+\textbf{Bit $k$} & \textbf{Weight $2^k$} & \textbf{Magnitude} & \textbf{Bit $k$} & \textbf{Weight $2^k$} & \textbf{Magnitude} \\ \hline
+0  & 1           & $10^0$ (Units)     & 16 & 65,536         & $6.55 \times 10^4$ \\ \hline
+1  & 2           & Units              & 17 & 131,072        & $1.31 \times 10^5$ \\ \hline
+2  & 4           & Units              & 18 & 262,144        & $2.62 \times 10^5$ \\ \hline
+3  & 8           & Units              & 19 & 524,288        & $5.24 \times 10^5$ \\ \hline
+4  & 16          & $10^1$ (Tens)      & 20 & 1,048,576      & $10^6$ (1 MiB) \\ \hline
+5  & 32          & Tens               & 21 & 2,097,152      & $2.10 \times 10^6$ \\ \hline
+6  & 64          & Tens               & 22 & 4,194,304      & $4.19 \times 10^6$ \\ \hline
+7  & 128         & $10^2$ (Hundreds)  & 23 & 8,388,608      & $8.39 \times 10^6$ \\ \hline
+8  & 256         & Hundreds           & 24 & 16,777,216     & $1.68 \times 10^7$ \\ \hline
+9  & 512         & Hundreds           & 25 & 33,554,432     & $3.36 \times 10^7$ \\ \hline
+10 & 1,024       & $10^3$ (1 KiB)     & 26 & 67,108,864     & $6.71 \times 10^7$ \\ \hline
+11 & 2,048       & $2.05 \times 10^3$ & 27 & 134,217,728    & $1.34 \times 10^8$ \\ \hline
+12 & 4,096       & $4.10 \times 10^3$ & 28 & 268,435,456    & $2.68 \times 10^8$ \\ \hline
+13 & 8,192       & $8.19 \times 10^3$ & 29 & 536,870,912    & $5.37 \times 10^8$ \\ \hline
+14 & 16,384      & $1.64 \times 10^4$ & 30 & 1,073,741,824  & $10^9$ (1 GiB) \\ \hline
+15 & 32,768      & $3.28 \times 10^4$ & 31 & 2,147,483,648  & $2.15 \times 10^9$ (Signed Max) \\ \hline
+\end{tabular}
+\caption{The first 32 bit positions, their binary weights $2^k$, and standard magnitudes.}
+\label{tab:powers_of_two}
+\end{table}
+
+\subsection{Anatomy of an Integer: Bit Indices, LSB, and MSB}
+
+When inspecting an integer in computer memory, we assign a 0-based integer index to each bit position, proceeding strictly from the lowest power of two to the highest power of two (from right to left):
+
+\begin{itemize}
+    \item \textbf{Bit Index $k$}: Represents the position associated with the weight $2^k$. In C++, testing or isolating this position is achieved using the expression \texttt{1ULL << k}.
+    \item \textbf{Least Significant Bit (LSB)}: The rightmost bit, located at index $k = 0$, with weight $2^0 = 1$. Because all higher powers of two ($2^1, 2^2, 2^3, \dots$) are strictly even, the LSB is the \emph{sole} bit that determines the parity of the integer. If $\text{LSB} = 1$, the integer is odd; if $\text{LSB} = 0$, the integer is even.
+    \item \textbf{Most Significant Bit (MSB)}: The leftmost non-zero bit of an integer, or the highest available bit position allocated to the integer data type. The index of the highest set bit corresponds to $\lfloor \log_2 x \rfloor$ and dictates the overall mathematical magnitude of the quantity. In signed integer formats, the MSB serves as the sign indicator.
+\end{itemize}
+
+Figure~\ref{fig:bit_anatomy} visualizes the positional architecture of an 8-bit unsigned integer and an 8-bit signed integer across the text width.
+
+\begin{figure}[htbp]
+\centering
+\noindent\emph{Figure: Bit anatomy across an 8-bit word. (See Diagram~25 in \texttt{diagrams\_review.pdf} for the full visual diagram.)}
+\caption{Bit anatomy across an 8-bit word. Bit 0 is the Least Significant Bit (LSB) determining parity. Bit 7 is the Most Significant Bit (MSB). In signed two's complement arithmetic, the MSB carries a negative positional weight ($-2^{N-1}$).}
+\label{fig:bit_anatomy}
+\end{figure}
+
+\subsection{C++ Integer Types, Bit Widths, and Limits}
+
+C++ provides standard fixed-width integer types via the \texttt{<cstdint>} header. Standardizing on fixed-width types prevents cross-platform discrepancies between 32-bit and 64-bit operating systems:
+\begin{itemize}
+    \item \texttt{uint8\_t} / \texttt{int8\_t}: Exactly 8 bits.\\
+    Unsigned range: $[0, 255]$; Signed range: $[-128, 127]$.
+    \item \texttt{uint16\_t} / \texttt{int16\_t}: Exactly 16 bits.\\
+    Unsigned range: $[0, 65{,}535]$; Signed range: $[-32{,}768, 32{,}767]$.
+    \item \texttt{uint32\_t} / \texttt{int32\_t}: Exactly 32 bits.\\
+    Unsigned: $[0, 2^{32}-1]$ ($4{,}294{,}967{,}295$);\\
+    Signed: $[-2^{31}, 2^{31}-1]$ ($[-2{,}147{,}483{,}648, 2{,}147{,}483{,}647]$).
+    \item \texttt{uint64\_t} / \texttt{int64\_t}: Exactly 64 bits.\\
+    Unsigned: $[0, 2^{64}-1 \approx 1.84 \times 10^{19}]$;\\
+    Signed: $[-2^{63}, 2^{63}-1 \approx 9.22 \times 10^{18}]$.
+\end{itemize}
+
+\begin{calloutbox}{The 64-Bit Literal Shift Trap}
+In C++, integer literals without suffixes (such as \texttt{1}) are typed as 32-bit signed \texttt{int}. Writing \texttt{1 << 40} results in \textbf{undefined behavior} because shifting exceeds the 32-bit width of the operand. To construct masks above bit 30, always use the 64-bit unsigned literal suffix: \texttt{1ULL << 40}.
+\end{calloutbox}
+
+\subsection{Signed Integers and Two's Complement Mechanics}
+
+Modern computing architectures represent signed integers using \textbf{two's complement} notation. In an $N$-bit two's complement integer, the most significant bit $b_{N-1}$ possesses negative positional weight:
+\begin{equation}
+V_{\text{signed}} = -b_{N-1} \cdot 2^{N-1} + \sum_{k=0}^{N-2} b_k \cdot 2^k
+\label{eq:twos_complement_def}
+\end{equation}
+
+This mathematical formulation grants two's complement its profound engineering advantage: addition, subtraction, and multiplication hardware circuits operate identically for both signed and unsigned integers without requiring separate logic units.
+
+To negate an integer $x$ in two's complement, we invert all its bits and add $1$:
+\begin{equation}
+-x = (\sim x) + 1
+\label{eq:negation_formula}
+\end{equation}
+
+\begin{example}[Negating a 4-Bit Integer in Two's Complement]
+Let $x = 6$, which in 4-bit binary is $0110_2$.
+\begin{enumerate}
+    \item Compute bitwise NOT ($\sim x$): invert each bit from $0$ to $1$ and $1$ to $0$:
+    \[
+    \sim(0110_2) = 1001_2
+    \]
+    \item Add 1 to the result:
+    \[
+    1001_2 + 0001_2 = 1010_2
+    \]
+    \item Evaluate the signed value of $1010_2$ via Equation~\eqref{eq:twos_complement_def}:
+    \[
+    -(1 \times 2^3) + (0 \times 2^2) + (1 \times 2^1) + (0 \times 2^0) = -8 + 0 + 2 + 0 = -6
+    \]
+\end{enumerate}
+The calculation confirms that $1010_2$ correctly encodes $-6$.
+\end{example}
+
+% ============================================================================
+\section{Main Topic Sections}
+% ============================================================================
+
+\subsection{The Fundamental Bitwise Operators and Truth Tables}
+
+C++ provides six primitive bitwise operators that act concurrently and independently across each bit position of their operands:
+
+\begin{enumerate}
+    \item \textbf{Bitwise AND (\&)}: Produces $1$ if and only if \emph{both} input bits are $1$. Acts as a selective filter or mask.
+    \item \textbf{Bitwise OR (\textbar)}: Produces $1$ if \emph{at least one} input bit is $1$. Acts as an accumulator or union.
+    \item \textbf{Bitwise XOR (\textasciicircum)}: Produces $1$ if the input bits \emph{differ}. Acts as addition modulo 2 without carry.
+    \item \textbf{Bitwise NOT (\textasciitilde)}: Unary operator that inverts every bit ($0 \to 1, 1 \to 0$).
+    \item \textbf{Left Shift (\texttt{<<})}: Shifts all bits left by $k$ positions, filling vacated low-order bits with $0$. Equivalent to integer multiplication by $2^k$.
+    \item \textbf{Right Shift (\texttt{>>})}: Shifts all bits right by $k$ positions. For unsigned types, vacated high-order bits are filled with $0$ (logical shift, equivalent to $\lfloor x / 2^k \rfloor$). For signed types, the sign bit is duplicated (arithmetic shift).
+\end{enumerate}
+
+Table~\ref{tab:bitwise_truth_tables} displays the truth tables for the fundamental binary operators.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|c|c||c|c|c||c|c|}
+\hline
+$A$ & $B$ & $A \ \& \ B$ (AND) & $A \mid B$ (OR) & $A \oplus B$ (XOR) & $\sim A$ (NOT) & $\sim B$ (NOT) \\ \hline
+0 & 0 & 0 & 0 & 0 & 1 & 1 \\ \hline
+0 & 1 & 0 & 1 & 1 & 1 & 0 \\ \hline
+1 & 0 & 0 & 1 & 1 & 0 & 1 \\ \hline
+1 & 1 & 1 & 1 & 0 & 0 & 0 \\ \hline
+\end{tabular}
+\caption{Truth tables for the fundamental bitwise operators.}
+\label{tab:bitwise_truth_tables}
+\end{table}
+
+\subsection{The Elemental Bit Operations: Test, Set, Clear, and Toggle}
+
+Every complex bitwise algorithm rests upon four elemental primitives applied to an individual bit position $k$:
+
+\begin{enumerate}
+    \item \textbf{Test Bit $k$}: Inspect whether the switch at index $k$ is ON ($1$) or OFF ($0$):
+    \begin{lstlisting}
+    bool is_set = (x >> k) & 1;        // Alternative: (x & (1ULL << k)) != 0
+    \end{lstlisting}
+    \item \textbf{Set Bit $k$}: Force the switch at index $k$ to become ON ($1$), leaving all other bits unchanged:
+    \begin{lstlisting}
+    x |= (1ULL << k);
+    \end{lstlisting}
+    \item \textbf{Clear Bit $k$}: Force the switch at index $k$ to become OFF ($0$), leaving all other bits unchanged:
+    \begin{lstlisting}
+    x &= ~(1ULL << k);
+    \end{lstlisting}
+    \item \textbf{Toggle Bit $k$}: Invert the switch at index $k$ ($0 \to 1$, $1 \to 0$):
+    \begin{lstlisting}
+    x ^= (1ULL << k);
+    \end{lstlisting}
+\end{enumerate}
+
+\subsection{Lowest Set Bit Isolation: The Mechanics of \texorpdfstring{$x \ \& \ (-x)$}{x \& (-x)}}
+
+In many high-performance data structures—most notably the Binary Indexed Tree (Fenwick Tree)—we frequently need to extract the single lowest bit of an integer that is set to $1$, zeroing out all other bits. This is accomplished in $O(1)$ operations via:
+\begin{equation}
+\text{lowest\_set\_bit}(x) = x \ \& \ (-x)
+\label{eq:lsb_formula}
+\end{equation}
+
+\begin{theorem}[LSB Isolation Invariant]
+For any non-zero integer $x$, the bitwise expression $x \ \& \ (-x)$ produces a value containing exactly one set bit, situated at the index of the least significant set bit of $x$.
+\end{theorem}
+
+\begin{proof}
+Let $x$ be expressed in binary. Because $x \neq 0$, it contains at least one set bit. Let bit $k$ be the lowest set bit. Then the binary representation of $x$ decomposes into three contiguous segments:
+\[
+x = [\text{prefix}] \ 1 \ [00\dots0]
+\]
+where $[00\dots0]$ represents $k$ trailing zeros, followed by bit $k$ which is $1$, followed by an arbitrary sequence of higher-order bits $[\text{prefix}]$.
+\begin{enumerate}
+    \item Compute $\sim x$: all bits are inverted:
+    \[
+    \sim x = [\sim\text{prefix}] \ 0 \ [11\dots1]
+    \]
+    The $k$ trailing zeros become $k$ trailing ones, and bit $k$ becomes $0$.
+    \item Add $1$ to compute $-x = (\sim x) + 1$:
+    Adding $1$ to the $k$ trailing ones causes a carry ripple: $1 + 1 = 0$ with carry $1$. The carry propagates continuously through all $k$ trailing ones until it reaches bit $k$. Bit $k$ turns from $0$ into $1$, and the carry terminates:
+    \[
+    -x = [\sim\text{prefix}] \ 1 \ [00\dots0]
+    \]
+    Notice that the trailing $k$ zeros and bit $k$ in $-x$ are identical to those in $x$, but the higher-order prefix is completely inverted ($[\sim\text{prefix}]$).
+    \item Compute $x \ \& \ (-x)$:
+    \begin{align*}
+    x \ \& \ (-x) &= \Big([\text{prefix}] \ 1 \ [00\dots0]\Big) \ \& \ \Big([\sim\text{prefix}] \ 1 \ [00\dots0]\Big) \\
+    &= \Big([\text{prefix}] \ \& \ [\sim\text{prefix}]\Big) \ (1 \ \& \ 1) \ ([00\dots0] \ \& \ [00\dots0]) \\
+    &= [00\dots0] \ 1 \ [00\dots0] = 2^k
+    \end{align*}
+    Because $[\text{prefix}] \ \& \ [\sim\text{prefix}] = 0$, every higher-order bit is annihilated. The only bit surviving the AND operation is bit $k$.
+\end{enumerate}
+\end{proof}
+
+Figure~\ref{fig:twos_complement_lsb} illustrates this carry cascade and isolation process visually for $x = 44$.
+
+\begin{figure}[htbp]
+\centering
+\noindent\emph{Figure: Lowest set bit isolation via $x \ \& \ (-x)$. (See Diagram~26 in \texttt{diagrams\_review.pdf} for the full visual diagram.)}
+\caption{Visual trace of lowest set bit isolation via $x \ \& \ (-x)$ on $x = 44$. Two's complement negation inverts higher-order bits while preserving the lowest set bit and trailing zeros, isolating bit 2 ($2^2 = 4$) in $O(1)$ operations.}
+\label{fig:twos_complement_lsb}
+\end{figure}
+
+\subsection{Brian Kernighan's Algorithm: \texorpdfstring{$x \ \& \ (x - 1)$}{x \& (x - 1)}}
+
+A companion operation to LSB isolation is \textbf{clearing} the lowest set bit. When we subtract $1$ from an integer $x$:
+\begin{itemize}
+    \item The lowest set bit turns from $1$ into $0$.
+    \item All trailing zeros below that bit flip into $1$s.
+    \item All bits above the lowest set bit remain unchanged.
+\end{itemize}
+
+Performing the bitwise AND of $x$ with $x - 1$ produces:
+\begin{equation}
+\text{clear\_lowest\_set\_bit}(x) = x \ \& \ (x - 1)
+\label{eq:kernighan_formula}
+\end{equation}
+
+Because each iteration of $x = x \ \& \ (x - 1)$ clears exactly one set bit, we can count the total number of set bits (the population count) in $O(K)$ time, where $K$ is the number of $1$-bits, rather than checking all 32 or 64 positions.
+
+\begin{calloutbox}{Testing for Powers of Two}
+An integer $x > 0$ is an exact power of two if and only if it contains exactly one set bit. Clearing that single bit must therefore yield zero:
+\begin{lstlisting}
+bool is_power_of_two = (x > 0) && ((x & (x - 1)) == 0);
+\end{lstlisting}
+\end{calloutbox}
+
+\subsection{XOR Algebraic Invariants and Self-Inverse Properties}
+
+Bitwise XOR ($\oplus$) possesses unique algebraic properties that make it an indispensable tool for sequence optimization and duplicate elimination. Mathematically, XOR forms an \textbf{abelian group} over the set of fixed-width binary words:
+
+\begin{enumerate}
+    \item \textbf{Commutativity}: $A \oplus B = B \oplus A$.
+    \item \textbf{Associativity}: $(A \oplus B) \oplus C = A \oplus (B \oplus C)$.
+    \item \textbf{Identity Element}: $A \oplus 0 = A$. (XORing with 0 preserves all bits).
+    \item \textbf{Self-Inverse (Nilpotence)}: $A \oplus A = 0$. (Any value XORed with itself cancels out completely).
+    \item \textbf{Inversion}: $A \oplus \text{MASK}_{\text{all } 1\text{s}} = \sim A$.
+\end{enumerate}
+
+These properties yield the profound \textbf{Cancellation Invariant}:
+\begin{equation}
+(A \oplus B) \oplus B = A \oplus (B \oplus B) = A \oplus 0 = A
+\label{eq:cancellation}
+\end{equation}
+Any element present an even number of times in an XOR accumulator cancels out to zero, leaving behind only elements that occur an odd number of times.
+
+\subsection{Prefix XOR and \texorpdfstring{$O(1)$}{O(1)} Range XOR Queries}
+
+Just as prefix sum arrays allow querying the sum of any contiguous slice in $O(1)$ time, a \textbf{prefix XOR array} enables $O(1)$ evaluation of the cumulative XOR across any subarray $[L, R]$.
+
+Let an array $A = [a_0, a_1, \dots, a_{n-1}]$ be given. We define the prefix XOR table $P$ of length $n + 1$:
+\[
+P[0] = 0, \quad P[i] = P[i - 1] \oplus a_{i - 1} = a_0 \oplus a_1 \oplus \dots \oplus a_{i - 1}
+\]
+
+To compute the XOR sum of the contiguous subarray from index $L$ to $R$ inclusive:
+\begin{align}
+\text{range\_xor}(L, R) &= a_L \oplus a_{L+1} \oplus \dots \oplus a_R \nonumber \\
+&= (a_0 \oplus \dots \oplus a_{L-1}) \oplus (a_0 \oplus \dots \oplus a_{L-1}) \oplus (a_L \oplus \dots \oplus a_R) \nonumber \\
+&= P[L] \oplus P[R + 1]
+\label{eq:prefix_xor_range}
+\end{align}
+
+Because the prefix elements $a_0 \oplus \dots \oplus a_{L-1}$ appear twice in $P[L] \oplus P[R + 1]$, they cancel out completely to zero by Equation~\eqref{eq:cancellation}. Unlike range sum queries which require subtraction ($P[R+1] - P[L]$), prefix range XOR queries require only XOR itself! Figure~\ref{fig:prefix_xor} demonstrates this cancellation visually.
+
+\begin{figure}[htbp]
+\centering
+\noindent\emph{Figure: Visual cancellation in Prefix XOR range queries. (See Diagram~27 in \texttt{diagrams\_review.pdf} for the full visual diagram.)}
+\caption{Visual cancellation in Prefix XOR range queries. Because $X \oplus X = 0$, evaluating $P[L] \oplus P[R+1]$ annihilates the preceding elements $a_0 \dots a_{L-1}$ to zero, isolating the subarray XOR sum in $O(1)$ time.}
+\label{fig:prefix_xor}
+\end{figure}
+
+\subsection{Independent Bit Column Accounting and Conservation}
+
+A foundational insight in bitwise problem solving is that **bits operate in parallel without cross-column carry** under standard bitwise operators (\&, \textbar, \textasciicircum).
+
+Unlike decimal or binary addition where a carry ripples from bit 0 to bit 31, the result at bit position $k$ in an expression like $A \ \& \ B$ or $A \mid B$ depends \emph{exclusively} on the values of $A$ and $B$ at bit position $k$. 
+
+This independence permits the **Column Ledger Pattern**:
+\begin{enumerate}
+    \item Deconstruct an entire array of $N$ numbers into 32 (or 64) independent frequency counters:
+    \[
+    \text{count}[k] = \sum_{i=0}^{N-1} ((A[i] \gg k) \ \& \ 1) \quad \text{for } k \in [0, 31]
+    \]
+    \item Analyze, optimize, or rearrange each bit position independently.
+    \item Reconstruct the final answer by re-weighting each column by its positional power $2^k$.
+\end{enumerate}
+
+Furthermore, operations such as $(A \ \& \ B)$ and $(A \mid B)$ strictly **conserve** the total count of set bits across the array:
+\begin{itemize}
+    \item If bits at position $k$ are $(0, 0)$: after operation, $(0 \ \& \ 0, 0 \mid 0) = (0, 0)$. Count of 1s: $0 \to 0$.
+    \item If bits at position $k$ are $(1, 1)$: after operation, $(1 \ \& \ 1, 1 \mid 1) = (1, 1)$. Count of 1s: $2 \to 2$.
+    \item If bits at position $k$ are $(1, 0)$: after operation, $(1 \ \& \ 0, 1 \mid 0) = (0, 1)$. Count of 1s: $1 \to 1$.
+\end{itemize}
+The $1$-bit merely migrates from the `AND` element to the `OR` element. This enables greedy bit consolidation strategies.
+
+% ============================================================================
+\section{Key Algorithmic Patterns}
+% ============================================================================
+
+\subsection{Bitmask Subset Representation}
+
+For a finite universe of $N$ discrete elements $U = \{e_0, e_1, \dots, e_{N-1}\}$, every subset $S \subseteq U$ can be mapped bijectively to an integer $\text{mask} \in [0, 2^N - 1]$:
+\begin{equation}
+e_i \in S \iff (\text{mask} \gg i) \ \& \ 1 = 1
+\label{eq:subset_bijection}
+\end{equation}
+
+Common set-theoretic operations translate directly to single-cycle CPU bitwise primitives:
+\begin{itemize}
+    \item **Empty Set ($\emptyset$)**: $\text{mask} = 0$.
+    \item **Full Universe ($U$)**: $\text{mask} = (1 \ll N) - 1$.
+    \item **Union ($S_1 \cup S_2$)**: $\text{mask}_1 \mid \text{mask}_2$.
+    \item **Intersection ($S_1 \cap S_2$)**: $\text{mask}_1 \ \& \ \text{mask}_2$.
+    \item **Set Difference ($S_1 \setminus S_2$)**: $\text{mask}_1 \ \& \ (\sim\text{mask}_2)$.
+    \item **Symmetric Difference ($S_1 \triangle S_2$)**: $\text{mask}_1 \oplus \text{mask}_2$.
+    \item **Subset Cardinality ($|S|$)**: \texttt{std::popcount(mask)}.
+\end{itemize}
+
+\subsection{Submask Enumeration in \texorpdfstring{$O(3^N)$}{O(3\textasciicircum N)} Time}
+
+A frequent algorithmic task requires iterating over all subsets of a given mask, across all possible masks. Naively iterating through all $2^N$ masks and checking all $2^N$ potential submasks requires $O(2^N \times 2^N) = O(4^N)$ operations, which is prohibitively slow for $N \ge 15$.
+
+We can iterate through \emph{strictly the valid submasks} of a mask in descending order using the elegant decrement-and-mask idiom:
+\begin{lstlisting}
+for (int sub = mask; sub > 0; sub = (sub - 1) & mask) {
+    // Process submask 'sub' of 'mask'
+}
+\end{lstlisting}
+
+\begin{theorem}[Total Submask Complexity]
+Iterating over all submasks of all masks of size $N$ using the decrement-and-mask idiom executes in exactly $O(3^N)$ operations.
+\end{theorem}
+
+\begin{proof}
+Consider a mask with exactly $k$ set bits. The number of such masks is given by the binomial coefficient $\binom{N}{k}$. For each mask with $k$ set bits, the number of valid submasks is $2^k$. Summing over all possible values of $k$ from $0$ to $N$:
+\[
+\text{Total Iterations} = \sum_{k=0}^N \binom{N}{k} 2^k
+\]
+Applying the Binomial Theorem $(x + y)^N = \sum_{k=0}^N \binom{N}{k} x^{N-k} y^k$ with $x = 1$ and $y = 2$:
+\[
+\sum_{k=0}^N \binom{N}{k} 1^{N-k} 2^k = (1 + 2)^N = 3^N
+\]
+For $N = 15$, $4^{15} \approx 1.07 \times 10^9$ operations (which causes Time Limit Exceeded), whereas $3^{15} = 14{,}348{,}907$ operations (which completes in under 20 milliseconds).
+\end{proof}
+
+Figure~\ref{fig:submask_lattice} visualizes the state lattice traversed when enumerating the submasks of mask $11 = 0b1011$.
+
+\begin{figure}[htbp]
+\centering
+\noindent\emph{Figure: Submask lattice for mask $11$ ($0b1011_2$). (See Diagram~28 in \texttt{diagrams\_review.pdf} for the full visual diagram.)}
+\caption{The submask lattice for $\text{mask} = 11$ ($0b1011_2$). The expression \texttt{sub = (sub - 1) \& mask} transitions strictly between valid subset states, bypassing all non-submask integers and achieving $O(3^N)$ global enumeration.}
+\label{fig:submask_lattice}
+\end{figure}
+
+\subsection{Fixed-Size Subset Enumeration (Gosper's Hack)}
+
+When an algorithm requires exploring all subsets of size $K$ from an $N$-element universe (e.g., combinations $\binom{N}{K}$), we can iterate through the masks in strictly lexicographical order without recursion using **Gosper's Hack**:
+
+\begin{lstlisting}
+uint64_t set = (1ULL << k) - 1;
+const uint64_t limit = (1ULL << n);
+
+while (set < limit) {
+    // Process combination 'set'
+    uint64_t c = set & -set;
+    uint64_t r = set + c;
+    set = (((r ^ set) >> 2) / c) | r;
+}
+\end{lstlisting}
+
+Gosper's Hack operates in strict $O(1)$ amortized time per combination, achieving the theoretical lower bound of $O\left(\binom{N}{K}\right)$ total runtime.
+
+\subsection{Bitmask Dynamic Programming and State Compression}
+
+In classic NP-hard combinatorial optimization problems—such as the Travelling Salesperson Problem (TSP), Hamiltonian Path, and Maximum Weight Matching—brute force requires testing all $N!$ permutations. For $N = 20$, $20! \approx 2.43 \times 10^{18}$, which is intractable.
+
+By noticing that the remaining choices depend only on:
+\begin{enumerate}
+    \item The subset of items already visited (encoded as an integer \texttt{mask} $\in [0, 2^N - 1]$),
+    \item The current element last visited (an integer $u \in [0, N-1]$),
+\end{enumerate}
+we eliminate permutation ordering redundancy.
+
+We define the 2D DP state:
+\[
+\text{dp}[\text{mask}][u] = \text{minimum cost to visit all nodes in } \text{mask}, \text{ terminating at node } u
+\]
+The state transition evaluates moving to an unvisited neighbor $v \notin \text{mask}$:
+\begin{equation}
+\text{dp}[\text{mask} \mid (1 \ll v)][v] = \min_{u \in \text{mask}} \Big( \text{dp}[\text{mask}][u] + \text{cost}[u][v] \Big)
+\label{eq:tsp_transition}
+\end{equation}
+
+This state compression reduces the time complexity from $O(N!)$ to:
+\[
+O(N^2 \cdot 2^N)
+\]
+For $N = 20$, $20^2 \cdot 2^{20} \approx 400 \times 10^6 \approx 4 \times 10^8$ basic operations, which executes comfortably within competitive programming time limits.
+
+% ============================================================================
+\section{Worked Examples}
+% ============================================================================
+
+\begin{example}[Single Unique Element via XOR Accumulation]
+\textbf{Problem Statement}: You are given an array where every integer appears exactly twice, except for one unique element which appears exactly once. Find the unique element in $O(N)$ time and $O(1)$ auxiliary space.
+
+\noindent\textbf{Input}: $A = [4, 1, 2, 1, 2]$.
+
+\noindent\textbf{Step-by-Step Solution}:
+\begin{enumerate}
+    \item Initialize an accumulator to the identity element: $\text{acc} = 0$.
+    \item Process $a_0 = 4$: $\text{acc} = 0 \oplus 4 = 4$.
+    \item Process $a_1 = 1$: $\text{acc} = 4 \oplus 1$.
+    \item Process $a_2 = 2$: $\text{acc} = 4 \oplus 1 \oplus 2$.
+    \item Process $a_3 = 1$: By associativity and commutativity:
+    \[
+    \text{acc} = 4 \oplus (1 \oplus 1) \oplus 2 = 4 \oplus 0 \oplus 2 = 4 \oplus 2
+    \]
+    The duplicate value $1$ cancels out to zero.
+    \item Process $a_4 = 2$:
+    \[
+    \text{acc} = 4 \oplus (2 \oplus 2) = 4 \oplus 0 = 4
+    \]
+    The duplicate value $2$ cancels out to zero.
+\end{enumerate}
+\noindent\textbf{Final Result}: $\text{acc} = 4$.
+\end{example}
+
+\begin{example}[Finding Two Unique Elements via Bit Partitioning]
+\textbf{Problem Statement}: An array contains two unique numbers that appear exactly once; all other numbers appear exactly twice. Find both unique numbers in $O(N)$ time and $O(1)$ space.
+
+\noindent\textbf{Input}: $A = [1, 2, 1, 3, 2, 5]$. Here the unique elements are $3$ and $5$.
+
+\noindent\textbf{Step-by-Step Solution}:
+\begin{enumerate}
+    \item Compute the cumulative XOR of all elements in the array:
+    \[
+    X = 1 \oplus 2 \oplus 1 \oplus 3 \oplus 2 \oplus 5 = (1 \oplus 1) \oplus (2 \oplus 2) \oplus (3 \oplus 5) = 0 \oplus 0 \oplus (3 \oplus 5) = 3 \oplus 5
+    \]
+    In binary: $3 = 0011_2$ and $5 = 0101_2$. Thus $X = 0011_2 \oplus 0101_2 = 0110_2 = 6_{10}$.
+    \item Because $3 \neq 5$, $X \neq 0$. Therefore, $X$ must possess at least one set bit where the binary representations of $3$ and $5$ differ.
+    \item Isolate the lowest differing set bit using Equation~\eqref{eq:lsb_formula}:
+    \[
+    \text{diff} = X \ \& \ (-X) = 6 \ \& \ (-6) = 0110_2 \ \& \ 1010_2 = 0010_2 = 2_{10}
+    \]
+    Bit 1 is set in $3$, but unset in $5$.
+    \item Partition the entire array into two distinct subsets based on whether bit 1 is set:
+    \begin{itemize}
+        \item \textbf{Group 0} (Bit 1 is 0): Numbers where \texttt{(x \& 2) == 0}: $[1, 1, 5]$.
+        \item \textbf{Group 1} (Bit 1 is 1): Numbers where \texttt{(x \& 2) != 0}: $[2, 3, 2]$.
+    \end{itemize}
+    Notice that the duplicate pairs ($1$ and $2$) are guaranteed to land entirely within the same partition, while $3$ and $5$ are separated into opposing groups!
+    \item Accumulate the XOR within each group independently:
+    \begin{align*}
+    u_1 &= 1 \oplus 1 \oplus 5 = 0 \oplus 5 = \mathbf{5} \\
+    u_2 &= 2 \oplus 3 \oplus 2 = (2 \oplus 2) \oplus 3 = 0 \oplus 3 = \mathbf{3}
+    \end{align*}
+\end{enumerate}
+\noindent\textbf{Final Result}: The two unique elements are $5$ and $3$.
+\end{example}
+
+\begin{example}[Population Count via Brian Kernighan's Algorithm]
+\textbf{Problem Statement}: Count the number of set bits in $x = 52$ using $x \ \& \ (x - 1)$.
+
+\noindent\textbf{Input}: $x = 52 = 00110100_2$.
+
+\noindent\textbf{Step-by-Step Solution}:
+\begin{enumerate}
+    \item **Initialization**: $\text{count} = 0$.
+    \item **Iteration 1**:
+    \begin{align*}
+    x &= 52 = 00110100_2 \\
+    x - 1 &= 51 = 00110011_2 \\
+    x_{\text{new}} = x \ \& \ (x - 1) &= 00110000_2 = 48_{10}
+    \end{align*}
+    Bit 2 was cleared. Increment $\text{count} \to 1$.
+    \item **Iteration 2**:
+    \begin{align*}
+    x &= 48 = 00110000_2 \\
+    x - 1 &= 47 = 00101111_2 \\
+    x_{\text{new}} = x \ \& \ (x - 1) &= 00100000_2 = 32_{10}
+    \end{align*}
+    Bit 4 was cleared. Increment $\text{count} \to 2$.
+    \item **Iteration 3**:
+    \begin{align*}
+    x &= 32 = 00100000_2 \\
+    x - 1 &= 31 = 00011111_2 \\
+    x_{\text{new}} = x \ \& \ (x - 1) &= 00000000_2 = 0_{10}
+    \end{align*}
+    Bit 5 was cleared. Increment $\text{count} \to 3$.
+    \item Loop terminates since $x_{\text{new}} = 0$.
+\end{enumerate}
+\noindent\textbf{Final Result}: $\text{count} = 3$ bits set (positions 2, 4, 5). The algorithm terminated in exactly 3 operations rather than inspecting all 32 bits.
+\end{example}
+
+\begin{example}[Tracing Submask Enumeration on $11 = 0b1011$]
+\textbf{Problem Statement}: Trace the decrement-and-mask loop $\text{sub} = (\text{sub} - 1) \ \& \ \text{mask}$ for $\text{mask} = 11$.
+
+\noindent\textbf{Step-by-Step Solution}:
+\begin{enumerate}
+    \item Target mask: $\text{mask} = 11 = 1011_2$. Set bits are at positions $\{0, 1, 3\}$.
+    \item Start: $\text{sub} = 11 = 1011_2$. Output: $11$.
+    \item $\text{sub} - 1 = 10 = 1010_2$. $\text{sub} = 1010_2 \ \& \ 1011_2 = 1010_2 = 10$. Output: $10$.
+    \item $\text{sub} - 1 = 9 = 1001_2$. $\text{sub} = 1001_2 \ \& \ 1011_2 = 1001_2 = 9$. Output: $9$.
+    \item $\text{sub} - 1 = 8 = 1000_2$. $\text{sub} = 1000_2 \ \& \ 1011_2 = 1000_2 = 8$. Output: $8$.
+    \item $\text{sub} - 1 = 7 = 0111_2$. $\text{sub} = 0111_2 \ \& \ 1011_2 = 0011_2 = 3$. Output: $3$. (Skips 7, 6, 5, 4!).
+    \item $\text{sub} - 1 = 2 = 0010_2$. $\text{sub} = 0010_2 \ \& \ 1011_2 = 0010_2 = 2$. Output: $2$.
+    \item $\text{sub} - 1 = 1 = 0001_2$. $\text{sub} = 0001_2 \ \& \ 1011_2 = 0001_2 = 1$. Output: $1$.
+    \item $\text{sub} - 1 = 0 = 0000_2$. $\text{sub} = 0000_2 \ \& \ 1011_2 = 0$. Loop terminates.
+\end{enumerate}
+\noindent\textbf{Final Result}: Output sequence: $\langle 11, 10, 9, 8, 3, 2, 1, 0 \rangle$. Visited all $2^3 = 8$ valid submasks in strictly decreasing order without visiting any invalid values.
+\end{example}
+
+\begin{example}[Column Ledger Bit Redistribution for Sum of Squares]
+\textbf{Problem Statement}: Given an array $A = [2, 6, 5, 8]$, you may repeatedly replace any pair $(A[i], A[j])$ with $(A[i] \ \& \ A[j], A[i] \mid A[j])$. Select $k = 2$ elements to maximize their sum of squares.
+
+\noindent\textbf{Step-by-Step Solution}:
+\begin{enumerate}
+    \item Expand each number into its binary representation:
+    \begin{align*}
+    A[0] = 2 &= 0010_2 \\
+    A[1] = 6 &= 0110_2 \\
+    A[2] = 5 &= 0101_2 \\
+    A[3] = 8 &= 1000_2
+    \end{align*}
+    \item Compile the column ledger counting set bits at positions $0, 1, 2, 3$:
+    \begin{itemize}
+        \item Bit 0 ($2^0 = 1$): present in $5 \implies \text{count}[0] = 1$.
+        \item Bit 1 ($2^1 = 2$): present in $2, 6 \implies \text{count}[1] = 2$.
+        \item Bit 2 ($2^2 = 4$): present in $6, 5 \implies \text{count}[2] = 2$.
+        \item Bit 3 ($2^3 = 8$): present in $8 \implies \text{count}[3] = 1$.
+    \end{itemize}
+    \item Because $x^2 + y^2$ is strictly convex, sum of squares is maximized by making the numbers as unequal as possible. We greedily concentrate all available bits into the first chosen number $v_1$:
+    \begin{itemize}
+        \item Bit 0: $\text{count}[0] = 1 > 0 \implies v_1 \text{ gets } 2^0 = 1$, $\text{count}[0] \to 0$.
+        \item Bit 1: $\text{count}[1] = 2 > 0 \implies v_1 \text{ gets } 2^1 = 2$, $\text{count}[1] \to 1$.
+        \item Bit 2: $\text{count}[2] = 2 > 0 \implies v_1 \text{ gets } 2^2 = 4$, $\text{count}[2] \to 1$.
+        \item Bit 3: $\text{count}[3] = 1 > 0 \implies v_1 \text{ gets } 2^3 = 8$, $\text{count}[3] \to 0$.
+    \end{itemize}
+    Thus $v_1 = 1 + 2 + 4 + 8 = 15 = 1111_2$.
+    \item Build the second chosen number $v_2$ from the remaining bit ledger:
+    \begin{itemize}
+        \item Bit 0: $\text{count}[0] = 0 \implies 0$.
+        \item Bit 1: $\text{count}[1] = 1 > 0 \implies v_2 \text{ gets } 2^1 = 2$, $\text{count}[1] \to 0$.
+        \item Bit 2: $\text{count}[2] = 1 > 0 \implies v_2 \text{ gets } 2^2 = 4$, $\text{count}[2] \to 0$.
+        \item Bit 3: $\text{count}[3] = 0 \implies 0$.
+    \end{itemize}
+    Thus $v_2 = 2 + 4 = 6 = 0110_2$.
+    \item Evaluate the sum of squares for the $k = 2$ selected numbers:
+    \[
+    \text{Sum} = v_1^2 + v_2^2 = 15^2 + 6^2 = 225 + 36 = \mathbf{261}
+    \]
+\end{enumerate}
+\noindent\textbf{Final Result}: The maximum possible sum of squares is $261$.
+\end{example}
+
+% ============================================================================
+\section{C++ Implementations}
+% ============================================================================
+
+All implementations adhere strictly to the C++23 standard, utilizing the standard \texttt{<bit>} library functions rather than compiler-specific builtins.
+
+\subsection{Fundamental Bit Utilities Header}
+
+\begin{lstlisting}
+#include <bit>
+#include <cstdint>
+#include <concepts>
+
+namespace bit_utils {
+
+// Tests if the k-th bit is set
+template <std::unsigned_integral T>
+[[nodiscard]] constexpr bool test_bit(T val, unsigned int k) noexcept {
+    return (val >> k) & T{1};
+}
+
+// Sets the k-th bit
+template <std::unsigned_integral T>
+[[nodiscard]] constexpr T set_bit(T val, unsigned int k) noexcept {
+    return val | (T{1} << k);
+}
+
+// Clears the k-th bit
+template <std::unsigned_integral T>
+[[nodiscard]] constexpr T clear_bit(T val, unsigned int k) noexcept {
+    return val & ~(T{1} << k);
+}
+
+// Toggles the k-th bit
+template <std::unsigned_integral T>
+[[nodiscard]] constexpr T toggle_bit(T val, unsigned int k) noexcept {
+    return val ^ (T{1} << k);
+}
+
+// Isolates the lowest set bit (e.g. 0b10100 -> 0b00100)
+template <std::integral T>
+[[nodiscard]] constexpr T lowest_set_bit(T val) noexcept {
+    return val & -val;
+}
+
+// Clears the lowest set bit using Brian Kernighan's idiom
+template <std::unsigned_integral T>
+[[nodiscard]] constexpr T clear_lowest_set_bit(T val) noexcept {
+    return val & (val - T{1});
+}
+
+// Population count using standard C++20 <bit>
+template <std::unsigned_integral T>
+[[nodiscard]] constexpr int popcount(T val) noexcept {
+    return std::popcount(val);
+}
+
+// Checks if value is an exact power of two
+template <std::unsigned_integral T>
+[[nodiscard]] constexpr bool is_power_of_two(T val) noexcept {
+    return std::has_single_bit(val);
+}
+
+} // namespace bit_utils
+\end{lstlisting}
+
+\subsection{Static Prefix XOR Range Queries}
+
+\begin{lstlisting}
+#include <vector>
+#include <span>
+#include <cstdint>
+
+class PrefixXorQueryEngine {
+public:
+    explicit PrefixXorQueryEngine(std::span<const uint32_t> arr) 
+        : prefix_(arr.size() + 1, 0) 
+    {
+        for (std::size_t i = 0; i < arr.size(); ++i) {
+            prefix_[i + 1] = prefix_[i] ^ arr[i];
+        }
+    }
+
+    // Evaluates cumulative XOR of elements in subarray [left, right] in O(1)
+    [[nodiscard]] uint32_t query(std::size_t left, std::size_t right) const noexcept {
+        return prefix_[left] ^ prefix_[right + 1];
+    }
+
+private:
+    std::vector<uint32_t> prefix_;
+};
+\end{lstlisting}
+
+\subsection{Submask Enumeration Framework}
+
+\begin{lstlisting}
+#include <vector>
+#include <cstdint>
+#include <functional>
+
+// Calls action on every submask of 'mask' in strictly descending order
+void for_each_submask(uint32_t mask, const std::function<void(uint32_t)>& action) {
+    for (uint32_t sub = mask; ; sub = (sub - 1) & mask) {
+        action(sub);
+        if (sub == 0) {
+            break; // Terminate after processing empty submask 0
+        }
+    }
+}
+\end{lstlisting}
+
+\subsection{Travelling Salesperson Problem via Bitmask Dynamic Programming}
+
+\begin{lstlisting}
+#include <vector>
+#include <algorithm>
+#include <cstdint>
+#include <limits>
+
+class TravellingSalesperson {
+public:
+    static constexpr int INF = 1e9; // Safe infinity preventing addition overflow
+
+    [[nodiscard]] static int solve(const std::vector<std::vector<int>>& cost) {
+        const std::size_t n = cost.size();
+        const std::size_t num_masks = 1ULL << n;
+
+        // dp[mask][u]: minimum cost to visit set 'mask' ending at vertex u
+        std::vector<std::vector<int>> dp(num_masks, std::vector<int>(n, INF));
+
+        // Base case: starting at vertex 0
+        dp[1][0] = 0;
+
+        for (std::size_t mask = 1; mask < num_masks; ++mask) {
+            for (std::size_t u = 0; u < n; ++u) {
+                if (dp[mask][u] == INF) {
+                    continue;
+                }
+
+                // Try transitioning to unvisited neighbor v
+                for (std::size_t v = 0; v < n; ++v) {
+                    if (!(mask & (1ULL << v))) {
+                        const std::size_t next_mask = mask | (1ULL << v);
+                        dp[next_mask][v] = std::min(
+                            dp[next_mask][v], 
+                            dp[mask][u] + cost[u][v]
+                        );
+                    }
+                }
+            }
+        }
+
+        // Return minimum cost visiting all vertices and returning to start (0)
+        int min_tour = INF;
+        const std::size_t full_mask = num_masks - 1;
+        for (std::size_t u = 1; u < n; ++u) {
+            min_tour = std::min(min_tour, dp[full_mask][u] + cost[u][0]);
+        }
+
+        return min_tour;
+    }
+};
+\end{lstlisting}
+
+% ============================================================================
+\section{Problem Pattern Recognition}
+% ============================================================================
+
+When reading an algorithmic problem statement, use this three-step decision process:
+
+\begin{enumerate}
+    \item \textbf{Inspect Constraints on $N$}:
+    \begin{itemize}
+        \item If $N \le 20$ and asks to find an optimal sequence, subset partition, or path: immediately consider \textbf{Bitmask DP} or \textbf{Submask Enumeration}.
+        \item If $N \le 60$ and items can be grouped into independent halves: consider \textbf{Meet-in-the-Middle} with bitmasks ($2^{N/2}$).
+    \end{itemize}
+    \item \textbf{Inspect Duplicate or Parity Language}:
+    \begin{itemize}
+        \item If every element appears twice except one, or pairs cancel: use the \textbf{XOR Self-Inverse Invariant}.
+        \item If range query operations ask for subarray XOR: build a \textbf{Prefix XOR Table}.
+    \end{itemize}
+    \item \textbf{Inspect Bitwise Invariant Language}:
+    \begin{itemize}
+        \item If the problem involves bitwise operations (\&, \textbar, \textasciicircum) over an array, treat each bit column independently (\textbf{Column Ledger Accounting}).
+    \end{itemize}
+\end{enumerate}
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
+\hline
+\textbf{Keywords in the Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
+``every element appears twice except one'', ``single non-duplicate'' & Identical values must annihilate without allocating a frequency hash table. & XOR Accumulator ($A \oplus A = 0$). \\ \hline
+``range XOR sum'', ``subarray XOR equals zero'' & Frequent cumulative XOR queries over intervals $[L, R]$. & 1D Prefix XOR Array ($P[L] \oplus P[R+1]$). \\ \hline
+``visit all $N$ cities'', ``assign $N$ tasks to $N$ workers'', $N \le 20$ & State depends solely on subset of visited items and last location. & Bitmask DP ($O(N^2 \cdot 2^N)$ state compression). \\ \hline
+``all sub-configurations of a configuration'', ``merge sub-clusters'' & Evaluating costs over all sub-partitions for every subset. & Submask Enumeration ($O(3^N)$ loop). \\ \hline
+``is power of two'', ``count set bits'', ``lowest 1-bit'' & Fundamental bit property test in constant time. & $x \ \& \ (x - 1)$, $x \ \& \ (-x)$, or \texttt{std::\-has\_\-single\_\-bit}. \\ \hline
+``bitwise operations on pairs to maximize/minimize objective'' & Bitwise operators act independently without carry across columns. & Bit Frequency Ledger (Column-by-column accounting). \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+% ============================================================================
+\section{Summary and Complexity Reference}
+% ============================================================================
+
+\vspace{0.3cm}
+\noindent
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\textbf{Task / Operation} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
+Query / Set / Clear / Toggle Bit & $O(1)$ & $O(1)$ & Basic state manipulation at bit position $k$. \\ \hline
+Isolate Lowest Set Bit ($x \ \& \ -x$) & $O(1)$ & $O(1)$ & Fenwick tree traversals; extracting set bits. \\ \hline
+Clear Lowest Set Bit ($x \ \& \ (x-1)$) & $O(1)$ & $O(1)$ & Checking powers of two; Brian Kernighan popcount. \\ \hline
+Range XOR Query via Prefix Array & $O(1)$ & $O(N)$ build & Frequent subarray XOR queries on static array. \\ \hline
+Submask Enumeration of Mask & $O(2^k)$ & $O(1)$ & Iterating sub-states for a mask with $k$ set bits. \\ \hline
+All Submasks for All Masks & $O(3^N)$ & $O(2^N)$ & Exhaustive subset dynamic programming. \\ \hline
+Gosper's Hack ($K$-combinations) & $O\left(\binom{N}{K}\right)$ & $O(1)$ & Iterating fixed-cardinality subsets in order. \\ \hline
+Travelling Salesperson (Bitmask DP) & $O(N^2 \cdot 2^N)$ & $O(N \cdot 2^N)$ & Permutation graph optimization with $N \le 20$. \\ \hline
+Bit Frequency Ledger Accumulation & $O(B \cdot N)$ & $O(B)$ & Independent column analysis ($B \in \{32, 64\}$). \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
+% ============================================================================
+\section{Glossary}
+% ============================================================================
+
+\subsection{Core Concepts}
+\begin{itemize}
+    \item \textbf{Bit}: Binary digit; the elementary atom of computer data, holding either $0$ or $1$.
+    \item \textbf{Bitmask}: An integer interpreted as a compact boolean array or subset where bit $i = 1$ indicates inclusion of element $i$.
+    \item \textbf{Least Significant Bit (LSB)}: Bit position 0 with weight $2^0 = 1$; dictates numerical parity.
+    \item \textbf{Most Significant Bit (MSB)}: The highest set bit position; dictates magnitude and signed polarity.
+    \item \textbf{Two's Complement}: The standard binary encoding for signed integers where the MSB has weight $-2^{N-1}$.
+    \item \textbf{Self-Inverse}: An algebraic operator that undoes itself, satisfying $x \oplus x = 0$.
+    \item \textbf{State Compression}: Encoding an exponential combinatorial subset as an integer index for dynamic programming tables.
+    \item \textbf{Submask}: A bitmask whose set bits are a strict or non-strict subset of another mask's set bits.
+    \item \textbf{Population Count (Popcount)}: The total count of bits set to $1$ in an integer.
+    \item \textbf{Logical vs. Arithmetic Shift}: Logical right shift fills high bits with $0$; arithmetic right shift preserves the sign bit.
+\end{itemize}
+
+\subsection{Mathematical Symbols}
+\begin{itemize}
+    \item $\&$: Bitwise AND.
+    \item $\mid$: Bitwise OR.
+    \item $\oplus$ or \textasciicircum: Bitwise Exclusive OR (XOR).
+    \item $\sim$: Bitwise NOT (one's complement inversion).
+    \item $\ll$: Bitwise Left Shift (multiplication by powers of two).
+    \item $\gg$: Bitwise Right Shift (division by powers of two).
+    \item $\in$: Set membership ($e_i \in S$).
+    \item $\subseteq$: Subset relation.
+    \item $\emptyset$: The empty set.
+    \item $\binom{N}{K}$: Binomial coefficient (``$N$ choose $K$'').
+    \item $\sum$: Summation.
+    \item $\lfloor \cdot \rfloor$: Floor function (rounding down to the nearest integer).
+\end{itemize}
+
+% ============================================================================
+\section{Further Reading}
+% ============================================================================
+
+\subsection{Free Online Resources}
+\begin{itemize}
+    \item \textbf{CP-Algorithms: Bit Manipulation}: \url{https://cp-algorithms.com/algebra/all-submasks.html}. Exceptional coverage of submask enumeration and subset transformations.
+    \item \textbf{Project Euler}: Problems 684, 757, and 808 for practice with large-integer bit-level representation and modular exponents.
+    \item \textbf{Sean Eron Anderson's Bit Twiddling Hacks}: Classic reference for bit hacks, branchless computing, and parity calculations.
+    \item \textbf{Brilliant.org: Binary and Bitwise Operations}: Interactive visual tutorials on two's complement and logic gate hardware.
+\end{itemize}
+
+\subsection{Classic Books}
+\begin{itemize}
+    \item \textbf{Hacker's Delight} by Henry S. Warren Jr. (Intermediate to Advanced). The definitive masterpiece on low-level arithmetic, bit permutations, and compiler-level bit tricks.
+    \item \textbf{Competitive Programmer's Handbook} by Antti Laaksonen (Beginner to Intermediate). Chapter 10 provides an intuitive introduction to bitmasks and dynamic programming state compression.
+    \item \textbf{Introduction to Algorithms (CLRS)} by Cormen, Leiserson, Rivest, and Stein (Foundational Reference). Chapters 16 and 34 for combinatorial optimization and subset state complexity.
+\end{itemize}
+
+% --- Version History (always the last section of the document) ---
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Date} & \textbf{Change} \\ \hline
+2026-10-12 & Document created. Exhaustive treatment of binary foundations, positional arithmetic, LSB/MSB, two's complement, four elemental bit operations, LSB isolation ($x \ \& \ -x$), Brian Kernighan popcount, XOR self-inverse cancellation, prefix XOR range queries, column ledger accounting, $O(3^N)$ submask enumeration lattice, Gosper's hack, and bitmask TSP dynamic programming with 4 full-width TikZ diagrams. \\ \hline
+2026-10-12 & Moved embedded TikZ diagrams to central review document (Diagrams 25--28 in diagrams\_review.pdf) and preserved figure placeholders. \\ \hline
+\end{tabularx}
+
+\end{document}
