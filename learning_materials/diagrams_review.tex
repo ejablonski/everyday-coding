@@ -83,7 +83,7 @@
 
 \begin{abstract}
 \noindent
-This document establishes the unified visual architecture for the entire 12-module algorithmic learning library. Designed specifically for visual learners who require spatial, mechanical intuition for foundational concepts as well as advanced algorithmic workflows, this review provides a comprehensive audit of all existing documents, catalogs explicit textual promises where diagrams were previously omitted, and showcases a complete gallery of 24 clean, scalable, standalone TikZ diagrams. Each diagram includes exact document destination breadcrumbs, section coordinates, and targeted pedagogical rationale.
+This document establishes the unified visual architecture for the entire 12-module algorithmic learning library. Designed specifically for visual learners who require spatial, mechanical intuition for foundational concepts as well as advanced algorithmic workflows, this review provides a comprehensive audit of all existing documents, catalogs explicit textual promises where diagrams were previously omitted, and showcases a complete gallery of 41 clean, scalable, standalone TikZ diagrams. Each diagram includes exact document destination breadcrumbs, section coordinates, and targeted pedagogical rationale.
 \end{abstract}
 
 \tableofcontents
@@ -110,16 +110,18 @@ A comprehensive line-by-line audit of all 12 modules currently residing in \text
 \endlastfoot
 \texttt{00.cpp\_reference.tex} & Pure Text / Code & Zero diagrams. Missing foundational memory architecture: automatic stack vs dynamic heap layout, and \texttt{std::vector} capacity doubling reallocation. \\ \hline
 \texttt{00.problem\_solving\_guide.tex} & Broken Placeholder & \textbf{Fatal Missing Figure}: Lines 113--119 contain an empty center block followed immediately by the caption \emph{Figure: Top-level triage tree}. \\ \hline
-\texttt{01.combinatorics\_permutations.tex} & Pure Text / Formulas & Stars and Bars (Section 3.4) relies on abstract ball-and-urn text without visual slot partitioning or divider binning diagrams. \\ \hline
-\texttt{02.modular\_arithmetic.tex} & Broken Placeholder & \textbf{Fatal Missing Figure}: Line 110 promises \emph{``This simple number line shows how integers map onto their remainders modulo 12''} followed immediately by Section 2.2 without any diagram! \\ \hline
-\texttt{03.number\_theory.tex} & Broken Placeholder & \textbf{Fatal Missing Figure}: Lines 390--394 announce \emph{Worked Trace: Sieve of Eratosthenes for $N = 30$} with an empty block. Callout box describes Euclidean rectangle tiling without drawing it. \\ \hline
-\texttt{04.sequences\_and\_series.tex} & Pure Text & Prefix sums and difference arrays are explained numerically but lack visual tape subtraction ($P[R+1] - P[L]$) and $+x / -x$ impulse integration plots. \\ \hline
+\texttt{01.combinatorics\_permutations.tex} & Pure Text / Formulas & Stars and Bars (Section 3.4) and Pascal's Triangle lattice walking (Section 2.2) lack visual spatial structures. Resolved in Diagram 4 and Diagram 40. \\ \hline
+\texttt{02.modular\_arithmetic.tex} & Broken Placeholder & \textbf{Fatal Missing Figure}: Line 110 promises clock remainders without a diagram. Also missing repeated squaring exponentiation tree. Resolved in Diagram 5 and Diagram 38. \\ \hline
+\texttt{03.number\_theory.tex} & Broken Placeholder & \textbf{Fatal Missing Figure}: Lines 390--394 announce Sieve of Eratosthenes with empty block. Lacks Euclidean rectangle tiling and divisor symmetry across $\sqrt{N}$. Resolved in Diagrams 6, 7, and 39. \\ \hline
+\texttt{04.sequences\_and\_series.tex} & Pure Text & Prefix sums and difference arrays explained numerically but lack tape subtraction, impulse plots, and 2D subgrid inclusion-exclusion diagrams. Resolved in Diagrams 8, 9, 10, and 32. \\ \hline
 \texttt{05.recursion\_and\_backtracking.tex} & 3 Broken Placeholders & \textbf{Fatal Missing Figures}: Line 131 announces \emph{recursion tree for $\text{fib}(4)$} with no drawing. Line 282 has \emph{Decision Tree for $n=2$:} followed by empty space. Line 294 has \emph{Decision Tree for Subsets:} followed by empty space. \\ \hline
-\texttt{06.dynamic\_programming.tex} & Incomplete Trace & Lines 170--173 announce coin table evolutions with blank lines. Lacks 1D DP dependency tape and 2D grid path choice matrices. \\ \hline
-\texttt{07.graph\_algorithms.tex} & Broken Placeholder & \textbf{Fatal Missing Figure}: Lines 177--179 announce \emph{``Below is a 4-node directed graph and its three C++ representations''} followed immediately by a callout box without any graph! \\ \hline
-\texttt{08.binary\_search.tex} & Truncated Trace & Section 2.1 introduces array $A$ and leaps directly to comparison count without showing the interval halving elimination steps. \\ \hline
+\texttt{06.dynamic\_programming.tex} & Incomplete Trace & Lines 170--173 announce coin tables with blank lines. Lacks 0/1 knapsack space compression and LCS 2D matrix reconstruction. Resolved in Diagrams 13, 14, 33, and 34. \\ \hline
+\texttt{07.graph\_algorithms.tex} & Broken Placeholder & \textbf{Fatal Missing Figure}: Lines 177--179 announce representation matrix without a graph. Lacks topological DAG ordering and bipartite odd-cycle proofs. Resolved in Diagrams 15, 16, 17, 18, 35, and 36. \\ \hline
+\texttt{08.binary\_search.tex} & Truncated Trace & Section 2.1 introduces array $A$ without halving steps. Lacks rotated sorted array discontinuity bifurcation. Resolved in Diagrams 19, 20, and 37. \\ \hline
+\texttt{09.string\_algorithms.tex} & Pure Text / Code & Zero diagrams in source. String matching, tries, KMP $\pi$-array fallbacks, and Rabin-Karp rolling hash shifts explained purely with formulas without visual state transitions. Covered in Diagrams 29, 30, and 31. \\ \hline
 \texttt{10.greedy\_algorithms.tex} & 1 TikZ Figure & Contains interval scheduling timeline. Included below for unified review. \\ \hline
 \texttt{11.monotonic\_stacks\_and\_queues.tex} & 3 TikZ Figures & Contains histogram expansion, cascading pops, and monotonic deque. Included below for unified review. \\ \hline
+\texttt{12.bit\_manipulation\_and\_bitmasks.tex} & 5 TikZ Figures & Comprehensive 5-diagram visual architecture: Diagram 25 (Integer anatomy), Diagram 26 (Two's complement LSB isolation), Diagram 27 (Prefix XOR cancellation), Diagram 28 (Submask enumeration lattice), and Diagram 41 (Brian Kernighan's lowest set-bit stripping). Included below for unified review. \\ \hline
 \end{xltabular}
 \vspace{0.3cm}
 
@@ -1852,10 +1854,1633 @@ A comprehensive line-by-line audit of all 12 modules currently residing in \text
 
 \newpage
 % ============================================================================
+% ============================================================================
+\section{Module 12: Bit Manipulation and Bitmasks}
+% ============================================================================
+
+\subsection{Diagram 25: Anatomy of an Integer --- Positional Weights, LSB, and Signed Layout}
+
+\breadcrumb{12.bit_manipulation_and_bitmasks.tex}{Section 1.3: Anatomy of an Integer: Bit Indices, LSB, and MSB}{Establishes fundamental physical intuition for positional powers of two, LSB parity, and signed two's complement sign-bit negative weight.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Standardized layout across full text width ($15.5\text{ cm}$); aligned unsigned and signed two's complement bit cells; calibrated vertical headroom and inward-pointing sign bit arrow to eliminate all margin clipping.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.96, every node/.style={transform shape},
+    cell/.style={draw=codeframe, fill=white, thick, minimum width=1.65cm, minimum height=0.85cm, font=\small, align=center},
+    lbl/.style={font=\scriptsize\ttfamily, text=codegray},
+    weightlbl/.style={font=\tiny\bfseries, text=primaryblue}
+]
+    % --- Container Frame ---
+    \draw[draw=codeframe, fill=codebg, rounded corners=4pt, thick] (0.0, -3.8) rectangle (15.4, 5.0);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.65) {Anatomy of an 8-Bit Integer (Example Value: $43 = 00101011_2$)};
+
+    % Top row: Unsigned layout
+    \node[anchor=west, font=\scriptsize\bfseries, text=codegreen] at (0.3, 3.9) {Unsigned Byte (\texttt{uint8\_t}) --- Range: $[0, 255]$};
+
+    % Cells for 8 bits: indices 7 down to 0
+    % Values for 43: b7=0, b6=0, b5=1, b4=0, b3=1, b2=0, b1=1, b0=1
+    \foreach \idx/\bit/\val in {7/0/128, 6/0/64, 5/1/32, 4/0/16, 3/1/8, 2/0/4, 1/1/2, 0/1/1} {
+        \pgfmathsetmacro{\xpos}{14.1 - \idx * 1.83}
+        \ifnum\bit=1
+            \node[cell, draw=codegreen, fill=codegreen!15, line width=1.2pt] (U\idx) at (\xpos, 2.65) {\textbf{\large \bit}};
+        \else
+            \node[cell] (U\idx) at (\xpos, 2.65) {\large \bit};
+        \fi
+        \node[above=2pt of U\idx, lbl] {bit \idx};
+        \node[below=2pt of U\idx, weightlbl] {$2^{\idx}=\val$};
+    }
+
+    % Annotations for MSB and LSB
+    \draw[->, thick, primaryblue, -{Stealth[length=4pt]}] (1.29, 1.05) -- (1.29, 1.8);
+    \node[anchor=north, font=\scriptsize\bfseries, text=primaryblue] at (1.29, 1.0) {MSB (Bit 7, Weight: 128)};
+
+    \draw[->, thick, codegreen, -{Stealth[length=4pt]}] (14.1, 1.05) -- (14.1, 1.8);
+    \node[anchor=north, font=\scriptsize\bfseries, text=codegreen] at (14.1, 1.0) {LSB (Bit 0, Weight: 1, Parity)};
+
+    % Bottom row: Signed Two's Complement layout
+    \draw[draw=codeframe!60] (0.3, 0.4) -- (15.1, 0.4);
+    \node[anchor=west, font=\scriptsize\bfseries, text=codeblue] at (0.3, 0.0) {Signed Byte (\texttt{int8\_t}) in Two's Complement --- Range: $[-128, 127]$};
+
+    \foreach \idx/\bit/\val in {7/0/-128, 6/0/64, 5/1/32, 4/0/16, 3/1/8, 2/0/4, 1/1/2, 0/1/1} {
+        \pgfmathsetmacro{\xpos}{14.1 - \idx * 1.83}
+        \ifnum\idx=7
+            \node[cell, draw=primaryblue, fill=primaryblue!15, line width=1.3pt] (S\idx) at (\xpos, -1.25) {\textbf{\large \bit}};
+            \node[below=2pt of S\idx, font=\tiny\bfseries, text=primaryblue] {$-2^7=\val$};
+        \else
+            \ifnum\bit=1
+                \node[cell, draw=codegreen, fill=codegreen!15, line width=1.2pt] (S\idx) at (\xpos, -1.25) {\textbf{\large \bit}};
+            \else
+                \node[cell] (S\idx) at (\xpos, -1.25) {\large \bit};
+            \fi
+            \node[below=2pt of S\idx, weightlbl] {$+2^{\idx}$};
+        \fi
+        \node[above=2pt of S\idx, lbl] {bit \idx};
+    }
+
+    \draw[->, thick, primaryblue, -{Stealth[length=4pt]}] (2.6, -2.4) -- (1.5, -2.4);
+    \node[anchor=west, font=\scriptsize\bfseries, text=primaryblue] at (2.7, -2.4) {Sign Bit (Bit 7: $0 = \text{Positive}, 1 = \text{Negative}$; Positional Weight: $-2^7 = -128$)};
+\end{tikzpicture}}
+\caption{Bit anatomy across an 8-bit word. Bit 0 is the Least Significant Bit (LSB) determining parity. Bit 7 is the Most Significant Bit (MSB). In signed two's complement arithmetic, the MSB carries a negative positional weight ($-2^{N-1}$).}
+\end{figure}
+
+\subsection{Diagram 26: Mechanics of Lowest Set Bit Isolation --- Carry Cascade in \texorpdfstring{$x \ \& \ (-x)$}{x \& (-x)}}
+
+\breadcrumb{12.bit_manipulation_and_bitmasks.tex}{Section 2.3: Lowest Set Bit Isolation: The Mechanics of \texttt{x \& (-x)}}{Visualizes two's complement bit inversion, $+1$ carry cascade propagation, and bitwise AND annihilation of higher-order bits.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Established 4-stage arithmetic trace ($x$, $\sim x$, $-x$, $x \mathbin{\&} -x$); highlighted active carry ripple; expanded vertical height to eliminate bit index collisions with title.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.96, every node/.style={transform shape},
+    box/.style={draw=codeframe, fill=white, thick, minimum width=1.35cm, minimum height=0.75cm, font=\small\ttfamily, align=center},
+    lbl/.style={font=\small\bfseries, align=left}
+]
+    % Container Frame spanning textwidth
+    \draw[draw=codeframe, fill=codebg, rounded corners=4pt, thick] (0.0, -4.6) rectangle (15.4, 4.8);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.45) {Mechanics of Lowest Set Bit Isolation: $x \ \& \ (-x)$ for $x = 44 = 00101100_2$};
+
+    % Row 1: Original x = 44
+    \node[lbl, text=primaryblue, anchor=west] at (0.3, 2.8) {$x = 44$:};
+    \foreach \idx/\val in {7/0, 6/0, 5/1, 4/0, 3/1, 2/1, 1/0, 0/0} {
+        \pgfmathsetmacro{\xp}{14.3 - \idx * 1.42}
+        \ifnum\idx=2
+            \node[box, draw=codegreen, fill=codegreen!20, line width=1.3pt] (X\idx) at (\xp, 2.8) {\textbf{\val}};
+        \else
+            \node[box] (X\idx) at (\xp, 2.8) {\val};
+        \fi
+        \node[above=2pt of X\idx, font=\tiny\ttfamily, text=codegray] {b\idx};
+    }
+    \node[anchor=west, font=\scriptsize\bfseries, text=codegreen] at (11.0, 2.05) {$\uparrow$ Lowest Set Bit (bit 2)};
+
+    % Row 2: Inverted ~x
+    \node[lbl, text=codegray, anchor=west] at (0.3, 1.3) {$\sim x$:};
+    \foreach \idx/\val in {7/1, 6/1, 5/0, 4/1, 3/0, 2/0, 1/1, 0/1} {
+        \pgfmathsetmacro{\xp}{14.3 - \idx * 1.42}
+        \node[box, fill=codebg] (N\idx) at (\xp, 1.3) {\val};
+    }
+
+    % Carry addition arrow
+    \draw[->, thick, primaryblue, -{Stealth[length=5pt]}] (14.3, 0.75) -- (14.3, 0.05)
+        node[midway, right=3pt, font=\tiny\bfseries, text=primaryblue] {$+ 1$ (Carry ripples to bit 2)};
+
+    % Row 3: -x = (~x) + 1
+    \node[lbl, text=codeblue, anchor=west] at (0.3, -0.5) {$-x = (\sim x) + 1$:};
+    \foreach \idx/\val in {7/1, 6/1, 5/0, 4/1, 3/0, 2/1, 1/0, 0/0} {
+        \pgfmathsetmacro{\xp}{14.3 - \idx * 1.42}
+        \ifnum\idx=2
+            \node[box, draw=codegreen, fill=codegreen!20, line width=1.3pt] (M\idx) at (\xp, -0.5) {\textbf{\val}};
+        \else
+            \node[box] (M\idx) at (\xp, -0.5) {\val};
+        \fi
+    }
+
+    % Row 4: Result of AND
+    \draw[draw=primaryblue!60, thick] (0.3, -1.4) -- (15.1, -1.4);
+    \node[lbl, text=codegreen, anchor=west] at (0.3, -2.2) {$x \ \& \ (-x)$:};
+    \foreach \idx/\val in {7/0, 6/0, 5/0, 4/0, 3/0, 2/1, 1/0, 0/0} {
+        \pgfmathsetmacro{\xp}{14.3 - \idx * 1.42}
+        \ifnum\idx=2
+            \node[box, draw=codegreen, fill=codegreen!30, line width=1.5pt] (R\idx) at (\xp, -2.2) {\textbf{\large \val}};
+        \else
+            \node[box] (R\idx) at (\xp, -2.2) {\val};
+        \fi
+    }
+
+    \node[anchor=north west, font=\scriptsize, align=left] at (0.3, -3.1) {
+        \textbf{Outcome}: Trailing zeros match, bit 2 matches ($1 \ \& \ 1 = 1$), and all higher bits invert ($[\text{prefix}] \ \& \ [\sim\text{prefix}] = 0$).\\
+        \textbf{Isolated Value}: $2^2 = \mathbf{4}$.
+    };
+\end{tikzpicture}}
+\caption{Visual trace of lowest set bit isolation via $x \ \& \ (-x)$ on $x = 44$. Two's complement negation inverts higher-order bits while preserving the lowest set bit and trailing zeros, isolating bit 2 ($2^2 = 4$) in $O(1)$ operations.}
+\end{figure}
+
+\subsection{Diagram 27: Prefix XOR Range Query Mechanics and Self-Inverse Cancellation}
+
+\breadcrumb{12.bit_manipulation_and_bitmasks.tex}{Section 2.6: Prefix XOR and $\mathcal{O}(1)$ Range XOR Queries}{Demonstrates self-inverse property $(X \oplus X = 0)$ annihilating prefix elements to isolate target subarray XOR in $O(1)$ operations.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed array cell trace with active target bracket; derived prefix XOR cancellation formula; recalibrated vertical card height ($5.0\text{ cm}$) and shifted array base offset to eliminate text overlap between range header and target bracket.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.96, every node/.style={transform shape},
+    arrbox/.style={draw=codeframe, fill=white, thick, rounded corners=2pt, minimum width=1.45cm, minimum height=0.75cm, font=\small, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -3.4) rectangle (15.4, 5.0);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.65) {Prefix XOR Range Query Mechanics: $\text{range\_xor}(2, 4) = P[2] \oplus P[5]$};
+
+    % Original Array A
+    \node[anchor=west, font=\small\bfseries, text=primaryblue] at (0.3, 2.0) {Array $A$:};
+    \foreach \i/\val in {0/4, 1/7, 2/2, 3/9, 4/5, 5/1} {
+        \pgfmathsetmacro{\cx}{2.8 + \i * 2.1}
+        \ifnum\i>1\relax
+            \ifnum\i<5\relax
+                \node[arrbox, draw=codegreen, fill=codegreen!20, line width=1.2pt] (A\i) at (\cx, 2.0) {\val};
+                \node[below=1pt of A\i, font=\tiny\ttfamily\bfseries, text=codegreen] {idx \i\ (target)};
+            \else
+                \node[arrbox] (A\i) at (\cx, 2.0) {\val};
+                \node[below=1pt of A\i, font=\tiny\ttfamily, text=codegray] {idx \i};
+            \fi
+        \else
+            \node[arrbox] (A\i) at (\cx, 2.0) {\val};
+            \node[below=1pt of A\i, font=\tiny\ttfamily, text=codegray] {idx \i};
+        \fi
+    }
+
+    % Target Range Bracket
+    \draw[draw=codegreen, line width=1.4pt, rounded corners=3pt] (6.0, 1.2) rectangle (12.2, 2.9);
+    \node[anchor=south, font=\scriptsize\bfseries, text=codegreen] at (9.1, 3.0) {Target Range $[2, 4]$: Value $= 2 \oplus 9 \oplus 5 = 14$};
+
+    % Prefix Terms
+    \node[anchor=west, font=\scriptsize, align=left] at (0.3, 0.3) {
+        \textbf{Prefix} $P[5] = a_0 \oplus a_1 \oplus a_2 \oplus a_3 \oplus a_4 = (4 \oplus 7) \oplus (2 \oplus 9 \oplus 5)$\\
+        \textbf{Prefix} $P[2] = a_0 \oplus a_1 = (4 \oplus 7)$
+    };
+
+    % XOR Equation and Cancellation
+    \draw[draw=codeframe!60] (0.3, -0.6) -- (15.1, -0.6);
+    \node[anchor=west, font=\small, align=left] at (0.3, -1.8) {
+        $\begin{aligned}
+        P[2] \oplus P[5] &= \underbrace{(4 \oplus 7)}_{\text{Prefix to } L-1} \oplus \Big( \underbrace{(4 \oplus 7)}_{\text{Cancelled prefix}} \oplus \underbrace{(2 \oplus 9 \oplus 5)}_{\text{Target subarray }} \Big) \\
+        &= \Big( (4 \oplus 7) \oplus (4 \oplus 7) \Big) \oplus (2 \oplus 9 \oplus 5) = \mathbf{0} \oplus (2 \oplus 9 \oplus 5) = \mathbf{14}
+        \end{aligned}$
+    };
+\end{tikzpicture}}
+\caption{Visual cancellation in Prefix XOR range queries. Because $X \oplus X = 0$, evaluating $P[L] \oplus P[R+1]$ annihilates the preceding elements $a_0 \dots a_{L-1}$ to zero, isolating the subarray XOR sum in $O(1)$ time.}
+\end{figure}
+
+\subsection{Diagram 28: Submask Enumeration Lattice for Mask \texorpdfstring{$11 = 0b1011$}{11 = 0b1011}}
+
+\breadcrumb{12.bit_manipulation_and_bitmasks.tex}{Section 3.2: Submask Enumeration in $\mathcal{O}(3^N)$ Time}{Visualizes descending traversal of subset lattice via \texttt{(sub - 1) \& mask}, proving avoidance of invalid non-submask states.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed 4-level subset lattice (k=3 down to k=0); verified transition arrows and descending state order; expanded card height to $4.4\text{ cm}$ to grant complete clearance between title, nodes, and generation sequence footer.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.96, every node/.style={transform shape},
+    node distance=1.3cm and 1.8cm,
+    state/.style={draw=codeframe, fill=white, thick, rounded corners=3pt, minimum width=2.4cm, minimum height=0.75cm, font=\small\ttfamily, align=center},
+    arrow/.style={->, thick, primaryblue, -{Stealth[length=4pt]}}
+]
+    % Container Frame
+    \draw[draw=codeframe, fill=codebg, rounded corners=4pt, thick] (0.0, -4.5) rectangle (15.4, 4.4);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 3.95) {Submask Enumeration Lattice for $\text{mask} = 11 = 0b1011$ ($3$ Set Bits)};
+
+    % Level 3: Full Mask (k = 3)
+    \node[state, draw=primaryblue, fill=primaryblue!15, line width=1.3pt] (S11) at (7.7, 2.5) {\textbf{11 (1011)}};
+
+    % Level 2: Submasks with 2 bits set (k = 2)
+    \node[state] (S10) at (2.7, 1.0) {10 (1010)};
+    \node[state] (S9)  at (7.7, 1.0) {9 (1001)};
+    \node[state] (S3)  at (12.7, 1.0) {3 (0011)};
+
+    % Level 1: Submasks with 1 bit set (k = 1)
+    \node[state] (S8) at (2.7, -0.6) {8 (1000)};
+    \node[state] (S2) at (7.7, -0.6) {2 (0010)};
+    \node[state] (S1) at (12.7, -0.6) {1 (0001)};
+
+    % Level 0: Empty Set (k = 0)
+    \node[state, draw=codegreen, fill=codegreen!15] (S0) at (7.7, -2.2) {\textbf{0 (0000)}};
+
+    % Arrows between levels showing descending iteration sequence
+    % Iteration order: 11 -> 10 -> 9 -> 8 -> 3 -> 2 -> 1 -> 0
+    \draw[arrow] (S11) -- (S10);
+    \draw[arrow] (S11) -- (S9);
+    \draw[arrow] (S11) -- (S3);
+
+    \draw[arrow] (S10) -- (S8);
+    \draw[arrow] (S10) -- (S2);
+    \draw[arrow] (S9)  -- (S8);
+    \draw[arrow] (S9)  -- (S1);
+    \draw[arrow] (S3)  -- (S2);
+    \draw[arrow] (S3)  -- (S1);
+
+    \draw[arrow] (S8) -- (S0);
+    \draw[arrow] (S2) -- (S0);
+    \draw[arrow] (S1) -- (S0);
+
+    \node[anchor=south west, font=\small\bfseries, text=primaryblue] at (0.3, -3.8) {
+        Order of Generation: $11 \to 10 \to 9 \to 8 \to 3 \to 2 \to 1 \to 0$ (Exactly $2^3 = 8$ states visited with zero invalid checks).
+    };
+\end{tikzpicture}}
+\caption{The submask lattice for $\text{mask} = 11$ ($0b1011_2$). The expression \texttt{sub = (sub - 1) \& mask} transitions strictly between valid subset states, bypassing all non-submask integers and achieving $O(3^N)$ global enumeration.}
+\end{figure}
+
+
+\newpage
+% ============================================================================
+\newpage
+\section{Module 09: String Algorithms}
+\newpage
+% ============================================================================
+\newpage
+
+\subsection{Diagram 29: Trie (Prefix Tree) Multi-Word Search \& Vector Pool Memory Layout}
+
+\breadcrumb{09.string_algorithms.tex}{Section 2.3: Tries (Prefix Trees)}{Demystifies character branching, terminal word markers, prefix sharing, and cache-friendly vector node pool allocation.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed full-width dual-panel layout: left tree graph visualizes shared prefixes across car, cat, cart, dog, dot with double-bordered terminal nodes; right panel details vector pool indexing and O(L) traversal mechanics.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.95, every node/.style={transform shape},
+    troot/.style={circle, draw=primaryblue, fill=primaryblue!15, line width=1.3pt, minimum size=0.9cm, font=\small\bfseries, align=center},
+    tnode/.style={circle, draw=codeframe, fill=white, thick, minimum size=0.85cm, font=\small, align=center},
+    tend/.style={circle, draw=codegreen, fill=codegreen!20, line width=1.4pt, double, double distance=1pt, minimum size=0.85cm, font=\small\bfseries, text=codegreen, align=center},
+    edgeLbl/.style={font=\scriptsize\bfseries, text=primaryblue, fill=codebg, inner sep=1.5pt, rounded corners=2pt},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -4.2) rectangle (15.4, 5.0);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.65) {Trie Architecture: Words \{\texttt{"car"}, \texttt{"cat"}, \texttt{"cart"}, \texttt{"dog"}, \texttt{"dot"}\} in Vector Pool};
+
+    % --- Left Panel: Tree Graph (x: 0.2 to 8.2) ---
+    % Root
+    \node[troot] (R) at (4.2, 3.6) {0};
+    \node[right=2pt of R, font=\tiny\bfseries, text=primaryblue] {Root};
+
+    % Level 1: 'c' and 'd'
+    \node[tnode] (C) at (2.2, 2.2) {1};
+    \node[tnode] (D) at (6.2, 2.2) {5};
+
+    \draw[->, thick, primaryblue] (R) -- (C) node[midway, edgeLbl] {'c'};
+    \draw[->, thick, primaryblue] (R) -- (D) node[midway, edgeLbl] {'d'};
+
+    % Level 2: 'a' under 'c', 'o' under 'd'
+    \node[tnode] (A) at (2.2, 0.8) {2};
+    \node[tnode] (O) at (6.2, 0.8) {6};
+
+    \draw[->, thick, primaryblue] (C) -- (A) node[midway, edgeLbl] {'a'};
+    \draw[->, thick, primaryblue] (D) -- (O) node[midway, edgeLbl] {'o'};
+
+    % Level 3: under 'a' -> 'r' and 't'; under 'o' -> 'g' and 't'
+    \node[tend] (R3) at (1.2, -0.6) {3};
+    \node[tend] (T4) at (3.2, -0.6) {4};
+    \node[tend] (G7) at (5.2, -0.6) {7};
+    \node[tend] (T8) at (7.2, -0.6) {8};
+
+    \draw[->, thick, primaryblue] (A) -- (R3) node[midway, edgeLbl] {'r'};
+    \draw[->, thick, primaryblue] (A) -- (T4) node[midway, edgeLbl] {'t'};
+    \draw[->, thick, primaryblue] (O) -- (G7) node[midway, edgeLbl] {'g'};
+    \draw[->, thick, primaryblue] (O) -- (T8) node[midway, edgeLbl] {'t'};
+
+    \node[below=1pt of R3, font=\tiny\bfseries, text=codegreen] {"car"};
+    \node[below=1pt of T4, font=\tiny\bfseries, text=codegreen] {"cat"};
+    \node[below=1pt of G7, font=\tiny\bfseries, text=codegreen] {"dog"};
+    \node[below=1pt of T8, font=\tiny\bfseries, text=codegreen] {"dot"};
+
+    % Level 4: under 'r' -> 't' for "cart"
+    \node[tend] (T9) at (1.2, -2.4) {9};
+    \draw[->, thick, primaryblue] (R3) -- (T9) node[midway, edgeLbl] {'t'};
+    \node[below=1pt of T9, font=\tiny\bfseries, text=codegreen] {"cart"};
+
+    % Common prefix highlight
+    \draw[draw=primaryblue!40, dashed, rounded corners=4pt, line width=1pt] (0.5, 0.2) rectangle (3.9, 1.4);
+    \node[anchor=west, font=\tiny\bfseries, text=codeblue] at (0.2, 1.5) {Shared Prefix \texttt{"ca"}};
+
+    % --- Right Panel: Memory Model & Mechanics (x: 8.5 to 15.1) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (8.5, -3.8) rectangle (15.1, 4.0);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.7, 3.8) {Contiguous Vector Pool Allocation:};
+
+    \node[anchor=north west, font=\scriptsize\ttfamily, text=black, align=left] at (8.7, 3.35) {
+        \textbf{struct} TrieNode \{\\
+        \phantom{x} \textbf{std::array}<int, 26> next; // child idx\\
+        \phantom{x} \textbf{bool} is\_end = false;\\
+        \};\\
+        \textbf{std::vector}<TrieNode> nodes;
+    };
+
+    \draw[draw=codeframe!60] (8.7, 1.6) -- (14.9, 1.6);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.0cm] at (8.7, 1.45) {
+        $\bullet$ \textbf{Pointerless Graph}: Child lookups index into contiguous memory: \texttt{nodes[u].next[c - 'a']}.\\
+        $\bullet$ \textbf{Cache Locality}: Eliminates pointer chasing and heap fragmentation inherent to raw pointers.\\
+        $\bullet$ \textbf{Double Circle}: Indicates \texttt{is\_end = true} (valid dictionary word terminus).
+    };
+
+    \draw[draw=codeframe!60] (8.7, -1.6) -- (14.9, -1.6);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.0cm] at (8.7, -1.75) {
+        \textbf{Algorithmic Complexity:}\\
+        $\bullet$ \textbf{Search Time}: $O(L)$ for word length $L$.\\
+        $\bullet$ \textbf{Insert Time}: $O(L)$ creating at most $L$ nodes.\\
+        $\bullet$ \textbf{Prefix Query}: $O(L)$ walk to test existence.\\
+        $\bullet$ \textbf{Space}: $O(\Sigma \cdot N \cdot L)$ worst case, heavily compressed by shared prefixes.
+    };
+\end{tikzpicture}}
+\caption{Trie architecture and memory model. Shared prefixes (\texttt{"ca"}, \texttt{"do"}) branch through a contiguous node pool, reducing search and prefix verification to $O(L)$ operations independent of total dictionary size.}
+\end{figure}
+
+\newpage
+\newpage
+\newpage
+
+\subsection{Diagram 30: KMP Prefix Function (\texorpdfstring{$\pi$}{pi}) \& Failure Table Fallback Transitions}
+
+\breadcrumb{09.string_algorithms.tex}{Section 2.2: The KMP Algorithm and Prefix Function}{Visualizes longest proper prefix/suffix matching values in the $\pi$ table and the zero-backtracking text pointer fallback jump.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed full-width 3-stage visual trace: top array displays pattern P = "ABABC"; middle table breaks down proper prefix vs suffix matches; bottom alignment trace details non-backtracking text pointer transition when mismatch occurs at P[4].}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.95, every node/.style={transform shape},
+    cell/.style={draw=codeframe, fill=white, thick, minimum width=1.4cm, minimum height=0.75cm, font=\small\ttfamily, align=center},
+    matchcell/.style={draw=codegreen, fill=codegreen!20, line width=1.3pt, minimum width=1.4cm, minimum height=0.75cm, font=\small\ttfamily\bfseries, text=codegreen, align=center},
+    failcell/.style={draw=red!70!black, fill=red!15, line width=1.3pt, minimum width=1.4cm, minimum height=0.75cm, font=\small\ttfamily\bfseries, text=red!70!black, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -4.5) rectangle (15.4, 5.0);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.65) {KMP Prefix Function ($\pi$) and Mismatch Fallback: Pattern $P = \text{"ABABC"}$};
+
+    % --- Top Panel: Pattern P and Pi Array (x: 0.3 to 15.1, y: 3.8 to 2.0) ---
+    \node[anchor=west, font=\small\bfseries, text=primaryblue] at (0.3, 3.6) {Pattern $P$:};
+    \foreach \idx/\ch/\pival in {0/A/0, 1/B/0, 2/A/1, 3/B/2, 4/C/0} {
+        \pgfmathsetmacro{\cx}{2.6 + \idx * 1.6}
+        \ifnum\pival>0
+            \node[matchcell] (P\idx) at (\cx, 3.6) {\ch};
+        \else
+            \node[cell] (P\idx) at (\cx, 3.6) {\ch};
+        \fi
+        \node[above=1pt of P\idx, font=\tiny\ttfamily, text=codegray] {idx \idx};
+        \node[below=2pt of P\idx, font=\scriptsize\bfseries, text=primaryblue] {$\pi[\idx] = \pival$};
+    }
+
+    % Summary explanation of Pi
+    \node[anchor=west, font=\scriptsize, align=left, text width=4.5cm] at (10.5, 3.4) {
+        \textbf{Definition}: $\pi[i] =$ length of longest proper prefix of $P[0 \dots i]$ that is also a suffix of $P[0 \dots i]$.
+    };
+
+    % --- Middle Panel: Prefix vs Suffix Equivalence (y: 1.4 to 0.0) ---
+    \draw[draw=codeframe!60] (0.3, 2.1) -- (15.1, 2.1);
+    \node[anchor=west, font=\small\bfseries, text=primaryblue] at (0.3, 1.6) {Proper Prefix / Suffix Equivalence Breakdown:};
+
+    \node[anchor=west, font=\scriptsize, align=left] at (0.3, 0.7) {
+        $\bullet$ At index $2$ ($P[0\dots 2] = \text{"ABA"} $): Prefix \texttt{"A"} matches Suffix \texttt{"A"} $\implies \mathbf{\pi[2] = 1}$.\\
+        $\bullet$ At index $3$ ($P[0\dots 3] = \text{"ABAB"} $): Prefix \texttt{"AB"} matches Suffix \texttt{"AB"} $\implies \mathbf{\pi[3] = 2}$.\\
+        $\bullet$ At index $4$ ($P[0\dots 4] = \text{"ABABC"} $): Suffix ends in \texttt{'C'}, no matching prefix $\implies \mathbf{\pi[4] = 0}$.
+    };
+
+    % --- Bottom Panel: Mismatch Fallback Trace (y: -0.2 to -4.1) ---
+    \draw[draw=codeframe!60] (0.3, -0.1) -- (15.1, -0.1);
+    \node[anchor=west, font=\small\bfseries, text=primaryblue] at (0.3, -0.6) {Live Text Search Trace: Text $T = \text{"ABABAB\dots"}$ vs Pattern $P = \text{"ABABC"}$};
+
+    % Text T cells
+    \node[anchor=west, font=\scriptsize\bfseries, text=codegray] at (0.3, -1.4) {Text $T$:};
+    \foreach \idx/\ch in {0/A, 1/B, 2/A, 3/B, 4/A, 5/B} {
+        \pgfmathsetmacro{\cx}{2.6 + \idx * 1.5}
+        \ifnum\idx=4
+            \node[cell, draw=primaryblue, line width=1.2pt] (T\idx) at (\cx, -1.4) {\textbf{\ch}};
+        \else
+            \node[cell] (T\idx) at (\cx, -1.4) {\ch};
+        \fi
+        \node[above=1pt of T\idx, font=\tiny\ttfamily, text=codegray] {i=\idx};
+    }
+
+    % Pattern P before mismatch
+    \node[anchor=west, font=\scriptsize\bfseries, text=codegray] at (0.3, -2.4) {Pattern $P$ (j):};
+    \foreach \idx/\ch in {0/A, 1/B, 2/A, 3/B, 4/C} {
+        \pgfmathsetmacro{\cx}{2.6 + \idx * 1.5}
+        \ifnum\idx=4
+            \node[failcell] (Pj\idx) at (\cx, -2.4) {\ch};
+        \else
+            \node[matchcell] (Pj\idx) at (\cx, -2.4) {\ch};
+        \fi
+    }
+    \node[right=2pt of Pj4, font=\tiny\bfseries, text=red!70!black] {$\times$ Mismatch at $j=4$ ($T[4]=\text{'A'} \ne P[4]=\text{'C'}$)};
+
+    % Fallback Jump Arrow
+    \draw[->, line width=1.5pt, red!70!black] (8.6, -2.8) to[bend left=30] (5.6, -3.5);
+    \node[anchor=north, font=\tiny\bfseries, text=red!70!black] at (7.1, -3.2) {Fallback: $j \leftarrow \pi[3] = \mathbf{2}$};
+
+    % Aligned Pattern after jump
+    \node[anchor=west, font=\scriptsize\bfseries, text=codegreen] at (0.3, -3.8) {Aligned ($j=2$):};
+    \node[matchcell] at (5.6, -3.8) {A};
+    \node[matchcell] at (7.1, -3.8) {B};
+    \node[cell] at (8.6, -3.8) {C};
+    \node[right=5pt of Pj4, font=\tiny\bfseries, text=codegreen, anchor=west] at (9.6, -3.8) {
+        $\checkmark$ Text index $i=4$ never rewinds! Pattern shifts so $P[2]=\text{'A'}$ matches $T[4]=\text{'A'}$.
+    };
+\end{tikzpicture}}
+\caption{KMP prefix function ($\pi$) and non-backtracking fallback transition. When character mismatch occurs at index $j = 4$, the pattern pointer jumps immediately to $\pi[j-1] = \pi[3] = 2$, preserving the matching prefix \texttt{"AB"} without rewinding the text pointer $i$.}
+\end{figure}
+
+\newpage
+\newpage
+\newpage
+
+\subsection{Diagram 31: Rabin-Karp Polynomial Rolling Hash Window Shift \& Arithmetic Mechanics}
+
+\breadcrumb{09.string_algorithms.tex}{Section 3.2: Sliding Window Substring Search (Rabin-Karp)}{Visualizes O(1) rolling hash window transitions by decomposing high-order character eviction, base multiplication shift, and low-order ingestion.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Established full-width multi-tier layout: top text tape tracks window shift W1 = "abc" -> W2 = "bcd"; middle panel breaks down 3-step modulo polynomial transformation; bottom card details double-hash collision prevention.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.95, every node/.style={transform shape},
+    tapebox/.style={draw=codeframe, fill=white, thick, minimum width=1.5cm, minimum height=0.75cm, font=\small\ttfamily, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -4.6) rectangle (15.4, 4.8);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.45) {Rabin-Karp Rolling Hash Mechanics: Window Shift from \texttt{"abc"} to \texttt{"bcd"} ($M=3$)};
+
+    % --- Top Panel: Text Tape (y: 3.5 to 2.2) ---
+    \node[anchor=west, font=\small\bfseries, text=primaryblue] at (0.3, 3.4) {Text $T$:};
+    \foreach \idx/\ch in {0/a, 1/b, 2/c, 3/d, 4/e, 5/f} {
+        \pgfmathsetmacro{\cx}{2.4 + \idx * 2.0}
+        \node[tapebox] (C\idx) at (\cx, 3.4) {\textbf{\ch}};
+        \node[above=1pt of C\idx, font=\tiny\ttfamily, text=codegray] {idx \idx};
+    }
+
+    % Window W1 frame [0..2]
+    \draw[draw=primaryblue, line width=1.4pt, rounded corners=3pt] (1.3, 2.7) rectangle (7.5, 4.1);
+    \node[anchor=south, font=\scriptsize\bfseries, text=primaryblue] at (4.4, 4.15) {Window $W_1 = \text{"abc"}$ ($H_1$)};
+
+    % Window W2 frame [1..3]
+    \draw[draw=codegreen, line width=1.4pt, dashed, rounded corners=3pt] (3.3, 2.5) rectangle (9.5, 3.9);
+    \node[anchor=north, font=\scriptsize\bfseries, text=codegreen] at (6.4, 2.45) {Window $W_2 = \text{"bcd"}$ ($H_2$)};
+
+    % Eviction & Ingestion Annotations
+    \draw[->, thick, red!70!black] (2.4, 2.7) -- (2.4, 1.8) node[midway, left=2pt, font=\tiny\bfseries] {$- \text{'a'} \cdot B^2$};
+    \node[below=1pt, font=\tiny\bfseries, text=red!70!black] at (2.4, 1.7) {Evict Outgoing};
+
+    \draw[<-, thick, codegreen] (8.4, 2.7) -- (8.4, 1.8) node[midway, right=2pt, font=\tiny\bfseries] {$+ \text{'d'}$};
+    \node[below=1pt, font=\tiny\bfseries, text=codegreen] at (8.4, 1.7) {Ingest Incoming};
+
+    % --- Middle Panel: Mathematical 3-Stage Transition (y: 1.2 to -2.0) ---
+    \draw[draw=codeframe!60] (0.3, 1.3) -- (15.1, 1.3);
+    \node[anchor=west, font=\small\bfseries, text=primaryblue] at (0.3, 0.9) {Three-Stage Algebraic Update Formulation (Base $B$, Modulus $M$):};
+
+    \node[anchor=west, font=\scriptsize, align=left, text width=14.5cm] at (0.3, -0.4) {
+        \textbf{Initial Hash}: $H_1 = \big( \text{'a'} \cdot B^2 + \text{'b'} \cdot B + \text{'c'} \big) \pmod M$\\[4pt]
+        $\mathbf{1.\ \text{Evict High Term}}$: $H' = \big( H_1 - \text{'a'} \cdot B^2 \big) \pmod M = \big( \text{'b'} \cdot B + \text{'c'} \big) \pmod M$\\[4pt]
+        $\mathbf{2.\ \text{Shift Left}}\ (\times B)$: $H'' = \big( H' \times B \big) \pmod M = \big( \text{'b'} \cdot B^2 + \text{'c'} \cdot B \big) \pmod M$\\[4pt]
+        $\mathbf{3.\ \text{Ingest Low Term}}$: $H_2 = \big( H'' + \text{'d'} \big) \pmod M = \big( \text{'b'} \cdot B^2 + \text{'c'} \cdot B + \text{'d'} \big) \pmod M$
+    };
+
+    % --- Bottom Card: Collision Defense & Complexity (y: -2.2 to -4.3) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt] (0.3, -4.3) rectangle (15.1, -2.1);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.5, -2.25) {Double Hashing Collision Defense and Complexity:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=14.2cm] at (0.5, -2.7) {
+        $\bullet$ \textbf{Single Hash Risk}: A single modulus $M = 10^9+7$ risks birthday paradox collisions for $N > 10^5$ substrings ($p \approx N^2 / (2M) \approx 5\%$).\\
+        $\bullet$ \textbf{Double Hashing Solution}: Track two independent pairs $(B_1, M_1) = (31, 10^9+7)$ and $(B_2, M_2) = (37, 10^9+9)$. Collision probability drops to $\mathcal{O}(N^2 / (M_1 M_2)) \approx 10^{-8}$, eliminating adversarial test case failures.\\
+        $\bullet$ \textbf{Runtime}: Precomputing $B^k \pmod M$ takes $O(M)$ time; each subsequent window transition requires strictly $\mathbf{O(1)}$ operations.
+    };
+\end{tikzpicture}}
+\caption{Rabin-Karp polynomial rolling hash window slide mechanics. By subtracting the outgoing character's high-order power $c_{\text{out}} \cdot B^{M-1}$, multiplying by base $B$, and adding the incoming character $c_{\text{in}}$, the new window hash is computed in $O(1)$ operations.}
+\end{figure}
+
+\newpage
+\newpage
+\newpage
+% ============================================================================
+\newpage
+\section{Monograph Visual Expansions: Core Algorithmic Paradigms}
+\newpage
+% ============================================================================
+\newpage
+
+\subsection[Diagram 32: 2D Prefix Sum Subgrid Range Query]{Diagram 32: 2D Prefix Sum Range Query via Inclusion-Exclusion}
+
+\breadcrumb{04.sequences_and_series.tex}{Section 5: 2D Matrix Block Sum: Range Queries in a Grid}{Visualizes geometric submatrix decomposition into four overlapping regions (A, B, C, D) and explains why the top-left corner is added back.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed full-width 2-panel layout: left coordinate matrix dissects 4 subgrid zones A, B, C, D; right panel details the algebraic inclusion-exclusion cancellation and 1-based index padding invariants.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{0.99\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.95, every node/.style={transform shape},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -4.5) rectangle (15.4, 4.8);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.45) {2D Prefix Sum Range Query: Subgrid $[r_1 \dots r_2, c_1 \dots c_2]$ via Inclusion-Exclusion};
+
+    % --- Left Panel: Matrix Subregions (x: 0.3 to 7.8, y: 3.6 to -4.0) ---
+    % Grid background
+    \draw[draw=codeframe, fill=white, thick] (0.8, -3.6) rectangle (7.4, 3.2);
+
+    % Region A (Top-Left corner: rows 0..r1-1, cols 0..c1-1)
+    \draw[draw=codegray, fill=codebg, thick] (0.8, 1.2) rectangle (3.2, 3.2);
+    \node[font=\small\bfseries, text=codegray] at (2.0, 2.2) {Region $A$};
+    \node[font=\tiny, text=codegray] at (2.0, 1.6) {Top-Left Overlap};
+
+    % Region B (Top stripe: rows 0..r1-1, cols c1..c2)
+    \draw[draw=codeblue!70, fill=codeblue!15, thick] (3.2, 1.2) rectangle (6.2, 3.2);
+    \node[font=\small\bfseries, text=codeblue] at (4.7, 2.2) {Region $B$};
+    \node[font=\tiny, text=codeblue] at (4.7, 1.6) {Top Stripe};
+
+    % Region C (Left stripe: rows r1..r2, cols 0..c1-1)
+    \draw[draw=primaryblue!70, fill=primaryblue!15, thick] (0.8, -2.4) rectangle (3.2, 1.2);
+    \node[font=\small\bfseries, text=primaryblue] at (2.0, -0.6) {Region $C$};
+    \node[font=\tiny, text=primaryblue] at (2.0, -1.2) {Left Stripe};
+
+    % Region D (Target Subgrid: rows r1..r2, cols c1..c2)
+    \draw[draw=codegreen, fill=codegreen!25, line width=1.5pt] (3.2, -2.4) rectangle (6.2, 1.2);
+    \node[font=\large\bfseries, text=codegreen] at (4.7, -0.4) {Region $D$};
+    \node[font=\scriptsize\bfseries, text=codegreen] at (4.7, -1.0) {Target Query Sum};
+
+    % Exterior area (outside query)
+    \node[font=\tiny, text=codegray] at (6.8, -3.0) {Rest of Matrix};
+
+    % Coordinate ticks and labels
+    \node[above, font=\tiny\ttfamily, text=primaryblue] at (0.8, 3.2) {$(0,0)$};
+    \node[above, font=\tiny\ttfamily, text=codegreen] at (3.2, 3.2) {$c_1$};
+    \node[above, font=\tiny\ttfamily, text=codegreen] at (6.2, 3.2) {$c_2$};
+    \node[left, font=\tiny\ttfamily, text=codegreen] at (0.8, 1.2) {$r_1$};
+    \node[left, font=\tiny\ttfamily, text=codegreen] at (0.8, -2.4) {$r_2$};
+
+    % --- Right Panel: Mathematical Formulations (x: 8.0 to 15.1) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (8.0, -4.1) rectangle (15.1, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.2, 3.55) {Inclusion-Exclusion Query Formulation:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.8cm] at (8.2, 3.05) {
+        To isolate Region $D$ in strictly $\mathcal{O}(1)$ time:\\[4pt]
+        $\begin{aligned}
+        \text{Total} &= P[r_2+1][c_2+1] = A + B + C + D\\
+        \text{Sub Top} &= - P[r_1][c_2+1] = -(A + B)\\
+        \text{Sub Left} &= - P[r_2+1][c_1] = -(A + C)\\
+        \text{Add Overlap} &= + P[r_1][c_1] = + A
+        \end{aligned}$\\[5pt]
+        $\mathbf{\text{Sum}(D)} = (A+B+C+D) - (A+B) - (A+C) + A = \mathbf{D}$
+    };
+
+    \draw[draw=codeframe!60] (8.2, -0.4) -- (14.9, -0.4);
+
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.2, -0.6) {Construction DP Formulation:};
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.8cm] at (8.2, -1.05) {
+        $P[r+1][c+1] = \text{grid}[r][c] + P[r][c+1] + P[r+1][c] - P[r][c]$\\[5pt]
+        $\bullet$ \textbf{1-Based Padding}: Size $(R+1) \times (C+1)$ avoids boundary branching for $r=0$ or $c=0$.\\
+        $\bullet$ \textbf{Build Complexity}: $\mathcal{O}(R \times C)$ time and space.\\
+        $\bullet$ \textbf{Query Complexity}: Strictly $\mathbf{\mathcal{O}(1)}$ (4 lookups, 3 additions).
+    };
+\end{tikzpicture}}%
+\caption{2D prefix sum subgrid range query via the inclusion-exclusion principle. Isolating rectangular subgrid $D$ subtracts the bounding rectangles above and left, and adds back the doubly subtracted top-left region $A$ in $O(1)$ operations.}
+\end{figure}
+
+\newpage
+\newpage
+\newpage
+
+\subsection[Diagram 33: 0/1 Knapsack Decision Grid]{Diagram 33: 0/1 Knapsack Decision Grid \& 1D Space-Optimized Reverse Traverse}
+
+\breadcrumb{06.dynamic_programming.tex}{Section 2.7: The Knapsack Family}{Visualizes 2D subproblem dependencies (skip vs take) and proves why the 1D space-optimized array MUST iterate backwards.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed full-width comparative architecture: left grid maps 2D skip/take state dependency arrows; right panel contrasts forward iteration corruption (unbounded knapsack) against safe reverse traversal (0/1 enforcement in O(W) space).}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.95, every node/.style={transform shape},
+    cell/.style={draw=codeframe, fill=white, thick, minimum width=1.1cm, minimum height=0.65cm, font=\scriptsize\ttfamily, align=center},
+    hiCell/.style={draw=primaryblue, fill=primaryblue!15, line width=1.2pt, minimum width=1.1cm, minimum height=0.65cm, font=\scriptsize\bfseries, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -4.5) rectangle (15.4, 4.8);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.45) {0/1 Knapsack Dynamics: 2D State Transitions and 1D Reverse Traverse Invariant};
+
+    % --- Left Panel: 2D Dependency Lattice (x: 0.3 to 7.6) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (0.3, -4.1) rectangle (7.5, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.5, 3.55) {2D State Transition Dependency:};
+
+    % Table grid for items vs capacities
+    \node[anchor=west, font=\tiny\bfseries, text=codegray] at (0.6, 2.8) {Item $i-1$:};
+    \node[cell] (PrevW) at (5.8, 2.8) {dp};
+    \node[above=1pt of PrevW, font=\tiny\ttfamily, text=codegray] {cap $w$};
+
+    \node[cell] (PrevSub) at (2.6, 2.8) {dp};
+    \node[above=1pt of PrevSub, font=\tiny\ttfamily, text=codegray] {cap $w - w_i$};
+
+    \node[anchor=west, font=\tiny\bfseries, text=primaryblue] at (0.6, 1.0) {Item $i$:};
+    \node[hiCell] (CurrW) at (5.8, 1.0) {target};
+    \node[below=1pt of CurrW, font=\tiny\ttfamily\bfseries, text=primaryblue] {$\text{dp}[i][w]$};
+
+    % Decision arrows
+    \draw[->, line width=1.4pt, codegray] (PrevW) -- (CurrW)
+        node[midway, right=2pt, font=\tiny\bfseries, text=codegray, align=left] {Skip item $i$:\\$\text{dp}[i-1][w]$};
+
+    \draw[->, line width=1.4pt, codegreen] (PrevSub) -- (CurrW)
+        node[midway, left=2pt, font=\tiny\bfseries, text=codegreen, align=right] {Take item $i$:\\$\text{dp}[i-1][w-w_i] + v_i$};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.6cm] at (0.5, -0.2) {
+        \textbf{Recurrence Relation}:\\[3pt]
+        $\text{dp}[i][w] = \max\Big(\underbrace{\text{dp}[i-1][w]}_{\text{Skip}}, \ \underbrace{\text{dp}[i-1][w-w_i] + v_i}_{\text{Take}}\Big)$\\[5pt]
+        $\bullet$ \textbf{Time}: $\mathcal{O}(N \cdot W)$ total cell evaluations.\\
+        $\bullet$ \textbf{Base Space}: $\mathcal{O}(N \cdot W)$ for full matrix.
+    };
+
+    % --- Right Panel: 1D Space Optimization & Traversal Direction (x: 7.8 to 15.1) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (7.8, -4.1) rectangle (15.1, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.0, 3.55) {Why 1D Array MUST Iterate in Reverse:};
+
+    % Danger of forward traversal
+    \node[anchor=north west, font=\scriptsize\bfseries, text=red!70!black] at (8.0, 3.0) {Forward Loop ($w = w_i \dots W$) --- CORRUPTION:};
+    \node[anchor=north west, font=\tiny, align=left, text width=6.6cm] at (8.0, 2.65) {
+        When computing $\text{dp}[w]$, $\text{dp}[w-w_i]$ was \emph{already updated} in the current outer loop for item $i$. It re-uses the same item multiple times $\implies$ \textbf{Unbounded Knapsack!}\\
+        \texttt{for (int w = w\_i; w <= W; ++w) // WRONG for 0/1!}
+    };
+
+    \draw[draw=codeframe!60] (8.0, 1.2) -- (14.9, 1.2);
+
+    % Safety of reverse traversal
+    \node[anchor=north west, font=\scriptsize\bfseries, text=codegreen] at (8.0, 0.95) {Reverse Loop ($w = W \dots w_i$) --- CORRECT:};
+    \node[anchor=north west, font=\tiny, align=left, text width=6.6cm] at (8.0, 0.6) {
+        Sweeping backwards from $W$ down to $w_i$, smaller capacity states $\text{dp}[w-w_i]$ still contain values from item $i-1$. Item $i$ can be selected at most once!\\
+        \texttt{for (int w = W; w >= w\_i; --w) // STRICT 0/1!}
+    };
+
+    \draw[draw=codeframe!60] (8.0, -1.0) -- (14.9, -1.0);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.6cm] at (8.0, -1.25) {
+        \textbf{Space Complexity Reduction}:\\[2pt]
+        $\mathcal{O}(N \cdot W) \text{ matrix} \implies \mathbf{\mathcal{O}(W)} \text{ single vector}$.\\
+        For $N = 10^3, W = 10^4$: memory drops from $40\text{ MB}$ to $40\text{ KB}$ (1,000x reduction), fitting entirely into L1 CPU cache.
+    };
+\end{tikzpicture}}
+\caption{0/1 Knapsack decision dynamics. Left: State transition combining vertical skip and diagonal take branches. Right: Reversing the 1D capacity loop ($w = W \dots w_i$) guarantees elements are used at most once, reducing memory to $O(W)$.}
+\end{figure}
+
+\newpage
+\newpage
+\newpage
+
+\subsection[Diagram 34: Longest Common Subsequence 2D Matrix]{Diagram 34: Longest Common Subsequence (LCS) 2D State Matrix \& String Reconstruction}
+
+\breadcrumb{06.dynamic_programming.tex}{Section 2.6: Two-Sequence DP: Longest Common Subsequence and Edit Distance}{Visualizes 2D character matching transitions, diagonal progress increments, and backwards path reconstruction of the optimal subsequence.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed full-width 2-panel layout: left grid displays full DP matrix for S1="ABCDE" and S2="ACE" with green matched diagonals; right panel details the transition cases and O(M+N) backwards path trace.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.95, every node/.style={transform shape},
+    cell/.style={draw=codeframe, fill=white, thick, minimum width=1.1cm, minimum height=0.65cm, font=\scriptsize\ttfamily, align=center},
+    matchCell/.style={draw=codegreen, fill=codegreen!25, line width=1.3pt, minimum width=1.1cm, minimum height=0.65cm, font=\scriptsize\bfseries\ttfamily, text=codegreen, align=center},
+    headCell/.style={draw=primaryblue!60, fill=primaryblue!10, thick, minimum width=1.1cm, minimum height=0.65cm, font=\scriptsize\bfseries\ttfamily, text=primaryblue, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -4.5) rectangle (15.4, 4.8);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.45) {LCS 2D Matrix \& Reconstruction: $S_1 = \text{"ABCDE"}$ vs $S_2 = \text{"ACE"}$ (LCS = \texttt{"ACE"}, Length = 3)};
+
+    % --- Left Panel: 2D Matrix (x: 0.5 to 7.8, y: 3.6 to -4.0) ---
+    % Column Headers (S2: \emptyset, A, C, E at x = 2.0, 3.2, 4.4, 5.6)
+    \node[headCell] at (2.0, 3.4) {$\emptyset$};
+    \node[headCell] at (3.2, 3.4) {A};
+    \node[headCell] at (4.4, 3.4) {C};
+    \node[headCell] at (5.6, 3.4) {E};
+    \node[above=2pt, font=\tiny\bfseries, text=primaryblue] at (3.8, 3.7) {String $S_2$ (columns $j$)};
+
+    % Row Headers (S1: \emptyset, A, B, C, D, E at y = 2.6 down to -1.4)
+    \node[headCell] at (0.8, 2.6) {$\emptyset$};
+    \node[headCell] at (0.8, 1.8) {A};
+    \node[headCell] at (0.8, 1.0) {B};
+    \node[headCell] at (0.8, 0.2) {C};
+    \node[headCell] at (0.8, -0.6) {D};
+    \node[headCell] at (0.8, -1.4) {E};
+    \node[left=2pt, font=\tiny\bfseries, text=primaryblue, rotate=90] at (0.3, 0.6) {String $S_1$ (rows $i$)};
+
+    % Matrix cells (row 0 to 5)
+    % Row 0 (\emptyset): 0, 0, 0, 0
+    \foreach \j/\val in {0/0, 1/0, 2/0, 3/0} { \node[cell] at (2.0 + \j*1.2, 2.6) {\val}; }
+    % Row 1 (A): 0, 1*, 1, 1
+    \node[cell] at (2.0, 1.8) {0};
+    \node[matchCell] (C11) at (3.2, 1.8) {1};
+    \node[cell] at (4.4, 1.8) {1};
+    \node[cell] at (5.6, 1.8) {1};
+
+    % Row 2 (B): 0, 1, 1, 1
+    \node[cell] at (2.0, 1.0) {0};
+    \node[cell] (C21) at (3.2, 1.0) {1};
+    \node[cell] at (4.4, 1.0) {1};
+    \node[cell] at (5.6, 1.0) {1};
+
+    % Row 3 (C): 0, 1, 2*, 2
+    \node[cell] at (2.0, 0.2) {0};
+    \node[cell] at (3.2, 0.2) {1};
+    \node[matchCell] (C32) at (4.4, 0.2) {2};
+    \node[cell] at (5.6, 0.2) {2};
+
+    % Row 4 (D): 0, 1, 2, 2
+    \node[cell] at (2.0, -0.6) {0};
+    \node[cell] at (3.2, -0.6) {1};
+    \node[cell] (C42) at (4.4, -0.6) {2};
+    \node[cell] at (5.6, -0.6) {2};
+
+    % Row 5 (E): 0, 1, 2, 3*
+    \node[cell] at (2.0, -1.4) {0};
+    \node[cell] at (3.2, -1.4) {1};
+    \node[cell] at (4.4, -1.4) {2};
+    \node[matchCell] (C53) at (5.6, -1.4) {3};
+
+    % Reconstruction Arrows (backwards from 5,3 -> 4,2 -> 3,2 -> 2,1 -> 1,1 -> 0,0)
+    \draw[->, line width=1.6pt, primaryblue] (C53) -- (C42) node[midway, below right, font=\tiny\bfseries] {Match 'E'};
+    \draw[->, line width=1.2pt, codegray, dashed] (C42) -- (C32);
+    \draw[->, line width=1.6pt, primaryblue] (C32) -- (C21) node[midway, below right, font=\tiny\bfseries] {Match 'C'};
+    \draw[->, line width=1.2pt, codegray, dashed] (C21) -- (C11);
+    \draw[->, line width=1.6pt, primaryblue] (C11) -- (2.0, 2.6) node[midway, below right, font=\tiny\bfseries] {Match 'A'};
+
+    \node[anchor=north west, font=\tiny\bfseries, text=codegreen, align=left] at (0.8, -2.4) {
+        Green Cells: Match characters ($S_1[i-1] == S_2[j-1]$) $\implies \text{dp}[i-1][j-1] + 1$.\\
+        Solid Blue Arrows: Reconstructed sequence path $\to$ \texttt{"ACE"}.
+    };
+
+    % --- Right Panel: Rules & Complexity (x: 7.6 to 15.1) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (7.6, -4.1) rectangle (15.1, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (7.8, 3.55) {Transition Invariants and Reconstruction:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.8cm] at (7.8, 3.1) {
+        \textbf{1. Diagonal Match Transition}:\\[2pt]
+        $\text{if } (S_1[i-1] == S_2[j-1]):$\\
+        \phantom{xx} $\text{dp}[i][j] = \text{dp}[i-1][j-1] + 1$\\[4pt]
+        Both pointers advance simultaneously; length increments by $1$.
+    };
+
+    \draw[draw=codeframe!60] (7.8, 1.4) -- (14.9, 1.4);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.8cm] at (7.8, 1.2) {
+        \textbf{2. Mismatch Max Transition}:\\[2pt]
+        $\text{else: } \text{dp}[i][j] = \max\big( \text{dp}[i-1][j], \ \text{dp}[i][j-1] \big)$\\[4pt]
+        Take the best result skipping $S_1[i-1]$ (up) or $S_2[j-1]$ (left).
+    };
+
+    \draw[draw=codeframe!60] (7.8, -0.6) -- (14.9, -0.6);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.8cm] at (7.8, -0.85) {
+        \textbf{3. Backtracking Reconstruction}:\\[2pt]
+        $\bullet$ Start at $(M, N)$. If characters match, prepend to string and step to $(i-1, j-1)$.\\
+        $\bullet$ Otherwise, move to neighbor with maximum value.\\
+        $\bullet$ Reconstructs optimal string in strictly $\mathbf{\mathcal{O}(M + N)}$ time!
+    };
+
+    \draw[draw=codeframe!60] (7.8, -2.6) -- (14.9, -2.6);
+
+    \node[anchor=north west, font=\tiny\bfseries, text=primaryblue] at (7.8, -2.8) {
+        Complexity: $\mathcal{O}(M \cdot N)$ Time $\mid$ $\mathcal{O}(\min(M,N))$ Space for Length.
+    };
+\end{tikzpicture}}
+\caption{Longest Common Subsequence (LCS) 2D state matrix and reconstruction path. Diagonal steps (green) represent matched character contributions, while backwards tracing from $(M, N)$ recovers the optimal common subsequence \texttt{"ACE"} in $O(M + N)$ time.}
+\end{figure}
+
+\newpage
+\newpage
+\newpage
+
+\subsection[Diagram 35: DAG Topological Sorting and Kahn's Algorithm]{Diagram 35: Directed Acyclic Graph (DAG) Topological Sorting \& Kahn's In-Degree Algorithm}
+
+\breadcrumb{07.graph_algorithms.tex}{Section 2.4: Topological Sorting and Cycle Detection}{Visualizes in-degree initialization, frontier queue processing, dynamic edge elimination, and final linear order generation.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed full-width 2-panel architecture: left panel shows DAG structure with dynamic in-degree reduction and queue trace; right panel summarizes Kahn's invariant, cycle detection condition, and O(V + E) complexity guarantees.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.95, every node/.style={transform shape},
+    vNode/.style={circle, draw=primaryblue, fill=primaryblue!10, very thick, minimum size=0.95cm, font=\small\bfseries, align=center},
+    activeNode/.style={circle, draw=codegreen, fill=codegreen!20, line width=1.5pt, minimum size=0.95cm, font=\small\bfseries, text=codegreen, align=center},
+    doneNode/.style={circle, draw=codegray, fill=codeframe!40, thick, minimum size=0.95cm, font=\small\bfseries, text=codegray, align=center},
+    qCell/.style={draw=codeframe, fill=white, thick, minimum width=0.8cm, minimum height=0.55cm, font=\scriptsize\ttfamily, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -4.5) rectangle (15.4, 4.8);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.45) {Kahn's Algorithm (BFS): In-Degree Frontier \& Topological Serialization};
+
+    % --- Left Panel: DAG & Queue Steps (x: 0.4 to 8.0) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (0.4, -4.1) rectangle (8.0, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.6, 3.55) {DAG Dependency Topology:};
+
+    % Vertices layout
+    \node[vNode] (N0) at (1.5, 2.3) {0};
+    \node[vNode] (N1) at (3.5, 2.9) {1};
+    \node[vNode] (N2) at (3.5, 1.7) {2};
+    \node[vNode] (N3) at (5.5, 2.3) {3};
+    \node[vNode] (N4) at (7.1, 2.3) {4};
+
+    % Initial in-degree badges
+    \node[above=1pt of N0, font=\tiny\bfseries, text=codegreen] {$\text{in}=0$};
+    \node[above=1pt of N1, font=\tiny\bfseries, text=primaryblue] {$\text{in}=1$};
+    \node[below=1pt of N2, font=\tiny\bfseries, text=primaryblue] {$\text{in}=1$};
+    \node[above=1pt of N3, font=\tiny\bfseries, text=primaryblue] {$\text{in}=2$};
+    \node[above=1pt of N4, font=\tiny\bfseries, text=primaryblue] {$\text{in}=1$};
+
+    % Directed edges
+    \draw[->, line width=1.2pt, primaryblue] (N0) -- (N1);
+    \draw[->, line width=1.2pt, primaryblue] (N0) -- (N2);
+    \draw[->, line width=1.2pt, primaryblue] (N1) -- (N3);
+    \draw[->, line width=1.2pt, primaryblue] (N2) -- (N3);
+    \draw[->, line width=1.2pt, primaryblue] (N3) -- (N4);
+
+    % Execution Trace Table
+    \draw[draw=codeframe!60] (0.6, 0.8) -- (7.8, 0.8);
+    \node[anchor=north west, font=\scriptsize\bfseries, text=primaryblue] at (0.6, 0.65) {Kahn's BFS Step-by-Step State:};
+
+    \node[anchor=north west, font=\tiny\ttfamily, align=left] at (0.6, 0.25) {
+        \textbf{Step 0}: Init in-degrees $\implies$ Queue $Q = [0]$. TopoOrder $= []$\\
+        \textbf{Step 1}: Pop $0 \implies$ Order $[0]$. Decrement neighbors:\\
+        \phantom{Step 1: } $\text{in}[1] = 0 \to \text{push}(1)$, \ $\text{in}[2] = 0 \to \text{push}(2)$. $Q = [1, 2]$\\
+        \textbf{Step 2}: Pop $1 \implies$ Order $[0, 1]$. Decrement $\text{in}[3] = 2-1 = 1$. $Q = [2]$\\
+        \textbf{Step 3}: Pop $2 \implies$ Order $[0, 1, 2]$. Decrement $\text{in}[3] = 1-1 = 0 \to \text{push}(3)$. $Q = [3]$\\
+        \textbf{Step 4}: Pop $3 \implies$ Order $[0, 1, 2, 3]$. Decrement $\text{in}[4] = 1-1 = 0 \to \text{push}(4)$. $Q = [4]$\\
+        \textbf{Step 5}: Pop $4 \implies$ Order $[0, 1, 2, 3, 4]$. $Q = []$ (Done!)
+    };
+
+    % Result Order Badge
+    \draw[fill=codegreen!15, draw=codegreen, rounded corners=2pt, thick] (0.6, -3.8) rectangle (7.8, -3.2);
+    \node[font=\scriptsize\bfseries, text=codegreen] at (4.2, -3.5) {Valid Topological Sort: $\mathbf{[0 \to 1 \to 2 \to 3 \to 4]}$};
+
+    % --- Right Panel: Invariants & Analysis (x: 8.3 to 15.1) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (8.3, -4.1) rectangle (15.1, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.5, 3.55) {Theoretical Invariants \& Cycle Detection:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.4cm] at (8.5, 3.1) {
+        \textbf{1. Zero In-Degree Invariant}:\\[2pt]
+        A vertex $u$ with $\text{in-degree}(u) = 0$ has \textbf{zero remaining dependencies}. It is strictly safe to execute or place next in linear ordering.
+    };
+
+    \draw[draw=codeframe!60] (8.5, 1.7) -- (14.9, 1.7);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.4cm] at (8.5, 1.45) {
+        \textbf{2. Cycle Detection Condition}:\\[2pt]
+        $\bullet$ If the graph contains a directed cycle, no vertex in the cycle ever reaches $\text{in-degree} = 0$.\\
+        $\bullet$ The queue empties before all $V$ vertices are processed.\\
+        $\bullet$ Condition: $\mathbf{|\text{Order}| < V \iff \text{Cycle Detected!}}$
+    };
+
+    \draw[draw=codeframe!60] (8.5, -0.4) -- (14.9, -0.4);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.4cm] at (8.5, -0.65) {
+        \textbf{3. Algorithmic Complexity}:\\[2pt]
+        $\bullet$ \textbf{Time Complexity}: $\mathbf{\mathcal{O}(V + E)}$. Each vertex is enqueued/dequeued once ($\mathcal{O}(V)$); each directed edge is traversed and decremented once ($\mathcal{O}(E)$).\\
+        $\bullet$ \textbf{Space Complexity}: $\mathbf{\mathcal{O}(V + E)}$ for adjacency list, $\mathcal{O}(V)$ for in-degree array and queue.
+    };
+
+    \draw[draw=codeframe!60] (8.5, -2.7) -- (14.9, -2.7);
+
+    \node[anchor=north west, font=\scriptsize\bfseries, text=primaryblue, align=left, text width=6.4cm] at (8.5, -2.95) {
+        Comparison with DFS Post-Order:\\
+        DFS discovers reverse topological order via call stack return; Kahn's algorithm dynamically validates dependencies via BFS queue.
+    };
+\end{tikzpicture}}
+\caption{Kahn's in-degree queue algorithm for topological sorting of Directed Acyclic Graphs (DAGs). Dynamically decrementing edge dependencies guarantees correct task serialization and identifies cycles when $|\text{Order}| < V$.}
+\end{figure}
+
+\newpage
+\newpage
+\newpage
+
+\subsection[Diagram 36: Bipartite 2-Coloring and Odd Cycle Contradiction]{Diagram 36: Bipartite Graph Checking (2-Coloring) \& Odd Cycle Contradiction Detection}
+
+\breadcrumb{07.graph_algorithms.tex}{Section 2.7: Bipartite Graphs and 2-Coloring}{Visualizes vertex partition into two independent sets $U$ and $V$, and proves why an odd-length cycle creates an unavoidable monochromatic edge conflict.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed full-width 2-panel architecture: left panel shows valid bipartite 2-coloring across partition sets U and V; right panel illustrates odd-cycle C3/C5 coloring deadlock and states the fundamental bipartition theorem.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.95, every node/.style={transform shape},
+    nodeBlue/.style={circle, draw=primaryblue, fill=primaryblue!20, very thick, minimum size=0.9cm, font=\small\bfseries, text=primaryblue, align=center},
+    nodeRed/.style={circle, draw=red!70!black, fill=red!15, very thick, minimum size=0.9cm, font=\small\bfseries, text=red!80!black, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -4.5) rectangle (15.4, 4.8);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.45) {Bipartite Graph Verification: 2-Coloring Traversal \& Odd-Cycle Contradiction};
+
+    % --- Left Panel: Valid Bipartite Partition (x: 0.4 to 7.6) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (0.4, -4.1) rectangle (7.6, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.6, 3.55) {Case A: Valid Bipartite Graph ($G$ has no odd cycles)};
+
+    % Partition Sets (U on left, V on right)
+    \draw[draw=primaryblue!50, fill=primaryblue!5, dashed, rounded corners=4pt, thick] (0.8, -0.6) rectangle (3.6, 2.9);
+    \node[anchor=north, font=\scriptsize\bfseries, text=primaryblue] at (2.2, 2.8) {Partition Set $U$ (Color 0)};
+
+    \draw[draw=red!50!black, fill=red!5, dashed, rounded corners=4pt, thick] (4.4, -0.6) rectangle (7.2, 2.9);
+    \node[anchor=north, font=\scriptsize\bfseries, text=red!80!black] at (5.8, 2.8) {Partition Set $V$ (Color 1)};
+
+    % Nodes in Set U
+    \node[nodeBlue] (U1) at (2.2, 1.8) {0};
+    \node[nodeBlue] (U2) at (2.2, 0.3) {2};
+
+    % Nodes in Set V
+    \node[nodeRed] (V1) at (5.8, 1.8) {1};
+    \node[nodeRed] (V2) at (5.8, 0.3) {3};
+
+    % Crossing Edges (All valid!)
+    \draw[line width=1.3pt, codegray] (U1) -- (V1);
+    \draw[line width=1.3pt, codegray] (U1) -- (V2);
+    \draw[line width=1.3pt, codegray] (U2) -- (V1);
+    \draw[line width=1.3pt, codegray] (U2) -- (V2);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.6cm] at (0.7, -0.9) {
+        \textbf{Invariants Satisfied}:\\[2pt]
+        $\bullet$ Every edge connects a vertex in $U$ to a vertex in $V$.\\
+        $\bullet$ Zero internal edges within $U$ or within $V$.\\
+        $\bullet$ Even cycle $0 - 1 - 2 - 3 - 0$ (length 4) alternates colors perfectly: Blue $\to$ Red $\to$ Blue $\to$ Red $\to$ Blue.
+    };
+
+    \draw[fill=codegreen!15, draw=codegreen, rounded corners=2pt, thick] (0.7, -3.8) rectangle (7.3, -3.2);
+    \node[font=\scriptsize\bfseries, text=codegreen] at (4.0, -3.5) {$\checkmark$ Graph is Bipartite (2-Colorable)};
+
+    % --- Right Panel: Odd Cycle Contradiction (x: 8.0 to 15.1) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (8.0, -4.1) rectangle (15.1, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=red!80!black] at (8.2, 3.55) {Case B: Odd Cycle Contradiction ($C_3$ Triangle)};
+
+    % Triangle Nodes
+    \node[nodeBlue] (T0) at (11.55, 2.5) {0};
+    \node[nodeRed]  (T1) at (9.6, 0.6) {1};
+    \node[nodeRed]  (T2) at (13.5, 0.6) {2};
+
+    % Edges
+    \draw[line width=1.3pt, codegray] (T0) -- (T1) node[midway, left=2pt, font=\tiny\bfseries, text=codegreen] {Valid (0--1)};
+    \draw[line width=1.3pt, codegray] (T0) -- (T2) node[midway, right=2pt, font=\tiny\bfseries, text=codegreen] {Valid (0--1)};
+    \draw[line width=2.0pt, red!80!black, dashed] (T1) -- (T2) node[midway, below=3pt, font=\tiny\bfseries, text=red!80!black] {CONTRADICTION: Color(1) == Color(2)};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.6cm] at (8.3, -0.6) {
+        \textbf{Traversal Conflict Step-by-Step}:\\[2pt]
+        1. Start BFS/DFS at vertex $0$: Assign $\text{Color}(0) = \text{Blue}$.\\
+        2. Inspect neighbor $1$: Assign $\text{Color}(1) = 1 - 0 = \text{Red}$.\\
+        3. Inspect neighbor $2$: Assign $\text{Color}(2) = 1 - 0 = \text{Red}$.\\
+        4. Inspect edge between $1$ and $2$: Both have $\text{Color} = \text{Red}$!\\
+        $\implies$ \textbf{Monochromatic edge encountered}: Graph is \textbf{NOT} bipartite!
+    };
+
+    \draw[fill=red!15, draw=red!80!black, rounded corners=2pt, thick] (8.3, -2.8) rectangle (14.8, -2.2);
+    \node[font=\scriptsize\bfseries, text=red!80!black] at (11.55, -2.5) {$\times$ Conflict: Odd Cycle Detected ($2k+1$ vertices)};
+
+    \draw[draw=codeframe!60] (8.3, -3.0) -- (14.8, -3.0);
+    \node[anchor=north west, font=\tiny\bfseries, text=primaryblue, align=left, text width=6.5cm] at (8.3, -3.15) {
+        \textbf{Fundamental Theorem of Bipartiteness}:\\
+        An undirected graph $G$ is bipartite $\iff$ $G$ contains no odd cycles.\\
+        Algorithm Complexity: $\mathcal{O}(V + E)$ Time via BFS or DFS.
+    };
+\end{tikzpicture}}
+\caption{Bipartite graph verification and 2-coloring. Left: Valid bipartition into sets $U$ and $V$ with alternating edge endpoints. Right: Odd cycle contradiction where two adjacent vertices are forced to share the same color, violating the bipartition invariant.}
+\end{figure}
+
+\newpage
+\newpage
+\newpage
+
+\subsection[Diagram 37: Search in Rotated Sorted Array]{Diagram 37: Search in Rotated Sorted Array: Discontinuity Pivot \& Monotonic Halves}
+
+\breadcrumb{08.binary_search.tex}{Section 2.5: Searching in Rotated Sorted Arrays}{Visualizes two monotonic sorted segments separated by a rotation pivot drop, and the deterministic binary search half-selection rules.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed full-width 2-panel architecture: left panel plots piecewise monotonic elevation profile and array cell indices; right panel formalizes the binary search branch invariants and guarantees O(log N) query time.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.95, every node/.style={transform shape},
+    cell/.style={draw=codeframe, fill=white, thick, minimum width=0.95cm, minimum height=0.6cm, font=\scriptsize\ttfamily, align=center},
+    pivotCell/.style={draw=red!70!black, fill=red!15, line width=1.2pt, minimum width=0.95cm, minimum height=0.6cm, font=\scriptsize\bfseries\ttfamily, text=red!80!black, align=center},
+    sortedCell/.style={draw=primaryblue, fill=primaryblue!15, line width=1.1pt, minimum width=0.95cm, minimum height=0.6cm, font=\scriptsize\bfseries\ttfamily, text=primaryblue, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -4.5) rectangle (15.4, 4.8);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.45) {Rotated Sorted Array: Monotonic Subsegments \& Discontinuity Bifurcation};
+
+    % --- Left Panel: Elevation Profile & Array Grid (x: 0.4 to 7.8) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (0.4, -4.1) rectangle (7.8, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.6, 3.55) {Discontinuity Profile: $A = [4, 5, 6, 7, \ 0, 1, 2]$};
+
+    % Plotting the two ramps
+    % Ramp 1: (1.2, 1.0) to (3.6, 2.5) for [4, 5, 6, 7]
+    \draw[line width=2.2pt, primaryblue] (1.2, 1.0) -- (3.6, 2.6);
+    \fill[primaryblue] (1.2, 1.0) circle (3pt) node[below=3pt, font=\tiny\bfseries] {A[0]=4};
+    \fill[primaryblue] (2.0, 1.53) circle (3pt) node[below=3pt, font=\tiny\bfseries] {5};
+    \fill[primaryblue] (2.8, 2.06) circle (3pt) node[below=3pt, font=\tiny\bfseries] {6};
+    \fill[primaryblue] (3.6, 2.6) circle (3pt) node[above=3pt, font=\tiny\bfseries] {A[3]=7 (Max)};
+
+    % Discontinuity drop line
+    \draw[dashed, line width=1.4pt, red!80!black] (3.6, 2.6) -- (4.4, 0.0) node[midway, right=1pt, font=\tiny\bfseries, text=red!80!black] {Rotation Drop};
+
+    % Ramp 2: (4.4, 0.0) to (6.8, 1.0) for [0, 1, 2]
+    \draw[line width=2.2pt, codegreen] (4.4, 0.0) -- (6.8, 1.0);
+    \fill[codegreen] (4.4, 0.0) circle (3pt) node[below=3pt, font=\tiny\bfseries] {A[4]=0 (Min)};
+    \fill[codegreen] (5.6, 0.5) circle (3pt) node[below=3pt, font=\tiny\bfseries] {1};
+    \fill[codegreen] (6.8, 1.0) circle (3pt) node[above=3pt, font=\tiny\bfseries] {A[6]=2};
+
+    % Labels for Ramps
+    \node[font=\scriptsize\bfseries, text=primaryblue] at (2.4, 2.8) {Monotonic Segment 1};
+    \node[font=\scriptsize\bfseries, text=codegreen] at (5.6, 1.3) {Monotonic Segment 2};
+
+    % Array visual cells below plot
+    \draw[draw=codeframe!60] (0.6, -0.6) -- (7.6, -0.6);
+    \node[anchor=north west, font=\scriptsize\bfseries, text=primaryblue] at (0.6, -0.8) {Array Storage \& Pointer Pinned at Middle:};
+
+    % Cells for indices 0 to 6 at y = -1.6
+    \node[sortedCell] at (1.0, -1.6) {4};
+    \node[sortedCell] at (2.0, -1.6) {5};
+    \node[sortedCell] at (3.0, -1.6) {6};
+    \node[pivotCell]  at (4.0, -1.6) {7};
+    \node[cell]       at (5.0, -1.6) {0};
+    \node[cell]       at (6.0, -1.6) {1};
+    \node[cell]       at (7.0, -1.6) {2};
+
+    % Indices
+    \node[font=\tiny\ttfamily, text=codegray] at (1.0, -2.1) {i=0};
+    \node[font=\tiny\ttfamily, text=codegray] at (2.0, -2.1) {i=1};
+    \node[font=\tiny\ttfamily, text=codegray] at (3.0, -2.1) {i=2};
+    \node[font=\tiny\ttfamily, text=red!80!black] at (4.0, -2.1) {i=3 (mid)};
+    \node[font=\tiny\ttfamily, text=codegray] at (5.0, -2.1) {i=4};
+    \node[font=\tiny\ttfamily, text=codegray] at (6.0, -2.1) {i=5};
+    \node[font=\tiny\ttfamily, text=codegray] at (7.0, -2.1) {i=6};
+
+    % Pointer indicators
+    \node[above=1pt, font=\tiny\bfseries, text=primaryblue] at (1.0, -1.25) {Left};
+    \node[above=1pt, font=\tiny\bfseries, text=red!80!black] at (4.0, -1.25) {Mid};
+    \node[above=1pt, font=\tiny\bfseries, text=codegreen] at (7.0, -1.25) {Right};
+
+    \node[anchor=north west, font=\tiny, align=left, text width=6.8cm] at (0.6, -2.5) {
+        $\bullet$ Key Observation: Splitting at \textbf{any} index \texttt{mid} always yields at least \textbf{one strictly sorted half}.\\
+        $\bullet$ Here $A[\text{left}] = 4 \le A[\text{mid}] = 7 \implies$ Entire left half $[0 \dots 3]$ is sorted!
+    };
+
+    % --- Right Panel: Binary Search Invariants (x: 8.1 to 15.1) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (8.1, -4.1) rectangle (15.1, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.3, 3.55) {Binary Search Range Bifurcation Rules:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, 3.1) {
+        \textbf{Case 1: Left Half is Sorted} ($A[\text{left}] \le A[\text{mid}]$):\\[2pt]
+        $\bullet$ If $A[\text{left}] \le \text{target} < A[\text{mid}]$:\\
+        \phantom{xx} Target lies within left sorted interval $\implies \mathbf{\text{right} = \text{mid} - 1}$.\\
+        $\bullet$ Else:\\
+        \phantom{xx} Target must be elsewhere $\implies \mathbf{\text{left} = \text{mid} + 1}$.
+    };
+
+    \draw[draw=codeframe!60] (8.3, 1.1) -- (14.9, 1.1);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, 0.85) {
+        \textbf{Case 2: Right Half is Sorted} ($A[\text{left}] > A[\text{mid}]$):\\[2pt]
+        $\bullet$ If $A[\text{mid}] < \text{target} \le A[\text{right}]$:\\
+        \phantom{xx} Target lies within right sorted interval $\implies \mathbf{\text{left} = \text{mid} + 1}$.\\
+        $\bullet$ Else:\\
+        \phantom{xx} Target must be elsewhere $\implies \mathbf{\text{right} = \text{mid} - 1}$.
+    };
+
+    \draw[draw=codeframe!60] (8.3, -1.2) -- (14.9, -1.2);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, -1.45) {
+        \textbf{Handling Duplicates} ($A[\text{left}] == A[\text{mid}] == A[\text{right}]$):\\[2pt]
+        $\bullet$ Ambiguity: Cannot decide which half is sorted (e.g. $[1, 0, 1, 1, 1]$).\\
+        $\bullet$ Resolution: Shrink bounds linearly ($\text{left}++, \text{right}--$). Worst case degrades to $\mathcal{O}(N)$.
+    };
+
+    \draw[draw=codeframe!60] (8.3, -2.8) -- (14.9, -2.8);
+
+    \node[anchor=north west, font=\tiny\bfseries, text=primaryblue, align=left, text width=6.5cm] at (8.3, -3.05) {
+        Complexity Guarantee:\\
+        $\bullet$ Unique elements: strictly $\mathbf{\mathcal{O}(\log N)}$ time and $\mathbf{\mathcal{O}(1)}$ extra space.\\
+        $\bullet$ Eliminates half the search space at each iteration.
+    };
+\end{tikzpicture}}
+\caption{Binary search in a rotated sorted array. Left: Elevation profile revealing two monotonic sorted ramps separated by a rotation pivot drop. Right: Branching rules identifying the sorted half to maintain $O(\log N)$ logarithmic convergence.}
+\end{figure}
+
+\newpage
+\newpage
+\newpage
+
+\subsection[Diagram 38: Binary Exponentiation Repeated Squaring]{Diagram 38: Binary Exponentiation (Fast Power) Repeated Squaring \& Bit Decomposition}
+
+\breadcrumb{02.number_theory.tex}{Section 2.1: Modular Arithmetic and Fast Exponentiation}{Visualizes logarithmic exponent decomposition ($n = \sum b_i 2^i$) and the state progression of base squaring and accumulator multiplication.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed full-width 2-panel architecture: left panel depicts bitwise decomposition of exponent 13 with base squaring and accumulator updates; right panel states recurrence relations, modular invariants, and O(log n) guarantees.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.95, every node/.style={transform shape},
+    bitBox/.style={draw=codeframe, fill=white, thick, minimum width=0.85cm, minimum height=0.6cm, font=\scriptsize\ttfamily, align=center},
+    bitActive/.style={draw=codegreen, fill=codegreen!20, line width=1.2pt, minimum width=0.85cm, minimum height=0.6cm, font=\scriptsize\bfseries\ttfamily, text=codegreen, align=center},
+    bitInactive/.style={draw=codegray, fill=codeframe!30, thick, minimum width=0.85cm, minimum height=0.6cm, font=\scriptsize\ttfamily, text=codegray, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -4.5) rectangle (15.4, 4.8);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.45) {Binary Exponentiation: Computing $a^{13} = a^8 \cdot a^4 \cdot a^1$ in $\mathcal{O}(\log n)$ Multiplications};
+
+    % --- Left Panel: Bit Decomposition & Multiplier Flow (x: 0.4 to 7.8) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (0.4, -4.1) rectangle (7.8, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.6, 3.55) {Exponent Decomposition: $n = 13_{10} = 1101_2$};
+
+    % Binary representation table
+    \node[anchor=north west, font=\tiny\bfseries, text=primaryblue] at (0.6, 3.05) {Bit Index $i$ ($2^i$ Weight):};
+    \node[bitBox] at (1.4, 2.3) {$2^3=8$};
+    \node[bitBox] at (2.8, 2.3) {$2^2=4$};
+    \node[bitBox] at (4.2, 2.3) {$2^1=2$};
+    \node[bitBox] at (5.6, 2.3) {$2^0=1$};
+
+    \node[anchor=north west, font=\tiny\bfseries, text=primaryblue] at (0.6, 1.8) {Bit Value $b_i$:};
+    \node[bitActive]   at (1.4, 1.3) {\textbf{1}};
+    \node[bitActive]   at (2.8, 1.3) {\textbf{1}};
+    \node[bitInactive] at (4.2, 1.3) {0};
+    \node[bitActive]   at (5.6, 1.3) {\textbf{1}};
+
+    \draw[draw=codeframe!60] (0.6, 0.7) -- (7.6, 0.7);
+    \node[anchor=north west, font=\scriptsize\bfseries, text=primaryblue] at (0.6, 0.5) {Iterative State Evolution: Accumulator $\times \text{Base}^{2^i}$};
+
+    \node[anchor=north west, font=\tiny\ttfamily, align=left] at (0.6, 0.1) {
+        \textbf{Initial}: $\text{result} = 1, \ \text{base} = a, \ n = 13$\\[4pt]
+        $\bullet$ \textbf{Iter 0} ($n=13$, odd, $b_0=1$):\\
+        \phantom{xx} $\text{result} \leftarrow \text{result} \times \text{base} = \mathbf{1 \cdot a = a}$\\
+        \phantom{xx} $\text{base} \leftarrow \text{base}^2 = \mathbf{a^2}, \ n \leftarrow 6$\\[4pt]
+        $\bullet$ \textbf{Iter 1} ($n=6$, even, $b_1=0$):\\
+        \phantom{xx} (Skip result update)\\
+        \phantom{xx} $\text{base} \leftarrow \text{base}^2 = \mathbf{a^4}, \ n \leftarrow 3$\\[4pt]
+        $\bullet$ \textbf{Iter 2} ($n=3$, odd, $b_2=1$):\\
+        \phantom{xx} $\text{result} \leftarrow \text{result} \times \text{base} = \mathbf{a \cdot a^4 = a^5}$\\
+        \phantom{xx} $\text{base} \leftarrow \text{base}^2 = \mathbf{a^8}, \ n \leftarrow 1$\\[4pt]
+        $\bullet$ \textbf{Iter 3} ($n=1$, odd, $b_3=1$):\\
+        \phantom{xx} $\text{result} \leftarrow \text{result} \times \text{base} = \mathbf{a^5 \cdot a^8 = a^{13}}$\\
+        \phantom{xx} $\text{base} \leftarrow \text{base}^2 = a^{16}, \ n \leftarrow 0 \implies \text{Done!}$
+    };
+
+    \draw[fill=codegreen!15, draw=codegreen, rounded corners=2pt, thick] (0.6, -3.9) rectangle (7.6, -3.3);
+    \node[font=\scriptsize\bfseries, text=codegreen] at (4.1, -3.6) {Total Multiplications: $3 \text{ squarings} + 3 \text{ accums} = 6 \ll 12$};
+
+    % --- Right Panel: Mathematical Rules (x: 8.1 to 15.1) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (8.1, -4.1) rectangle (15.1, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.3, 3.55) {Recurrence \& Modular Arithmetic Rules:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, 3.1) {
+        \textbf{1. Divide-and-Conquer Recurrence}:\\[2pt]
+        $$a^n = \begin{cases}
+        1 & \text{if } n = 0 \\
+        \big(a^{n/2}\big)^2 & \text{if } n \text{ is even} \\
+        a \cdot \big(a^{(n-1)/2}\big)^2 & \text{if } n \text{ is odd}
+        \end{cases}$$
+        Halves the exponent size at every single step!
+    };
+
+    \draw[draw=codeframe!60] (8.3, 1.2) -- (14.9, 1.2);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, 0.95) {
+        \textbf{2. Modular Reduction Invariant}:\\[2pt]
+        To prevent 64-bit integer overflow during $a^n \pmod M$:\\[2pt]
+        $(x \cdot y) \bmod M = \big((x \bmod M) \cdot (y \bmod M)\big) \bmod M$\\[2pt]
+        Apply modulo $M$ after \textbf{every} base squaring and accumulator multiplication.
+    };
+
+    \draw[draw=codeframe!60] (8.3, -1.1) -- (14.9, -1.1);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, -1.35) {
+        \textbf{3. Matrix \& Polynomial Generalization}:\\[2pt]
+        $\bullet$ Works for \textbf{any} associative algebraic monoid (matrices, permutations, polynomials).\\
+        $\bullet$ Matrix Exponentiation solves linear recurrences (e.g. $N$-th Fibonacci number) in $\mathcal{O}(K^3 \log N)$ time.
+    };
+
+    \draw[draw=codeframe!60] (8.3, -2.8) -- (14.9, -2.8);
+
+    \node[anchor=north west, font=\tiny\bfseries, text=primaryblue, align=left, text width=6.5cm] at (8.3, -3.05) {
+        Complexity Guarantee:\\
+        $\bullet$ Time Complexity: strictly $\mathbf{\mathcal{O}(\log n)}$ operations.\\
+        $\bullet$ Space Complexity: $\mathbf{\mathcal{O}(1)}$ extra space in iterative implementation.
+    };
+\end{tikzpicture}}
+\caption{Binary exponentiation via repeated squaring and bit decomposition. Expressing exponent $n$ in base 2 enables computing $a^n \pmod M$ in $\mathcal{O}(\log n)$ multiplications rather than naive $\mathcal{O}(n)$ linear products.}
+\end{figure}
+
+\newpage
+\newpage
+\newpage
+
+\subsection[Diagram 39: Divisor Complementary Symmetry]{Diagram 39: Divisor Complementary Symmetry \& The $\sqrt{N}$ Reflection Axis}
+
+\breadcrumb{02.number_theory.tex}{Section 2.2: Primality Testing and Prime Factorization}{Visualizes divisor pairing $(d, N/d)$ reflecting across the central threshold $\sqrt{N}$, establishing the fundamental proof for $\mathcal{O}(\sqrt{N})$ trial division.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed full-width 2-panel architecture: left panel displays symmetric reflection arcs for N=36 pivoting around sqrt(36)=6; right panel formalizes the product contradiction proof and algorithm complexity implications.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.95, every node/.style={transform shape},
+    dNode/.style={circle, draw=primaryblue, fill=primaryblue!15, very thick, minimum size=0.7cm, font=\scriptsize\bfseries, align=center},
+    pivotNode/.style={circle, draw=red!70!black, fill=red!20, line width=1.4pt, minimum size=0.8cm, font=\scriptsize\bfseries, text=red!80!black, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -4.5) rectangle (15.4, 4.8);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.45) {Divisor Pair Complementarity: Symmetrical Reflection Around $\sqrt{N}$};
+
+    % --- Left Panel: Arc Symmetry for N = 36 (x: 0.4 to 7.8) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (0.4, -4.1) rectangle (7.8, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.6, 3.55) {Factor Pairs of $N = 36$ ($\sqrt{36} = 6$):};
+
+    % Central reflection axis line
+    \draw[dashed, line width=1.3pt, red!80!black] (4.1, -2.5) -- (4.1, 2.5);
+    \node[anchor=south, font=\scriptsize\bfseries, text=red!80!black] at (4.1, 2.6) {Symmetry Axis: $\sqrt{N} = 6$};
+
+    % Divisor nodes placed along horizontal baseline y = 0.2
+    % Left side (d <= 6): 1, 2, 3, 4, 6
+    \node[dNode] (D1) at (1.0, 0.2) {1};
+    \node[dNode] (D2) at (1.8, 0.2) {2};
+    \node[dNode] (D3) at (2.6, 0.2) {3};
+    \node[dNode] (D4) at (3.3, 0.2) {4};
+    \node[pivotNode] (D6) at (4.1, 0.2) {6};
+
+    % Right side (d > 6): 9, 12, 18, 36
+    \node[dNode] (D9)  at (4.9, 0.2) {9};
+    \node[dNode] (D12) at (5.6, 0.2) {12};
+    \node[dNode] (D18) at (6.4, 0.2) {18};
+    \node[dNode] (D36) at (7.2, 0.2) {36};
+
+    % Complementary arcs connecting pairs
+    \draw[<->, line width=1.2pt, primaryblue] (D4) to[bend left=45] (D9)
+        node[midway, above=1pt, font=\tiny\bfseries] {$4 \times 9$};
+    \draw[<->, line width=1.2pt, primaryblue] (D3) to[bend left=50] (D12)
+        node[midway, above=1pt, font=\tiny\bfseries] {$3 \times 12$};
+    \draw[<->, line width=1.2pt, primaryblue] (D2) to[bend left=55] (D18)
+        node[midway, above=1pt, font=\tiny\bfseries] {$2 \times 18$};
+    \draw[<->, line width=1.2pt, primaryblue] (D1) to[bend left=60] (D36)
+        node[midway, above=1pt, font=\tiny\bfseries] {$1 \times 36$};
+
+    % Regions
+    \draw[draw=primaryblue!40, fill=primaryblue!8, rounded corners=3pt] (0.6, -2.2) rectangle (3.9, -0.6);
+    \node[font=\scriptsize\bfseries, text=primaryblue, align=center] at (2.25, -1.1) {
+        \textbf{Inspected Range}\\
+        $d \le \sqrt{N}$ ($\le 6$)
+    };
+    \node[font=\tiny, text=primaryblue, align=center] at (2.25, -1.8) {
+        Loop iterates up to $\sqrt{N}$:\\
+        Discovers \textbf{all} small factors!
+    };
+
+    \draw[draw=codegray!40, fill=codegray!8, rounded corners=3pt] (4.3, -2.2) rectangle (7.6, -0.6);
+    \node[font=\scriptsize\bfseries, text=codegray, align=center] at (5.95, -1.1) {
+        \textbf{Mirror Range}\\
+        $d' \ge \sqrt{N}$ ($\ge 6$)
+    };
+    \node[font=\tiny, text=codegray, align=center] at (5.95, -1.8) {
+        Derived automatically:\\
+        $d' = N / d$ (Free discovery!)
+    };
+
+    \draw[fill=codegreen!15, draw=codegreen, rounded corners=2pt, thick] (0.6, -3.9) rectangle (7.6, -3.3);
+    \node[font=\scriptsize\bfseries, text=codegreen] at (4.1, -3.6) {Search Space Reduced from $\mathcal{O}(N) \to \mathcal{O}(\sqrt{N})$};
+
+    % --- Right Panel: Mathematical Proof & Invariants (x: 8.1 to 15.1) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (8.1, -4.1) rectangle (15.1, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.3, 3.55) {The Fundamental Product Contradiction Proof:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, 3.1) {
+        \textbf{Theorem}: If $n$ is composite, it has a divisor $d$ with $1 < d \le \sqrt{n}$.\\[4pt]
+        \textbf{Proof by Contradiction}:\\[2pt]
+        1. Assume $n = a \cdot b$ where $1 < a \le b < n$.\\
+        2. Suppose for contradiction that \textbf{both} $a > \sqrt{n}$ and $b > \sqrt{n}$.\\
+        3. Then their product must satisfy:\\[2pt]
+        \phantom{xx} $a \cdot b > \sqrt{n} \cdot \sqrt{n} = n \implies n > n \quad (\text{Contradiction!})$\\
+        4. Hence, at least one factor must satisfy $a \le \sqrt{n}$. \ $\blacksquare$
+    };
+
+    \draw[draw=codeframe!60] (8.3, 0.4) -- (14.9, 0.4);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, 0.15) {
+        \textbf{Algorithmic Implications}:\\[2pt]
+        $\bullet$ \textbf{Primality Testing}: If no integer $2 \le d \le \lfloor\sqrt{n}\rfloor$ divides $n$, then $n$ is strictly prime! Complexity: $\mathbf{\mathcal{O}(\sqrt{n})}$.\\
+        $\bullet$ \textbf{All Divisors Enumeration}: For each $d \mid n$, insert both $d$ and $n/d$ (avoiding duplicate if $d^2 = n$). Complexity: $\mathbf{\mathcal{O}(\sqrt{n})}$.\\
+        $\bullet$ \textbf{Sieve Bound}: Sieve of Eratosthenes outer loop terminates at $\lfloor\sqrt{N}\rfloor$.
+    };
+
+    \draw[draw=codeframe!60] (8.3, -2.8) -- (14.9, -2.8);
+
+    \node[anchor=north west, font=\tiny\bfseries, text=primaryblue, align=left, text width=6.5cm] at (8.3, -3.05) {
+        Extreme Scaling Advantage:\\
+        For $N = 10^{12}$, $\sqrt{N} = 10^6$ operations: drops execution from 3 hours to $\mathbf{2\text{ milliseconds}}$!
+    };
+\end{tikzpicture}}
+\caption{Divisor complementary symmetry and the $\sqrt{N}$ reflection axis. Divisors occur in pairs $(d, N/d)$ across the central axis $\sqrt{N}$; finding all divisors or proving primality requires traversing strictly up to $\lfloor\sqrt{N}\rfloor$.}
+\end{figure}
+
+\newpage
+\newpage
+\newpage
+
+\subsection[Diagram 40: Pascal's Triangle and Grid Lattice Paths]{Diagram 40: Pascal's Triangle Additive Pyramid \& Grid Lattice Paths $\binom{n}{k}$}
+
+\breadcrumb{01.math_foundations.tex}{Section 2.2: Binomial Coefficients and Combinatorics}{Visualizes Pascal's identity $\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}$ and its structural equivalence to Manhattan grid lattice path routing.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed full-width 2-panel architecture: left panel combines Pascal's additive pyramid (rows 0--4) with a $2 \times 2$ Manhattan grid routing network; right panel proves combinatorial identities and outlines $\mathcal{O}(N^2)$ DP table construction.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.95, every node/.style={transform shape},
+    pNode/.style={circle, draw=codeframe, fill=white, thick, minimum size=0.7cm, font=\scriptsize\bfseries, align=center},
+    sumNode/.style={circle, draw=codegreen, fill=codegreen!20, line width=1.3pt, minimum size=0.7cm, font=\scriptsize\bfseries\ttfamily, text=codegreen, align=center},
+    srcNode/.style={circle, draw=primaryblue, fill=primaryblue!20, line width=1.2pt, minimum size=0.7cm, font=\scriptsize\bfseries\ttfamily, text=primaryblue, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -4.5) rectangle (15.4, 4.8);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.45) {Combinatorial Duality: Pascal's Pyramid \& Manhattan Grid Lattice Paths $\binom{n}{k}$};
+
+    % --- Left Panel: Pascal Triangle & Grid (x: 0.4 to 7.8) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (0.4, -4.1) rectangle (7.8, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.6, 3.55) {Pascal's Additive Recurrence: $\binom{4}{2} = \binom{3}{1} + \binom{3}{2}$};
+
+    % Pascal Rows (Row 0 at y=3.0, down to Row 4 at y=0.6)
+    % Row 0 (n=0): 1
+    \node[pNode] at (4.1, 2.9) {1};
+
+    % Row 1 (n=1): 1, 1
+    \node[pNode] at (3.5, 2.3) {1};
+    \node[pNode] at (4.7, 2.3) {1};
+
+    % Row 2 (n=2): 1, 2, 1
+    \node[pNode] at (2.9, 1.7) {1};
+    \node[pNode] at (4.1, 1.7) {2};
+    \node[pNode] at (5.3, 1.7) {1};
+
+    % Row 3 (n=3): 1, 3, 3, 1
+    \node[pNode] at (2.3, 1.1) {1};
+    \node[srcNode] (P31) at (3.5, 1.1) {3};
+    \node[srcNode] (P32) at (4.7, 1.1) {3};
+    \node[pNode] at (5.9, 1.1) {1};
+
+    % Row 4 (n=4): 1, 4, 6, 4, 1
+    \node[pNode] at (1.7, 0.5) {1};
+    \node[pNode] at (2.9, 0.5) {4};
+    \node[sumNode] (P42) at (4.1, 0.5) {6};
+    \node[pNode] at (5.3, 0.5) {4};
+    \node[pNode] at (6.5, 0.5) {1};
+
+    % Addition arrows: (P31) and (P32) -> (P42)
+    \draw[->, line width=1.4pt, codegreen] (P31) -- (P42);
+    \draw[->, line width=1.4pt, codegreen] (P32) -- (P42);
+    \node[anchor=west, font=\tiny\bfseries, text=codegreen] at (4.4, 0.8) {$3 + 3 = 6$};
+
+    % Row labels on left
+    \node[font=\tiny\bfseries, text=codegray] at (0.9, 2.9) {$n=0$};
+    \node[font=\tiny\bfseries, text=codegray] at (0.9, 2.3) {$n=1$};
+    \node[font=\tiny\bfseries, text=codegray] at (0.9, 1.7) {$n=2$};
+    \node[font=\tiny\bfseries, text=codegray] at (0.9, 1.1) {$n=3$};
+    \node[font=\tiny\bfseries, text=primaryblue] at (0.9, 0.5) {$n=4$};
+
+    % Bottom half of left panel: 2x2 Grid Lattice Path
+    \draw[draw=codeframe!60] (0.6, 0.0) -- (7.6, 0.0);
+    \node[anchor=north west, font=\scriptsize\bfseries, text=primaryblue] at (0.6, -0.15) {Equivalent Lattice Paths to $(2, 2)$ ($2$ Right, $2$ Down):};
+
+    % 2x2 grid vertices: (2.2, -1.0) to (5.2, -3.2)
+    % Vertices (r, c)
+    \foreach \r in {0, 1, 2} {
+        \foreach \c in {0, 1, 2} {
+            \fill[primaryblue] (2.5 + \c*1.4, -0.9 - \r*1.1) circle (2.5pt);
+        }
+    }
+    % Grid edges
+    \foreach \r in {0, 1, 2} {
+        \draw[line width=1.0pt, codeframe] (2.5, -0.9 - \r*1.1) -- (5.3, -0.9 - \r*1.1);
+    }
+    \foreach \c in {0, 1, 2} {
+        \draw[line width=1.0pt, codeframe] (2.5 + \c*1.4, -0.9) -- (2.5 + \c*1.4, -3.1);
+    }
+
+    % One sample path in bold green: Start (0,0) -> (0,1) -> (1,1) -> (1,2) -> (2,2)
+    \draw[->, line width=2.0pt, codegreen] (2.5, -0.9) -- (3.9, -0.9) -- (3.9, -2.0) -- (5.3, -2.0) -- (5.3, -3.1);
+
+    % Start and End badges
+    \node[above=2pt, font=\tiny\bfseries, text=primaryblue] at (2.5, -0.9) {Start $(0,0)$};
+    \node[below=2pt, font=\tiny\bfseries, text=codegreen] at (5.3, -3.1) {Target $(2,2)$};
+
+    \node[anchor=north west, font=\tiny, align=left] at (0.6, -3.5) {
+        Total monotonic paths from $(0,0)$ to $(R, D)$: $\binom{R+D}{D} = \binom{2+2}{2} = \mathbf{6\text{ paths}}$.\\
+        Every grid junction value equals sum of top and left neighbors!
+    };
+
+    % --- Right Panel: Combinatorial Invariants (x: 8.1 to 15.1) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (8.1, -4.1) rectangle (15.1, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.3, 3.55) {Fundamental Identities \& Algorithms:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, 3.1) {
+        \textbf{1. Pascal's Identity (Addition Rule)}:\\[2pt]
+        $$\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}, \quad \text{with } \binom{n}{0} = \binom{n}{n} = 1$$
+        \textbf{Combinatorial Proof}: Consider picking a team of $k$ from $n$ people including Alice. Teams either contain Alice ($\binom{n-1}{k-1}$) or exclude Alice ($\binom{n-1}{k}$).
+    };
+
+    \draw[draw=codeframe!60] (8.3, 0.9) -- (14.9, 0.9);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, 0.65) {
+        \textbf{2. Key Symmetric Properties}:\\[2pt]
+        $\bullet$ \textbf{Symmetry}: $\binom{n}{k} = \binom{n}{n-k}$ (choosing $k$ to take is choosing $n-k$ to leave behind).\\
+        $\bullet$ \textbf{Row Sum (Subset Count)}: $\sum_{k=0}^n \binom{n}{k} = 2^n$.\\
+        $\bullet$ \textbf{Hockey-Stick Identity}: $\sum_{i=r}^n \binom{i}{r} = \binom{n+1}{r+1}$.
+    };
+
+    \draw[draw=codeframe!60] (8.3, -1.3) -- (14.9, -1.3);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, -1.55) {
+        \textbf{3. Algorithmic Table Construction}:\\[2pt]
+        $\bullet$ Precomputing $\binom{n}{k}$ using 2D DP table uses \textbf{only additions}—zero division, completely immune to modular inverse non-existence when $M$ is not prime!\\
+        $\bullet$ Table Precomputation: $\mathbf{\mathcal{O}(N^2)}$ Time and Space.\\
+        $\bullet$ Range Query: strictly $\mathbf{\mathcal{O}(1)}$ instant lookup.
+    };
+
+    \draw[draw=codeframe!60] (8.3, -2.9) -- (14.9, -2.9);
+
+    \node[anchor=north west, font=\tiny\bfseries, text=primaryblue, align=left, text width=6.5cm] at (8.3, -3.1) {
+        Connection to Dynamic Programming:\\
+        Pascal's identity is the exact recurrence governing path counting on 2D DAG grids (e.g. Unique Paths LeetCode 62).
+    };
+\end{tikzpicture}}
+\caption{Pascal's triangle additive pyramid and Manhattan grid lattice path duality. Pascal's recurrence $\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}$ mirrors 2D grid path summation, allowing division-free $\mathcal{O}(N^2)$ precomputation.}
+\end{figure}
+
+\newpage
+\newpage
+\newpage
+
+\subsection[Diagram 41: Brian Kernighan's Bit Stripping]{Diagram 41: Brian Kernighan's Algorithm: Lowest 1-Bit Stripping via $x \mathbin{\&} (x - 1)$}
+
+\breadcrumb{12.bit_manipulation.tex}{Section 2.3: Bitwise Tricks and Classical Techniques}{Visualizes borrow propagation during subtraction and the zeroing of the least significant set bit in $\mathcal{O}(k)$ iterations.}
+
+\diagramaudit{Agent (Antigravity)}{2026-10-12}{Constructed full-width 2-panel architecture: left panel shows 8-bit register traces for x=12 and x=8 with borrow inversion; right panel formalizes prefix bit invariance, power-of-two tests, and O(k) popcount guarantees.}
+
+\begin{figure}[htbp]
+\centering
+\noindent\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+    scale=0.95, every node/.style={transform shape},
+    bCell/.style={draw=codeframe, fill=white, thick, minimum width=0.6cm, minimum height=0.55cm, font=\scriptsize\ttfamily, align=center},
+    bZero/.style={draw=codegray!60, fill=codeframe!25, thick, minimum width=0.6cm, minimum height=0.55cm, font=\scriptsize\ttfamily, text=codegray, align=center},
+    bOne/.style={draw=primaryblue, fill=primaryblue!20, line width=1.1pt, minimum width=0.6cm, minimum height=0.55cm, font=\scriptsize\bfseries\ttfamily, text=primaryblue, align=center},
+    bFlip/.style={draw=red!70!black, fill=red!15, line width=1.1pt, minimum width=0.6cm, minimum height=0.55cm, font=\scriptsize\bfseries\ttfamily, text=red!80!black, align=center},
+    bStrip/.style={draw=codegreen, fill=codegreen!20, line width=1.2pt, minimum width=0.6cm, minimum height=0.55cm, font=\scriptsize\bfseries\ttfamily, text=codegreen, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Container Frame
+    \draw[card] (0.0, -4.5) rectangle (15.4, 4.8);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.45) {Brian Kernighan's Invariant: Stripping Least Significant Set Bit in $\mathcal{O}(\text{popcount})$};
+
+    % --- Left Panel: Register Bitwise Arithmetic (x: 0.4 to 7.8) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (0.4, -4.1) rectangle (7.8, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.6, 3.55) {Step 1: Stripping Bit 2 from $x = 12_{10}$ ($0000\,1100_2$)};
+
+    % Bit labels (7 down to 0) at y = 3.1
+    \foreach \b/\idx in {0/7, 1/6, 2/5, 3/4, 4/3, 5/2, 6/1, 7/0} {
+        \node[font=\tiny\ttfamily, text=codegray] at (2.0 + \b*0.65, 3.1) {b\idx};
+    }
+
+    % Row 1: x = 12 (0000 1100) at y = 2.6
+    \node[anchor=east, font=\scriptsize\ttfamily] at (1.8, 2.6) {$x = 12$:};
+    \foreach \b/\val in {0/0, 1/0, 2/0, 3/0} { \node[bZero] at (2.0 + \b*0.65, 2.6) {\val}; }
+    \node[bOne]  at (2.0 + 4*0.65, 2.6) {1};
+    \node[bFlip] at (2.0 + 5*0.65, 2.6) {1};
+    \node[bZero] at (2.0 + 6*0.65, 2.6) {0};
+    \node[bZero] at (2.0 + 7*0.65, 2.6) {0};
+
+    % Row 2: x - 1 = 11 (0000 1011) at y = 2.0
+    \node[anchor=east, font=\scriptsize\ttfamily] at (1.8, 2.0) {$x - 1 = 11$:};
+    \foreach \b/\val in {0/0, 1/0, 2/0, 3/0} { \node[bZero] at (2.0 + \b*0.65, 2.0) {\val}; }
+    \node[bOne]  at (2.0 + 4*0.65, 2.0) {1};
+    \node[bFlip] at (2.0 + 5*0.65, 2.0) {0};
+    \node[bFlip] at (2.0 + 6*0.65, 2.0) {1};
+    \node[bFlip] at (2.0 + 7*0.65, 2.0) {1};
+
+    % Horizontal line for AND operation
+    \draw[line width=1.1pt, codeframe] (1.0, 1.6) -- (7.2, 1.6);
+    \node[anchor=east, font=\tiny\bfseries, text=primaryblue] at (1.8, 1.6) {$\&$};
+
+    % Row 3: x & (x-1) = 8 (0000 1000) at y = 1.25
+    \node[anchor=east, font=\scriptsize\ttfamily] at (1.8, 1.25) {$x \ \& \ (x-1)$:};
+    \foreach \b/\val in {0/0, 1/0, 2/0, 3/0} { \node[bZero] at (2.0 + \b*0.65, 1.25) {\val}; }
+    \node[bOne]   at (2.0 + 4*0.65, 1.25) {1};
+    \node[bStrip] at (2.0 + 5*0.65, 1.25) {0};
+    \node[bZero]  at (2.0 + 6*0.65, 1.25) {0};
+    \node[bZero]  at (2.0 + 7*0.65, 1.25) {0};
+    \node[anchor=west, font=\tiny\bfseries, text=codegreen] at (6.8, 1.25) {$= 8_{10}$};
+
+    % Step 2 at y = 0.3 down to -1.5
+    \draw[draw=codeframe!60] (0.6, 0.7) -- (7.6, 0.7);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.6, 0.55) {Step 2: Stripping Bit 3 from $x = 8_{10}$ ($0000\,1000_2$)};
+
+    % Row 4: x = 8 (0000 1000) at y = 0.0
+    \node[anchor=east, font=\scriptsize\ttfamily] at (1.8, 0.0) {$x = 8$:};
+    \foreach \b/\val in {0/0, 1/0, 2/0, 3/0} { \node[bZero] at (2.0 + \b*0.65, 0.0) {\val}; }
+    \node[bFlip] at (2.0 + 4*0.65, 0.0) {1};
+    \foreach \b/\val in {5/0, 6/0, 7/0} { \node[bZero] at (2.0 + \b*0.65, 0.0) {\val}; }
+
+    % Row 5: x - 1 = 7 (0000 0111) at y = -0.6
+    \node[anchor=east, font=\scriptsize\ttfamily] at (1.8, -0.6) {$x - 1 = 7$:};
+    \foreach \b/\val in {0/0, 1/0, 2/0, 3/0} { \node[bZero] at (2.0 + \b*0.65, -0.6) {\val}; }
+    \node[bFlip] at (2.0 + 4*0.65, -0.6) {0};
+    \foreach \b/\val in {5/1, 6/1, 7/1} { \node[bFlip] at (2.0 + \b*0.65, -0.6) {\val}; }
+
+    % Horizontal line for AND
+    \draw[line width=1.1pt, codeframe] (1.0, -1.0) -- (7.2, -1.0);
+
+    % Row 6: x & (x-1) = 0 (0000 0000) at y = -1.35
+    \node[anchor=east, font=\scriptsize\ttfamily] at (1.8, -1.35) {$x \ \& \ (x-1)$:};
+    \foreach \b/\val in {0/0, 1/0, 2/0, 3/0} { \node[bZero] at (2.0 + \b*0.65, -1.35) {\val}; }
+    \node[bStrip] at (2.0 + 4*0.65, -1.35) {0};
+    \foreach \b/\val in {5/0, 6/0, 7/0} { \node[bZero] at (2.0 + \b*0.65, -1.35) {\val}; }
+    \node[anchor=west, font=\tiny\bfseries, text=codegreen] at (6.8, -1.35) {$= 0_{10}$};
+
+    \draw[fill=codegreen!15, draw=codegreen, rounded corners=2pt, thick] (0.6, -3.9) rectangle (7.6, -3.3);
+    \node[font=\scriptsize\bfseries, text=codegreen] at (4.1, -3.6) {Loop Terminates: strictly $2$ steps for $k = 2$ set bits!};
+
+    % --- Right Panel: Structural Theory & Invariants (x: 8.1 to 15.1) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (8.1, -4.1) rectangle (15.1, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.3, 3.55) {Algebraic Proof of Lowest 1-Bit Elimination:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, 3.1) {
+        \textbf{1. Anatomy of Subtraction Borrow}:\\[2pt]
+        Any non-zero integer $x$ can be partitioned uniquely as:
+        $$x = \text{prefix} \mathbin{\parallel} 1 \mathbin{\parallel} 0^m$$
+        where $0^m$ denotes $m$ trailing zeros ($m \ge 0$).\\[4pt]
+        Subtracting $1$ borrows across all $m$ zeros:
+        $$x - 1 = \text{prefix} \mathbin{\parallel} 0 \mathbin{\parallel} 1^m$$
+    };
+
+    \draw[draw=codeframe!60] (8.3, 0.7) -- (14.9, 0.7);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, 0.45) {
+        \textbf{2. Bitwise Conjunction Invariant}:\\[2pt]
+        Performing bitwise AND eliminates the lowest set bit:
+        $$x \mathbin{\&} (x - 1) = \text{prefix} \mathbin{\parallel} 0 \mathbin{\parallel} 0^m$$
+        $\bullet$ \textbf{Higher prefix bits}: strictly identical $\implies$ unchanged.\\
+        $\bullet$ \textbf{The isolated lowest 1-bit}: $1 \ \& \ 0 = 0 \implies$ cleared!\\
+        $\bullet$ \textbf{Trailing bits}: $0 \ \& \ 1 = 0 \implies$ remain zero.
+    };
+
+    \draw[draw=codeframe!60] (8.3, -1.6) -- (14.9, -1.6);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.5cm] at (8.3, -1.85) {
+        \textbf{3. Fundamental Algorithmic Applications}:\\[2pt]
+        $\bullet$ \textbf{Power of Two Check}: $(x > 0) \ \land \ ((x \ \& \ (x - 1)) == 0)$.\\
+        $\bullet$ \textbf{Popcount Loop}: $\mathcal{O}(k)$ iterations where $k$ is number of set bits (sub-word scaling, skips zero sequences!).\\
+        $\bullet$ \textbf{Isolate Lowest Bit}: $x \mathbin{\&} (-x)$ (Two's complement mask).
+    };
+
+    \draw[draw=codeframe!60] (8.3, -3.1) -- (14.9, -3.1);
+
+    \node[anchor=north west, font=\tiny\bfseries, text=primaryblue, align=left, text width=6.5cm] at (8.3, -3.3) {
+        Efficiency Comparison:\\
+        Naive loop: 32 or 64 fixed iterations. Kernighan: strictly $k$ iterations ($k \ll 64$).
+    };
+\end{tikzpicture}}
+\caption{Brian Kernighan's algorithm for lowest set-bit elimination. Subtraction borrows across trailing zeros, transforming $x = \text{prefix} \parallel 1 \parallel 0^m$ into $x - 1 = \text{prefix} \parallel 0 \parallel 1^m$ and zeroing the lowest set bit in $\mathcal{O}(\text{popcount})$ operations.}
+\end{figure}
+
+
+\newpage
 \section{Technical Monograph Integration Plan}
 % ============================================================================
 
-To fully elevate the repository's monographs to world-class pedagogical visual standards, the 20 newly designed diagrams in this gallery should be systematically integrated into their respective parent \texttt{.tex} source documents in an upcoming integration phase:
+To fully elevate the repository's monographs to world-class pedagogical visual standards, the 33 newly designed diagrams in this 41-diagram gallery should be systematically integrated into their respective parent \texttt{.tex} source documents in an upcoming integration phase:
 
 \begin{enumerate}
     \item \textbf{High-Priority Broken Placeholders}:
@@ -1879,8 +3504,15 @@ To fully elevate the repository's monographs to world-class pedagogical visual s
     \item \textbf{Advanced Algorithmic Additions}:
     Embed into target monographs:
     \begin{itemize}
-        \item \texttt{06.dynamic\_programming.tex}: Diagrams 13 and 14 (1D Tape and 2D Grid DP).
-        \item \texttt{07.graph\_algorithms.tex}: Diagrams 16, 17, and 18 (BFS Wavefront, Dijkstra, DSU).
+        \item \texttt{06.dynamic\_programming.tex}: Diagrams 13 and 14 (1D Tape and 2D Grid DP), Diagram 33 (0/1 Knapsack Space Optimization), and Diagram 34 (LCS 2D State Matrix Reconstruction).
+        \item \texttt{07.graph\_algorithms.tex}: Diagrams 16, 17, and 18 (BFS Wavefront, Dijkstra, DSU), Diagram 35 (Kahn's DAG Topological Sorting), and Diagram 36 (Bipartite 2-Coloring Contradiction).
+        \item \texttt{08.binary\_search.tex}: Diagram 37 (Rotated Sorted Array Discontinuity Bifurcation).
+        \item \texttt{09.string\_algorithms.tex}:\\ Diagram 29 (Trie Vector Pool Layout), Diagram 30 (KMP $\pi$ Fallback Transitions), and Diagram 31 (Rabin-Karp Rolling Hash Shift).
+        \item \texttt{01.combinatorics\_permutations.tex}:\\ Diagram 40 (Pascal's Triangle Additive Pyramid and Lattice Paths).
+        \item \texttt{02.modular\_arithmetic.tex}:\\ Diagram 38 (Binary Exponentiation Repeated Squaring Tree).
+        \item \texttt{03.number\_theory.tex}:\\ Diagram 39 (Divisor Complementary Symmetry across $\sqrt{N}$).
+        \item \texttt{04.sequences\_and\_series.tex}:\\ Diagram 32 (2D Prefix Sum Subgrid Inclusion-Exclusion).
+        \item \texttt{12.bit\_manipulation\_and\_bitmasks.tex}:\\ Diagram 41 (Brian Kernighan's Lowest Set-Bit Stripping).
     \end{itemize}
 \end{enumerate}
 
@@ -1898,6 +3530,8 @@ To fully elevate the repository's monographs to world-class pedagogical visual s
 2026-10-11 & Completed rigorous skeptical visual review and collision audit: eliminated text overlaps and margin overflows across Diagrams 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 21, and 22; re-spaced nodes, calibrated arrow routing, and verified layout fidelity with \texttt{pdftoppm}. \\ \hline
 2026-10-11 & Incorporated per-diagram review and audit tables across all 24 diagrams with reviewer attribution (Agent Antigravity), timestamp, and granular inspection/change log detailing exact geometry, routing, and invariant fixes. \\ \hline
 2026-10-11 & Updated per-diagram audit table headers to Reviewer (Human/Agent) and calibrated TikZ diagram bounding boxes to eliminate all margin overflow warnings. \\ \hline
+2026-10-12 & Integrated Module 12 (Bit Manipulation and Bitmasks) visual architecture: added Diagrams 25--28 (Integer Anatomy, LSB Isolation, Prefix XOR Cancellation, and Submask Enumeration Lattice) with breadcrumbs and audit logs. \\ \hline
+2026-10-12 & Repository-wide visual expansion and audit complete: designed and integrated 13 publication-grade TikZ diagrams (Diagrams 29--41) covering Module 09 (Trie Prefix Tree, KMP Fallback Automaton, Rabin-Karp Rolling Hash Shift) and core monograph paradigms (2D Prefix Sum Inclusion-Exclusion, 0/1 Knapsack Space Compression, LCS 2D State Matrix, Kahn's DAG Topological Sort, Bipartite 2-Coloring Contradiction, Rotated Sorted Array Binary Search, Binary Exponentiation Tree, Divisor Reflection Axis across $\sqrt{N}$, Pascal Additive Lattice Paths, and Brian Kernighan's Bit Stripping); gallery expanded from 28 to 41 full-width standalone diagrams with destination breadcrumbs and audit tables. \\ \hline
 \end{tabularx}
 
 \end{document}
