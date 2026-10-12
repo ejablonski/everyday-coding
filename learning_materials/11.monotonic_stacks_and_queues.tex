@@ -10,9 +10,9 @@
 \usepackage{tabularx}
 \usepackage{graphicx}
 
-% --- Optional Diagram Packages ---
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc}
+% --- Optional Diagram Packages (include when needed) ---
+% \usepackage{forest}
+% \usepackage{tikz}
 
 % --- Unified Color Palette ---
 \definecolor{primaryblue}{RGB}{24, 75, 140}
@@ -272,37 +272,9 @@ A celebrated application of the monotonic stack is computing the area of the lar
 
 For any bar $i$, what is the widest rectangle of height $H[i]$ that can be formed? It can expand to the left until it hits the first bar strictly shorter than $H[i]$ (its PSE at index $L$), and it can expand to the right until it hits the first bar strictly shorter than $H[i]$ (its NSE at index $R$). 
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=0.75]
-    % Axes
-    \draw[->, thick] (-0.5, 0) -- (7.5, 0) node[right] {Index};
-    \draw[->, thick] (0, -0.5) -- (0, 7) node[above] {Height};
-
-    % Bars: 2, 1, 5, 6, 2, 3
-    \draw[fill=blue!15, draw=blue!70!black, thick] (0.5, 0) rectangle (1.5, 2) node[pos=0.5] {$2$};
-    \draw[fill=blue!15, draw=blue!70!black, thick] (1.5, 0) rectangle (2.5, 1) node[pos=0.5] {$1$};
-    \draw[fill=blue!40, draw=blue!80!black, thick] (2.5, 0) rectangle (3.5, 5) node[pos=0.5] {$5$};
-    \draw[fill=blue!40, draw=blue!80!black, thick] (3.5, 0) rectangle (4.5, 6) node[pos=0.5] {$6$};
-    \draw[fill=blue!15, draw=blue!70!black, thick] (4.5, 0) rectangle (5.5, 2) node[pos=0.5] {$2$};
-    \draw[fill=blue!15, draw=blue!70!black, thick] (5.5, 0) rectangle (6.5, 3) node[pos=0.5] {$3$};
-
-    % Indices below
-    \node[below] at (1, 0) {$0$};
-    \node[below] at (2, 0) {$1$};
-    \node[below] at (3, 0) {$2$};
-    \node[below] at (4, 0) {$3$};
-    \node[below] at (5, 0) {$4$};
-    \node[below] at (6, 0) {$5$};
-
-    % Bounding rectangle highlight for height 5
-    \draw[draw=red, line width=1.5pt, dashed] (2.5, 0) rectangle (4.5, 5);
-    \node[red, font=\bfseries, above] at (3.5, 5.1) {Width $= 2$, Area $= 10$};
-
-    % Boundary arrows
-    \draw[<-, thick, red] (2.5, 2.5) -- (2.0, 2.5) node[left] {PSE (index 1)};
-    \draw[<-, thick, red] (4.5, 2.5) -- (5.0, 2.5) node[right] {NSE (index 4)};
-\end{tikzpicture}
+\noindent\emph{Figure: Histogram boundary expansion for bar $H[2] = 5$. (See Diagram~22 in \texttt{diagrams\_review.pdf} for the full visual diagram.)}
 \caption{Histogram boundary expansion for bar $H[2] = 5$. The rectangle of height $5$ expands left until index $1$ (height $1$) and right until index $4$ (height $2$). The width is $R - L - 1 = 4 - 1 - 1 = 2$, yielding area $5 \times 2 = 10$.}
 \label{fig:histogram_expansion}
 \end{figure}
@@ -419,44 +391,9 @@ Therefore, the total number of operations performed by the inner loop across all
 
 Figure~\ref{fig:cascading_pops} illustrates what happens when a new element arrives that violates the stack invariant. In an array $A = [7, 4, 2, 6]$, the stack holds indices of values $[7, 4, 2]$ in decreasing order. When value $6$ arrives, it triggers a cascade of pops: $2$ is popped ($2 < 6$), then $4$ is popped ($4 < 6$). When $7$ is reached ($7 > 6$), the invariant is restored, and $6$ is pushed.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=0.85, every node/.style={transform shape}]
-    % Array display
-    \node[font=\bfseries] at (-1.5, 3.5) {Array $A$:};
-    \foreach \idx/\val in {0/7, 1/4, 2/2, 3/6} {
-        \draw[thick, fill=blue!10] (\idx*1.4, 3.1) rectangle (\idx*1.4+1.2, 3.9);
-        \node at (\idx*1.4+0.6, 3.5) {$\val$};
-        \node[gray, font=\scriptsize] at (\idx*1.4+0.6, 2.7) {idx \idx};
-    }
-
-    % Step 1: Stack before 6 arrives
-    \node[font=\bfseries, align=center] at (1.5, 1.8) {1. Stack before $A[3]=6$};
-    \draw[thick] (0.8, -1.5) -- (0.8, 1.2) -- (2.2, 1.2) -- (2.2, -1.5);
-    \draw[thick, fill=blue!20] (0.9, -1.4) rectangle (2.1, -0.6) node[midway] {$A[0] = 7$};
-    \draw[thick, fill=blue!20] (0.9, -0.5) rectangle (2.1, 0.3) node[midway] {$A[1] = 4$};
-    \draw[thick, fill=blue!20] (0.9, 0.4) rectangle (2.1, 1.1) node[midway] {$A[2] = 2$};
-    \node[above, font=\scriptsize, primaryblue] at (1.5, 1.1) {Top};
-    \node[below, font=\scriptsize, codegray, align=center] at (1.5, -1.6) {Elements waiting\\for their NGE};
-
-    % Arrow showing arrival of 6
-    \draw[->, line width=1.5pt, red] (3.0, 0.5) -- (4.8, 0.5) node[midway, above, font=\small, align=center] {Incoming\\$A[3]=6$};
-
-    % Step 2: Cascading pops
-    \node[font=\bfseries, align=center] at (6.5, 1.8) {2. Cascading Pops};
-    % Popped nodes flying out
-    \draw[thick, fill=red!20, dashed] (5.8, 0.4) rectangle (7.2, 1.1) node[midway] {$2 < 6 \implies$ Pop!};
-    \draw[thick, fill=red!20, dashed] (5.8, -0.5) rectangle (7.2, 0.2) node[midway] {$4 < 6 \implies$ Pop!};
-    \node[font=\scriptsize, codegreen] at (8.5, 0.75) {NGE of $2$ is $6$};
-    \node[font=\scriptsize, codegreen] at (8.5, -0.15) {NGE of $4$ is $6$};
-
-    % Step 3: Resulting stack
-    \node[font=\bfseries, align=center] at (11.0, 1.8) {3. Stack After Push};
-    \draw[thick] (10.3, -1.5) -- (10.3, 1.2) -- (11.7, 1.2) -- (11.7, -1.5);
-    \draw[thick, fill=blue!20] (10.4, -1.4) rectangle (11.6, -0.6) node[midway] {$A[0] = 7$};
-    \draw[thick, fill=codegreen!30] (10.4, -0.5) rectangle (11.6, 0.3) node[midway] {$A[3] = 6$};
-    \node[above, font=\scriptsize, codegreen] at (11.0, 0.3) {New Top};
-\end{tikzpicture}
+\noindent\emph{Figure: Cascading pops on a decreasing monotonic stack. (See Diagram~23 in \texttt{diagrams\_review.pdf} for the full visual diagram.)}
 \caption{Visualizing cascading pops on a decreasing monotonic stack. Incoming element $A[3] = 6$ pops $A[2]=2$ and $A[1]=4$ because $6 > 2$ and $6 > 4$. Element $A[0]=7$ survives because $7 > 6$. Both popped elements record $6$ as their Next Greater Element.}
 \label{fig:cascading_pops}
 \end{figure}
@@ -465,35 +402,9 @@ Figure~\ref{fig:cascading_pops} illustrates what happens when a new element arri
 
 Figure~\ref{fig:deque_sliding_window} shows how a monotonic deque manages sliding window maximums across a window of length $K = 3$.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=0.85, every node/.style={transform shape}]
-    % Array
-    \foreach \idx/\val in {0/1, 1/3, 2/-1, 3/-3, 4/5, 5/3, 6/6} {
-        \draw[thick, fill=gray!10] (\idx*1.5, 3.5) rectangle (\idx*1.5+1.3, 4.3);
-        \node at (\idx*1.5+0.65, 3.9) {$\val$};
-        \node[gray, font=\scriptsize] at (\idx*1.5+0.65, 3.1) {idx \idx};
-    }
-
-    % Sliding window frame at [2, 4]: values -1, -3, 5
-    \draw[draw=primaryblue, line width=2pt, rounded corners] (2.9, 2.9) rectangle (7.4, 4.5);
-    \node[primaryblue, font=\bfseries] at (5.15, 4.8) {Window $[2 \dots 4]$ ($K=3$)};
-
-    % Deque structure
-    \node[font=\bfseries] at (1.5, 1.0) {Monotonic Deque:};
-    \draw[thick, primaryblue] (3.0, 0.5) rectangle (8.0, 1.5);
-    \node[above, primaryblue, font=\scriptsize] at (3.5, 1.5) {Front (Maximum)};
-    \node[above, primaryblue, font=\scriptsize] at (7.5, 1.5) {Back (Arrival)};
-
-    % Deque entries
-    \draw[thick, fill=codegreen!30] (3.2, 0.6) rectangle (4.8, 1.4) node[midway, font=\small] {idx $4$ ($5$)};
-
-    % Explanations
-    \draw[->, thick, red] (6.0, 2.5) -- (6.0, 1.6);
-    \node[right, font=\scriptsize, red, align=left] at (6.1, 2.1) {Incoming $5$ at idx $4$ pops\\idx $3$ ($-3$) and idx $2$ ($-1$)\\from back because $5 > -1 > -3$.};
-
-    \node[codegreen, font=\bfseries] at (5.15, -0.3) {Window Maximum = $A[\text{dq.front()}] = A[4] = 5$};
-\end{tikzpicture}
+\noindent\emph{Figure: Monotonic deque sliding window maximum for window $[2 \dots 4]$. (See Diagram~24 in \texttt{diagrams\_review.pdf} for the full visual diagram.)}
 \caption{Monotonic Deque sliding window maximum for window $[2 \dots 4]$. Older elements $-1$ and $-3$ are dominated by the arriving value $5$ and popped from the back of the deque.}
 \label{fig:deque_sliding_window}
 \end{figure}
@@ -984,6 +895,7 @@ Subarray Extremum Contributions & $O(N)$ & $O(N)$ & Summing minimum or maximum v
 \textbf{Date} & \textbf{Change} \\ \hline
 2026-10-11 & Document created. \\ \hline
 2026-10-11 & Added concrete worked examples to all Main Topic subsections, added Next Smaller Element C++ implementation, canonicalized 3-step pattern recognition, and expanded duplicate trace and glossary. \\ \hline
+2026-10-12 & Moved embedded TikZ diagrams to central review document (Diagrams 22--24 in diagrams\_review.pdf) and preserved figure placeholders. \\ \hline
 \end{tabularx}
 
 \end{document}
