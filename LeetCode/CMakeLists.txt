@@ -9,6 +9,7 @@ add_executable(LeetCodeSolutions
   150.evaluate_reverse_polish_notation/150.evaluate_reverse_polish_notation_tests.cpp
   204.count_primes/204.count_primes_tests.cpp
   263.ugly_number/263.ugly_number_tests.cpp
+  301.remove_invalid_parentheses/301.remove_invalid_parentheses_tests.cpp
   448.find_all_numbers_disappeared_in_an_array/448.find_all_numbers_disappeared_in_an_array_tests.cpp
   485.max_consecutive_ones/485.max_consecutive_ones_tests.cpp
   636.exclusive_time_of_functions/636.exclusive_time_of_functions_test.cpp
