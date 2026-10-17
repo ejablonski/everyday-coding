@@ -19,6 +19,7 @@ add_executable(LeetCodeSolutions
   728.self_dividing_numbers/728.self_dividing_numbers_tests.cpp
   739.daily_temperatures/739.daily_temperatures_tests.cpp
   856.score_of_parentheses/856.score_of_parentheses_tests.cpp
+  921.minimum_add_to_make_parentheses_valid/921.minimum_add_to_make_parentheses_valid_tests.cpp
   1015.smallest_integer_divisible_by_k/1015.smallest_integer_divisible_by_k_tests.cpp
   1021.remove_outermost_parentheses/1021.remove_outermost_parentheses_tests.cpp
   1365.how_many_numbers_are_smaller_than_the_current_number/1365.how_many_numbers_are_smaller_than_the_current_number_tests.cpp
