@@ -42,6 +42,7 @@ add_executable(LeetCodeSolutions
   3551.minimum_swaps_to_sort_by_digit_sum/3551.minimum_swaps_to_sort_by_digit_sum_tests.cpp
   3723.maximize_sum_of_squares_of_digits/3723.maximize_sum_of_squares_of_digits_tests.cpp
   3727.maximum_alternating_sum_of_squares/3727.maximum_alternating_sum_of_squares_tests.cpp
+  3886.sum_of_sortable_integers/3886.sum_of_sortable_integers_tests.cpp
 )
 
 target_include_directories(LeetCodeSolutions
