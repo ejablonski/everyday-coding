@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 project("everyday_coding"
-  VERSION 1.1.26
+  VERSION 1.1.27
   LANGUAGES CXX
 )
 
