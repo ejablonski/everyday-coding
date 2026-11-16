@@ -8,6 +8,7 @@ add_executable(LeetCodeSolutions
   118.pascals_triangle/118.pascals_triangle_tests.cpp
   150.evaluate_reverse_polish_notation/150.evaluate_reverse_polish_notation_tests.cpp
   204.count_primes/204.count_primes_tests.cpp
+  232.implement_queue_using_stacks/232.implement_queue_using_stacks_tests.cpp
   263.ugly_number/263.ugly_number_tests.cpp
   301.remove_invalid_parentheses/301.remove_invalid_parentheses_tests.cpp
   448.find_all_numbers_disappeared_in_an_array/448.find_all_numbers_disappeared_in_an_array_tests.cpp
@@ -61,25 +62,25 @@ set_target_properties(LeetCodeSolutions PROPERTIES CXX_CLANG_TIDY "")
 
 # Automatically locate and copy the ASan DLL on Windows
 if(WIN32 AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  # Ask Clang dynamically where its internal libraries are located
-  execute_process(
+    # Ask Clang dynamically where its internal libraries are located
+    execute_process(
     COMMAND ${CMAKE_CXX_COMPILER} -print-resource-dir
     OUTPUT_VARIABLE CLANG_RESOURCE_DIR
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
 
-  # Build the path to the ASan DLL relative to the dynamic resource dir
-  set(ASAN_DLL "${CLANG_RESOURCE_DIR}/lib/windows/clang_rt.asan_dynamic-x86_64.dll")
+    # Build the path to the ASan DLL relative to the dynamic resource dir
+    set(ASAN_DLL "${CLANG_RESOURCE_DIR}/lib/windows/clang_rt.asan_dynamic-x86_64.dll")
 
-  # Copy the DLL into the same folder as the test executable
-  if(EXISTS "${ASAN_DLL}")
-    add_custom_command(TARGET LeetCodeSolutions POST_BUILD
+    # Copy the DLL into the same folder as the test executable
+    if(EXISTS "${ASAN_DLL}")
+        add_custom_command(TARGET LeetCodeSolutions POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       "${ASAN_DLL}"
       $<TARGET_FILE_DIR:LeetCodeSolutions>
       COMMENT "Dynamically copying ASan DLL from compiler resources"
     )
-  endif()
+    endif()
 endif()
 
 include(CTest)
