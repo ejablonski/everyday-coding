@@ -45,6 +45,7 @@ add_executable(LeetCodeSolutions
   3727.maximum_alternating_sum_of_squares/3727.maximum_alternating_sum_of_squares_tests.cpp
   3863.minimum_operations_to_sort_a_string/3863.minimum_operations_to_sort_a_string_tests.cpp
   3886.sum_of_sortable_integers/3886.sum_of_sortable_integers_tests.cpp
+  3942.minimum_operations_to_sort_a_permutation/3942.minimum_operations_to_sort_a_permutation_tests.cpp
 )
 
 target_include_directories(LeetCodeSolutions

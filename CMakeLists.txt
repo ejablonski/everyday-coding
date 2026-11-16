@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 project("everyday_coding"
-  VERSION 1.1.28
+  VERSION 1.1.29
   LANGUAGES CXX
 )
 
@@ -28,10 +28,10 @@ list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(CLANG_TIDY_EXE)
-  message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
-  set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+    message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
+    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
 else()
-  message(WARNING "clang-tidy not found! Disabling clang-tidy integration.")
+    message(WARNING "clang-tidy not found! Disabling clang-tidy integration.")
 endif()
 
 add_subdirectory(./LeetCode)
