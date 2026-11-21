@@ -23,6 +23,7 @@ add_executable(LeetCodeSolutions
   921.minimum_add_to_make_parentheses_valid/921.minimum_add_to_make_parentheses_valid_tests.cpp
   1015.smallest_integer_divisible_by_k/1015.smallest_integer_divisible_by_k_tests.cpp
   1021.remove_outermost_parentheses/1021.remove_outermost_parentheses_tests.cpp
+  1046.last_stone_weight/1046.last_stone_weight_tests.cpp
   1365.how_many_numbers_are_smaller_than_the_current_number/1365.how_many_numbers_are_smaller_than_the_current_number_tests.cpp
   1441.build_an_array_with_stack_operations/1441.build_an_array_with_stack_operations_tests.cpp
   1470.shuffle_the_array/1470.shuffle_the_array_tests.cpp
