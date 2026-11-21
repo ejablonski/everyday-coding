@@ -1,6 +1,9 @@
 #include <algorithm>
 #include <ranges>
 #include <vector>
+
+namespace LC3727 {
+
 /**
  * Learning Journal:
  * - Pattern: Greedy sorting & alternating array partition.
@@ -29,3 +32,5 @@ struct Solution
         return ans;
     }
 };
+
+} // namespace LC3727

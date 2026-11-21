@@ -1,6 +1,8 @@
 #include <unordered_set>
 #include <vector>
 
+namespace LC2913 {
+
 struct Solution
 {
     [[nodiscard]]
@@ -17,3 +19,5 @@ struct Solution
         return sum;
     }
 };
+
+} // namespace LC2913

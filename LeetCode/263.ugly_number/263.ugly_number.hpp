@@ -1,3 +1,5 @@
+namespace LC263 {
+
 struct Solution
 {
     static bool isUgly(int _n)
@@ -23,3 +25,5 @@ struct Solution
         return _n == 1;
     }
 };
+
+} // namespace LC263

@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+using namespace LC150;
+
 TEST_CASE("LeetCode 150 - Evaluate Reverse Polish Notation", "[LeetCode][150][stack][math][array]")
 {
     // --- Official Markdown Examples ---

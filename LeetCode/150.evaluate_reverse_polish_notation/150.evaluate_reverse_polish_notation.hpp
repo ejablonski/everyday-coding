@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+namespace LC150 {
+
 /**
  * Learning Journal:
  * - Pattern: Stack (Last-In, First-Out)
@@ -60,3 +62,5 @@ struct Solution
         return s.top();
     }
 };
+
+} // namespace LC150

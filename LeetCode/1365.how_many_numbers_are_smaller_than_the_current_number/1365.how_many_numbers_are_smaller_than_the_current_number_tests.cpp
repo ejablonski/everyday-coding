@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC1365;
+
 TEST_CASE("LeetCode 1365 - How Many Numbers Are Smaller Than the Current Number", "[LeetCode][1365][array][hash-table][sorting][counting]")
 {
     Solution solution;

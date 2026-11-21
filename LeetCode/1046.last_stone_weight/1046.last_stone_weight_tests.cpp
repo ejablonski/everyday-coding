@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC1046;
+
 TEST_CASE("LeetCode 1046 - Last Stone Weight",
           "[LeetCode][1046][array][heap][priority-queue][simulation]")
 {

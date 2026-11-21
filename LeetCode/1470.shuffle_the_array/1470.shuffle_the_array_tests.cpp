@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC1470;
+
 TEST_CASE("LeetCode 1470 - Shuffle the Array", "[LeetCode][1470][array]")
 {
     Solution solution;

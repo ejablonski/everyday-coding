@@ -1,5 +1,7 @@
 #include <string>
 
+namespace LC856 {
+
 /**
  * Solution: Found a hint about this solution on one of the comments of this problem on LeetCode.
  * It's about tracking depth of the parentheses and based on that calculate the score. To determine
@@ -31,3 +33,5 @@ struct Solution
         return score;
     }
 };
+
+} // namespace LC856

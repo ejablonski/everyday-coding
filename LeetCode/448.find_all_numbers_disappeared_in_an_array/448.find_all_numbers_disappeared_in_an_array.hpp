@@ -2,6 +2,8 @@
 #include <ranges>
 #include <vector>
 
+namespace LC448 {
+
 struct Solution
 {
     static std::vector<int> findDisappearedNumbers(std::vector<int>& _nums)
@@ -14,3 +16,5 @@ struct Solution
         return diff;
     }
 };
+
+} // namespace LC448

@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
+using namespace LC3723;
+
 TEST_CASE("LeetCode 3723 - Maximize Sum of Squares of Digits", "[LeetCode][3723][math][greedy][string]")
 {
     // --- Official Markdown Examples ---

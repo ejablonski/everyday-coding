@@ -1,5 +1,7 @@
 #include <string>
 
+namespace LC1541 {
+
 struct Solution
 {
     static int minInsertions(std::string _s)
@@ -36,3 +38,5 @@ struct Solution
         return insertions + (open_bracket * 2);
     }
 };
+
+} // namespace LC1541

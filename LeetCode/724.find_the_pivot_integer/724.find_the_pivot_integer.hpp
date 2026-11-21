@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <ranges>
 
+namespace LC724 {
+
 struct Solution
 {
     static int pivotInteger(int _n)
@@ -19,3 +21,5 @@ struct Solution
         return -1;
     }
 };
+
+} // namespace LC724

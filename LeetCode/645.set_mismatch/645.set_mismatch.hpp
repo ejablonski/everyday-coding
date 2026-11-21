@@ -2,6 +2,8 @@
 #include <numeric>
 #include <vector>
 
+namespace LC645 {
+
 struct Solution
 {
     static std::vector<int> findErrorNums(std::vector<int>& _nums)
@@ -26,3 +28,5 @@ struct Solution
         return ans;
     }
 };
+
+} // namespace LC645

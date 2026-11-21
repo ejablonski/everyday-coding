@@ -4,6 +4,8 @@
 #include <ranges>
 #include <vector>
 
+namespace LC1502 {
+
 struct Solution
 {
     [[nodiscard]]
@@ -21,3 +23,5 @@ struct Solution
         return std::ranges::all_of(diffs, [=](int diff) { return diff == expected_diff; });
     }
 };
+
+} // namespace LC1502

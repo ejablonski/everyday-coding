@@ -1,5 +1,7 @@
 #include <vector>
 
+namespace LC485 {
+
 struct Solution
 {
     static int findMaxConsecutiveOnes(std::vector<int>& _nums)
@@ -19,3 +21,5 @@ struct Solution
         return ans;
     }
 };
+
+} // namespace LC485

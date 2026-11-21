@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
+using namespace LC3863;
+
 TEST_CASE("LeetCode 3863 - Minimum Operations to Sort a String",
           "[LeetCode][3863][string][greedy][sorting]")
 {

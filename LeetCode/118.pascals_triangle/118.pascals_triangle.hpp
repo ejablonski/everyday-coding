@@ -1,5 +1,7 @@
 #include <vector>
 
+namespace LC118 {
+
 struct Solution
 {
     static std::vector<std::vector<int>> generate(int _rows)
@@ -17,3 +19,5 @@ struct Solution
         return triangle;
     }
 };
+
+} // namespace LC118

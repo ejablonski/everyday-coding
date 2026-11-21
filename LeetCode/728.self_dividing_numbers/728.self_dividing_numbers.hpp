@@ -1,6 +1,8 @@
 #include <ranges>
 #include <vector>
 
+namespace LC728 {
+
 struct Solution
 {
     static std::vector<int> selfDividingNumbers(int _left, int _right)
@@ -34,3 +36,5 @@ struct Solution
                std::ranges::to<std::vector<int>>();
     }
 };
+
+} // namespace LC728

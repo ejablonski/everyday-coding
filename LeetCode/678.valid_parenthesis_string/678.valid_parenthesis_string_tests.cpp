@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
+using namespace LC678;
+
 TEST_CASE("LeetCode 678 - Valid Parenthesis String",
           "[LeetCode][678][string][dynamic-programming][memoization][greedy]")
 {

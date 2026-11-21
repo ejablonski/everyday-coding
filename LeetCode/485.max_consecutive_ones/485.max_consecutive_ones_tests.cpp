@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC485;
+
 TEST_CASE("LeetCode 485 - Max Consecutive Ones", "[LeetCode][485][array]")
 {
     Solution solution;

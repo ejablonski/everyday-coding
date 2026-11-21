@@ -1,5 +1,7 @@
 #include <stack>
 
+namespace LC232 {
+
 class MyQueue
 {
   private:
@@ -35,3 +37,5 @@ class MyQueue
 
     bool empty() { return in.empty() && out.empty(); }
 };
+
+} // namespace LC232

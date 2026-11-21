@@ -1,6 +1,8 @@
 #include <queue>
 #include <vector>
 
+namespace LC1046 {
+
 /**
  * Thanks to std::priority_queue this problem is trivial
  */
@@ -25,3 +27,5 @@ struct Solution
         return pq.empty() ? 0 : pq.top();
     }
 };
+
+} // namespace LC1046

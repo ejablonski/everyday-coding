@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC118;
+
 TEST_CASE("LeetCode 118 - Pascal's Triangle", "[LeetCode][118][array][dynamic-programming]")
 {
     Solution solution;

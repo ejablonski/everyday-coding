@@ -1,5 +1,7 @@
 #include <vector>
 
+namespace LC3942 {
+
 struct Solution
 {
     [[nodiscard]]
@@ -39,3 +41,5 @@ struct Solution
         return -1;
     }
 };
+
+} // namespace LC3942

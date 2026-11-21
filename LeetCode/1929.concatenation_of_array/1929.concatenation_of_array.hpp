@@ -1,5 +1,7 @@
 #include <vector>
 
+namespace LC1929 {
+
 struct Solution
 {
     static std::vector<int> getConcatenation(std::vector<int>& _nums)
@@ -12,3 +14,5 @@ struct Solution
         return _nums;
     }
 };
+
+} // namespace LC1929

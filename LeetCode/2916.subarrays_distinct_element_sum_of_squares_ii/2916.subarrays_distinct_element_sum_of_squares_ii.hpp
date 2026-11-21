@@ -92,7 +92,7 @@
  *   `last_seen` lookup table.
  */
 
-namespace {
+namespace LC2916 {
 using namespace std;
 
 struct Solution
@@ -240,4 +240,4 @@ struct Solution
         return grand_total;
     }
 };
-} // namespace
+} // namespace LC2916

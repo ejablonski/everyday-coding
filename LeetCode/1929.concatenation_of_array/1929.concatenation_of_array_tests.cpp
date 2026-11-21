@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC1929;
+
 TEST_CASE("LeetCode 1929 - Concatenation of Array", "[LeetCode][1929][array]")
 {
     Solution solution;

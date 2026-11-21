@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC1502;
+
 TEST_CASE("LeetCode 1502 - Can Make Arithmetic Progression From Sequence", "[LeetCode][1502][array][sorting]")
 {
     Solution solution;

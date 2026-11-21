@@ -2,6 +2,8 @@
 #include <utility>
 #include <vector>
 
+namespace LC20 {
+
 struct Solution
 {
     static bool isValid(std::string& _s)
@@ -34,3 +36,5 @@ struct Solution
         return stack.empty();
     };
 };
+
+} // namespace LC20

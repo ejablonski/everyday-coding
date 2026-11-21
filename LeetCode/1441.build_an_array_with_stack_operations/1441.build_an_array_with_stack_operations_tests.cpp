@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+using namespace LC1441;
+
 TEST_CASE("LeetCode 1441 - Build an Array With Stack Operations",
           "[LeetCode][1441][array][stack][simulation]")
 {

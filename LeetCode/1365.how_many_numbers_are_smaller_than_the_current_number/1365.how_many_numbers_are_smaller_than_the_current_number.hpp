@@ -2,6 +2,8 @@
 #include <iterator>
 #include <vector>
 
+namespace LC1365 {
+
 /**
  * Solution explanation: In sorted array every prev element will be smaller so you just need to
  * find an index of an element in a sorted array. O(N log N) complexity.
@@ -23,3 +25,5 @@ struct Solution
         return ans;
     }
 };
+
+} // namespace LC1365

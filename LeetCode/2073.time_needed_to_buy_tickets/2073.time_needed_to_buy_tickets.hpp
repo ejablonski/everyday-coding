@@ -1,5 +1,7 @@
 #include <vector>
 
+namespace LC2073 {
+
 struct Solution
 {
     [[nodiscard]]
@@ -25,3 +27,5 @@ struct Solution
         return time_passed;
     }
 };
+
+} // namespace LC2073

@@ -1,5 +1,7 @@
 #include <string>
 
+namespace LC1021 {
+
 struct Solution {
     static std::string removeOuterParentheses(std::string _s) {
       std::string ans = "";
@@ -26,3 +28,5 @@ struct Solution {
       return ans;
     }
 };
+
+} // namespace LC1021

@@ -2,6 +2,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+using namespace LC204;
+
 TEST_CASE("LeetCode 204 - Count Primes", "[LeetCode][204][array][math][number-theory]")
 {
     Solution solution;

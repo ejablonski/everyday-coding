@@ -1,6 +1,8 @@
 #include <string>
 #include <vector>
 
+namespace LC22 {
+
 struct Solution
 {
     static void explore(std::string& _buffer, int _open, int _closed, int _size,
@@ -33,3 +35,5 @@ struct Solution
         return ans;
     }
 };
+
+} // namespace LC22

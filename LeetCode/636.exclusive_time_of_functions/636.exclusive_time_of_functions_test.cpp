@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+using namespace LC636;
+
 TEST_CASE("LeetCode 636 - Exclusive Time of Functions", "[LeetCode][636][stack][array]")
 {
     // --- Official Markdown Examples ---

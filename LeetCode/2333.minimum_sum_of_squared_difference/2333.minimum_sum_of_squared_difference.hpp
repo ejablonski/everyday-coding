@@ -1,6 +1,8 @@
 #include <cmath>
 #include <vector>
 
+namespace LC2333 {
+
 /**
  * Learning Journal:
  * - Pattern: Greedy Optimization ("Shaving the Peaks") via Frequency Buckets.
@@ -52,3 +54,5 @@ struct Solution
         return ans;
     }
 };
+
+} // namespace LC2333

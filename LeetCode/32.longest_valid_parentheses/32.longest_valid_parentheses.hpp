@@ -1,6 +1,8 @@
 #include <string>
 #include <vector>
 
+namespace LC32 {
+
 /**
  * Solution explanation: DP, 1D array solution.
  * Because every valid parentheses must end with ')' all we need is to traverse through whole
@@ -42,3 +44,5 @@ struct Solution
         return max_length;
     }
 };
+
+} // namespace LC32

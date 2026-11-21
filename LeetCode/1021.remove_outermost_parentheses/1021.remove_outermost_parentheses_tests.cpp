@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
+using namespace LC1021;
+
 TEST_CASE("LeetCode 1021 - Remove Outermost Parentheses", "[LeetCode][1021][string][stack]")
 {
     // --- Official Markdown Examples ---

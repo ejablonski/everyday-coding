@@ -1,6 +1,8 @@
 #include <ranges>
 #include <vector>
 
+namespace LC1569 {
+
 /**
  * Learning Journal:
  *
@@ -126,3 +128,5 @@ struct Solution
         return buildBranch(_nums, buildPascalsTriangle(_nums.size())) - 1;
     }
 };
+
+} // namespace LC1569

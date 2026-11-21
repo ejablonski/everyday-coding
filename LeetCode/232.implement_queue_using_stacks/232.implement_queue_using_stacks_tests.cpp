@@ -2,6 +2,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+using namespace LC232;
+
 TEST_CASE("LeetCode 232 - Implement Queue using Stacks", "[LeetCode][232][stack][design][queue]")
 {
     MyQueue queue;

@@ -2,6 +2,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+using namespace LC263;
+
 TEST_CASE("LeetCode 263 - Ugly Number", "[LeetCode][263][math]")
 {
     Solution solution;

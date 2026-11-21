@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
+using namespace LC1541;
+
 TEST_CASE("LeetCode 1541 - Minimum Insertions to Balance a Parentheses String", "[LeetCode][1541][string][greedy][stack]")
 {
     // --- Official Markdown Examples ---

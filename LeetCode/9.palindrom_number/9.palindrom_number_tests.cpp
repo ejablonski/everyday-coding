@@ -2,6 +2,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+using namespace LC9;
+
 TEST_CASE("LeetCode 9 - Palindrom Number", "[LeetCode][9][math]")
 {
     Solution solution;

@@ -4,6 +4,8 @@
 #include <numeric>
 #include <vector>
 
+using namespace LC2916;
+
 TEST_CASE("LeetCode 2916 - Subarrays Distinct Element Sum of Squares II",
           "[LeetCode][2916][array][dynamic-programming][binary-indexed-tree][segment-tree]")
 {

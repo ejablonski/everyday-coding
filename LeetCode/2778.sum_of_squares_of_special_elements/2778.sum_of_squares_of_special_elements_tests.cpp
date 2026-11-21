@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC2778;
+
 TEST_CASE("LeetCode 2778 - Sum of Squares of Special Elements", "[LeetCode][2778][array][math][simulation]")
 {
     // --- Official Markdown Examples ---

@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC3551;
+
 TEST_CASE("LeetCode 3551 - Minimum Swaps to Sort by Digit Sum",
           "[LeetCode][3551][array][sorting][greedy][graph]")
 {

@@ -5,6 +5,8 @@
 #include <unordered_set>
 #include <vector>
 
+using namespace LC22;
+
 TEST_CASE("LeetCode 22 - Generate Parentheses", "[LeetCode][22][backtracking][string]")
 {
     SECTION("Example 1: n = 3")

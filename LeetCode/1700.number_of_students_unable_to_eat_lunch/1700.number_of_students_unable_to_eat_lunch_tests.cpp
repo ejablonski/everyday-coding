@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC1700;
+
 TEST_CASE("LeetCode 1700 - Number of Students Unable to Eat Lunch",
           "[LeetCode][1700][array][stack][queue][simulation]")
 {

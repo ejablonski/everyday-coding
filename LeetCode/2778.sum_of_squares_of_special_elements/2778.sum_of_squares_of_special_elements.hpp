@@ -1,4 +1,7 @@
 #include <vector>
+
+namespace LC2778 {
+
 struct Solution
 {
     [[nodiscard]]
@@ -15,3 +18,5 @@ struct Solution
         return sum;
     }
 };
+
+} // namespace LC2778

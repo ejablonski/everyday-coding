@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC1475;
+
 TEST_CASE("LeetCode 1475 - Final Prices With a Special Discount in a Shop", "[LeetCode][1475][array][stack][monotonic-stack]")
 {
     // --- Official Markdown Examples ---

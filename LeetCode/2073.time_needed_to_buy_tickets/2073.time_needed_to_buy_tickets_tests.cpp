@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC2073;
+
 TEST_CASE("LeetCode 2073 - Time Needed to Buy Tickets",
           "[LeetCode][2073][array][queue][simulation]")
 {

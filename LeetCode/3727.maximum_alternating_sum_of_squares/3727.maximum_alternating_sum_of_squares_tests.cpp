@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC3727;
+
 TEST_CASE("LeetCode 3727 - Maximum Alternating Sum of Squares", "[LeetCode][3727][array][greedy][sorting]")
 {
     // --- Official Markdown Examples ---

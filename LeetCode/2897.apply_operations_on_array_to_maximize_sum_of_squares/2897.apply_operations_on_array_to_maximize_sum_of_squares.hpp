@@ -1,4 +1,7 @@
 #include <vector>
+
+namespace LC2897 {
+
 /**
  * Learning Journal:
  * - Pattern: Bit Manipulation + Greedy (Bit Conservation & Redistribution).
@@ -45,3 +48,5 @@ struct Solution
         return ans;
     }
 };
+
+} // namespace LC2897

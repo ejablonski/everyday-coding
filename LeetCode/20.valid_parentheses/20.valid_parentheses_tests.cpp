@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
+using namespace LC20;
+
 TEST_CASE("LeetCode 20 - Valid Parentheses", "[LeetCode][20][stack][string]")
 {
     Solution solution;

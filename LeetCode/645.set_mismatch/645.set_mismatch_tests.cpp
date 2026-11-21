@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC645;
+
 TEST_CASE("LeetCode 645 - Set Mismatch", "[LeetCode][645][array][hash-table][bit-manipulation][sorting]")
 {
     Solution solution;

@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <vector>
 
+namespace LC1700 {
+
 struct Solution
 {
     [[nodiscard]]
@@ -28,3 +30,5 @@ struct Solution
         return s0 + s1;
     }
 };
+
+} // namespace LC1700

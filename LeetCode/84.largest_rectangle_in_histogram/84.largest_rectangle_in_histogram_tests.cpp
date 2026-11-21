@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC84;
+
 TEST_CASE("LeetCode 84 - Largest Rectangle in Histogram", "[LeetCode][84][array][stack][monotonic-stack]")
 {
     // --- Official Markdown Examples ---

@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC3886;
+
 TEST_CASE("LeetCode 3886 - Sum of Sortable Integers", "[LeetCode][3886][array][math]")
 {
     // --- Official Markdown Examples ---

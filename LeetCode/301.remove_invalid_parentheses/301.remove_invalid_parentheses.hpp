@@ -3,6 +3,8 @@
 #include <unordered_set>
 #include <vector>
 
+namespace LC301 {
+
 class Solution
 {
     // Helper function to check if a string has valid parentheses
@@ -69,3 +71,5 @@ class Solution
         return result;
     }
 };
+
+} // namespace LC301

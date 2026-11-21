@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+namespace LC60 {
+
 struct Solution
 {
     [[nodiscard]]
@@ -40,3 +42,5 @@ struct Solution
         return result;
     }
 };
+
+} // namespace LC60

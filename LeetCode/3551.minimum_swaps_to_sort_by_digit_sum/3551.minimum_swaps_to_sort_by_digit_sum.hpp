@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <vector>
 
+namespace LC3551 {
+
 /**
  * Learning Journal — LeetCode 3551: Minimum Swaps to Sort by Digit Sum
  * ====================================================================
@@ -131,3 +133,5 @@ struct Solution
         return swaps;
     }
 };
+
+} // namespace LC3551

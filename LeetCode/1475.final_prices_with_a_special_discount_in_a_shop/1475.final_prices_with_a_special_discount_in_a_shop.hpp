@@ -1,6 +1,8 @@
 #include <stack>
 #include <vector>
 
+namespace LC1475 {
+
 /**
  * Learning Journal:
  * - Pattern: Monotonic Stack (Next Smaller Element).
@@ -66,3 +68,5 @@ struct Solution
     //     return final_prices;
     // }
 };
+
+} // namespace LC1475

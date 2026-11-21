@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
+using namespace LC32;
+
 TEST_CASE("LeetCode 32 - Longest Valid Parentheses",
           "[LeetCode][32][string][dynamic-programming][stack]")
 {

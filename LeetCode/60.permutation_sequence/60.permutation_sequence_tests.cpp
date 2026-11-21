@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
+using namespace LC60;
+
 TEST_CASE("LeetCode 60 - Permutation Sequence", "[LeetCode][60][math][recursion]")
 {
     Solution solution;

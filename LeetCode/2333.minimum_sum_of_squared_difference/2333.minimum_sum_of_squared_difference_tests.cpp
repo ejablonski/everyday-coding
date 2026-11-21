@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC2333;
+
 TEST_CASE("LeetCode 2333 - Minimum Sum of Squared Difference", "[LeetCode][2333][array][math][greedy]")
 {
     // --- Official Markdown Examples ---

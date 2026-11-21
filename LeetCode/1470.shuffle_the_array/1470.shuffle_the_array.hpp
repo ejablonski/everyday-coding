@@ -1,5 +1,7 @@
 #include <vector>
 
+namespace LC1470 {
+
 struct Solution
 {
     static std::vector<int> shuffle(std::vector<int>& _nums, int _n)
@@ -13,3 +15,5 @@ struct Solution
         return ans;
     }
 };
+
+} // namespace LC1470

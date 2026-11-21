@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
+using namespace LC921;
+
 TEST_CASE("LeetCode 921 - Minimum Add to Make Parentheses Valid",
           "[LeetCode][921][string][stack][greedy]")
 {

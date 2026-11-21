@@ -1,5 +1,7 @@
 #include <vector>
 
+namespace LC1866 {
+
 struct Solution
 {
     /**
@@ -25,3 +27,5 @@ struct Solution
         return dp[_n][_k];
     }
 };
+
+} // namespace LC1866

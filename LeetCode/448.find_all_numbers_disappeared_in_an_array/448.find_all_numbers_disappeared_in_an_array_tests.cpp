@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC448;
+
 TEST_CASE("LeetCode 448 - Find All Numbers Disappeared in an Array", "[LeetCode][448][array][hash-table]")
 {
     Solution solution;

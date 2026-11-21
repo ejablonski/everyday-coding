@@ -1,6 +1,8 @@
 #include <string>
 #include <vector>
 
+namespace LC678 {
+
 struct Solution
 {
     [[nodiscard]]
@@ -81,3 +83,5 @@ struct Solution
         return false;
     }
 };
+
+} // namespace LC678

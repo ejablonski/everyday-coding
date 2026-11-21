@@ -1,6 +1,8 @@
 #include <stack>
 #include <vector>
 
+namespace LC739 {
+
 /**
  * Learning Journal:
  * - Pattern: Monotonic Stack (Next Greater Element - Distance/Span Variant).
@@ -32,3 +34,5 @@ struct Solution
         return warmer;
     }
 };
+
+} // namespace LC739

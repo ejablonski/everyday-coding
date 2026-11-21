@@ -1,5 +1,8 @@
 #include <stack>
 #include <vector>
+
+namespace LC84 {
+
 /**
  * Learning Journal:
  * - Pattern: Monotonic Stack (increasing order of bar heights).
@@ -38,3 +41,5 @@ struct Solution
         return max_area;
     }
 };
+
+} // namespace LC84

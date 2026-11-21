@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC2897;
+
 TEST_CASE("LeetCode 2897 - Apply Operations on Array to Maximize Sum of Squares",
           "[LeetCode][2897][array][math][greedy][bit-manipulation]")
 {

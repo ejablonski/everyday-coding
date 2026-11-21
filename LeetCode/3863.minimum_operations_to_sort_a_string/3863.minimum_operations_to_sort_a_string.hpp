@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <string>
 
+namespace LC3863 {
+
 struct Solution
 {
     [[nodiscard]]
@@ -36,3 +38,5 @@ struct Solution
         return 2;
     }
 };
+
+} // namespace LC3863

@@ -2,6 +2,8 @@
 #include <ranges>
 #include <vector>
 
+namespace LC3886 {
+
 struct Solution
 {
     [[nodiscard]]
@@ -60,3 +62,5 @@ struct Solution
         return sum_of_ks;
     }
 };
+
+} // namespace LC3886

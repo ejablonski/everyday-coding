@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+using namespace LC301;
+
 TEST_CASE("LeetCode 301 - Remove Invalid Parentheses",
           "[LeetCode][301][string][backtracking][breadth-first-search]")
 {

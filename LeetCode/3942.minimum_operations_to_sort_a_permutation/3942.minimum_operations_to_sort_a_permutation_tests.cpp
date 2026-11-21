@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC3942;
+
 TEST_CASE("LeetCode 3942 - Minimum Operations to Sort a Permutation",
           "[LeetCode][3942][array][math][greedy]")
 {

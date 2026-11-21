@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+namespace LC636 {
+
 /**
  * Learning Journal:
  * - Pattern: Stack (Last-In, First-Out) for nested execution.
@@ -68,3 +70,5 @@ struct Solution
         return timestamps;
     }
 };
+
+} // namespace LC636

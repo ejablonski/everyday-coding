@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC2089;
+
 TEST_CASE("LeetCode 2089 - Find Target Indices After Sorting Array",
           "[LeetCode][2089][array][sorting][binary-search]")
 {

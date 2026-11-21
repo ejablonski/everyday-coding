@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC739;
+
 TEST_CASE("LeetCode 739 - Daily Temperatures", "[LeetCode][739][array][stack][monotonic-stack]")
 {
     // --- Official Markdown Examples ---

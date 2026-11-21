@@ -1,5 +1,7 @@
 #include <string>
 
+namespace LC3723 {
+
 /**
  * Learning Journal:
  * - Pattern: Greedy construction & convex optimization.
@@ -30,3 +32,5 @@ struct Solution
                (zeros > 0 ? std::string(zeros, '0') : "");
     }
 };
+
+} // namespace LC3723

@@ -1,5 +1,7 @@
 #include <vector>
 
+namespace LC204 {
+
 struct Solution
 {
     /**
@@ -39,3 +41,5 @@ struct Solution
         return ans;
     }
 };
+
+} // namespace LC204

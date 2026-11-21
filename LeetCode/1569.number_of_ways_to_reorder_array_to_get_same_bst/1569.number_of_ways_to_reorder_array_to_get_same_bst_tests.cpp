@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
+using namespace LC1569;
+
 TEST_CASE("LeetCode 1569 - Number of Ways to Reorder Array to Get Same BST",
           "[LeetCode][1569][array][math][tree][binary-search-tree][combinatorics]")
 {

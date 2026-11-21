@@ -1,5 +1,7 @@
 #include <string>
 
+namespace LC921 {
+
 struct Solution
 {
     [[nodiscard]]
@@ -23,3 +25,5 @@ struct Solution
         return insertions_needed + open_waiting;
     }
 };
+
+} // namespace LC921

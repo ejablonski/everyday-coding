@@ -1,3 +1,5 @@
+namespace LC1015 {
+
 struct Solution
 {
     /**
@@ -25,3 +27,5 @@ struct Solution
         return -1;
     }
 };
+
+} // namespace LC1015

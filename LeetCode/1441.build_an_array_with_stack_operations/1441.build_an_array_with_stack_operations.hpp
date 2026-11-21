@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+namespace LC1441 {
+
 /**
  * Learning Journal:
  * - Pattern: Array Traversal / Two Pointers
@@ -42,3 +44,5 @@ struct Solution
         return operations;
     }
 };
+
+} // namespace LC1441

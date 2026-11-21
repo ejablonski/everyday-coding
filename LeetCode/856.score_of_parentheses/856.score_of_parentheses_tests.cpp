@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
+using namespace LC856;
+
 TEST_CASE("LeetCode 856 - Score of Parentheses", "[LeetCode][856][string][stack]")
 {
     // --- Official Markdown Examples ---

@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <vector>
 
+namespace LC2089 {
+
 struct Solution
 {
     [[nodiscard]]
@@ -22,3 +24,5 @@ struct Solution
         return indices;
     }
 };
+
+} // namespace LC2089

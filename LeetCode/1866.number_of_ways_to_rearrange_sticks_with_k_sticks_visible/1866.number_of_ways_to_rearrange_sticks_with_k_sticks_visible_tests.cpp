@@ -2,6 +2,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+using namespace LC1866;
+
 TEST_CASE("LeetCode 1866 - Number of Ways to Rearrange Sticks With K Sticks Visible", "[LeetCode][1866][math][dynamic-programming][combinatorics]")
 {
     Solution solution;

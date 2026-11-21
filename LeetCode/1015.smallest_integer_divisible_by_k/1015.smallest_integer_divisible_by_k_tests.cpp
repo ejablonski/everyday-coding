@@ -2,6 +2,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+using namespace LC1015;
+
 TEST_CASE("LeetCode 1015 - Smallest Integer Divisible by K", "[LeetCode][1015][math][hash-table]")
 {
     Solution solution;

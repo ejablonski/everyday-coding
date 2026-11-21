@@ -2,6 +2,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+using namespace LC724;
+
 TEST_CASE("LeetCode 724 - Find the Pivot Integer", "[LeetCode][724][array][prefix-sum]")
 {
     Solution solution;
