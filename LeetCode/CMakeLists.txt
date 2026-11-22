@@ -11,6 +11,7 @@ add_executable(LeetCodeSolutions
   232.implement_queue_using_stacks/232.implement_queue_using_stacks_tests.cpp
   263.ugly_number/263.ugly_number_tests.cpp
   301.remove_invalid_parentheses/301.remove_invalid_parentheses_tests.cpp
+  373.find_k_pairs_with_smallest_sums/373.find_k_pairs_with_smallest_sums_tests.cpp
   448.find_all_numbers_disappeared_in_an_array/448.find_all_numbers_disappeared_in_an_array_tests.cpp
   485.max_consecutive_ones/485.max_consecutive_ones_tests.cpp
   636.exclusive_time_of_functions/636.exclusive_time_of_functions_test.cpp
