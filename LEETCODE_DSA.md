@@ -97,7 +97,7 @@ git branch -D lc-373
 
 ### Heap
 - [x] **Q1.** [1046. Last Stone Weight](https://leetcode.com/problems/last-stone-weight) (`Easy`) — `LeetCode/1046.last_stone_weight`
-- [ ] **Q2.** [373. Find K Pairs with Smallest Sums](https://leetcode.com/problems/find-k-pairs-with-smallest-sums) (`Medium`) — `LeetCode/373.find_k_pairs_with_smallest_sums`
+- [x] **Q2.** [373. Find K Pairs with Smallest Sums](https://leetcode.com/problems/find-k-pairs-with-smallest-sums) (`Medium`) — `LeetCode/373.find_k_pairs_with_smallest_sums`
 - [ ] **Q3.** [1354. Construct Target Array With Multiple Sums](https://leetcode.com/problems/construct-target-array-with-multiple-sums) (`Hard`) — `LeetCode/1354.construct_target_array_with_multiple_sums`
 
 ### String
