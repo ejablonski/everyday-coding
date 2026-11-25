@@ -15,6 +15,8 @@ To keep token usage predictable and reviews manageable, execute this plan in sho
   - Completed `learning_materials/11.monotonic_stacks_and_queues.tex` across all applicable phases (Phase 1.11 bug fixes + Phase 3 embedded & visually verified Diagrams 22--24 + Phase 4.13 Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics) and synced the Stock Span fix into `learning_materials/00.problem_solving_guide.tex`.
   - Incorporated user PDF review feedback into both Module 11 and the canonical `SKILL.md` template: sans-serif typography (Helvetica + `sfmath` + `txtt` + `upquote`), modern Title Banner + `overviewbox` (replacing academic `Abstract`), automatic per-section page breaks (`\clearpage`), high-contrast colored section/subsection banners, borderless-vertical `booktabs` tables, plain-English `formulabox`/`watchoutbox` cards, vivid multi-class C++23 syntax highlighting (`deletestring=[b]'` for digit separators + `xleftmargin=24pt, framexleftmargin=22pt`), **Print-First rule** (no clickable `[Check Answer]` links; compact notebook-friendly prompts with colored Mode pills and printed `Answer: p. XX` references), and 3-pass `.aux`-stabilized verification in `scripts/verify_learning_materials.py`.
   - **Stopped after the pilot module** so the user can confirm the final pilot format before applying it to the remaining modules.
+- **Session 3 (Done — `2026-11-25`):**
+  - Completed `learning_materials/01.combinatorics_permutations.tex` across all applicable phases (Phase 1.3 bug fixes + Phase 3 embedded & visually verified fixed Diagrams 4, 40, and new Catalan Reflection Principle diagram + Phase 4.3 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
 - **Ongoing Sessions (1 Module per Fresh Session):**
   - Follow the exact same single-module vertical slice (Phases 1/2 + 3 + 4 + verification + Progress Matrix update + commit) for whichever module the user selects next.
   - Suggested order: `11` → `12` → `00.problem_solving_guide.tex` → `10` → `09` → `06` → `07` → (`08`, `05`, `04`, `03`, `02`, `01`, `00.cpp_reference.tex` on demand) → delete `learning_materials/diagrams_review.tex` once all diagrams are migrated → Phase 5 (`13`–`16`) just-in-time.
@@ -106,11 +108,11 @@ Fix every confirmed factual error, C++23 compile/UB defect, formatting glitch, a
   - [ ] *(Synced in Phase 2 & Phase 3)* Move `09. String Algorithms` from Under Construction to Available, sync its patterns/complexity/glossary, and replace empty triage tree (L113–119) with fixed Diagram 3.
 
 ### Core Modules (`01`–`08`)
-- [ ] **1.3 `learning_materials/01.combinatorics_permutations.tex`:**
-  - [ ] Strip UTF-8 BOM; remove unused `forest`/`tikz` until Phase 3 adds actual diagrams.
-  - [ ] Fix compile error on L561: remove `constexpr` from `printAllPermutations` (calls `std::cout`) and switch to `std::ranges::sort`/`std::ranges::next_permutation`.
-  - [ ] Replace `double` literals `1e9 + 7` (L579, L625, L724) with `1'000'000'007LL`; fix signed/unsigned compare (`current.size() == k`, L670); replace C-style cast `(char)` and `int` factorial overflow in `getPermutation` (L695–699); add bounds guards and `[[nodiscard]]`.
-  - [ ] Fix bracelet formula domain ($n \ge 3$, L207), Stirling base case $S(0, k) = 0$ ($k > 0$, L359), missing Glossary symbols, straight quotes, and `$k^{\text{th}}$` typography.
+- [x] **1.3 `learning_materials/01.combinatorics_permutations.tex`:** *(Completed 2026-11-25)*
+  - [x] Strip UTF-8 BOM; remove unused `forest`/`tikz` until Phase 3 adds actual diagrams. *(Removed unused `forest`, kept `tikz` for embedded diagrams.)*
+  - [x] Fix compile error on L561: remove `constexpr` from `printAllPermutations` (calls `std::cout`) and switch to `std::ranges::sort`/`std::ranges::next_permutation`.
+  - [x] Replace `double` literals `1e9 + 7` (L579, L625, L724) with `1'000'000'007LL`; fix signed/unsigned compare (`current.size() == k`, L670); replace C-style cast `(char)` and `int` factorial overflow in `getPermutation` (L695–699); add bounds guards and `[[nodiscard]]`.
+  - [x] Fix bracelet formula domain ($n \ge 3$, L207), Stirling base case $S(0, k) = 0$ ($k > 0$, L359), missing Glossary symbols, straight quotes, and `$k^{\text{th}}$` typography.
 - [ ] **1.4 `learning_materials/02.modular_arithmetic.tex`:**
   - [ ] Strip UTF-8 BOM; replace raw UTF-8 `—` (L126) and `é` (L196) with `---` and `\'{e}`.
   - [ ] Fix wrong overflow inequality on L120 (separate addition $2M < 2^{31}$ from multiplication $M^2 \approx 10^{18} < 2^{63}$).
@@ -205,7 +207,7 @@ Both files are ~310–375 lines (vs. 850–1,100 lines for full modules) and nee
 All 41 diagrams currently sit unintegrated in `learning_materials/diagrams_review.tex`. Fix every defect, add missing promised diagrams, embed each diagram directly into its parent monograph, visually inspect every rendered PDF page via `pdflatex` + `pdftoppm`, and delete `diagrams_review.tex`.
 
 ### 3.1 Fix Factual, Policy & Metadata Blockers in `diagrams_review.tex`
-- [ ] **D40 (L3337):** Remove `LeetCode 62` platform-agnostic violation; replace UTF-8 `—` (L3328) with `---`.
+- [x] **D40 (L3337):** Remove `LeetCode 62` platform-agnostic violation; replace UTF-8 `—` (L3328) with `---`. *(Fixed when embedded into Module 01 on 2026-11-25.)*
 - [ ] **D30 (L2306–2308, KMP):** Fix shifted pattern cells after fallback `j = pi[3] = 2` so `P[2] = 'A'` aligns under `T[4] = 'A'` (followed by `P[3] = 'B'`, `P[4] = 'C'`).
 - [ ] **D31 (L2335–2381, Rabin-Karp):** Separate window length `L` from prime modulus `M`; fix precomputation time to $O(L)$; fix birthday collision probability for $N = 10^5, M = 10^9+7$ (`~99.3%`, or state `~5%` for $N = 10^4$).
 - [ ] **D1 (L157–172 vs L202–203, Memory Layout):** Make stack addresses *decrease* in the "Stack Grows Down" direction and fix invalid C++ `int* ptr = 0x55aa10;`.
@@ -227,7 +229,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 ### 3.4 Embed Into Monographs, Visually Verify & Clean Up
 - [ ] Embed D1, D2 → `00.cpp_reference.tex` (and visually inspect rendered PNGs).
 - [ ] Embed D3 → `00.problem_solving_guide.tex` (replaces empty L113–119).
-- [ ] Embed D4, D40 → `01.combinatorics_permutations.tex`.
+- [x] Embed D4, D40 → `01.combinatorics_permutations.tex` *(fixed D4 slot-label clearance, D40 platform/UTF-8/double-scaling/border collisions, and added Catalan Reflection Principle diagram; visually verified 2026-11-25)*.
 - [ ] Embed D5, D38 → `02.modular_arithmetic.tex` (replaces missing L110 figure).
 - [ ] Embed D6, D7, D39 → `03.number_theory.tex` (replaces empty L390–394).
 - [ ] Embed D8, D9, D32 → `04.sequences_and_series.tex` (resolves orphaned `"region D"`).
@@ -249,10 +251,10 @@ Apply the **Pedagogical Blueprint** (4-Beat Origin Stories, local `notationbox` 
 
 - [ ] **4.1 `00.cpp_reference.tex`:** Add "Why this container/view exists" 2-line origin notes (`std::span`, `std::string_view`, `std::ranges` lazy views vs. eager copies) + 3 "Pick the Right Tool / Spot the UB" pen-and-paper quick checks.
 - [ ] **4.2 `00.problem_solving_guide.tex`:** Add a 3-problem **"Triage Practice" `tryitbox`** (given 3 short problem descriptions + constraints, pick Paradigm + Complexity + Module on paper, check against Solutions appendix).
-- [ ] **4.3 `01.combinatorics_permutations.tex`:**
+- [x] **4.3 `01.combinatorics_permutations.tex`:** *(Completed 2026-11-25)*
   - *Origin Stories:* Why we divide by $k!$ in $\binom{n}{k}$; where Stars & Bars bijection comes from; why Catalan counts *every* valid split (reflection principle intuition); where Inclusion-Exclusion alternating signs come from.
   - *Local `notationbox`:* Permutations ($P(n,k)$, $n!$), Combinations ($\binom{n}{k}$), Derangements/Catalan/Stirling ($D_n, C_n, S(n,k)$).
-  - *Pen & Paper Drills (3):* Stars & Bars with lower bounds ($x_i \ge 1$), hand-compute $C_3$ via valid splits, 3-set PIE on divisibility up to 30.
+  - *Pen & Paper Drills (8 inline + 6 Practice Sheet):* Stars & Bars with lower bounds ($x_i \ge 1$ and mixed bounds), hand-compute $C_3$/$C_4$ via valid splits, 3-set PIE on divisibility up to 30, plus 6-mode inline & Practice Sheet coverage with trap diagnostics.
 - [ ] **4.4 `02.modular_arithmetic.tex`:**
   - *Origin Stories:* Why modular addition/multiplication preserve remainders *but division fails*; why Binary Exponentiation decomposes exponents in binary; where Fermat's Little Theorem & Extended Euclid come from; CRT intuition ("aligning periodic clocks").
   - *Local `notationbox`:* Congruence ($\equiv, \pmod{m}$), Modular Inverse ($a^{-1}$), Totient ($\phi(m)$).
@@ -318,7 +320,7 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `SKILL.md` & `verify_learning_materials.py` (Phase 0) | DONE (2026-11-24) | N/A | N/A | DONE (2026-11-24) | N/A | N/A |
 | `00.cpp_reference.tex` | `[ ]` | N/A | `[ ]` (D1, D2) | `[ ]` | `[ ]` | `[ ]` |
 | `00.problem_solving_guide.tex` | `[ ]` | N/A | `[ ]` (D3) | `[ ]` | N/A | `[ ]` |
-| `01.combinatorics_permutations.tex` | `[ ]` | N/A | `[ ]` (D4, D40) | `[ ]` | `[ ]` | `[ ]` |
+| `01.combinatorics_permutations.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `02.modular_arithmetic.tex` | `[ ]` | N/A | `[ ]` (D5, D38) | `[ ]` | `[ ]` | `[ ]` |
 | `03.number_theory.tex` | `[ ]` | N/A | `[ ]` (D6, D7, D39) | `[ ]` | `[ ]` | `[ ]` |
 | `04.sequences_and_series.tex` | `[ ]` | N/A | `[ ]` (D8, D9, D32) | `[ ]` | `[ ]` | `[ ]` |
