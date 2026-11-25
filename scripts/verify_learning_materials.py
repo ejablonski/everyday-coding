@@ -191,8 +191,9 @@ def check_tex_hygiene(tex_path: Path, fix_bom: bool) -> tuple[list[str], list[st
         )
 
     # 9. tryitbox solution reference consistency (\label{sol:...} or legacy \hypertarget{sol:...})
-    linked = set(re.findall(r"\\begin\{tryitbox\}\{[^}]*\}\{([^}]+)\}", text))
-    targets = set(re.findall(r"\\(?:label|hypertarget)\{sol:([^}]+)\}", text))
+    prose_text = "\n".join(line for _, line in prose_lines)
+    linked = set(re.findall(r"\\begin\{tryitbox\}(?:\{[^}]*\}){1,2}\{([^}]+)\}", prose_text))
+    targets = set(re.findall(r"\\(?:label|hypertarget)\{sol:([^}]+)\}", prose_text))
     for missing in sorted(linked - targets):
         errors.append(f"[TryIt] Exercise '{missing}' has no matching \\label{{sol:{missing}}}.")
     for orphan in sorted(targets - linked):

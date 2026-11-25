@@ -108,9 +108,9 @@ Every document is written for a reader who:
 
 Every learning material must work equally well **when printed on paper** and **when read on screen**:
 
-- **No web-only navigation cues**: Never rely on clickable links such as `[Check Answer]` as the primary way to navigate. Instead, number every exercise (`Exercise 1`, `Exercise 2`, ...) and display a quiet printed page reference (`Answer: p.~\pageref*{sol:exN}` in muted gray).
-- **Pencil-ready workspace**: Include blank fill-in mini-tables or dotted pencil lines (`\pencillines{N}`) inside Pen & Paper exercises so a reader with a printed copy can work directly on the sheet.
-- **Per-section page breaks**: Every major `\section` (and unnumbered final sections like Solutions and Version History) starts on a fresh page (`\renewcommand{\sectionbreak}{\clearpage}` right after `\tableofcontents`) with running headers and `Page N` footers (`fancyhdr`).
+- **No web-only navigation cues**: Never rely on clickable links such as `[Check Answer]` as the primary way to navigate. Instead, number every exercise (`Exercise 1`, `Exercise 2`, ...) with a crisp mode pill and a quiet printed page reference (`Answer: p.~\pageref*{sol:exN}` in muted gray).
+- **Compact prompts (no wasted write-in space)**: Do NOT include blank dotted lines or empty fill-in grids inside exercise boxes—readers work on their own notebook or scratch paper, keeping the guide dense, clean, and printable.
+- **Per-section page breaks**: Every major `\section` (and unnumbered back-matter sections like the Practice Sheet, Solutions, and Version History) starts on a fresh page (`\renewcommand{\sectionbreak}{\clearpage}` right after `\tableofcontents`) with running headers and `Page N` footers (`fancyhdr`).
 - **Keep short cards intact**: Callout, formula, warning, and exercise boxes must NOT split awkwardly across page boundaries (omit `breakable` on short boxes).
 - **Grayscale-safe color harmony**: Use cohesive, muted semantic colors (dark high-contrast text, soft `3%–14%` fills, thick left accent bars, and distinct line styles solid vs. dashed) so pages stay crisp even on a black-and-white laser printer.
 
@@ -131,10 +131,16 @@ Every guide must actively build intuition rather than presenting formulas or alg
    - Avoid unnecessary formal math notation in prose (prefer plain English words and concrete arrays like `[1, 3, 5, 8]` over dense symbols like `$\forall$`, `$\not<$`, or `$\langle s_0, \dots \rangle$`).
 3. **Local Symbol Mini-Tables (`notationbox`)**:
    - Keep the complete Glossary in Section 8, **and** place a clean borderless-vertical `booktabs` `\begin{notationbox}` right at the start of any subsection that introduces 2+ domain symbols.
-4. **Abundant Pen-and-Paper Practice (`tryitbox`) + Answer Key**:
-   - Include **6–9 short (1–3 minute) pen-and-paper exercises** distributed throughout the guide right after key concepts, subsections, and patterns.
-   - Rotate across high-retention formats: **Concept Check**, **Fill-In Table**, **Hand-Trace Drill**, **Break-It Challenge**, **Predict Complexity**, and **Pattern Triage**.
-   - **Zero inline spoilers & zero clickable web links**: Number every exercise automatically (`Exercise 1`, `Exercise 2`, ...), show a quiet printed page reference (`Answer: p.~\pageref*{sol:exN}`), include blank tables or `\pencillines{N}` for printed copies, and place concise step-by-step solutions with `\label{sol:exN}` in **Solutions to Pen-and-Paper Exercises** right before Version History.
+4. **High-Leverage Pen-and-Paper Suite (`tryitbox` + Practice Sheet + Trap Diagnostics)**:
+   - Combine **6–8 compact inline micro-drills** (placed right after key concepts) with a dedicated **End-of-Chapter Practice Sheet** (**5–6 mixed cold-start drills** with zero subsection hints, placed on its own fresh page right before Solutions).
+   - Rotate systematically across **6 Thinking Modes**, displayed as a colored pill in every `tryitbox` header (`\begin{tryitbox}{<Mode>}{<Short Title>}{<id>}`):
+     1. **`Trace`** — Short 4–6 element hand-trace focused on the key invariant transition.
+     2. **`Debug`** — Spot a subtle bug in a 3–6 line snippet or construct the smallest breaking counterexample.
+     3. **`Twist`** — Modify an existing template for a slight requirement change (e.g., max → min, linear → circular).
+     4. **`Edge Cases`** — Stress-test on classic killers (`all equal`, `strictly sorted`, `k = 1`, `empty/zero`).
+     5. **`Triage`** — Cold-start tool selection on 2–3 disguised problem statements without giveaway keywords.
+     6. **`Derive`** — Compute tiny cases ($n = 1 \dots 4$) by hand to discover a formula, recurrence, or complexity bound.
+   - **Zero inline spoilers & 1-line diagnostic traps**: Place concise solutions (`\label{sol:<id>}`) in **Solutions to Pen-and-Paper Exercises**, and end every solution with a 1-line `\trapnote{...}` (**Common trap:**) diagnosing the most frequent mistake so printed readers can self-debug immediately.
 5. **Anti-Wall-of-Text Discipline**:
    - **Paragraph cap**: Keep prose paragraphs to **4–5 lines (~60–80 words)** maximum. Break longer explanations into numbered steps, colored `\invariantbeat{...}` one-liners, compact `Naive vs. Shortcut` tables, or diagrams.
 
@@ -142,7 +148,7 @@ Every guide must actively build intuition rather than presenting formulas or alg
 
 ## Mandatory Document Structure
 
-Ten sections, strictly in this order (with every `\section` from Section 1 onward starting on a fresh page):
+Ten core sections strictly in this order (with every `\section` from Section 1 onward starting on a fresh page), followed by three unnumbered back-matter sections:
 
 1. **Title Banner & "What You'll Learn" Overview Card (`overviewbox`)** — Modern tinted title banner (no academic `\begin{abstract}` or "Technical Monograph" framing) followed by a friendly 3–5 sentence `overviewbox` summarizing what the guide covers and who it is for, then `\tableofcontents`.
 2. **Foundations / Core Concepts** — Start from absolute zero. Concepts in
@@ -151,7 +157,7 @@ Ten sections, strictly in this order (with every `\section` from Section 1 onwar
 3. **Main Topic Sections** — Sub-topics in logical order. Every subsection
    opens with a local `notationbox` when introducing 2+ symbols, uses the 4-beat
    Origin Story + `formulabox` / `watchoutbox`, contains a worked step-by-step
-   example, and ends with a pencil-ready `tryitbox`.
+   example, and ends with a compact `tryitbox`.
 4. **Key Algorithmic Patterns** — Why naive/brute-force fails → what the
    efficient technique is (plain English first) → visual diagrams and traces on small inputs.
 5. **Worked Examples** — 4–6 distinct examples covering different techniques.
@@ -163,7 +169,7 @@ Ten sections, strictly in this order (with every `\section` from Section 1 onwar
 7. **Problem Pattern Recognition** — Three-step decision process (What does the
    problem ask for? → What is the key constraint? → Is input too large for direct
    solution?) plus a modern `booktabs` 3-column table (`Keywords in the Problem`,
-   `Plain English Meaning`, `Tool to Use`) and a quick Pattern Triage exercise.
+   `Plain English Meaning`, `Tool to Use`).
 8. **Summary and Complexity Reference** — Modern `booktabs` 4-column table:
    `Task / Operation`, `Time`, `Space`, `Use When`.
 9. **Glossary** — Two subsections: *Core Concepts* and *Mathematical Symbols*.
@@ -172,36 +178,39 @@ Ten sections, strictly in this order (with every `\section` from Section 1 onwar
     `projecteuler.net`, `artofproblemsolving.com/wiki`, `brilliant.org`), then
     annotated book recommendations with difficulty levels.
 
+### End-of-Chapter Practice Sheet (Required When `tryitbox` Is Used)
+
+Place an unnumbered `\section*{Practice Sheet: Mixed Pen-and-Paper Drills}`
+(added to the TOC, starting on a fresh page) immediately **after Further
+Reading** and **before Solutions to Pen-and-Paper Exercises**. Include 5–6
+compact, mixed cold-start `tryitbox` drills spanning all 6 thinking modes
+(`Trace`, `Debug`, `Twist`, `Edge Cases`, `Triage`, `Derive`) with zero hints
+about which chapter subsection applies, designed to be printed or revisited for
+spaced repetition.
+
 ### Solutions to Pen-and-Paper Exercises (Required When `tryitbox` Is Used)
 
-When a guide contains `\begin{tryitbox}` checkpoints, include an unnumbered
-`\section*{Solutions to Pen-and-Paper Exercises}` (added to the table of
-contents, starting on its own fresh page) placed immediately **after Further
-Reading** and **before Version History**. Each solution uses `\label{sol:<id>}`
-matching its exercise's printed `Answer: p.~\pageref*{sol:<id>}` reference and
-gives a concise, verifiable step-by-step check. It is not counted among the ten
-sections above.
+Place an unnumbered `\section*{Solutions to Pen-and-Paper Exercises}` (added to
+the TOC, starting on a fresh page) immediately **after the Practice Sheet** and
+**before Version History**. Each solution uses `\label{sol:<id>}` matching its
+exercise's printed `Answer: p.~\pageref*{sol:<id>}`, gives a concise verifiable
+check, and closes with a 1-line `\trapnote{...}` (**Common trap:**) explaining
+the most likely error.
 
 ### Version History (Required Final Section)
 
 Every document ends with a **Version History** section (on its own fresh page),
-placed after Further Reading (and after Solutions to Pen-and-Paper Exercises, if
-present) and before `\end{document}`. It is an unnumbered section that still
-appears in the table of contents. It is not counted among the ten sections above.
+placed after Solutions to Pen-and-Paper Exercises and before `\end{document}`.
+It is an unnumbered section that still appears in the table of contents.
 
 - It is a modern `booktabs` two-column table: **Date** and **Change**.
 - Dates use the ISO format `YYYY-MM-DD`.
 - Creating the file is itself a change, so every document has at least one row:
   `Document created.`
-- Every later edit (new section, corrected formula, added example, rewritten
-  explanation, fixed typo that alters meaning) appends **one new row at the
-  bottom** with the date and a short, specific description of what changed.
-  Rows are never edited or removed; the history is append-only and in
-  chronological order.
-- Keep each description to one line. Say what changed, not why. Good:
-  `Added Segmented Sieve section and worked trace.` Bad: `Updates.`
-- Purely cosmetic rebuilds (recompiling without changing the `.tex` source) are
-  not changes and get no row.
+- Every later edit appends **one new row at the bottom** with the date and a
+  short, specific description of what changed. Rows are never edited or removed.
+- Keep each description to one line. Say what changed, not why.
+- Purely cosmetic rebuilds without changing `.tex` source get no row.
 
 ---
 
@@ -209,9 +218,10 @@ appears in the table of contents. It is not counted among the ten sections above
 
 Do not copy from or rely on any individual `.tex` file in the repository. Use
 the exact self-contained modern print+screen preamble defined below for every
-learning material document (clean sans-serif Helvetica + `sfmath`, `titlesec`
-high-contrast banners + per-section page breaks, `tcolorbox` semantic cards,
-`booktabs` borderless-vertical tables, and `fancyhdr` running headers/footers).
+learning material document (clean sans-serif Helvetica + `sfmath` + `courier`,
+`titlesec` high-contrast banners + per-section page breaks, `tcolorbox` semantic
+cards, `booktabs` borderless-vertical tables, and `fancyhdr` running
+headers/footers).
 
 ```latex
 \documentclass[11pt,a4paper]{article}
@@ -336,16 +346,17 @@ high-contrast banners + per-section page breaks, `tcolorbox` semantic cards,
 \theoremstyle{definition}
 \newtheorem{example}{Example}[section]
 
-% --- Semantic Narrative Beat Labels ---
+% --- Semantic Narrative Beat Labels & Solution Trap Diagnostic ---
 \newcommand{\painbeat}{\textbf{\color{accentamber}The Problem:} }
 \newcommand{\ahabeat}{\textbf{\color{accentteal}The ``Aha!'' Insight:} }
 \newcommand{\examplebeat}{\textbf{\color{primaryblue}Mini-Example First:} }
 \newcommand{\breaksbeat}{\textbf{\color{accentred}When It Breaks:} }
 \newcommand{\invariantbeat}[1]{\par\noindent\textbf{\color{accentteal}Loop Invariant (#1):} }
+\newcommand{\trapnote}[1]{\par\smallskip\noindent{\footnotesize\textbf{\color{accentamber}Common trap:} #1}}
 
 % --- Modern Overview Card (Replaces Academic Abstract) ---
 \newtcolorbox{overviewbox}[1][What You'll Learn]{
-    enhanced, breakable,
+    enhanced,
     colback=accentteal!5, colframe=accentteal!25,
     borderline west={3.5pt}{0pt}{accentteal},
     arc=3pt, boxrule=0.5pt,
@@ -413,31 +424,25 @@ high-contrast banners + per-section page breaks, `tcolorbox` semantic cards,
     \vspace{0.2cm}\par
 }
 
-% --- Print-First Pen-and-Paper Exercise Environment (Numbered + Page Ref, No Web Links) ---
+% --- Print-First Pen-and-Paper Exercise Environment (Mode Pill + Printed Page Ref, Compact) ---
+% Usage: \begin{tryitbox}{<Mode>}{<Short Title>}{<label-id>}
+% Modes: Trace | Debug | Twist | Edge Cases | Triage | Derive
 \newcounter{exercise}
-\newtcolorbox{tryitbox}[2]{
+\newtcolorbox{tryitbox}[3]{
     enhanced,
     step=exercise,
     colback=codegreen!3, colframe=codegreen!45,
     colbacktitle=codegreen!14, coltitle=codegreen!85!black,
     borderline west={3.5pt}{0pt}{codegreen},
     arc=3pt, boxrule=0.6pt,
-    left=10pt, right=10pt, top=7pt, bottom=8pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
     toptitle=4pt, bottomtitle=4pt,
-    before skip=10pt, after skip=10pt,
+    before skip=9pt, after skip=9pt,
     fonttitle=\bfseries,
-    title={Pen \& Paper --- Exercise \theexercise: #1 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#2}}}
+    title={Exercise \theexercise\hspace{0.5em}{\colorbox{codegreen!85!black}{\color{white}\scriptsize\bfseries\;#1\;}}\hspace{0.5em}#2 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#3}}}
 }
 
-% --- Pencil Workspace Helper (Dotted Lines for Printed Copies; requires tikz/pgffor) ---
-\newcommand{\pencillines}[1]{%
-    \par\vspace{3pt}%
-    \foreach \n in {1,...,#1}{%
-        \noindent\textcolor{codegray!55}{\dotfill}\par\vspace{6pt}%
-    }%
-}
-
-% --- Modern C++ Code Listing Setup ---
+% --- Modern C++ Code Listing Setup (Clean Line-Number Clearance Inside Frame) ---
 \lstset{
     language=C++,
     basicstyle=\footnotesize\ttfamily,
@@ -447,8 +452,11 @@ high-contrast banners + per-section page breaks, `tcolorbox` semantic cards,
     numberstyle=\tiny\color{codegray},
     numbers=left,
     numbersep=8pt,
-    xleftmargin=14pt,
-    framexleftmargin=8pt,
+    xleftmargin=24pt,
+    framexleftmargin=22pt,
+    framexrightmargin=4pt,
+    framextopmargin=3pt,
+    framexbottommargin=3pt,
     backgroundcolor=\color{codebg},
     frame=single,
     rulecolor=\color{codeframe},
@@ -491,12 +499,19 @@ high-contrast banners + per-section page breaks, `tcolorbox` semantic cards,
 
 % Document sections follow here...
 
+% --- Practice Sheet: Mixed Pen-and-Paper Drills (include whenever tryitbox is used) ---
+% \section*{Practice Sheet: Mixed Pen-and-Paper Drills}
+% \addcontentsline{toc}{section}{Practice Sheet: Mixed Pen-and-Paper Drills}
+% \markboth{Practice Sheet: Mixed Pen-and-Paper Drills}{}
+% (5-6 mixed cold-start tryitbox drills spanning all 6 modes)
+
 % --- Solutions to Pen-and-Paper Exercises (include whenever tryitbox is used) ---
 % \section*{Solutions to Pen-and-Paper Exercises}
 % \addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
 % \markboth{Solutions to Pen-and-Paper Exercises}{}
 % \begin{enumerate}
-%     \item \label{sol:ex1}\textbf{Exercise 1 --- <Exercise Title>:} <Concise verifiable solution.>
+%     \item \label{sol:ex1}\textbf{Exercise 1 (<Mode>) --- <Exercise Title>:} <Concise verifiable solution.>
+%     \trapnote{<1-line diagnostic for the most common mistake.>}
 % \end{enumerate}
 
 % --- Version History (always the last section of the document) ---
@@ -524,7 +539,7 @@ high-contrast banners + per-section page breaks, `tcolorbox` semantic cards,
 
 ### Modern Table Layout Conventions (Zero Vertical Grid Lines)
 
-Never use 1999-style vertical grid lines (`|...|...|`) or cramped `\hline` borders in informational tables. Use `booktabs` (`\toprule`, `\midrule`, `\bottomrule`), a soft `\rowcolor{primaryblue!10}` header row, gentle `\rowcolors{2}{codebg}{white}` zebra striping, and explicit wrapping column widths (`>{\raggedright\arraybackslash}p{...}` / `X`) so wide columns never crush narrow ones. (Light gray cell grids are reserved strictly for blank pencil fill-in worksheets inside `tryitbox`.)
+Never use 1999-style vertical grid lines (`|...|...|`) or cramped `\hline` borders in tables. Use `booktabs` (`\toprule`, `\midrule`, `\bottomrule`), a soft `\rowcolor{primaryblue!10}` header row, gentle `\rowcolors{2}{codebg}{white}` zebra striping, and explicit wrapping column widths (`>{\raggedright\arraybackslash}p{...}` / `X`) so wide columns never crush narrow ones.
 
 - **Pattern Recognition Table**:
   ```latex

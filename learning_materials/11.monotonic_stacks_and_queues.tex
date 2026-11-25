@@ -115,7 +115,7 @@
     pdfauthor={Antigravity Engineering}
 }
 
-% --- Example Environment (Clean Accent Styling) ---
+% --- Example Environment ---
 \theoremstyle{definition}
 \newtheorem{example}{Example}[section]
 
@@ -125,10 +125,11 @@
 \newcommand{\examplebeat}{\textbf{\color{primaryblue}Mini-Example First:} }
 \newcommand{\breaksbeat}{\textbf{\color{accentred}When It Breaks:} }
 \newcommand{\invariantbeat}[1]{\par\noindent\textbf{\color{accentteal}Loop Invariant (#1):} }
+\newcommand{\trapnote}[1]{\par\smallskip\noindent{\footnotesize\textbf{\color{accentamber}Common trap:} #1}}
 
 % --- Modern Overview Card (Replaces Academic Abstract) ---
 \newtcolorbox{overviewbox}[1][What You'll Learn]{
-    enhanced, breakable,
+    enhanced,
     colback=accentteal!5, colframe=accentteal!25,
     borderline west={3.5pt}{0pt}{accentteal},
     arc=3pt, boxrule=0.5pt,
@@ -196,31 +197,25 @@
     \vspace{0.2cm}\par
 }
 
-% --- Print-First Pen-and-Paper Exercise Environment (Numbered + Page Ref, No Web Links) ---
+% --- Print-First Pen-and-Paper Exercise Environment (Mode Pill + Printed Page Ref, Compact) ---
+% Usage: \begin{tryitbox}{<Mode>}{<Short Title>}{<label-id>}
+% Modes: Trace | Debug | Twist | Edge Cases | Triage | Derive
 \newcounter{exercise}
-\newtcolorbox{tryitbox}[2]{
+\newtcolorbox{tryitbox}[3]{
     enhanced,
     step=exercise,
     colback=codegreen!3, colframe=codegreen!45,
     colbacktitle=codegreen!14, coltitle=codegreen!85!black,
     borderline west={3.5pt}{0pt}{codegreen},
     arc=3pt, boxrule=0.6pt,
-    left=10pt, right=10pt, top=7pt, bottom=8pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
     toptitle=4pt, bottomtitle=4pt,
-    before skip=10pt, after skip=10pt,
+    before skip=9pt, after skip=9pt,
     fonttitle=\bfseries,
-    title={Pen \& Paper --- Exercise \theexercise: #1 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#2}}}
+    title={Exercise \theexercise\hspace{0.5em}{\colorbox{codegreen!85!black}{\color{white}\scriptsize\bfseries\;#1\;}}\hspace{0.5em}#2 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#3}}}
 }
 
-% --- Pencil Workspace Helper (Dotted Lines for Printed Copies) ---
-\newcommand{\pencillines}[1]{%
-    \par\vspace{3pt}%
-    \foreach \n in {1,...,#1}{%
-        \noindent\textcolor{codegray!55}{\dotfill}\par\vspace{6pt}%
-    }%
-}
-
-% --- Modern C++ Code Listing Setup ---
+% --- Modern C++ Code Listing Setup (Clean Line-Number Clearance Inside Frame) ---
 \lstset{
     language=C++,
     basicstyle=\footnotesize\ttfamily,
@@ -230,8 +225,11 @@
     numberstyle=\tiny\color{codegray},
     numbers=left,
     numbersep=8pt,
-    xleftmargin=14pt,
-    framexleftmargin=8pt,
+    xleftmargin=24pt,
+    framexleftmargin=22pt,
+    framexrightmargin=4pt,
+    framextopmargin=3pt,
+    framexbottommargin=3pt,
     backgroundcolor=\color{codebg},
     frame=single,
     rulecolor=\color{codeframe},
@@ -263,7 +261,7 @@
 \end{tcolorbox}
 
 \begin{overviewbox}[What You'll Learn]
-This guide explains \textbf{monotonic stacks} and \textbf{monotonic deques}---simple sorted buffers that turn slow nested array scans into fast single-pass $O(N)$ solutions. Instead of starting with abstract proofs, we build every technique from concrete numbers and visual traces so you always see \emph{why} throwing away dominated elements is safe. You will practice the four nearest-neighbor queries, index-based spans, duplicate tie-breaking, largest rectangle in a histogram, removing $K$ digits, and sliding-window maximums, backed by clean C++23 templates and nine pen-and-paper exercises.
+This guide explains \textbf{monotonic stacks} and \textbf{monotonic deques}---simple sorted buffers that turn slow nested array scans into fast single-pass $O(N)$ solutions. Instead of starting with abstract proofs, we build every technique from concrete numbers and visual traces so you always see \emph{why} throwing away dominated elements is safe. You will master the four nearest-neighbor queries, index-based spans, duplicate tie-breaking, largest rectangle in a histogram, removing $K$ digits, and sliding-window maximums, backed by C++23 templates, eight inline drills, and an end-of-chapter mixed practice sheet.
 \end{overviewbox}
 
 \vspace{2pt}
@@ -302,13 +300,12 @@ Whenever a newer element is both \textbf{better} (larger for a max query, smalle
 Shadow elimination only works when you want the \textbf{nearest} greater (or smaller) item. If a problem instead asks for the \emph{second} greater element, or the maximum over an arbitrary non-contiguous subset, a shadowed item might still matter and cannot be discarded on first sight.
 \end{watchoutbox}
 
-\begin{tryitbox}{Skyline Shadows Check}{ex1}
-You want the \textbf{Next Greater Element} (first taller building to the right). Suppose three buildings from left to right have heights $[160, 190, 175]$.
+\begin{tryitbox}{Trace}{Skyline Shadows Check}{ex1}
+You want the \textbf{Next Greater Element} (first taller building to the right) for heights $[160, 190, 175]$. Scanning from right to left:
 \begin{enumerate}
-    \item For any viewer standing to the left of $160$, which building height is permanently shadowed and can be discarded? Why?
-    \item Which building heights remain on the stack (list from bottom to top)?
+    \item Which building height is permanently shadowed and popped?
+    \item Which heights survive on the stack (bottom to top), and why does $160$ survive even though $190$ is taller?
 \end{enumerate}
-\pencillines{2}
 \end{tryitbox}
 
 \subsection{Monotonic Stack vs. Monotonic Deque}
@@ -384,25 +381,8 @@ With indices $0, 1, 2, 3$ and $-1$ meaning ``none exists'':
 \end{enumerate}
 \end{example}
 
-\begin{tryitbox}{Four Nearest Queries Table}{ex2}
-For the array $A = [6, 2, 5, 4]$ (indices $0, 1, 2, 3$), fill in the nearest value for each query below (write $-1$ when no such element exists):
-
-\vspace{4pt}
-\begin{center}
-\begingroup
-\small
-\arrayrulecolor{codeframe}
-\begin{tabularx}{0.96\linewidth}{|>{\bfseries}p{3.6cm}|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
-\hline
-\rowcolor{codegreen!10}
-Query & $i = 0$ ($6$) & $i = 1$ ($2$) & $i = 2$ ($5$) & $i = 3$ ($4$) \\ \hline
-Next Greater (NGE) & & & & \\ \hline
-Previous Greater (PGE) & & & & \\ \hline
-Next Smaller (NSE) & & & & \\ \hline
-Previous Smaller (PSE) & & & & \\ \hline
-\end{tabularx}
-\endgroup
-\end{center}
+\begin{tryitbox}{Trace}{Four Nearest Queries}{ex2}
+For $A = [6, 2, 5, 4]$, compute all four result arrays on scratch paper (write $-1$ when no neighbor satisfies the condition): \textbf{NGE}, \textbf{PGE}, \textbf{NSE}, and \textbf{PSE}.
 \end{tryitbox}
 
 \subsection{Why Storing Indices Always Beats Storing Raw Values}
@@ -428,26 +408,13 @@ Suppose we want the distance (span) from each entry to its Next Greater Element:
 \end{enumerate}
 \end{example}
 
-\begin{tryitbox}{Hand-Trace Index Stack \& Spans}{ex3}
-Trace \textbf{Next Greater Element} and its index distance ($\text{span} = i - \text{popped}$) from left to right on $A = [2, 5, 3, 7, 1]$ using a decreasing stack of \emph{indices}. Fill in each row:
-
-\vspace{4pt}
-\begin{center}
-\begingroup
-\small
-\arrayrulecolor{codeframe}
-\begin{tabularx}{0.96\linewidth}{|c|c|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{3.0cm}|}
-\hline
-\rowcolor{codegreen!10}
-\textbf{$i$} & \textbf{$A[i]$} & \textbf{Popped index $\to$ NGE and span} & \textbf{Stack After} \\ \hline
-$0$ & $2$ & & \\ \hline
-$1$ & $5$ & & \\ \hline
-$2$ & $3$ & & \\ \hline
-$3$ & $7$ & & \\ \hline
-$4$ & $1$ & & \\ \hline
-\end{tabularx}
-\endgroup
-\end{center}
+\begin{tryitbox}{Edge Cases}{Index Stack Stress Test}{ex3}
+Trace left-to-right \textbf{Daily Temperature Span} (pop while $T[\text{top}] < T[i]$, record $\text{span} = i - \text{top}$, default $0$) on three inputs, recording the output \texttt{span} array and final stack size for each:
+\begin{enumerate}
+    \item Mixed: $T = [2, 5, 3, 7, 1]$
+    \item All equal: $T = [5, 5, 5, 5]$
+    \item Strictly decreasing: $T = [9, 7, 5, 3]$
+\end{enumerate}
 \end{tryitbox}
 
 \subsection{Handling Duplicate Values Without Double-Counting}
@@ -498,14 +465,13 @@ Comparing all three boundary strategies side by side:
 \end{enumerate}
 \end{example}
 
-\begin{tryitbox}{Break-It Challenge --- Duplicate Subarrays}{ex4}
-Consider the tiny array $A = [1, 3, 1]$ (indices $0, 1, 2$; there are $6$ contiguous subarrays in total).
+\begin{tryitbox}{Debug}{Duplicate Subarray Tie-Breaking}{ex4}
+Consider $A = [1, 3, 1]$ ($6$ contiguous subarrays in total):
 \begin{enumerate}
-    \item How many subarrays are counted if \textbf{both} left and right stops use strict $<$? Which subarray gets double-counted?
-    \item How many subarrays are counted if \textbf{both} stops use non-strict $\le$? Which subarray is missed?
-    \item Compute $\text{PLE}$ (strict $<$) and $\text{NLE}$ (non-strict $\le$) for all $3$ indices, verify the counts sum to $6$, and find the total sum of subarray minimums.
+    \item What wrong subarray count do you get if \textbf{both} stops use strict $<$, and which subarray gets double-counted?
+    \item What wrong count if \textbf{both} stops use non-strict $\le$, and which subarray is missed?
+    \item Compute $\text{PLE}$ (strict $<$) and $\text{NLE}$ (non-strict $\le$) for all $3$ indices and find the exact sum of subarray minimums.
 \end{enumerate}
-\pencillines{3}
 \end{tryitbox}
 
 \subsection{Boundary Expansion: Largest Rectangle in Histogram}
@@ -614,28 +580,11 @@ Computing the widest rectangle anchored at each bar:
 Largest area across all six bars: $\max(2, 6, 10, 6, 8, 3) = 10$.
 \end{example}
 
-\begin{tryitbox}{Histogram Table \& Sentinel Break-It}{ex5}
-\textbf{(a)} For $H = [3, 1, 4, 2]$ ($N = 4$), fill in the table below and circle the maximum area:
-
-\vspace{4pt}
-\begin{center}
-\begingroup
-\small
-\arrayrulecolor{codeframe}
-\begin{tabularx}{0.96\linewidth}{|c|c|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
-\hline
-\rowcolor{codegreen!10}
-\textbf{Bar $i$} & \textbf{Height $H[i]$} & \textbf{Left Wall $L$} & \textbf{Right Wall $R$} & \textbf{Width ($R - L - 1$)} & \textbf{Area} \\ \hline
-$0$ & $3$ & & & & \\ \hline
-$1$ & $1$ & & & & \\ \hline
-$2$ & $4$ & & & & \\ \hline
-$3$ & $2$ & & & & \\ \hline
-\end{tabularx}
-\endgroup
-\end{center}
-\vspace{4pt}
-\textbf{(b) Break It:} Write a $3$-bar histogram where forgetting the trailing sentinel $-1$ makes the stack loop return $0$ instead of the true maximum area, and state the true maximum area.
-\pencillines{1}
+\begin{tryitbox}{Debug}{Histogram Expansion \& Missing Sentinel}{ex5}
+\begin{enumerate}
+    \item For $H = [3, 1, 4, 2]$, compute $(L, R, \text{Width}, \text{Area})$ for every bar $i \in \{0, 1, 2, 3\}$ and find the maximum area.
+    \item Construct a $3$-bar histogram where omitting the trailing sentinel $-1$ makes the stack loop return $0$, and state its true maximum area.
+\end{enumerate}
 \end{tryitbox}
 
 \subsection{Monotonic Deque for Sliding Window Range Extrema}
@@ -677,26 +626,11 @@ Tracking the deque indices at each step:
 Final window maximums: $[5, 5, 5]$.
 \end{example}
 
-\begin{tryitbox}{Sliding Window Deque Trace \& Eviction Types}{ex6}
-Trace \textbf{Sliding Window Maximum} ($K = 3$) on $A = [4, 1, 3, 5, 2]$. Fill in the table below, noting whether each evicted index was popped from the \textbf{front} (expired) or \textbf{back} (dominated):
-
-\vspace{4pt}
-\begin{center}
-\begingroup
-\small
-\arrayrulecolor{codeframe}
-\begin{tabularx}{0.96\linewidth}{|c|c|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{2.3cm}|>{\centering\arraybackslash}p{2.2cm}|}
-\hline
-\rowcolor{codegreen!10}
-\textbf{$i$} & \textbf{$A[i]$} & \textbf{Evictions (front or back?)} & \textbf{Deque Indices} & \textbf{Window Max} \\ \hline
-$0$ & $4$ & & & --- \\ \hline
-$1$ & $1$ & & & --- \\ \hline
-$2$ & $3$ & & & \\ \hline
-$3$ & $5$ & & & \\ \hline
-$4$ & $2$ & & & \\ \hline
-\end{tabularx}
-\endgroup
-\end{center}
+\begin{tryitbox}{Twist}{Sliding Window Trace \& Flip to Minimum}{ex6}
+\begin{enumerate}
+    \item Trace \textbf{Sliding Window Maximum} ($K = 3$) on $A = [4, 1, 3, 5, 2]$: list the deque indices at every step, the output array, and note which index leaves from the \textbf{front} vs. the \textbf{back}.
+    \item \textbf{Template Twist:} In the 3 steps above, what \emph{single comparison operator} changes to turn Sliding Window Maximum into \textbf{Sliding Window Minimum}? Does the front-expiry rule change?
+\end{enumerate}
 \end{tryitbox}
 
 % ============================================================================
@@ -706,7 +640,7 @@ $4$ & $2$ & & & \\ \hline
 \subsection{Why Naive Brute-Force Fails}
 
 The obvious way to find every Next Greater Element runs an inner scan for each starting index:
-\begin{lstlisting}[numbers=none]
+\begin{lstlisting}[numbers=none, xleftmargin=4pt, framexleftmargin=4pt]
 // Naive O(N^2) search
 for (int i = 0; i < n; ++i) {
     int nge = -1;
@@ -746,7 +680,7 @@ Sliding Window Max & Rescan $K$ items (or heap $O(\log K)$) & Deque drops expire
 \subsection{Why a \texttt{while} Inside a \texttt{for} Is Still Linear Time}
 
 \painbeat Looking at a \texttt{while} loop nested inside a \texttt{for} loop makes almost everyone suspect $O(N^2)$ time:
-\begin{lstlisting}[numbers=none]
+\begin{lstlisting}[numbers=none, xleftmargin=4pt, framexleftmargin=4pt]
 for (int i = 0; i < n; ++i) {
     while (!st.empty() && A[st.top()] < A[i]) {
         ans[st.top()] = A[i];
@@ -765,13 +699,13 @@ for (int i = 0; i < n; ++i) {
 
 Across the entire program, the loop executes at most $N$ pushes plus $N$ pops ($2N$ stack operations total), giving $O(N)$ overall time---an average (amortized) cost of $O(1)$ per item. The exact same $2N$ budget holds for the monotonic deque.
 
-\begin{tryitbox}{Predict the Exact Push \& Pop Budget}{ex7}
-Trace the NGE loop above mentally on $A = [10, 9, 8, 7, 6, 100]$ ($N = 6$):
+\begin{tryitbox}{Derive}{Prove the Exact Push \& Pop Budget}{ex7}
+Run the left-to-right NGE loop mentally on $A = [10, 9, 8, 7, 6, 100]$ ($N = 6$):
 \begin{enumerate}
-    \item Which single iteration triggers the most pops, and how many pops happen in that one step?
-    \item Across all $6$ iterations combined, what is the \textbf{exact total} number of pushes and \textbf{exact total} number of pops?
+    \item How many pops happen in the single worst iteration ($i = 5$)?
+    \item What are the \textbf{exact total} pushes and \textbf{exact total} pops across all $6$ iterations?
+    \item Generalize to any length $N$: what is the tightest upper bound on $\text{pushes} + \text{pops}$?
 \end{enumerate}
-\pencillines{2}
 \end{tryitbox}
 
 \subsection{Visualizing Cascading Pops}
@@ -1081,13 +1015,13 @@ $7$ & $73$ & $[6]$ & None & --- & $[6, 7]$ \\
 
 \textbf{Answer}: \texttt{"1219"}.
 
-\begin{tryitbox}{Remove $K$ Digits Edge Cases}{ex8}
-Trace \textbf{Remove $K$ Digits} on two tricky edge cases:
+\begin{tryitbox}{Edge Cases}{Remove $K$ Digits Killers}{ex8}
+Trace \textbf{Remove $K$ Digits} on three edge cases and write the exact final string:
 \begin{enumerate}
-    \item $S = \texttt{"10200"}$ with $K = 1$ (watch out for leading zeros!).
-    \item $S = \texttt{"12345"}$ with $K = 2$ (watch out for leftover removal budget!).
+    \item $S = \texttt{"10200"}$, $K = 1$ (leading zeros after popping).
+    \item $S = \texttt{"12345"}$, $K = 2$ (leftover budget after the loop).
+    \item $S = \texttt{"100"}$, $K = 1$ (only zeros remain).
 \end{enumerate}
-\pencillines{2}
 \end{tryitbox}
 
 % ============================================================================
@@ -1382,16 +1316,6 @@ When you meet an unfamiliar sequence problem, walk through these three quick che
 \endgroup
 \end{center}
 
-\begin{tryitbox}{Quick Pattern Triage --- Pick the Right Tool}{ex9}
-Without writing code, write down the exact data structure and monotonicity direction (\textbf{Decreasing Stack}, \textbf{Increasing Stack}, or \textbf{Increasing/Decreasing Deque}) for each task:
-\begin{enumerate}
-    \item \textbf{Daily Stock Span}: For each day, count consecutive prior days (including today) whose price was $\le$ today's price.
-    \item \textbf{Rolling Minimum Latency}: Maintain the smallest latency among the last $K$ server readings as new readings stream in.
-    \item \textbf{Widest Shelf Under Uneven Ceiling}: Given ceiling heights $C[0 \dots N-1]$, find the largest rectangle that fits underneath.
-\end{enumerate}
-\pencillines{3}
-\end{tryitbox}
-
 % ============================================================================
 \section{Summary and Complexity Reference}
 % ============================================================================
@@ -1466,67 +1390,146 @@ Remove $K$ Digits / Subsequence & $O(N)$ & $O(N)$ & Deleting $K$ items to form t
 \end{itemize}
 
 % ============================================================================
+\section*{Practice Sheet: Mixed Pen-and-Paper Drills}
+\addcontentsline{toc}{section}{Practice Sheet: Mixed Pen-and-Paper Drills}
+\markboth{Practice Sheet: Mixed Pen-and-Paper Drills}{}
+% ============================================================================
+
+\noindent
+Work through these six mixed drills on scratch paper \emph{without} flipping back to the chapter. Unlike the inline checks above, these combine patterns with no subsection hints---ideal for a timed 15-minute review or spaced repetition a week later.
+
+\begin{tryitbox}{Triage}{Cold Tool Selection}{ex9}
+Pick the exact data structure (\textbf{Decreasing Stack}, \textbf{Increasing Stack}, \textbf{Decreasing Deque}, or \textbf{Increasing Deque}) and key boundary rule for each disguised task:
+\begin{enumerate}
+    \item \textbf{Daily Stock Span}: For each day, count consecutive prior days (including today) whose price was $\le$ today's price.
+    \item \textbf{Rolling Minimum Latency}: Maintain the smallest latency among the last $K$ server readings as readings stream in.
+    \item \textbf{Widest Shelf Under Uneven Ceiling}: Given ceiling heights $C[0 \dots N-1]$, find the largest rectangle that fits underneath.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Debug}{Circular Waiting Span Bug}{ex10}
+To adapt \textbf{Daily Temperature Span} to a \textbf{circular} array (wrapping around after index $n-1$), someone loops $i$ from $0$ to $2n - 1$ using $T[i \bmod n]$:
+\begin{lstlisting}[numbers=none, xleftmargin=4pt, framexleftmargin=4pt]
+for (int i = 0; i < 2 * n; ++i) {
+    while (!st.empty() && T[st.back()] < T[i % n]) {
+        span[st.back()] = i - st.back();
+        st.pop_back();
+    }
+    st.push_back(i % n); // <-- Subtle bug!
+}
+\end{lstlisting}
+Trace $T = [2, 3, 1]$ (true circular spans: $[1, 0, 1]$) to find which entry gets corrupted on the second pass, and write the 1-line fix.
+\end{tryitbox}
+
+\begin{tryitbox}{Twist}{Sum of Subarray Ranges ($\max - \min$)}{ex11}
+Given $A = [1, 3, 2]$, you want the sum of $\max(B) - \min(B)$ across all contiguous subarrays $B$.
+\begin{enumerate}
+    \item Explain in one sentence how to solve this in $O(N)$ time by reusing \texttt{sum\_subarray\_mins} twice instead of designing a new data structure.
+    \item Compute the exact answer for $A = [1, 3, 2]$ on paper using $\sum \max(B) - \sum \min(B)$.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Trace}{Visible People in a Queue}{ex12}
+People stand in a line with heights $H = [10, 6, 8, 5, 11, 9]$. Person $i$ can see person $j > i$ to their right if everyone strictly between them is shorter than both $H[i]$ and $H[j]$. Scan right-to-left with a decreasing stack: for each $i$, pop every person shorter than $H[i]$ (counting each pop), and add $+1$ if a taller blocker still sits on top. Compute the visible count for all $6$ positions.
+\end{tryitbox}
+
+\begin{tryitbox}{Edge Cases}{Sliding Window Corner Cases}{ex13}
+Trace \texttt{max\_sliding\_window(nums, k)} mentally on three edge cases:
+\begin{enumerate}
+    \item All equal: \texttt{nums = [7, 7, 7, 7]}, $k = 2$ --- what is the output, and what is the \emph{maximum size} the deque ever reaches?
+    \item Single-item window: \texttt{nums = [5, 2, 8]}, $k = 1$.
+    \item Full-array window: \texttt{nums = [5, 2, 8]}, $k = 3$.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Derive}{Longest Subarray With $\max - \min \le L$}{ex14}
+You want the longest contiguous subarray whose $\max - \min \le L$ (test on $A = [8, 2, 4, 7]$ with $L = 4$).
+\begin{enumerate}
+    \item Why can't a \emph{single} monotonic deque track both the window maximum and window minimum at once?
+    \item Use two deques (\texttt{max\_dq} decreasing, \texttt{min\_dq} increasing) and advance \texttt{left} whenever $A[\texttt{max\_dq.front()}] - A[\texttt{min\_dq.front()}] > L$. Trace $A = [8, 2, 4, 7]$, $L = 4$ to find the longest valid subarray length.
+\end{enumerate}
+\end{tryitbox}
+
+% ============================================================================
 \section*{Solutions to Pen-and-Paper Exercises}
 \addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
 \markboth{Solutions to Pen-and-Paper Exercises}{}
 % ============================================================================
 
 \begin{enumerate}
-    \item \label{sol:ex1}\textbf{Exercise 1 --- Skyline Shadows Check:}
-    \textbf{(1)} Only height $175$ (index $2$) is permanently shadowed, because $190$ (index $1$) stands closer to all viewers on the left \emph{and} is taller.
-    \textbf{(2)} The stack (bottom to top) keeps $[190, 160]$. Height $160$ is \emph{not} shadowed because a viewer of height $150$ hits $160$ first, whereas a viewer of height $170$ looks over $160$ and hits $190$.
+    \item \label{sol:ex1}\textbf{Exercise 1 (Trace) --- Skyline Shadows Check:}
+    \textbf{(1)} Only $175$ (index $2$) is shadowed by $190$ (closer and taller) and popped.
+    \textbf{(2)} Stack keeps $[190, 160]$ (bottom to top). Height $160$ survives because a viewer of height $150$ to its left hits $160$ first, whereas a viewer of height $170$ looks over $160$ and hits $190$.
+    \trapnote{Thinking $190$ shadows $160$---shadowing only eliminates elements \emph{behind} (further from future queries than) the taller item.}
 
-    \item \label{sol:ex2}\textbf{Exercise 2 --- Four Nearest Queries on $A = [6, 2, 5, 4]$:}
-    \begin{itemize}
-        \item $\text{NGE} = [-1, 5, -1, -1]$
-        \item $\text{PGE} = [-1, 6, 6, 5]$
-        \item $\text{NSE} = [2, -1, 4, -1]$
-        \item $\text{PSE} = [-1, -1, 2, 2]$
-    \end{itemize}
+    \item \label{sol:ex2}\textbf{Exercise 2 (Trace) --- Four Nearest Queries on $A = [6, 2, 5, 4]$:}
+    $\text{NGE} = [-1, 5, -1, -1]$;\quad $\text{PGE} = [-1, 6, 6, 5]$;\quad $\text{NSE} = [2, -1, 4, -1]$;\quad $\text{PSE} = [-1, -1, 2, 2]$.
+    \trapnote{Writing $\text{PGE}[2] = 2$ or $\text{PSE}[3] = 5$ by checking only the immediate neighbor instead of skipping past elements that fail the inequality.}
 
-    \item \label{sol:ex3}\textbf{Exercise 3 --- Hand-Trace Index Stack \& Spans on $A = [2, 5, 3, 7, 1]$:}
-    \begin{itemize}
-        \item $i = 0$ ($2$): none popped. Stack: $[0]$.
-        \item $i = 1$ ($5$): pop $0$ ($\text{NGE}[0] = 5$, $\text{span}[0] = 1 - 0 = 1$). Stack: $[1]$.
-        \item $i = 2$ ($3$): none popped. Stack: $[1, 2]$.
-        \item $i = 3$ ($7$): pop $2$ ($\text{NGE}[2] = 7$, $\text{span}[2] = 1$); pop $1$ ($\text{NGE}[1] = 7$, $\text{span}[1] = 2$). Stack: $[3]$.
-        \item $i = 4$ ($1$): none popped. Stack: $[3, 4]$.
-    \end{itemize}
-    Final arrays: $\text{NGE} = [5, 7, 7, -1, -1]$ and $\text{span} = [1, 2, 1, 0, 0]$.
+    \item \label{sol:ex3}\textbf{Exercise 3 (Edge Cases) --- Index Stack Stress Test:}
+    \textbf{(1)} $[2, 5, 3, 7, 1] \to \text{span} = [1, 2, 1, 0, 0]$, final stack $[3, 4]$ (size $2$).
+    \textbf{(2)} $[5, 5, 5, 5] \to \text{span} = [0, 0, 0, 0]$, final stack $[0, 1, 2, 3]$ (size $4$).
+    \textbf{(3)} $[9, 7, 5, 3] \to \text{span} = [0, 0, 0, 0]$, final stack $[0, 1, 2, 3]$ (size $4$).
+    \trapnote{Popping equal values ($\le$ instead of $<$) falsely outputs $[1, 1, 1, 0]$ on $[5, 5, 5, 5]$ even though no day was strictly warmer.}
 
-    \item \label{sol:ex4}\textbf{Exercise 4 --- Duplicate Subarrays on $A = [1, 3, 1]$:}
-    \begin{itemize}
-        \item \textbf{(1) Both strict ($<$)}: counts are $3 + 1 + 3 = 7$. Subarray $[1, 3, 1]$ is double-counted by both $i = 0$ and $i = 2$.
-        \item \textbf{(2) Both non-strict ($\le$)}: counts are $2 + 1 + 2 = 5$. Subarray $[1, 3, 1]$ is missed completely.
-        \item \textbf{(3) Strict $\text{PLE}$ + Non-strict $\text{NLE}$}: $\text{PLE} = [-1, 0, -1]$, $\text{NLE} = [2, 2, 3]$. Counts: $i=0 \to 1 \times 2 = 2$, $i=1 \to 1 \times 1 = 1$, $i=2 \to 3 \times 1 = 3$ (sum $= 6$). Sum of minimums $= 1(2) + 3(1) + 1(3) = 8$.
-    \end{itemize}
+    \item \label{sol:ex4}\textbf{Exercise 4 (Debug) --- Duplicate Subarray Tie-Breaking on $A = [1, 3, 1]$:}
+    \textbf{(1)} Both $<$ counts $3 + 1 + 3 = 7$ (double-counts $[1, 3, 1]$).
+    \textbf{(2)} Both $\le$ counts $2 + 1 + 2 = 5$ (misses $[1, 3, 1]$).
+    \textbf{(3)} Strict $\text{PLE} = [-1, 0, -1]$, non-strict $\text{NLE} = [2, 2, 3]$; counts $2, 1, 3$ (sum $= 6$); total sum $= 1(2) + 3(1) + 1(3) = 8$.
+    \trapnote{Getting $9$ (both $<$) or $7$ (both $\le$) instead of $8$ because symmetric bounds double-count or drop the subarray spanning both $1$s.}
 
-    \item \label{sol:ex5}\textbf{Exercise 5 --- Histogram $H = [3, 1, 4, 2]$ \& Sentinel Break-It:}
-    \textbf{(a)} Bar $0$ ($3$): $L=-1, R=1, W=1, \text{Area}=3$. Bar $1$ ($1$): $L=-1, R=4, W=4, \text{Area}=4$. Bar $2$ ($4$): $L=1, R=3, W=1, \text{Area}=4$. Bar $3$ ($2$): $L=1, R=4, W=2, \text{Area}=4$. Maximum area $= 4$.\\
-    \textbf{(b)} Any strictly increasing histogram such as $H = [2, 4, 6]$ triggers zero pops during $i = 0, 1, 2$; without sentinel $-1$, the loop returns $0$ instead of the true maximum $8$ (bars $1$ and $2$ at height $4$).
+    \item \label{sol:ex5}\textbf{Exercise 5 (Debug) --- Histogram Expansion \& Missing Sentinel:}
+    \textbf{(1)} $H = [3, 1, 4, 2]$: Bar $0 \to (-1, 1, W=1, \text{Area}=3)$; Bar $1 \to (-1, 4, W=4, \text{Area}=4)$; Bar $2 \to (1, 3, W=1, \text{Area}=4)$; Bar $3 \to (1, 4, W=2, \text{Area}=4)$. Max area $= 4$.
+    \textbf{(2)} Any strictly increasing histogram like $H = [2, 4, 6]$ triggers zero pops without sentinel $-1$, falsely returning $0$ instead of $8$ (bars $1$--$2$ at height $4$).
+    \trapnote{Using $\text{Width} = R - L$ instead of $R - L - 1$, which overstates every width by $1$ because $L$ and $R$ are exclusive blocking walls.}
 
-    \item \label{sol:ex6}\textbf{Exercise 6 --- Sliding Window Maximum ($K = 3$) on $A = [4, 1, 3, 5, 2]$:}
-    \begin{itemize}
-        \item $i=0$ ($4$): none. Deque: $[0]$.
-        \item $i=1$ ($1$): none. Deque: $[0, 1]$.
-        \item $i=2$ ($3$): pop $1$ from \textbf{back} ($1 \le 3$). Deque: $[0, 2]$. Max $= 4$.
-        \item $i=3$ ($5$): pop $0$ from \textbf{front} (expired: $0 \le 3 - 3$); pop $2$ from \textbf{back} ($3 \le 5$). Deque: $[3]$. Max $= 5$.
-        \item $i=4$ ($2$): none. Deque: $[3, 4]$. Max $= 5$.
-    \end{itemize}
-    Final window maximums: $[4, 5, 5]$.
+    \item \label{sol:ex6}\textbf{Exercise 6 (Twist) --- Sliding Window Trace \& Flip to Minimum:}
+    \textbf{(1)} On $[4, 1, 3, 5, 2]$ ($K=3$): deque states $[0] \to [0,1] \to [0,2]$ (back pop $1$, max $4$) $\to [3]$ (\textbf{front} pop $0$ expired, \textbf{back} pop $2$, max $5$) $\to [3, 4]$ (max $5$). Output: $[4, 5, 5]$.
+    \textbf{(2)} Change only back pruning from $A[\texttt{dq.back()}] \le A[i]$ to $A[\texttt{dq.back()}] \ge A[i]$. Front expiry ($\texttt{dq.front()} \le i - K$) does \emph{not} change.
+    \trapnote{Flipping the front-expiry inequality too---window expiration depends only on index distance, never on min vs. max.}
 
-    \item \label{sol:ex7}\textbf{Exercise 7 --- Exact Push \& Pop Budget on $A = [10, 9, 8, 7, 6, 100]$:}
-    \textbf{(1)} Iteration $i = 5$ ($100$) triggers $5$ pops in a single step (all earlier indices $4, 3, 2, 1, 0$).
-    \textbf{(2)} Across the entire run, there are exactly $6$ pushes ($= N$) and $5$ pops ($\le N$), proving total work never exceeds $2N = 12$ operations.
+    \item \label{sol:ex7}\textbf{Exercise 7 (Derive) --- Exact Push \& Pop Budget on $[10, 9, 8, 7, 6, 100]$:}
+    \textbf{(1)} Iteration $i = 5$ triggers $5$ pops in one step.
+    \textbf{(2)} Total across all $6$ iterations: exactly $6$ pushes and $5$ pops.
+    \textbf{(3)} General tight bound: $N$ pushes + at most $(N - 1)$ pops $= 2N - 1 = O(N)$ (the final pushed element is never popped).
+    \trapnote{Multiplying worst single-step pops ($N - 1$) by $N$ iterations to guess $O(N^2)$ instead of charging pushes and pops per element.}
 
-    \item \label{sol:ex8}\textbf{Exercise 8 --- Remove $K$ Digits Edge Cases:}
-    \textbf{(1)} \texttt{"10200"}, $K = 1$: \texttt{'0'} pops \texttt{'1'} ($K = 0$), leaving stack \texttt{"0200"}; stripping leading zeros yields \texttt{"200"}.
-    \textbf{(2)} \texttt{"12345"}, $K = 2$: zero pops during the scan; leftover $K = 2$ trims \texttt{'5'} and \texttt{'4'} from the back, yielding \texttt{"123"}.
+    \item \label{sol:ex8}\textbf{Exercise 8 (Edge Cases) --- Remove $K$ Digits Killers:}
+    \textbf{(1)} \texttt{"10200"}, $K=1 \to$ stack \texttt{"0200"} $\to$ \texttt{"200"}.
+    \textbf{(2)} \texttt{"12345"}, $K=2 \to$ no loop pops, trim $2$ from back $\to$ \texttt{"123"}.
+    \textbf{(3)} \texttt{"100"}, $K=1 \to$ stack \texttt{"00"} $\to$ strip zeros, fallback to \texttt{"0"}.
+    \trapnote{Returning an empty string \texttt{""} on \texttt{"100"}, $K=1$ instead of \texttt{"0"} after stripping leading zeros.}
 
-    \item \label{sol:ex9}\textbf{Exercise 9 --- Quick Pattern Triage:}
-    \textbf{(1)} Daily Stock Span $\to$ \textbf{Decreasing Monotonic Stack} (finds Previous Greater Element).
-    \textbf{(2)} Rolling Minimum Latency $\to$ \textbf{Increasing Monotonic Deque} (front holds window minimum).
-    \textbf{(3)} Widest Shelf Under Uneven Ceiling $\to$ \textbf{Increasing Monotonic Stack with trailing sentinel} (identical to Largest Rectangle in Histogram).
+    \item \label{sol:ex9}\textbf{Exercise 9 (Triage) --- Cold Tool Selection:}
+    \textbf{(1)} Stock Span $\to$ \textbf{Decreasing Stack} (Previous Greater Element: stops at first strictly greater day).
+    \textbf{(2)} Rolling Minimum Latency $\to$ \textbf{Increasing Deque} (front expiry + pop back while $\ge$ incoming).
+    \textbf{(3)} Widest Shelf Under Ceiling $\to$ \textbf{Increasing Stack with trailing $-1$ sentinel} (Histogram expansion).
+    \trapnote{Picking an Increasing Stack for Stock Span because the prompt mentions ``lower or equal price''---you search for the first \emph{strictly greater} blocker.}
+
+    \item \label{sol:ex10}\textbf{Exercise 10 (Debug) --- Circular Waiting Span Bug on $T = [2, 3, 1]$:}
+    At $i=1$, index $0$ gets $\text{span}[0] = 1$. On pass $2$, $i=3$ pushes $0$ again, and $i=4$ pops $0$ and \textbf{overwrites} $\text{span}[0] = 4 - 0 = 4$ (corrupting $[1, 0, 1]$ into $[4, 0, 1]$).
+    \textbf{1-line fix:} Guard the push with \texttt{if (i < n) st.push\_back(i);}.
+    \trapnote{Assuming circular traversal is just ``loop to $2n$ and mod everything''---only first-pass indices should ever enter the waiting stack.}
+
+    \item \label{sol:ex11}\textbf{Exercise 11 (Twist) --- Sum of Subarray Ranges on $A = [1, 3, 2]$:}
+    \textbf{(1)} By linearity, $\sum(\max - \min) = \sum \max - \sum \min$, so run \texttt{sum\_subarray\_mins} on $A$ and again on $-A$ (negating the result), or flip the inequalities for maxes.
+    \textbf{(2)} $\sum \min = 1(3) + 3(1) + 2(2) = 10$; $\sum \max = 1(1) + 3(4) + 2(1) = 15$; answer $= 15 - 10 = 5$.
+    \trapnote{Trying to maintain both $\max$ and $\min$ inside one stack---splitting the sum keeps both passes completely independent.}
+
+    \item \label{sol:ex12}\textbf{Exercise 12 (Trace) --- Visible People in a Queue on $[10, 6, 8, 5, 11, 9]$:}
+    Right-to-left: $i=5\,(9) \to 0$, $st=[9]$; $i=4\,(11)$ pops $9 \to 1$, $st=[11]$; $i=3\,(5)$ sees blocker $11 \to 1$, $st=[11,5]$; $i=2\,(8)$ pops $5$ + blocker $11 \to 2$, $st=[11,8]$; $i=1\,(6)$ sees blocker $8 \to 1$, $st=[11,8,6]$; $i=0\,(10)$ pops $6, 8$ + blocker $11 \to 3$, $st=[11,10]$. Result: $[3, 1, 2, 1, 1, 0]$.
+    \trapnote{Forgetting the $+1$ when the stack is still non-empty after popping---you can still see the first taller person who blocks further sight.}
+
+    \item \label{sol:ex13}\textbf{Exercise 13 (Edge Cases) --- Sliding Window Corner Cases:}
+    \textbf{(1)} $[7, 7, 7, 7], k=2 \to$ output $[7, 7, 7]$; because back pruning uses $\le$, every arriving $7$ pops the prior $7$, so max deque size is only $1$.
+    \textbf{(2)} $[5, 2, 8], k=1 \to [5, 2, 8]$.
+    \textbf{(3)} $[5, 2, 8], k=3 \to [8]$.
+    \trapnote{Using strict $<$ instead of $\le$ in back pruning keeps duplicate indices in the deque unnecessarily up to size $k$.}
+
+    \item \label{sol:ex14}\textbf{Exercise 14 (Derive) --- Longest Subarray With $\max - \min \le L$:}
+    \textbf{(1)} Maximum requires a \emph{decreasing} deque while minimum requires an \emph{increasing} deque---one ordering cannot put both extrema at the front.
+    \textbf{(2)} Trace on $[8, 2, 4, 7]$, $L=4$: $r=0$ ($[8]$, len $1$); $r=1$ ($8-2=6>4 \to$ shrink $l=1$, $[2]$, len $1$); $r=2$ ($4-2=2 \le 4$, $[2,4]$, len $2$); $r=3$ ($7-2=5>4 \to$ shrink $l=2$, $[4,7]$, len $2$). Longest valid length $= 2$.
+    \trapnote{Forgetting to pop expired indices ($\le \text{left} - 1$) from \emph{both} \texttt{max\_dq} and \texttt{min\_dq} fronts when \texttt{left} advances.}
 \end{enumerate}
 
 % ============================================================================
@@ -1548,7 +1551,7 @@ Remove $K$ Digits / Subsequence & $O(N)$ & $O(N)$ & Deleting $K$ items to form t
 2026-10-11 & Added concrete worked examples to all Main Topic subsections, added Next Smaller Element C++ implementation, canonicalized 3-step pattern recognition, and expanded duplicate trace and glossary. \\
 2026-10-12 & Moved embedded TikZ diagrams to central review document (Diagrams 22--24 in diagrams\_review.pdf) and preserved figure placeholders. \\
 2026-11-24 & Fixed duplicate symmetry-breaking explanation, Stock Span pattern row, and Example 4 typo; embedded Diagrams 22--24; added Remove K Digits example and C++23 code, 4-beat Origin Stories, local notation boxes, and 3 pen-and-paper drills with solutions. \\
-2026-11-25 & Redesigned layout for screen and print: switched to sans-serif typography (Helvetica + sfmath), replaced academic Abstract with Overview card, added automatic section page breaks, styled high-contrast colored headers/subheaders/callouts/formula cards, modernized tables with booktabs, removed clickable answer links in favor of printed page numbers, and expanded pen-and-paper practice to 9 pencil-ready exercises. \\
+2026-11-25 & Redesigned layout for screen and print (sans-serif Helvetica + sfmath + courier, Overview card, per-section page breaks, high-contrast colored headers/callouts/formula cards, booktabs tables); fixed C++ listing line-number frame clearance; upgraded pen-and-paper suite to 6 thinking modes (8 compact inline drills + 6-drill end-of-chapter Practice Sheet + 1-line Common trap diagnostics). \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup
