@@ -270,11 +270,11 @@ material document.
 \newenvironment{notationbox}[1][Symbols Used Here]{
     \par\vspace{0.2cm}
     \noindent\textbf{\small\color{primaryblue}#1}\par\vspace{0.1cm}
-    \noindent\footnotesize\begin{tabularx}{\textwidth}{|l|X|p{3.6cm}|}
+    \noindent\footnotesize\tabularx{\textwidth}{|l|X|>{\raggedright\arraybackslash}p{3.6cm}|}
     \hline
     \textbf{Symbol} & \textbf{Plain-English Meaning} & \textbf{Example / Type} \\ \hline
 }{
-    \end{tabularx}\normalsize
+    \endtabularx\normalsize
     \vspace{0.25cm}\par
 }
 

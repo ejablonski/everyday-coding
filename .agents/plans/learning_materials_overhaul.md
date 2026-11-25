@@ -11,12 +11,10 @@
 To keep token usage predictable and reviews manageable, execute this plan in short, single-module sessions:
 
 - **Session 1 (Done — `2026-11-24`):** Phase 0 foundation (`.agents/skills/learning-materials/SKILL.md` + `scripts/verify_learning_materials.py` + this plan).
-- **Session 2 (Gold-Standard Pilot — Next):**
-  - Target **one** chosen pilot monograph (recommended: `learning_materials/11.monotonic_stacks_and_queues.tex`).
-  - Complete **all applicable phases for that single file in one pass** (Phase 1 bug fixes + Phase 3 diagram fixes/embedding from `learning_materials/diagrams_review.tex` + Phase 4 "But Why?" Origin Stories, local `notationbox` tables, `tryitbox` pen-and-paper drills + Solutions appendix; for `09`/`10`, also Phase 2 stub expansion).
-  - If `pdflatex` or `pdftoppm` is missing (`0.4`), install or confirm with the user so Pass 4 visual inspection runs on the rendered diagram/box pages.
-  - Run `python3 scripts/verify_learning_materials.py learning_materials/<FILE>.tex --cpp --pdf --render-diagrams <external_scratch_dir>`, visually inspect only the rendered diagram/box pages, clean up temporary PNGs/aux files, update `learning_materials/00.problem_solving_guide.tex` if synced patterns/bugs changed (e.g., Stock Span in Module 11), check off completed boxes and the Progress Matrix in this file, and commit.
-  - **Stop after the pilot module** so the user can inspect the compiled PDF format before applying it to the remaining modules.
+- **Session 2 (Gold-Standard Pilot — Done `2026-11-24`):**
+  - Completed `learning_materials/11.monotonic_stacks_and_queues.tex` across all applicable phases (Phase 1.11 bug fixes + Phase 3 embedded & visually verified Diagrams 22--24 + Phase 4.13 4-beat Origin Stories, local `notationbox` tables, 3 `tryitbox` pen-and-paper drills + Solutions appendix) and synced the Stock Span fix into `learning_materials/00.problem_solving_guide.tex`.
+  - Also fixed `notationbox` in `SKILL.md` to use `\tabularx` / `\endtabularx` (required by `tabularx` inside `\newenvironment`) with `>{\raggedright\arraybackslash}p{3.6cm}`.
+  - **Stopped after the pilot module** so the user can inspect the compiled PDF format before applying it to the remaining modules.
 - **Ongoing Sessions (1 Module per Fresh Session):**
   - Follow the exact same single-module vertical slice (Phases 1/2 + 3 + 4 + verification + Progress Matrix update + commit) for whichever module the user selects next.
   - Suggested order: `11` → `12` → `00.problem_solving_guide.tex` → `10` → `09` → `06` → `07` → (`08`, `05`, `04`, `03`, `02`, `01`, `00.cpp_reference.tex` on demand) → delete `learning_materials/diagrams_review.tex` once all diagrams are migrated → Phase 5 (`13`–`16`) just-in-time.
@@ -53,15 +51,15 @@ Never introduce a formula, recurrence, or trick out of thin air. Structure each 
 Keep the comprehensive **Glossary** in Section 9, **and** place a compact 3-column inline notation box right at the top of any subsection that uses 2+ domain symbols so the reader never has to flip to the back of the PDF:
 
 ```latex
-% Canonical inline notation strip (to be added to SKILL.md preamble)
+% Canonical inline notation strip (in SKILL.md preamble)
 \newenvironment{notationbox}[1][Symbols Used Here]{
     \par\vspace{0.2cm}
     \noindent\textbf{\small\color{primaryblue}#1}\par\vspace{0.1cm}
-    \noindent\footnotesize\begin{tabularx}{\textwidth}{|l|X|p{3.6cm}|}
+    \noindent\footnotesize\tabularx{\textwidth}{|l|X|>{\raggedright\arraybackslash}p{3.6cm}|}
     \hline
     \textbf{Symbol} & \textbf{Plain-English Meaning} & \textbf{Example / Type} \\ \hline
 }{
-    \end{tabularx}\normalsize
+    \endtabularx\normalsize
     \vspace{0.25cm}\par
 }
 ```
@@ -75,7 +73,7 @@ Add **2–4 short pen-and-paper checkpoints per monograph** right after key subs
 **No inline spoilers:** Place brief, numbered **Answer Keys** in an unnumbered `\section*{Solutions to Pen-and-Paper Exercises}` right before `Version History`, cross-linked via `\hypertarget` / `\hyperlink` so PDF readers can jump to check their work and jump right back.
 
 ```latex
-% Canonical pen-and-paper exercise box (to be added to SKILL.md preamble)
+% Canonical pen-and-paper exercise box (in SKILL.md preamble)
 \newenvironment{tryitbox}[2]{
     \par\vspace{0.25cm}
     \noindent\begin{tabular}{|p{0.96\textwidth}|}
@@ -112,7 +110,7 @@ Establish the updated standard before editing individual monographs so every sub
   - [x] Added `scripts/verify_learning_materials.py` checking: (a) Clean Directory Policy, (b) UTF-8 BOMs (`--fix-bom`), (c) raw Markdown `**` / backticks, (d) platform-agnostic violations, (e) standalone C++23 compile checks (`--cpp`), and (f) `pdflatex` double-compile + cleanup + selective diagram-page PNG rendering (`--pdf --render-diagrams <dir>`).
 - [ ] **0.3 Branch Hygiene (Optional):**
   - [ ] Rebase `learning-materials-updates` onto `origin/master` (confirmed zero overlap with `learning_materials/` or `.agents/`) when ready to merge, or merge via PR.
-- [ ] **0.4 Ensure TeX Live + `poppler-utils` (`pdflatex`, `pdftoppm`) are available** in the working environment before running Session 2 (Pilot PDF visual inspection).
+- [x] **0.4 Ensure TeX Live + `poppler-utils` (`pdflatex`, `pdftoppm`) are available** in the working environment before running Session 2 (Pilot PDF visual inspection). *(Installed 2026-11-24)*
 
 ---
 
@@ -130,7 +128,7 @@ Fix every confirmed factual error, C++23 compile/UB defect, formatting glitch, a
   - [ ] Fix C++20 stateless lambda note (L177–178), `ranges::stable_sort`/`stable_partition` complexity nuances (L260/265), `ranges::fold_left` `<algorithm>` header note (L345), and `std::bit_width(0) == 0` edge case (L398).
   - [ ] Add brief C++23 reference blocks relevant to Modules 09–12: `std::string_view` (`remove_prefix`/`remove_suffix` + lifetime warning), `std::deque`/`std::stack<int, std::vector<int>>`, `<bit>` unsigned-only caveat + `std::bitset` + `1ULL << k` shift UB, safe `INF = max() / 2`, and C++23 deducing `this`.
 - [ ] **1.2 `learning_materials/00.problem_solving_guide.tex`:**
-  - [ ] Fix wrong Stock Span row on L343 (Stock Span = Previous **Greater** Element = **Decreasing** Monotonic Stack, not Increasing).
+  - [x] Fix wrong Stock Span row on L343 (Stock Span = Previous **Greater** Element = **Decreasing** Monotonic Stack, not Increasing). *(Completed 2026-11-24 alongside Module 11)*
   - [ ] Remove duplicate House Robber row (L261 vs L274) and redundant `(Also in: ...)` tags in Sec 4.4–4.5.
   - [ ] Fix Complexity Table formatting & errors: switch 28-row `tabularx` (L448–478) to `xltabular` so it page-breaks cleanly; fix Prefix XOR `O(N) build` misplaced in Space column (L475); clarify Submask Enumeration space (`O(1)` iteration, `O(2^N)` DP table, L476); add Greedy Huffman/heap row and missing Module `03`/`04`/`06`/`07`/`08` rows.
   - [ ] Reconcile Pattern Recognition table format (4-column vs grouped 3-column) with `SKILL.md`, and sync missing Glossary symbols (`D_n`, `S(n,k)`, `\oplus`, `\&`, `\sum`, `\gcd`, `\operatorname{lcm}`).
@@ -181,11 +179,11 @@ Fix every confirmed factual error, C++23 compile/UB defect, formatting glitch, a
   - [ ] Restore all 6 stripped traces, fix Example 4's `L=0`/`L=1` switch & skipped steps (L482–495), and either add sections for 2D Matrix BS / Median of Two Sorted Arrays or remove them from L886/888/910.
 
 ### New Branch Modules (`11`, `12`)
-- [ ] **1.11 `learning_materials/11.monotonic_stacks_and_queues.tex`:**
-  - [ ] **Fix inverted strict (`<`) vs. non-strict (`<=`) duplicate-counting explanation (L247–257)** and reconcile L240 ("first occurrence") with L568 ("last occurrence").
-  - [ ] **Fix Stock Span row in Pattern Recognition table (L812):** Stock Span = Previous Greater Element = Decreasing Monotonic Stack.
-  - [ ] Fix typo `-1 \le -1 is false` → `3 \le -1 is false` (L510).
-  - [ ] Add brief worked example + C++23 implementation for **"Remove K Digits" (Lexicographical Monotonic Stack with removal budget)** already listed in Pattern Recognition (L816).
+- [x] **1.11 `learning_materials/11.monotonic_stacks_and_queues.tex`:** *(Completed 2026-11-24)*
+  - [x] **Fix inverted strict (`<`) vs. non-strict (`<=`) duplicate-counting explanation (L247–257)** and reconcile L240 ("first occurrence") with L568 ("last occurrence").
+  - [x] **Fix Stock Span row in Pattern Recognition table (L812):** Stock Span = Previous Greater Element = Decreasing Monotonic Stack.
+  - [x] Fix typo `-1 \le -1 is false` → `3 \le -1 is false` (L510).
+  - [x] Add brief worked example + C++23 implementation for **"Remove K Digits" (Lexicographical Monotonic Stack with removal budget)** already listed in Pattern Recognition (L816).
 - [ ] **1.12 `learning_materials/12.bit_manipulation_and_bitmasks.tex`:**
   - [ ] Replace all **15 raw Markdown `**bold**`** instances (L411, 415, 425, 447–453, 494, 606–621) with `\textbf{...}`, raw backticks `` `AND` ``/`` `OR` `` (L431) with `\texttt{...}`, and raw UTF-8 `—` (L293, 512) with `---`.
   - [ ] Fix Table 1 (L155: $2^{31}$ is `|INT32_MIN|`, Signed Max is $2^{31}-1 = 2{,}147{,}483{,}647$) and L372 ("Self-Inverse / Involution", remove wrong word "Nilpotence").
@@ -268,7 +266,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 - [ ] Embed D19, D20, D37 + Lower/Upper Bound duplicates → `08.binary_search.tex`.
 - [ ] Embed D29, D30, D31 → `09.string_algorithms.tex`.
 - [ ] Embed D21 + Fractional Knapsack / Counterexample / Exchange Argument → `10.greedy_algorithms.tex`.
-- [ ] Embed D22, D23, D24 → `11.monotonic_stacks_and_queues.tex` (replaces 3 text stubs).
+- [x] Embed D22, D23, D24 → `11.monotonic_stacks_and_queues.tex` (replaces 3 text stubs; fixed D24 blue frame collision and D22 label/card spacing). *(Completed 2026-11-24)*
 - [ ] Embed D25, D26, D27, D28, D41 → `12.bit_manipulation_and_bitmasks.tex` (replaces 4 text stubs).
 - [ ] **Delete `learning_materials/diagrams_review.tex`** once every diagram is embedded and verified, restoring the Clean Directory Policy.
 
@@ -314,7 +312,7 @@ Apply the **Pedagogical Blueprint** (4-Beat Origin Stories, local `notationbox` 
   - *Pen & Paper Drills (3):* Hand-trace `lower_bound` vs. `upper_bound` on `[2, 4, 4, 4, 7]`; design the feasibility predicate $P(x)$ for shipping packages in $D$ days; trace rotated search on `[6, 7, 1, 2, 3, 4, 5]` for target `2`.
 - [ ] **4.11 `09.string_algorithms.tex`:** *(Fold into Phase 2.1 rewrite.)*
 - [ ] **4.12 `10.greedy_algorithms.tex`:** *(Fold into Phase 2.2 rewrite.)*
-- [ ] **4.13 `11.monotonic_stacks_and_queues.tex`:**
+- [x] **4.13 `11.monotonic_stacks_and_queues.tex`:** *(Completed 2026-11-24)*
   - *Origin Stories:* Why dominated elements can *never* be the answer again (skyline shadow proof); why `while` inside `for` is still $O(N)$ (each element pays 1 push + at most 1 pop); why strict/non-strict tie-breaking partitions duplicate subarrays cleanly.
   - *Local `notationbox`:* `NGE`/`PGE`/`NSE`/`PSE`, `PLE`/`NLE`, Histogram bounds $L, R$, Window $[i-K+1, i]$.
   - *Pen & Paper Drills (3):* Trace Next Greater Element on `[2, 5, 3, 7, 1]`; compute histogram bar widths for `[3, 1, 4, 2]`; trace Sliding Window Max ($K = 3$) on `[4, 1, 3, 5, 2]`.
@@ -359,7 +357,7 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `08.binary_search.tex` | `[ ]` | N/A | `[ ]` (D19–20, D37 + 1) | `[ ]` | `[ ]` | `[ ]` |
 | `09.string_algorithms.tex` | `[ ]` | `[ ]` | `[ ]` (D29–31) | `[ ]` | `[ ]` | `[ ]` |
 | `10.greedy_algorithms.tex` | `[ ]` | `[ ]` | `[ ]` (D21 + 3) | `[ ]` | `[ ]` | `[ ]` |
-| `11.monotonic_stacks_and_queues.tex` | `[ ]` | N/A | `[ ]` (D22–24) | `[ ]` | `[ ]` | `[ ]` |
+| `11.monotonic_stacks_and_queues.tex` | DONE (2026-11-24) | N/A | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) |
 | `12.bit_manipulation_and_bitmasks.tex` | `[ ]` | N/A | `[ ]` (D25–28, D41) | `[ ]` | `[ ]` | `[ ]` |
 | Retire `diagrams_review.tex` | N/A | N/A | `[ ]` | N/A | N/A | N/A |
 | `13.two_pointers_and_sliding_window.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` |

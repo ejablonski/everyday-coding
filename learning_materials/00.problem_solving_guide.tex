@@ -340,7 +340,8 @@ This is the unified pattern recognition index. Each row merges the quick-referen
 \hline
 \textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
 ``next greater element'', ``first warmer day'' & Find the first larger value to the right of each element. & Decreasing Monotonic Stack \\ \hline
-``stock span'', ``previous smaller element'' & Count consecutive prior days with lower or equal price. & Increasing Monotonic Stack \\ \hline
+``stock span'', ``previous greater element'' & Count consecutive prior days with lower or equal price (stops at first strictly greater). & Decreasing Monotonic Stack \\ \hline
+``previous / next smaller element'' & Find the nearest strictly smaller value to the left or right of each element. & Increasing Monotonic Stack \\ \hline
 ``largest rectangle in histogram'' & Expand bar width left and right until a shorter bar appears. & Increasing Monotonic Stack with sentinel \\ \hline
 ``maximum/minimum in sliding window of size $K$'' & Query range extremum over a continuously shifting interval. & Monotonic Deque (double-ended eviction) \\ \hline
 ``sum of subarray minimums'' & Sum the minimum of every contiguous subarray. & Monotonic Stack with symmetry breaking \\ \hline
@@ -565,6 +566,7 @@ Bit Frequency Ledger Accumulation & $O(B \cdot N)$ & $O(B)$ & Independent column
 2026-10-10 & Added Greedy Algorithms module to Available registry, synced 4 pattern recognition rows, and added greedy complexity entries. \\ \hline
 2026-10-11 & Added Monotonic Stacks and Queues module to Available registry, synced 7 pattern recognition rows, and added monotonic complexity entries. \\ \hline
 2026-10-12 & Added Bit Manipulation and Bitmasks module to Available registry, synced 6 pattern recognition rows, and added bit manipulation complexity entries and glossary definitions. \\ \hline
+2026-11-24 & Fixed Stock Span row in Module 11 pattern table (Decreasing Monotonic Stack / Previous Greater Element) and added dedicated row for Previous/Next Smaller Element. \\ \hline
 \end{tabularx}
 
 \end{document}
