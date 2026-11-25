@@ -6,6 +6,23 @@
 
 ---
 
+## Session Execution Model
+
+To keep token usage predictable and reviews manageable, execute this plan in short, single-module sessions:
+
+- **Session 1 (Done — `2026-11-24`):** Phase 0 foundation (`.agents/skills/learning-materials/SKILL.md` + `scripts/verify_learning_materials.py` + this plan).
+- **Session 2 (Gold-Standard Pilot — Next):**
+  - Target **one** chosen pilot monograph (recommended: `learning_materials/11.monotonic_stacks_and_queues.tex`).
+  - Complete **all applicable phases for that single file in one pass** (Phase 1 bug fixes + Phase 3 diagram fixes/embedding from `learning_materials/diagrams_review.tex` + Phase 4 "But Why?" Origin Stories, local `notationbox` tables, `tryitbox` pen-and-paper drills + Solutions appendix; for `09`/`10`, also Phase 2 stub expansion).
+  - If `pdflatex` or `pdftoppm` is missing (`0.4`), install or confirm with the user so Pass 4 visual inspection runs on the rendered diagram/box pages.
+  - Run `python3 scripts/verify_learning_materials.py learning_materials/<FILE>.tex --cpp --pdf --render-diagrams <external_scratch_dir>`, visually inspect only the rendered diagram/box pages, clean up temporary PNGs/aux files, update `learning_materials/00.problem_solving_guide.tex` if synced patterns/bugs changed (e.g., Stock Span in Module 11), check off completed boxes and the Progress Matrix in this file, and commit.
+  - **Stop after the pilot module** so the user can inspect the compiled PDF format before applying it to the remaining modules.
+- **Ongoing Sessions (1 Module per Fresh Session):**
+  - Follow the exact same single-module vertical slice (Phases 1/2 + 3 + 4 + verification + Progress Matrix update + commit) for whichever module the user selects next.
+  - Suggested order: `11` → `12` → `00.problem_solving_guide.tex` → `10` → `09` → `06` → `07` → (`08`, `05`, `04`, `03`, `02`, `01`, `00.cpp_reference.tex` on demand) → delete `learning_materials/diagrams_review.tex` once all diagrams are migrated → Phase 5 (`13`–`16`) just-in-time.
+
+---
+
 ## Agent Handoff Protocol
 
 Before starting any work item from this plan:
@@ -13,12 +30,11 @@ Before starting any work item from this plan:
 1. **Check git state:** Confirm the active branch (`learning-materials-updates` or a dedicated feature branch off `master`) and read the **Progress Matrix** at the bottom of this file to find the next unchecked checkpoint.
 2. **Batch per module when practical:** When working on an existing monograph `XX.<topic>.tex`, prefer completing its **Phase 1 (Bug Fixes) + Phase 3 (Diagram Integration) + Phase 4 (Pedagogical Upgrade)** in a single cohesive pass so the document is compiled, visually inspected, and gets one clean Version History entry instead of three separate churn cycles.
 3. **Mandatory Verification Gate before checking `[x]`:**
-   - **C++23 check:** Extract every standalone listing (containing `#include`) to an external scratch folder and verify with `g++ -std=c++23 -fsyntax-only -Wall -Wextra` (zero errors, zero warnings).
-   - **LaTeX & Hygiene check:** Zero UTF-8 BOMs (`U+FEFF`), zero raw Markdown (`**...**`, `` `...` ``), zero raw non-ASCII punctuation (`—`, `×`, `é`), zero competitive programming platform names (`LeetCode`, `HackerRank`, `Codeforces`, etc.), zero absolute paths.
-   - **Build & Visual Inspection (Pass 4 of `SKILL.md`):** Compile twice with `pdflatex -interaction=nonstopmode`, render pages via `pdftoppm -png -r 150` into an external scratch directory, visually inspect every diagram and table for collisions/overflows/color harmony, then delete all `.aux`, `.log`, `.out`, `.toc`, and temporary PNG files.
+   - **Automated Hygiene & C++23 check:** Run `python3 scripts/verify_learning_materials.py learning_materials/XX.<topic>.tex --cpp` (verifies zero BOMs, zero raw Markdown/Unicode/platform names, Clean Directory Policy, and `g++ -std=c++23 -fsyntax-only -Wall -Wextra`).
+   - **Build & Selective Visual Inspection (Pass 4 of `SKILL.md`):** Run with `--pdf --render-diagrams <external_scratch_dir>` (or `--pages ...` for `notationbox`/`tryitbox` pages), inspect the rendered PNGs for collisions/overflows/color harmony, and delete temporary PNGs immediately afterward.
    - **Version History:** Append a single concise one-line entry (`YYYY-MM-DD | ...`) to the edited `.tex` file.
    - **Clean Directory Policy:** Confirm `learning_materials/` contains **only** `XX.<topic>.tex` (and compiled `.pdf` if kept locally; `.pdf` is gitignored). Never store scripts, plans, or scratch files inside `learning_materials/`.
-4. **Update this file:** Check off completed `[x]` boxes, record the date/commit in the **Progress Matrix**, and note any newly discovered issues under the relevant phase.
+4. **Update this file:** Check off completed `[x]` boxes, record the date in the **Progress Matrix**, and note any newly discovered issues under the relevant phase.
 
 ---
 
