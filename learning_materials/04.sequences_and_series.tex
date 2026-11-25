@@ -1,26 +1,114 @@
-﻿\documentclass[11pt,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 
 % --- Core LaTeX Packages ---
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\ttdefault}{txtt}
+\usepackage{upquote}
+\usepackage[margin=0.85in, headheight=15pt]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{xcolor}
+\usepackage[helvet]{sfmath}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[explicit]{titlesec}
+\usepackage[skins,breakable]{tcolorbox}
 \usepackage{listings}
 \usepackage{hyperref}
-\usepackage{tabularx}
 \usepackage{graphicx}
 
-% --- Optional Diagram Packages (include when needed) ---
-% \usepackage{forest}
-% \usepackage{tikz}
+% --- Diagram Packages ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,decorations.pathreplacing}
 
-% --- Unified Color Palette ---
+% --- Unified Print-Safe Color Palette ---
 \definecolor{primaryblue}{RGB}{24, 75, 140}
-\definecolor{codebg}{RGB}{248, 249, 250}
-\definecolor{codeframe}{RGB}{210, 215, 222}
-\definecolor{codegreen}{RGB}{40, 130, 60}
-\definecolor{codeblue}{RGB}{20, 90, 180}
-\definecolor{codegray}{RGB}{120, 120, 120}
+\definecolor{accentteal}{RGB}{15, 118, 110}
+\definecolor{accentamber}{RGB}{180, 83, 9}
+\definecolor{accentred}{RGB}{185, 28, 28}
+\definecolor{codebg}{RGB}{246, 248, 250}
+\definecolor{codeframe}{RGB}{204, 212, 220}
+\definecolor{codeink}{RGB}{24, 30, 38}
+\definecolor{codekw}{RGB}{126, 34, 206}
+\definecolor{codetype}{RGB}{0, 118, 138}
+\definecolor{codegreen}{RGB}{22, 138, 66}
+\definecolor{codeblue}{RGB}{15, 92, 212}
+\definecolor{codestr}{RGB}{194, 65, 12}
+\definecolor{codegray}{RGB}{105, 115, 125}
+
+% --- Global Typography & Spacing ---
+\linespread{1.08}
+\renewcommand{\arraystretch}{1.35}
+\setlength{\tabcolsep}{7pt}
+\setlist[itemize]{itemsep=3pt, topsep=4pt, leftmargin=1.5em}
+\setlist[enumerate]{itemsep=4pt, topsep=4pt, leftmargin=1.6em}
+
+% --- Running Header & Footer (Screen + Print Navigation) ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{codegray}\textbf{Sequences, Series, and Prefix Sums}}
+\fancyhead[R]{\footnotesize\color{codegray}\nouppercase{\leftmark}}
+\fancyfoot[C]{\footnotesize\color{codegray}Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{codeframe}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{}}
+
+% --- Section & Subsection Styling (High-Contrast + Per-Section Page Breaks) ---
+\newcommand{\sectionbreak}{}
+
+\titleformat{\section}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {\colorbox{primaryblue}{\color{white}\bfseries\Large\;\thesection\;}\hspace{0.55em}#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+\titlespacing*{\section}{0pt}{4pt}{14pt}
+
+\titleformat{name=\section,numberless}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{primaryblue!90!black}}
+  {}
+  {0pt}
+  {\begin{tcolorbox}[
+      enhanced, colback=primaryblue!6, colframe=primaryblue!6,
+      borderline west={3.5pt}{0pt}{primaryblue},
+      sharp corners=west, arc=2pt,
+      left=8pt, right=8pt, top=5pt, bottom=5pt,
+      boxsep=0pt, before skip=0pt, after skip=0pt
+  ]\large\bfseries\color{primaryblue!90!black}\thesubsection\hspace{0.55em}#1\end{tcolorbox}}
+\titlespacing*{\subsection}{0pt}{18pt}{8pt}
+
+\titleformat{name=\subsection,numberless}[block]
+  {\normalsize\bfseries\color{accentteal}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{2pt}{\color{accentteal!40}\titlerule[0.7pt]}]
+\titlespacing*{\subsection}{0pt}{14pt}{6pt}
+
+% --- Canonical Shared TikZ Styles ---
+\tikzset{
+    lmbox/.style={draw=codeframe, fill=codebg, thick, rounded corners=2pt, inner sep=4pt, font=\small},
+    lmactive/.style={draw=primaryblue, fill=primaryblue!8, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=primaryblue},
+    lmaccepted/.style={draw=codegreen, fill=codegreen!10, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=codegreen},
+    lmpruned/.style={draw=red!70!black, fill=red!70!black!6, thick, dashed, rounded corners=2pt, inner sep=4pt, font=\small, text=red!70!black},
+    lmarrow/.style={-{Stealth[length=5pt]}, thick, primaryblue},
+    lmmuted/.style={-{Stealth[length=5pt]}, thick, codegray},
+    lmprunedarrow/.style={-{Stealth[length=5pt]}, thick, dashed, red!70!black}
+}
 
 % --- Hyperref Setup ---
 \hypersetup{
@@ -32,40 +120,129 @@
     pdfauthor={Antigravity Engineering}
 }
 
-% --- Theorem & Definition Environments ---
+% --- Example Environment ---
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{example}{Example}[section]
 
-% --- Callout Box Environment ---
-\newenvironment{calloutbox}[1]{
-    \par\vspace{0.3cm}
-    \noindent\begin{tabular}{|p{0.96\textwidth}|}
-    \hline
-    \vspace{0.1cm}
-    \textbf{#1}\par\vspace{0.1cm}
-}{
-    \vspace{0.1cm}
-    \\ \hline
-    \end{tabular}
-    \vspace{0.3cm}\par
+% --- Semantic Narrative Beat Labels & Solution Trap Diagnostic ---
+\newcommand{\painbeat}{\textbf{\color{accentamber}The Problem:} }
+\newcommand{\ahabeat}{\textbf{\color{accentteal}The ``Aha!'' Insight:} }
+\newcommand{\examplebeat}{\textbf{\color{primaryblue}Mini-Example First:} }
+\newcommand{\breaksbeat}{\textbf{\color{accentred}When It Breaks:} }
+\newcommand{\invariantbeat}[1]{\par\noindent\textbf{\color{accentteal}Loop Invariant (#1):} }
+\newcommand{\trapnote}[1]{\par\smallskip\noindent{\footnotesize\textbf{\color{accentamber}Common trap:} #1}}
+
+% --- Modern Overview Card ---
+\newtcolorbox{overviewbox}[1][What You'll Learn]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
 }
 
-% --- Modern C++ Code Listing Setup ---
+% --- Key Takeaway / Core Rule Box ---
+\newtcolorbox{calloutbox}[1]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Plain-English Formula Card ---
+\newtcolorbox{formulabox}[1][Formula in Plain English]{
+    enhanced,
+    colback=primaryblue!4, colframe=primaryblue!22,
+    borderline west={3.5pt}{0pt}{primaryblue},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=6pt, bottom=6pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\small\bfseries\color{primaryblue},
+    title={#1},
+    attach title to upper={\par\vspace{2pt}}
+}
+
+% --- Watch-Out / Edge-Case Warning Box ---
+\newtcolorbox{watchoutbox}[1][Watch Out --- When It Breaks]{
+    enhanced,
+    colback=accentamber!6, colframe=accentamber!30,
+    borderline west={3.5pt}{0pt}{accentamber},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentamber},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Local Symbol Mini-Table Environment ---
+\newenvironment{notationbox}[1][Symbols Used Here]{
+    \par\vspace{0.15cm}
+    \noindent\textbf{\small\color{primaryblue}#1}\par\vspace{0.1cm}
+    \begingroup
+    \footnotesize
+    \rowcolors{2}{codebg}{white}
+    \noindent\tabularx{\textwidth}{>{\raggedright\arraybackslash\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.8cm}}
+    \arrayrulecolor{primaryblue}\toprule[1.1pt]
+    \rowcolor{primaryblue!10}
+    \textcolor{primaryblue}{\textbf{Symbol}} & \textcolor{primaryblue}{\textbf{Plain-English Meaning}} & \textcolor{primaryblue}{\textbf{Example / Type}} \\
+    \arrayrulecolor{codeframe}\midrule[0.6pt]
+}{
+    \arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+    \endtabularx
+    \endgroup
+    \vspace{0.2cm}\par
+}
+
+% --- Print-First Pen-and-Paper Exercise Environment ---
+\newcounter{exercise}
+\newtcolorbox{tryitbox}[3]{
+    enhanced,
+    step=exercise,
+    colback=codegreen!3, colframe=codegreen!45,
+    colbacktitle=codegreen!14, coltitle=codegreen!85!black,
+    borderline west={3.5pt}{0pt}{codegreen},
+    arc=3pt, boxrule=0.6pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    toptitle=4pt, bottomtitle=4pt,
+    before skip=9pt, after skip=9pt,
+    fonttitle=\bfseries,
+    title={Exercise \theexercise\hspace{0.5em}{\colorbox{codegreen!85!black}{\color{white}\scriptsize\bfseries\;#1\;}}\hspace{0.5em}#2 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#3}}}
+}
+
+% --- Modern C++23 Code Listing Setup ---
 \lstset{
     language=C++,
-    basicstyle=\footnotesize\ttfamily,
-    keywordstyle=\color{codeblue}\bfseries,
+    basicstyle=\small\ttfamily\color{codeink},
+    keywordstyle=\color{codekw}\bfseries,
+    morekeywords={constexpr,noexcept,nullptr,static_assert,auto,override,final,decltype,concept,requires},
+    keywordstyle=[2]\color{codetype}\bfseries,
+    morekeywords=[2]{std,vector,span,deque,string,string_view,size_t,int64_t,uint32_t,uint64_t,optional,pair,tuple,array,priority_queue,unordered_map,unordered_set,map,set,ranges,views,nodiscard,plus},
+    moredelim=[l][\color{codeblue}\bfseries]{\#},
+    deletestring=[b]',
     commentstyle=\color{codegreen}\itshape,
-    stringstyle=\color{orange!80!black},
+    stringstyle=\color{codestr},
     numberstyle=\tiny\color{codegray},
     numbers=left,
     numbersep=8pt,
+    xleftmargin=24pt,
+    framexleftmargin=22pt,
+    framexrightmargin=4pt,
+    framextopmargin=4pt,
+    framexbottommargin=4pt,
     backgroundcolor=\color{codebg},
     frame=single,
     rulecolor=\color{codeframe},
+    aboveskip=8pt,
+    belowskip=10pt,
     breaklines=true,
     breakatwhitespace=true,
     tabsize=4,
@@ -73,543 +250,981 @@
     captionpos=b
 }
 
-% --- Document Information ---
-\title{\vspace{-1.5cm}\textbf{\Huge Sequences, Series, and Prefix Sums}\\[0.3cm]
-\Large Arithmetic and Geometric Sums, Closed-Form Formulas, and Range Query Techniques}
-\author{Technical Monograph}
-\date{\today}
-
 \begin{document}
-\maketitle
-\tableofcontents
-\newpage
 
-\begin{abstract}
-\noindent
-This document explains sequences, series, and prefix sums starting from absolute zero. It introduces concepts using simple examples and builds toward algorithmic problem solving. You will learn to identify patterns, write efficient range queries, and apply difference arrays. The final sections provide decision tables to help select the right approach for any given task.
-\end{abstract}
+% --- Modern Title Banner ---
+\thispagestyle{plain}
+\begin{tcolorbox}[
+    enhanced,
+    colback=primaryblue!6, colframe=primaryblue!20,
+    borderline west={5pt}{0pt}{primaryblue},
+    arc=4pt, boxrule=0.6pt,
+    left=14pt, right=14pt, top=10pt, bottom=10pt,
+    before skip=0pt, after skip=8pt
+]
+    {\footnotesize\bfseries\color{accentteal}MODULE 04 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[4pt]
+    {\Huge\bfseries\color{primaryblue}Sequences, Series, and Prefix Sums}\\[4pt]
+    {\large\color{codegray}Arithmetic and Geometric Sums, Closed-Form Formulas, and Range Query Techniques}\\[5pt]
+    {\footnotesize\color{codegray}Updated \today}
+\end{tcolorbox}
 
+\begin{overviewbox}[What You'll Learn]
+Counting and summing over large ranges show up in almost every algorithmic problem---yet naive loops time out as soon as $N$ hits $10^9$ or queries hit $10^5$. Written for programmers building mathematical intuition from scratch, this guide shows \emph{where} every sum formula comes from before asking you to apply it. You will master arithmetic and geometric series, power sums, 1D and 2D prefix sums, telescoping cancellations, difference arrays, and overflow-safe C++23 implementations---backed by visual diagrams, eight inline drills, and a mixed practice sheet.
+\end{overviewbox}
+
+\vspace{1pt}
+{\setlength{\parskip}{0pt}\footnotesize\tableofcontents}
+
+% Every major section starts cleanly on a new page
+\renewcommand{\sectionbreak}{\clearpage}
+
+% ============================================================================
 \section{Foundations}
-A \textbf{sequence} is an ordered list of items, like an array in programming. The position of an item in the list is called its \textbf{index}. We often use a letter with a small index to talk about a specific term in the list, like $a_1$ for the first term, $a_2$ for the second term, and so on.
+% ============================================================================
 
-A \textbf{series} is the total sum you get when you add the numbers in a sequence together. If the sequence is $2, 4, 6, 8$, the series is $2 + 4 + 6 + 8$. The result is 20. In programming, this is exactly what happens when you write a loop to keep a running total of the elements in an array. 
+Almost every fast summation trick in computer science replaces an $O(N)$ \texttt{for} loop with either a single algebraic formula or a precomputed running total. Before deriving any shortcuts, let us connect four everyday programming concepts to their mathematical names.
 
-The mathematical symbol for this loop is $\sum$ (Sigma). It defines a start point and an end point. Just as a \texttt{for (int i = 1; i <= n; ++i)} loop iterates and accumulates, $\sum_{i=1}^{n} a_i$ means starting index $i$ at 1 and adding every term $a_i$ until index $n$.
+\subsection{Sequences, Series, and Sigma Notation}
 
-Sometimes, adding things up one by one takes too long. If you want to add up a million numbers, a loop has to do a million steps. But if those numbers follow a predictable pattern, you might be able to use a formula to find the sum in a single step. We call a formula that gives you the answer instantly, without a loop, a \textbf{closed-form formula}.
+\begin{notationbox}[Symbols Used in Foundations]
+$a_i$ & The $i$-th element of a sequence (like \texttt{a[i]} in an array) & $a_1 = 2,\; a_4 = 8$ \\
+$n$ & Total number of terms being considered & $n = 100$ \\
+$\sum_{i=L}^{R} f(i)$ & Sum of $f(i)$ as $i$ loops from $L$ to $R$ inclusive & $\sum_{i=1}^{4} 2i = 20$ \\
+$S_n$ & Running total (series) of the first $n$ terms & $S_4 = a_1 + a_2 + a_3 + a_4$ \\
+\end{notationbox}
 
-\section{Main Topics}
+A \textbf{sequence} is simply an ordered list of values, identical to a \texttt{std::vector} in C++. Each element sits at a numbered position called its \textbf{index}. Math texts usually start at $a_1$ (1-based), while C++ arrays start at \texttt{a[0]} (0-based)---always watch which convention a formula uses.
+
+A \textbf{series} is the single number you get by adding the terms of a sequence together. If the sequence is $[2, 4, 6, 8]$, its series is $2 + 4 + 6 + 8 = 20$. In code, computing a series is just a running accumulator loop.
+
+\begin{formulabox}[Reading Sigma Notation ($\sum$) Like a C++ Loop]
+\[
+    \sum_{i=L}^{R} f(i) \quad \Longleftrightarrow \quad \texttt{int64\_t s = 0; for (int i = L; i <= R; ++i) s += f(i);}
+\]
+\textbf{Read this as:} ``Start a loop variable $i$ at $L$, stop after $R$, evaluate $f(i)$ on each step, and add every result into a running total.'' If $L > R$, the loop executes zero times and the empty sum equals $0$.
+\end{formulabox}
+
+\subsection{Closed-Form Formulas vs.\ Direct Loops}
+
+\painbeat Adding a billion numbers ($N = 10^9$) in a \texttt{for} loop takes roughly one billion CPU additions---several seconds, which exceeds typical 1-second limits. Adding $10^{12}$ numbers would take hours.
+
+\ahabeat Whenever a sequence follows a rigid rule (adding a constant, multiplying by a constant, or canceling neighbors), you can collapse the entire loop into a \textbf{closed-form formula} that returns the exact sum in $O(1)$ arithmetic operations.
+
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.0cm} >{\centering\arraybackslash}p{2.0cm} >{\centering\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Approach}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Max Safe $N$}} & \textcolor{primaryblue}{\textbf{When It Works}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Direct \texttt{for} loop & $O(N)$ & $\sim 10^8$ & Arbitrary unsorted data queried once \\
+Closed-form formula & $O(1)$ & $\sim 10^{18}$ & Predictable pattern (arithmetic, power, telescoping) \\
+Prefix sum / Diff array & $O(N + Q)$ & $N, Q \le 10^6$ & Arbitrary data with many range queries or updates \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
+
+% ============================================================================
+\section{Main Topics: Progressions and Closed-Form Series}
+% ============================================================================
+
+This section derives the five classic closed-form sums from small numerical examples so you can re-derive any of them on scratch paper in ten seconds rather than memorizing symbols blindly.
 
 \subsection{Arithmetic Progressions}
-An arithmetic progression is a sequence where the gap between consecutive numbers is always the exact same amount. For example, $3, 7, 11, 15$ is an arithmetic progression because you add $4$ to get the next number every single time.
 
-Let $a$ be the very first number in the sequence. Let $d$ be the difference you add each time (called the common difference). The sequence looks like this:
-$$a, a + d, a + 2d, a + 3d, \dots$$
+\begin{notationbox}[Symbols Used in Arithmetic Progressions \& Series]
+$a_1$ (or $a$) & Very first term of the progression & $a_1 = 5$ \\
+$d$ & Common difference added at every step ($a_{i+1} - a_i$) & $d = 3$ (or $d = -2$) \\
+$a_n$ & Value of the $n$-th term (1-based) & $a_4 = 14$ \\
+$S_n$ & Sum of the first $n$ terms ($a_1 + a_2 + \dots + a_n$) & $S_4 = 38$ \\
+\end{notationbox}
 
-To find the $n$-th term of this sequence without computing all the ones before it, you start at $a$ and you take $n-1$ steps of size $d$. 
-$$a_n = a + (n-1)d$$
+\painbeat Suppose a subscription starts at \$5 in month 1 and rises by \$3 every month ($5, 8, 11, 14, \dots$). Stepping forward one month at a time to find month 100 works for $n = 100$, but stalls if someone asks for month $10^{12}$.
 
-How do you detect if a sequence of numbers is an arithmetic progression? You simply check the difference between every adjacent pair. If all differences are identical, it is an arithmetic progression.
+\ahabeat To jump from term $1$ to term $n$, you never take $n$ hops---you take exactly $n - 1$ hops of identical size $d$.
 
-\textbf{Worked Example:} What is the 100th term of the sequence $5, 8, 11, 14, \dots$?
+\examplebeat In $[5, 8, 11, 14]$ ($a_1 = 5, d = 3$):
+\begin{itemize}
+    \item $a_1 = 5 + 0 \times 3 = 5$ (zero hops to reach the start),
+    \item $a_2 = 5 + 1 \times 3 = 8$,\quad $a_3 = 5 + 2 \times 3 = 11$,\quad $a_4 = 5 + 3 \times 3 = 14$.
+\end{itemize}
+
+\begin{formulabox}[$n$-th Term of an Arithmetic Progression]
+\[
+    a_n = a_1 + (n - 1)d
+\]
+\textbf{Read this as:} Start at the first value $a_1$, then take $n - 1$ equal steps of size $d$. To test whether an arbitrary array is an arithmetic progression, check that every adjacent gap $A[i + 1] - A[i]$ is identical.
+\end{formulabox}
+
+\begin{watchoutbox}[Watch Out --- Off-By-One Hops and Negative Differences]
+A classic bug is writing $a_1 + n \cdot d$ instead of $a_1 + (n - 1)d$, which overshoots by one term when 1-based. Also remember that $d$ can be negative (a decreasing progression like $20, 17, 14, \dots$ has $d = -3$) or zero (a constant list).
+\end{watchoutbox}
+
+\textbf{Worked Example:} What is the $100$-th term of $5, 8, 11, 14, \dots$?
 \begin{enumerate}
-    \item Identify the first term: $a = 5$.
-    \item Find the common difference by subtracting adjacent terms: $d = 8 - 5 = 3$.
-    \item Apply the $n$-th term formula for $n = 100$:
-    $$ a_{100} = a + (n - 1)d = 5 + (100 - 1) \times 3 = 5 + 99 \times 3 = 5 + 297 = \mathbf{302}. $$
+    \item Identify the starting term $a_1 = 5$ and common difference $d = 8 - 5 = 3$.
+    \item Apply $a_n = a_1 + (n - 1)d$ with $n = 100$:
+    \[
+        a_{100} = 5 + (100 - 1) \times 3 = 5 + 99 \times 3 = 5 + 297 = \mathbf{302}.
+    \]
 \end{enumerate}
 
-\subsection{Arithmetic Series}
-An arithmetic series is the sum of an arithmetic progression. 
-
-The story goes that when the famous mathematician Carl Friedrich Gauss was a young boy in school, his teacher asked the class to add all the numbers from 1 to 100, hoping to keep them quiet for a long time. Gauss answered almost immediately: 5050. 
-
-Where does this come from? Gauss noticed a pattern. Instead of adding $1 + 2 + 3 + \dots$, he grouped the numbers from the ends towards the middle:
-$1 + 100 = 101$
-$2 + 99 = 101$
-$3 + 98 = 101$
-... and so on. Since there are 100 numbers, there are 50 pairs, and each pair sums to 101. So the total is $50 \times 101 = 5050$.
-
-From this, we get the formula for the sum of the first $n$ integers:
-$$ \sum_{i=1}^{n} i = \frac{n(n+1)}{2} $$
-
-This works for any arithmetic series, not just $1, 2, 3, \dots$. If you want to add $n$ terms, you take the average of the first term and the last term, and multiply by the number of terms.
-$$ \text{Sum} = \frac{n}{2} \times (\text{first} + \text{last}) $$
-
-If you do not know the last term, you can plug in the formula for the $n$-th term ($a + (n-1)d$) to get:
-$$ \text{Sum} = \frac{n}{2} (2a + (n-1)d) $$
-
-\textbf{Worked Example:} Find the sum of the first 50 odd numbers: $1 + 3 + 5 + \dots$
+\begin{tryitbox}{Trace}{Jumping Ahead and Testing Membership}{ex1}
+Consider the arithmetic progression $7, 12, 17, 22, \dots$
 \begin{enumerate}
-    \item We want to sum $n = 50$ terms.
-    \item The first term is $a = 1$. The common difference is $d = 2$.
-    \item Plug into the formula: $\text{Sum} = \frac{50}{2} (2(1) + (50-1)2)$.
-    \item Calculate the inside of the parentheses: $2 + 49 \times 2 = 2 + 98 = 100$.
-    \item Multiply by $n/2$: $25 \times 100 = 2500$.
-    \item The sum is 2500. (Fun fact: the sum of the first $n$ odd numbers is always $n^2$, and $50^2 = 2500$.)
+    \item Compute the $25$-th term $a_{25}$ directly without listing all $25$ terms.
+    \item Does the number $142$ appear in this progression? If so, find its exact 1-based index $n$.
+\end{enumerate}
+\end{tryitbox}
+
+\subsection{Arithmetic Series (The Gauss Pairing Trick)}
+
+\painbeat Adding $1 + 2 + 3 + \dots + n$ term by term requires $n$ loop iterations. If a problem asks for the sum up to $n = 10^9$, a loop cannot finish in time.
+
+\ahabeat Legend says young Carl Friedrich Gauss summed $1$ through $100$ in seconds by folding the list onto itself: pair the smallest term with the largest, the second-smallest with the second-largest, and so on. Because one side steps \emph{up} by $+d$ while the other steps \emph{down} by $-d$, every single pair has the exact same sum!
+
+\examplebeat For $n = 10$ ($1 + 2 + \dots + 10$), fold the ends inward into $5$ identical pairs:
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+    % Container card (natural width 15.6cm)
+    \draw[draw=codeframe, fill=codebg, rounded corners=4pt, thick] (0, -1.65) rectangle (15.6, 3.35);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.35, 3.08)
+        {Gauss Pairing Intuition: Fold Ends Inward So Every Pair Sums to $a_1 + a_n$};
+
+    % 10 value boxes spaced cleanly across x = 0.8 to 14.8
+    \foreach \i in {1,...,10} {
+        \pgfmathsetmacro{\xpos}{0.55 + (\i - 1) * 1.48}
+        \ifnum\i<6
+            \draw[draw=primaryblue, fill=primaryblue!8, thick, rounded corners=2pt] (\xpos, -0.35) rectangle (\xpos+1.15, 0.35);
+            \node[font=\small\bfseries, text=primaryblue] at (\xpos+0.575, 0.0) {\i};
+        \else
+            \draw[draw=accentteal, fill=accentteal!8, thick, rounded corners=2pt] (\xpos, -0.35) rectangle (\xpos+1.15, 0.35);
+            \node[font=\small\bfseries, text=accentteal] at (\xpos+0.575, 0.0) {\i};
+        \fi
+    }
+
+    % Symmetric pairing arcs above boxes: (1,10), (2,9), (3,8), (4,7), (5,6)
+    % Centers: x_i = 0.55 + (i-1)*1.48 + 0.575 = 1.125 + (i-1)*1.48
+    % 1: 1.125, 2: 2.605, 3: 4.085, 4: 5.565, 5: 7.045
+    % 6: 8.525, 7: 10.005, 8: 11.485, 9: 12.965, 10: 14.445
+    \draw[thick, primaryblue] (7.045, 0.38) .. controls (7.045, 0.78) and (8.525, 0.78) .. (8.525, 0.38);
+    \draw[thick, primaryblue!85] (5.565, 0.38) .. controls (5.565, 1.15) and (10.005, 1.15) .. (10.005, 0.38);
+    \draw[thick, primaryblue!70] (4.085, 0.38) .. controls (4.085, 1.52) and (11.485, 1.52) .. (11.485, 0.38);
+    \draw[thick, primaryblue!55] (2.605, 0.38) .. controls (2.605, 1.88) and (12.965, 1.88) .. (12.965, 0.38);
+    \draw[thick, primaryblue!40] (1.125, 0.38) .. controls (1.125, 2.24) and (14.445, 2.24) .. (14.445, 0.38);
+
+    \node[fill=codebg, inner sep=2pt, font=\scriptsize\bfseries, text=primaryblue] at (7.785, 2.15) {Every pair $= 11$};
+
+    % Bottom summary banner
+    \node[draw=primaryblue!30, fill=white, rounded corners=3pt, thick, font=\small, inner sep=5pt, align=center, text width=14.6cm] at (7.8, -1.05) {
+        $1+10 = 11,\;\; 2+9 = 11,\;\; 3+8 = 11,\;\; 4+7 = 11,\;\; 5+6 = 11 \quad\Longrightarrow\quad \mathbf{5 \text{ pairs} \times 11 = 55}$
+    };
+\end{tikzpicture}
+\caption{Gauss pairing on $1 + 2 + \dots + 10$. Folding the two halves together creates $n/2 = 5$ pairs, each summing to $a_1 + a_n = 11$, giving $5 \times 11 = 55$ in $O(1)$ arithmetic.}
+\label{fig:gauss-pairing}
+\end{figure}
+
+For $1$ through $100$, the exact same folding produces $50$ identical pairs:
+\[
+    1 + 100 = 101, \qquad 2 + 99 = 101, \qquad 3 + 98 = 101, \quad \dots, \quad 50 + 51 = 101,
+\]
+giving $50 \times 101 = 5{,}050$ immediately.
+
+\begin{formulabox}[Arithmetic Series Formulas]
+\[
+    \sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+    \qquad\qquad
+    S_n = \frac{n}{2}(a_1 + a_n) = \frac{n}{2}\bigl(2a_1 + (n - 1)d\bigr)
+\]
+\textbf{Read this as:} Take the average of the first and last terms, $\frac{a_1 + a_n}{2}$, and multiply by the number of terms $n$. If $a_n$ is unknown, substitute $a_n = a_1 + (n - 1)d$.
+\end{formulabox}
+
+\begin{watchoutbox}[Watch Out --- Odd $n$ and 64-Bit Overflow]
+What if $n$ is odd (say $1 + 2 + 3 + 4 + 5$)? The formula still works cleanly: $\frac{5}{2} \times (1 + 5) = 2.5 \times 6 = 15$, because the lone middle term ($3$) is exactly half a pair ($6/2$). In C++, however, writing \texttt{n * (n + 1) / 2} can overflow \texttt{int64\_t} when $n > 4.29 \times 10^9$; divide the even factor by $2$ \emph{before} multiplying!
+\end{watchoutbox}
+
+\textbf{Worked Example:} Find the sum of the first $50$ odd numbers: $1 + 3 + 5 + \dots$
+\begin{enumerate}
+    \item Identify $n = 50$, first term $a_1 = 1$, and common difference $d = 2$.
+    \item Substitute into $S_n = \frac{n}{2}(2a_1 + (n - 1)d)$:
+    \[
+        S_{50} = \frac{50}{2}\bigl(2(1) + (50 - 1)\times 2\bigr) = 25 \times (2 + 98) = 25 \times 100 = \mathbf{2{,}500}.
+    \]
+    \item \textbf{Sanity check:} Notice that $S_n$ for the first $n$ odd numbers simplifies algebraically to $\frac{n}{2}(2 + 2n - 2) = n^2$, and $50^2 = 2{,}500$.
 \end{enumerate}
 
-\begin{calloutbox}{The Gauss Pairing Trick}
-Whenever you have a sequence of items evenly spaced out, you can often pair the smallest with the largest, the second-smallest with the second-largest, and so on. They will all have the exact same sum.
-
-For example, summing 1 to 10 pairs 1 with 10, 2 with 9, 3 with 8, 4 with 7, and 5 with 6. Every pair sums to 11. For $n = 10$, there are $10 / 2 = 5$ pairs. The total is $5 \times 11 = 55$. This is why the arithmetic sum formula takes the average of the ends and multiplies by the count.
-\end{calloutbox}
-
-\subsection{Sum of Squares}
-What if you want to add up squares? $1^2 + 2^2 + 3^2 + \dots + n^2$. 
-
-The formula for the sum of the first $n$ squares is:
-$$ \sum_{i=1}^{n} i^2 = \frac{n(n+1)(2n+1)}{6} $$
-
-Where does this come from? The intuition involves thinking about building a pyramid of blocks.
-
-If you stack a 1x1 block on top of a 2x2 square, on top of a 3x3 square, you get a stepped pyramid. If you make six identical copies of this pyramid, you can interlock them to form a solid rectangular box of dimensions $n \times (n+1) \times (2n+1)$. Since the six pyramids perfectly make up the box, the volume of one pyramid (the sum of squares) is exactly one-sixth of the volume of the box.
-
-\textbf{Worked Example:} Find the sum $1^2 + 2^2 + 3^2 + 4^2$.
+\begin{tryitbox}{Derive}{Summing a Shifted Range Two Ways}{ex2}
+Compute the sum of all integers from $11$ to $30$ inclusive ($11 + 12 + \dots + 30$) in \textbf{two} ways:
 \begin{enumerate}
-    \item Here, $n = 4$.
-    \item Plug into the formula: $\frac{4 \times (4+1) \times (2(4)+1)}{6}$.
-    \item Compute the factors: $4 \times 5 \times 9 = 180$.
-    \item Divide by 6: $180 / 6 = 30$.
-    \item Check manually: $1 + 4 + 9 + 16 = 30$. It matches.
+    \item Using the general Gauss pairing formula $S = \frac{n}{2}(a_1 + a_n)$ (count $n$ carefully!).
+    \item As the difference of two triangular sums, $\sum_{i=1}^{30} i - \sum_{i=1}^{10} i$.
+\end{enumerate}
+Verify that both methods give the exact same number.
+\end{tryitbox}
+
+\subsection{Sums of Squares and Cubes}
+
+\painbeat Sometimes an algorithm's work or a geometry problem adds quadratic or cubic terms---like $1^2 + 2^2 + \dots + n^2$ (counting all square subgrids in an $n \times n$ board) or $1^3 + 2^3 + \dots + n^3$.
+
+\ahabeat Think of $\sum_{i=1}^{n} i^2$ geometrically as a stepped pyramid: a $1 \times 1$ block sitting on a $2 \times 2$ layer, on a $3 \times 3$ layer, down to an $n \times n$ base. Six identical copies of this stepped pyramid interlock with zero gaps to form a solid rectangular box of dimensions $n \times (n + 1) \times (2n + 1)$---so one pyramid has exactly one-sixth of that volume.
+
+\examplebeat Test both power sums on tiny inputs ($n = 1, 2, 3, 4$) before trusting the algebra:
+\begin{itemize}
+    \item Squares at $n = 4$: $1 + 4 + 9 + 16 = 30$, and $\frac{4 \times 5 \times 9}{6} = \frac{180}{6} = 30$.
+    \item Cubes at $n = 3$: $1^3 + 2^3 + 3^3 = 1 + 8 + 27 = 36$, which equals $(1 + 2 + 3)^2 = 6^2 = 36$!
+\end{itemize}
+
+\begin{formulabox}[Sums of the First $n$ Squares and Cubes]
+\[
+    \sum_{i=1}^{n} i^2 = \frac{n(n+1)(2n+1)}{6}
+    \qquad\qquad
+    \sum_{i=1}^{n} i^3 = \left(\frac{n(n+1)}{2}\right)^2 = \left(\sum_{i=1}^{n} i\right)^2
+\]
+\textbf{Read this as:} The sum of squares grows like $\frac{1}{3}n^3$ (one-sixth of the $n \times (n+1) \times (2n+1)$ box). Remarkably, the sum of cubes is always the exact square of the plain triangular sum!
+\end{formulabox}
+
+\begin{watchoutbox}[Watch Out --- Rapid Intermediate Overflow]
+Because $n(n+1)(2n+1) \approx 2n^3$, computing the full numerator before dividing by $6$ overflows signed 64-bit \texttt{int64\_t} around $n \approx 1.66 \times 10^6$ (and 32-bit \texttt{int} at just $n = 1{,}024$). Even worse, $\sum i^3 \approx \frac{1}{4}n^4$ overflows \texttt{int64\_t} at $n = 77{,}936$. In C++, divide out the factors of $2$ and $3$ \emph{before} multiplying (Section~5.1), or work modulo a prime using modular inverses (Module 02).
+\end{watchoutbox}
+
+\textbf{Worked Example:} Compute $1^3 + 2^3 + 3^3 + 4^3 + 5^3$.
+\begin{enumerate}
+    \item Compute the triangular sum for $n = 5$: $\frac{5 \times 6}{2} = 15$.
+    \item Square the result: $15^2 = \mathbf{225}$.
+    \item Verify directly: $1 + 8 + 27 + 64 + 125 = 225$.
 \end{enumerate}
 
-\subsection{Sum of Cubes}
-What if you want to add up cubes? $1^3 + 2^3 + 3^3 + \dots + n^3$.
-
-The formula for the sum of the first $n$ cubes is:
-$$ \sum_{i=1}^{n} i^3 = \left( \frac{n(n+1)}{2} \right)^2 $$
-
-There is a remarkable fact here: the sum of the cubes is exactly equal to the square of the sum of the integers. For example, $1^3 + 2^3 + 3^3 = 36$, and $(1 + 2 + 3)^2 = 6^2 = 36$.
-
-\textbf{Worked Example:} Find the sum $1^3 + 2^3 + 3^3 + 4^3 + 5^3$.
+\begin{tryitbox}{Edge Cases}{Empty Sums and 32-Bit Overflow Thresholds}{ex3}
 \begin{enumerate}
-    \item Here, $n = 5$.
-    \item First, compute the sum of the first 5 integers: $\frac{5 \times 6}{2} = 15$.
-    \item Now square that result: $15^2 = 225$.
-    \item The sum is 225.
+    \item Evaluate $\sum_{i=1}^{n} i^2$ and $\sum_{i=1}^{n} i^3$ at the boundary values $n = 0$ and $n = 1$.
+    \item Find the smallest positive integer $n$ for which the unreduced numerator $n(n+1)(2n+1)$ exceeds signed 32-bit \texttt{INT\_MAX} ($2{,}147{,}483{,}647$), even though the final sum of squares still fits comfortably in a 32-bit \texttt{int}.
+\end{enumerate}
+\end{tryitbox}
+
+\subsection{Geometric Series (The Shift-and-Subtract Trick)}
+
+\begin{notationbox}[Symbols Used in Geometric Series]
+$a$ & Initial term at index $i = 0$ & $a = 3$ \\
+$r$ & Common ratio multiplied at each step ($a_{i+1} / a_i$) & $r = 2$ or $r = \frac{1}{2}$ \\
+$n$ & Highest exponent in $\sum_{i=0}^{n} a r^i$ (total of $n + 1$ terms!) & $n = 4 \implies 5$ terms \\
+$|r|$ & Absolute value (magnitude ignoring sign) & $|-0.5| = 0.5 < 1$ \\
+\end{notationbox}
+
+\painbeat Every time a binary tree doubles its nodes per level ($1, 2, 4, 8, \dots, 2^n$) or an investment compounds by a fixed percentage, you face a \textbf{geometric progression}---where each term is multiplied by a constant ratio $r$. Gauss pairing fails here because the terms grow exponentially, not linearly.
+
+\ahabeat Use \textbf{Shift-and-Subtract}: call the sum $S$, multiply the entire equation by $r$ to shift every term one slot to the right, and subtract $S$ from $rS$. Every single middle term matches and cancels out, leaving only the very last term minus the very first!
+
+\examplebeat Watch Shift-and-Subtract collapse $S = 1 + 2 + 4 + 8$ ($a = 1, r = 2, n = 3$):
+\[
+\begin{aligned}
+    2S &= \phantom{1 + {}} 2 + 4 + 8 + 16 \\
+    -\; S &= 1 + 2 + 4 + 8 \\ \hline
+    (2 - 1)S &= 16 - 1 \implies S = 15 = 2^{3 + 1} - 1.
+\end{aligned}
+\]
+Doing the exact same shift on $S = a + ar + ar^2 + \dots + ar^n$ gives $rS - S = ar^{n+1} - a$, so $(r - 1)S = a(r^{n+1} - 1)$. Dividing by $r - 1$ yields the general closed form with zero guesswork.
+
+\begin{formulabox}[Finite, Power-of-2, and Convergent Infinite Geometric Sums]
+\[
+    \sum_{i=0}^{n} a r^i = a\frac{r^{n+1} - 1}{r - 1} \;\; (r \neq 1)
+    \qquad\quad
+    \sum_{i=0}^{n} 2^i = 2^{n+1} - 1
+    \qquad\quad
+    \sum_{i=0}^{\infty} a r^i = \frac{a}{1 - r} \;\; (|r| < 1)
+\]
+\textbf{Read this as:} A geometric sum is driven by its largest term---for $r = 2$, the sum $1 + 2 + \dots + 2^n$ is just one shy of the \emph{next} power of two (why an 8-bit unsigned max is $2^8 - 1 = 255$ and why bottom-up tree work is $O(N)$). When $|r| < 1$, $r^{n+1} \to 0$ as $n \to \infty$, so infinitely many shrinking terms still add to a finite total!
+\end{formulabox}
+
+\begin{watchoutbox}[Watch Out --- $r = 1$ Division by Zero and Term Count]
+Two pitfalls catch almost everyone:
+\begin{itemize}
+    \item \textbf{When $r = 1$:} The denominator $r - 1 = 0$ crashes with division by zero! Every term equals $a$, and indices $0$ through $n$ contain $n + 1$ terms, so the sum is simply $a(n + 1)$. Always guard \texttt{if (r == 1)} in C++.
+    \item \textbf{Divergence when $|r| \ge 1$:} The infinite formula $\frac{a}{1 - r}$ is \emph{nonsense} if $|r| \ge 1$ (plugging $r = 2$ gives $1 + 2 + 4 + \dots = -1$, which is false for real sums).
+\end{itemize}
+\end{watchoutbox}
+
+\textbf{Worked Example:} Compute $3 + 6 + 12 + 24 + 48$.
+\begin{enumerate}
+    \item Identify $a = 3$, ratio $r = 2$, and last exponent $n = 4$ (since $48 = 3 \times 2^4$, five terms total).
+    \item Apply the formula: $3 \times \frac{2^{4+1} - 1}{2 - 1} = 3 \times \frac{32 - 1}{1} = 3 \times 31 = \mathbf{93}$.
+    \item Verify directly: $3 + 6 + 12 + 24 + 48 = 93$.
 \end{enumerate}
 
-\subsection{Geometric Series}
-A geometric progression is a sequence where each term is multiplied by a constant factor, called the ratio $r$, to get the next term. For example, $3, 6, 12, 24$ is a geometric progression with a ratio of 2.
-
-The sum of a geometric series is:
-$$ \sum_{i=0}^{n} a r^i = a + ar + ar^2 + \dots + ar^n = a \frac{r^{n+1} - 1}{r - 1} $$
-
-Where does this come from? If you call the sum $S$, and you multiply the entire sum by $r$, you get a new sum $rS$. Almost all the terms in $rS$ match the terms in $S$, just shifted over by one position. If you subtract $S$ from $rS$, all the middle terms cancel out, leaving only the very last term of $rS$ and the very first term of $S$. Solving for $S$ gives the formula.
-
-A very important special case is when $r = 2$. In computing, powers of two are everywhere. If $a=1$ and $r=2$, the sum is $1 + 2 + 4 + \dots + 2^n = 2^{n+1} - 1$. This is why the maximum value of an 8-bit unsigned integer is $2^8 - 1 = 255$.
-
-What happens if the ratio $r$ is between -1 and 1, meaning $|r| < 1$? The terms get smaller and smaller. If you keep adding terms forever (an infinite series), the term $r^{n+1}$ gets closer and closer to 0. The formula simplifies to exactly $\frac{a}{1 - r}$. This means an infinite sum can add up to a finite number!
-
-\begin{calloutbox}{What happens when $r = 1$?}
-If the common ratio is $r = 1$, every term in the sequence is identical ($a, a, a, \dots$). You are adding $a$ to itself $n + 1$ times (from index $0$ to $n$). The sum is simply:
-$$ \text{Sum} = a(n + 1) $$
-You cannot use the formula $\frac{r^{n+1}-1}{r-1}$ here because the denominator becomes $1 - 1 = 0$. In C++, always check \texttt{if (r == 1)} first before evaluating the division.
-\end{calloutbox}
-
-\textbf{Worked Example:} What is the sum of $3 + 6 + 12 + 24 + 48$?
+\begin{tryitbox}{Twist}{Finite, Alternating Infinite, and Constant-Ratio Sums}{ex4}
+Evaluate all three geometric series by hand:
 \begin{enumerate}
-    \item Identify the first term $a = 3$ and the ratio $r = 2$.
-    \item Identify the power of the last term. $48$ is $3 \times 16$, which is $3 \times 2^4$. So $n = 4$.
-    \item Plug into the formula: $3 \times \frac{2^{4+1} - 1}{2 - 1}$.
-    \item Calculate the numerator: $2^5 - 1 = 32 - 1 = 31$.
-    \item The denominator is $2 - 1 = 1$.
-    \item The total is $3 \times 31 = 93$.
-    \item Check manually: $3 + 6 + 12 + 24 + 48 = 9 + 12 + 24 + 48 = 21 + 24 + 48 = 45 + 48 = 93$.
+    \item Finite ($r = 3$): $5 + 15 + 45 + 135 + 405$.
+    \item Infinite alternating ($r = -\frac{1}{2}$): $8 - 4 + 2 - 1 + \frac{1}{2} - \dots$
+    \item Constant ratio ($r = 1$): $\sum_{i=0}^{9} 7 \cdot 1^i$.
 \end{enumerate}
+\end{tryitbox}
 
+% ============================================================================
 \section{Key Algorithmic Patterns}
+% ============================================================================
 
-\subsection{Prefix Sums}
-Why the naive/brute-force approach fails: 
-Imagine you have an array of 100,000 numbers representing daily sales. The user asks you "What were the total sales between day 50,000 and day 60,000?" To answer, you loop over those 10,000 days and add them up. If the user asks 100,000 different questions like this, you will perform one billion addition operations. This is far too slow.
+Real programming inputs rarely follow clean arithmetic or geometric patterns---they are arbitrary arrays of sensor readings, stock prices, or pixel brightnesses. The four patterns below turn repeated range operations on arbitrary data into $O(1)$ arithmetic.
 
-What the efficient technique is:
-We use a technique called \textbf{Prefix Sums}. We create a new array where each position stores the running total of all items up to that point. The 5th element in the prefix array stores the sum of items 1 through 5. To find the sum of items between an arbitrary start point and end point, you just take the prefix sum up to the end point, and subtract the prefix sum just before the start point. This answers the query in a single step, no matter how wide the range is.
+\subsection{1D Prefix Sums (Static Range Queries in $O(1)$)}
 
-\textbf{Worked Trace:}
-Let our original array be: $A = [3, 1, 4, 1, 5, 9]$
-We want to answer queries fast.
+\begin{notationbox}[Symbols Used in 1D Prefix Sums]
+$A[0 \dots N-1]$ & Original 0-based input array of length $N$ & $A = [1, 3, 4, 1, 5]$ \\
+$P[0 \dots N]$ & Prefix sum array of length $N + 1$ with $P[0] = 0$ & $P[k] = \sum_{i=0}^{k-1} A[i]$ \\
+$[L, R]$ & Inclusive query range ($0 \le L \le R < N$) & $[2, 4] \to A[2]+A[3]+A[4]$ \\
+$Q$ & Number of range sum queries & $Q = 10^5$ \\
+\end{notationbox}
+
+\painbeat Suppose you store $N = 10^5$ daily revenue figures and receive $Q = 10^5$ queries asking for the total revenue between day $L$ and day $R$. Scanning from $L$ to $R$ on every query takes $O(Q \cdot N) = 10^{10}$ additions---instant Time Limit Exceeded.
+
+\ahabeat Precompute one running-total array $P$ (like a cashier's receipt tape that prints the subtotal after every item). Any range $[L, R]$ is simply the running total through $R$ minus the running total strictly before $L$---one subtraction, regardless of whether the range has $3$ items or $90{,}000$.
+
+\begin{formulabox}[1D Prefix Sum Construction and $O(1)$ Query]
+\[
+    P[0] = 0, \qquad P[k + 1] = P[k] + A[k], \qquad \sum_{i=L}^{R} A[i] = P[R + 1] - P[L]
+\]
+\textbf{Read this as:} $P[k]$ holds the sum of the \emph{first $k$ elements} ($A[0]$ through $A[k-1]$). Subtracting $P[L]$ cancels everything before index $L$, leaving the exact sum of $A[L \dots R]$.
+\end{formulabox}
+
+\invariantbeat{Prefix Build} Before iteration $i$, $P[i]$ stores the exact sum of $A[0 \dots i - 1]$. Adding $A[i]$ establishes the invariant for $P[i + 1]$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+    % Top Row: Original Array A (natural coordinates spanning x = 0.0 to 15.2)
+    \node[font=\bfseries\small, primaryblue, anchor=east] at (1.75, 4.35) {Array $A$:};
+
+    % 5 boxes for A[0..4], width 2.1cm, pitch 2.45cm -> x = 2.1 to 14.0
+    \foreach \i/\val in {0/1, 1/3, 2/4, 3/1, 4/5} {
+        \pgfmathsetmacro{\xpos}{2.1 + \i * 2.45}
+        \draw[thick, draw=codeframe, fill=codebg, rounded corners=2pt] (\xpos, 3.85) rectangle (\xpos+2.1, 4.85);
+        \node[font=\large\bfseries, primaryblue] at (\xpos+1.05, 4.35) {\val};
+        \node[font=\scriptsize, codegray, below=2pt] at (\xpos+1.05, 3.85) {idx \i};
+    }
+
+    % Range Highlight [2..4] cleanly enclosing boxes 2, 3, 4 and their index tags
+    \draw[line width=1.3pt, draw=primaryblue, rounded corners=3pt, dashed] (6.8, 3.25) rectangle (14.2, 5.1);
+    \node[primaryblue, font=\scriptsize\bfseries, above=2pt] at (10.5, 5.15)
+        {Target Query Range: $[L=2, R=4] \implies 4 + 1 + 5 = \mathbf{10}$};
+
+    % Middle Row: Prefix Array P (6 elements, width 1.85cm, pitch 2.15cm -> x = 2.0 to 14.6)
+    \node[font=\bfseries\small, primaryblue, anchor=east] at (1.75, 1.75) {Prefix $P$:};
+
+    \foreach \i/\val in {0/0, 1/1, 2/4, 3/8, 4/9, 5/14} {
+        \pgfmathsetmacro{\xpos}{2.0 + \i * 2.15}
+        \node[font=\scriptsize, codegray, above=2pt] at (\xpos+0.925, 2.25) {idx \i};
+        \ifnum\i=2
+            \draw[line width=1.5pt, draw=primaryblue, fill=primaryblue!8, rounded corners=2pt] (\xpos, 1.25) rectangle (\xpos+1.85, 2.25);
+            \node[font=\large\bfseries, primaryblue] at (\xpos+0.925, 1.75) {\val};
+        \else\ifnum\i=5
+            \draw[line width=1.5pt, draw=primaryblue, fill=primaryblue!8, rounded corners=2pt] (\xpos, 1.25) rectangle (\xpos+1.85, 2.25);
+            \node[font=\large\bfseries, primaryblue] at (\xpos+0.925, 1.75) {\val};
+        \else
+            \draw[thick, draw=codeframe, fill=white, rounded corners=2pt] (\xpos, 1.25) rectangle (\xpos+1.85, 2.25);
+            \node[font=\large, codegray] at (\xpos+0.925, 1.75) {\val};
+        \fi\fi
+    }
+
+    % Subtraction arrows cleanly routing downward from bottom of P[2] (x=7.225) and P[5] (x=13.675)
+    \draw[lmarrow] (7.225, 1.2) to[out=-90, in=115] (6.0, -0.35);
+    \node[font=\scriptsize\bfseries, primaryblue, anchor=east] at (6.55, 0.52) {$P[L] = P[2] = 4$};
+    \draw[lmarrow] (13.675, 1.2) to[out=-90, in=65] (9.7, -0.35);
+    \node[font=\scriptsize\bfseries, primaryblue, anchor=west] at (11.45, 0.12) {$P[R+1] = P[5] = 14$};
+
+    % Formula badge spanning page width
+    \node[draw=primaryblue!30, fill=codebg, rounded corners=3pt, thick, font=\small, inner sep=6pt, align=center, text width=14.6cm] at (7.8, -0.78) {
+        $\text{Subarray Sum}(A[2 \dots 4]) = P[R + 1] - P[L] = P[5] - P[2] = 14 - 4 = \mathbf{10} \quad (O(1) \text{ evaluation})$
+    };
+\end{tikzpicture}
+\caption{1D prefix sum tape deconstruction. Computing the sum of $A[2 \dots 4]$ reduces to subtracting the cumulative prefix $P[2]$ from $P[5]$ in a single $O(1)$ operation.}
+\label{fig:prefix-sum-1d}
+\end{figure}
+
+\examplebeat Trace Figure~\ref{fig:prefix-sum-1d} step by step on $A = [1, 3, 4, 1, 5]$:
 \begin{enumerate}
-    \item First, we build the prefix sum array $P$. We add an extra 0 at the beginning to make the math easy for ranges that start at the very first element.
-    \item $P[0] = 0$
-    \item $P[1] = 0 + 3 = 3$
-    \item $P[2] = 3 + 1 = 4$
-    \item $P[3] = 4 + 4 = 8$
-    \item $P[4] = 8 + 1 = 9$
-    \item $P[5] = 9 + 5 = 14$
-    \item $P[6] = 14 + 9 = 23$
-    \item Prefix array $P = [0, 3, 4, 8, 9, 14, 23]$
+    \item Initialize $P$ with size $N + 1 = 6$ and $P[0] = 0$.
+    \item Accumulate left to right: $P[1] = 0 + 1 = 1$,\; $P[2] = 1 + 3 = 4$,\; $P[3] = 4 + 4 = 8$,\; $P[4] = 8 + 1 = 9$,\; $P[5] = 9 + 5 = 14$.
+    \item Prefix array is $P = [0, 1, 4, 8, 9, 14]$.
+    \item Query $[L = 2, R = 4]$ (elements $4, 1, 5$): evaluate $P[4 + 1] - P[2] = P[5] - P[2] = 14 - 4 = \mathbf{10}$.
 \end{enumerate}
 
-
-
-\begin{enumerate}
-    \setcounter{enumi}{9}
-    \item Now, what is the sum from index 2 to index 4 (values: 4, 1, 5)?
-    \item We want $A[2] + A[3] + A[4]$. The formula is $P[\text{end} + 1] - P[\text{start}]$.
-    \item Here, end is 4, start is 2. So we want $P[5] - P[2]$.
-    \item Look up $P[5]$ which is 14. Look up $P[2]$ which is 4.
-    \item $14 - 4 = 10$. Check manually: $4 + 1 + 5 = 10$. It works instantly!
-\end{enumerate}
-
-\begin{calloutbox}{Why is the Prefix Array Size $N + 1$?}
-By allocating $P$ with length $N + 1$ and defining $P[0] = 0$:
-\begin{itemize}
-    \item Entry $P[k]$ stores the sum of the first $k$ elements (indices $0$ through $k - 1$).
-    \item The sum of any range $[L, R]$ is always $P[R + 1] - P[L]$.
-    \item When $L = 0$ (starting at the first item), the formula evaluates to $P[R + 1] - P[0] = P[R + 1] - 0 = P[R + 1]$.
-\end{itemize}
-This eliminates any need for an \texttt{if (left == 0)} branch in your code, keeping the query a single unconditional subtraction.
+\begin{calloutbox}{Why Allocate Size $N + 1$ with $P[0] = 0$?}
+Storing an extra leading zero means $P[k]$ always sums indices $0$ through $k - 1$. When a query starts at $L = 0$, $P[R + 1] - P[0] = P[R + 1] - 0 = P[R + 1]$ works automatically with \textbf{zero} \texttt{if (L == 0)} edge-case branches.
 \end{calloutbox}
 
-\subsection{Telescoping Sums}
-Why the naive/brute-force approach fails:
-If a problem asks you to calculate the sum of many complex fractions or terms, doing the floating-point math directly could lose precision or take too long for a million terms.
+\begin{watchoutbox}[Watch Out --- Static Data Only and Overflow]
+Prefix sums shine on \textbf{static} arrays. If the input changes at index $k$, every entry $P[k + 1 \dots N]$ goes stale and costs $O(N)$ to rebuild---when updates and queries interleave, switch to a Fenwick Tree or Segment Tree (Module 16). Also store $P$ in \texttt{std::int64\_t}: summing $10^5$ values of $10^5$ hits $10^{10}$, overflowing 32-bit \texttt{int}.
+\end{watchoutbox}
 
-What the efficient technique is:
-A telescoping sum is a series where every term can be broken into two pieces, such that the second piece of one term perfectly cancels out the first piece of the next term. Like a collapsing pirate telescope, all the middle parts disappear, leaving only the very beginning and the very end.
+\begin{tryitbox}{Trace}{Building and Querying a 1D Prefix Array with Negatives}{ex5}
+Given $A = [4, -2, 7, -3, 5]$, construct the $6$-element prefix sum array $P$ (with $P[0] = 0$). Then answer these three inclusive queries using $P[R + 1] - P[L]$:
+\[
+    [1, 3], \qquad [0, 4], \qquad [2, 2].
+\]
+\end{tryitbox}
 
-\textbf{Worked Trace:}
-Evaluate the sum $\frac{1}{1 \times 2} + \frac{1}{2 \times 3} + \frac{1}{3 \times 4} + \dots + \frac{1}{99 \times 100}$.
+\subsection{2D Prefix Sums (Submatrix Queries in $O(1)$)}
+
+\painbeat Now imagine an $R \times C$ matrix (such as an image heatmap or terrain grid) with $Q = 10^5$ queries asking for the sum inside any axis-aligned rectangle $(r_1, c_1)$ to $(r_2, c_2)$. Looping over each subgrid takes $O(Q \cdot R \cdot C)$ time.
+
+\ahabeat Extend the running-total tape to two dimensions! Define $P[r][c]$ as the sum of the entire top-left rectangle covering rows $0 \dots r - 1$ and columns $0 \dots c - 1$. Using Inclusion-Exclusion (Figure~\ref{fig:prefix-sum-2d}), subtracting the strips above and left of our target rectangle $D$ removes the top-left corner $A$ \emph{twice}---so we simply add $A$ back once.
+
+\begin{formulabox}[2D Prefix Sum Build and 4-Corner Query]
+\[
+\begin{aligned}
+    \text{Build:}\quad & P[r+1][c+1] = \text{Grid}[r][c] + P[r][c+1] + P[r+1][c] - P[r][c] \\
+    \text{Query:}\quad & \text{Sum}(r_1..r_2,\, c_1..c_2) = P[r_2+1][c_2+1] - P[r_1][c_2+1] - P[r_2+1][c_1] + P[r_1][c_1]
+\end{aligned}
+\]
+\textbf{Read this as:} Take the whole bounding box from $(0, 0)$ to $(r_2, c_2)$, chop off the top strip ($A + B$), chop off the left strip ($A + C$), and add back the doubly chopped corner ($A$). Just 4 lookups give any rectangle sum in $O(1)$!
+\end{formulabox}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Native full-width container (0.0 to 15.6cm; zero resizebox/scale double-scaling)
+    \draw[card] (0.0, -4.95) rectangle (15.6, 4.75);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.35, 4.45)
+        {2D Prefix Sum Range Query: Subgrid $[r_1 \dots r_2,\; c_1 \dots c_2]$ via Inclusion-Exclusion};
+
+    % --- Left Panel: Matrix Subregions (x: 1.05 to 7.55, y: -3.95 to 3.15) ---
+    \draw[draw=codeframe, fill=white, thick] (1.05, -3.95) rectangle (7.55, 3.15);
+
+    % Region A (Top-Left overlap: prefix rows 0..r1, cols 0..c1)
+    \draw[draw=codegray, fill=codebg, thick] (1.05, 1.15) rectangle (3.35, 3.15);
+    \node[font=\small\bfseries, text=codegray] at (2.20, 2.35) {Region $A$};
+    \node[font=\scriptsize, text=codegray] at (2.20, 1.75) {Top-Left Overlap};
+
+    % Region B (Top strip: prefix rows 0..r1, cols c1..c2+1)
+    \draw[draw=codeblue!70, fill=codeblue!10, thick] (3.35, 1.15) rectangle (6.25, 3.15);
+    \node[font=\small\bfseries, text=codeblue] at (4.80, 2.35) {Region $B$};
+    \node[font=\scriptsize, text=codeblue] at (4.80, 1.75) {Top Strip};
+
+    % Region C (Left strip: prefix rows r1..r2+1, cols 0..c1)
+    \draw[draw=primaryblue!70, fill=primaryblue!10, thick] (1.05, -2.25) rectangle (3.35, 1.15);
+    \node[font=\small\bfseries, text=primaryblue] at (2.20, -0.35) {Region $C$};
+    \node[font=\scriptsize, text=primaryblue] at (2.20, -0.95) {Left Strip};
+
+    % Region D (Target subgrid: rows r1..r2, cols c1..c2)
+    \draw[draw=codegreen, fill=codegreen!14, line width=1.5pt] (3.35, -2.25) rectangle (6.25, 1.15);
+    \node[font=\large\bfseries, text=codegreen] at (4.80, -0.25) {Region $D$};
+    \node[font=\scriptsize\bfseries, text=codegreen] at (4.80, -0.95) {Target Query Sum};
+
+    % Exterior area label placed cleanly in bottom margin strip
+    \node[font=\scriptsize, text=codegray] at (4.30, -3.1) {Rest of Matrix (outside query)};
+
+    % Explicit prefix-table boundary coordinates (0, c1, c2+1 and 0, r1, r2+1)
+    \node[above=2pt, font=\scriptsize\ttfamily, text=primaryblue] at (1.05, 3.15) {0};
+    \node[above=2pt, font=\scriptsize\ttfamily, text=codegreen] at (3.35, 3.15) {$c_1$};
+    \node[above=2pt, font=\scriptsize\ttfamily, text=codegreen] at (6.25, 3.15) {$c_2{+}1$};
+    \node[left=3pt, font=\scriptsize\ttfamily, text=primaryblue] at (1.05, 3.15) {0};
+    \node[left=3pt, font=\scriptsize\ttfamily, text=codegreen] at (1.05, 1.15) {$r_1$};
+    \node[left=3pt, font=\scriptsize\ttfamily, text=codegreen] at (1.05, -2.25) {$r_2{+}1$};
+
+    % Axis hint caption underneath left grid
+    \node[font=\scriptsize, text=codegray] at (4.30, -4.45)
+        {Grid lines show 1-based padded prefix boundaries in $P$};
+
+    % --- Right Panel: Algebraic Derivation (x: 7.95 to 15.25) ---
+    \draw[draw=codeframe!90, fill=white, rounded corners=3pt, thick] (7.95, -4.55) rectangle (15.25, 3.8);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.2, 3.55)
+        {Inclusion-Exclusion Query Derivation:};
+
+    \node[anchor=north west, font=\footnotesize, align=left, text width=6.85cm] at (8.2, 3.0) {
+        Isolate Region $D$ in strictly $O(1)$ time:\\[3pt]
+        $\begin{aligned}
+        \text{Full box} &= P[r_2{+}1][c_2{+}1] &&= A + B + C + D \\
+        \text{Sub top}  &= -P[r_1][c_2{+}1]    &&= -(A + B) \\
+        \text{Sub left} &= -P[r_2{+}1][c_1]    &&= -(A + C) \\
+        \text{Add corner}&= +P[r_1][c_1]       &&= +A
+        \end{aligned}$\\[5pt]
+        \textbf{Net sum:} $(A{+}B{+}C{+}D) - (A{+}B) - (A{+}C) + A = \mathbf{D}$
+    };
+
+    \draw[draw=codeframe!70] (8.2, -0.55) -- (15.0, -0.55);
+
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.2, -0.8)
+        {Construction Recurrence \& Cost:};
+    \node[anchor=north west, font=\footnotesize, align=left, text width=6.85cm] at (8.2, -1.35) {
+        $P[r{+}1][c{+}1] = \text{Grid}[r][c] + P[r][c{+}1] + P[r{+}1][c] - P[r][c]$\\[5pt]
+        $\bullet$ \textbf{Padding:} Size $(R+1) \times (C+1)$ avoids $r=0$ / $c=0$ branches.\\
+        $\bullet$ \textbf{Build:} $O(R \times C)$ time and space.\\
+        $\bullet$ \textbf{Query:} $O(1)$ time (4 lookups, 3 adds/subs).
+    };
+\end{tikzpicture}
+\caption{2D prefix sum subgrid query via Inclusion-Exclusion. Subtracting the top strip ($A+B$) and left strip ($A+C$) from the full box ($A+B+C+D$) removes corner $A$ twice; adding $P[r_1][c_1] = A$ restores exact region $D$ in $O(1)$ time.}
+\label{fig:prefix-sum-2d}
+\end{figure}
+
+\begin{watchoutbox}[Watch Out --- Unsigned Wrap-Around on Bounds Checks]
+When validating 2D query coordinates with \texttt{std::size\_t}, never write \texttt{r2 + 1 >= prefix.size()}: if a buggy caller passes \texttt{r2 = SIZE\_MAX}, \texttt{r2 + 1} wraps to \texttt{0} and bypasses the check! Store \texttt{rows\_} and \texttt{cols\_} explicitly and check \texttt{r2 >= rows\_ || c2 >= cols\_}.
+\end{watchoutbox}
+
+\begin{tryitbox}{Trace}{Hand-Building a $3 \times 3$ Prefix Table and 4-Corner Query}{ex6}
+Given the $3 \times 3$ matrix
+\[
+    \text{Grid} = \begin{bmatrix} 2 & 1 & 3 \\ 4 & 0 & 2 \\ 1 & 5 & 2 \end{bmatrix},
+\]
+fill its $4 \times 4$ padded prefix table $P$ (with row $0$ and column $0$ equal to $0$), then evaluate the bottom-right $2 \times 2$ submatrix from $(r_1, c_1) = (1, 1)$ to $(r_2, c_2) = (2, 2)$ using the 4-corner formula.
+\end{tryitbox}
+
+\subsection{Telescoping Sums (Cancellation by Design)}
+
+\painbeat Suppose you are asked to evaluate $\frac{1}{1 \times 2} + \frac{1}{2 \times 3} + \dots + \frac{1}{999{,}999 \times 1{,}000{,}000}$. Summing a million fractions in floating-point loses precision and takes $O(N)$ time.
+
+\ahabeat Rewrite each term as a \textbf{difference of adjacent pieces} $f(i) - f(i + 1)$. Like a collapsing spyglass telescope, the negative tail of each term annihilates the positive head of the very next term, leaving only the two outer ends!
+
+\begin{formulabox}[Telescoping Sum Collapse]
+\[
+    \sum_{i=a}^{b} \bigl(f(i) - f(i + 1)\bigr) = f(a) - f(b + 1)
+\]
+\textbf{Read this as:} Whenever a sum's terms can be split into consecutive differences, every interior term appears once with $+$ and once with $-$, vanishing completely.
+\end{formulabox}
+
+\examplebeat Evaluate $\frac{1}{1 \times 2} + \frac{1}{2 \times 3} + \frac{1}{3 \times 4} + \dots + \frac{1}{99 \times 100}$:
 \begin{enumerate}
-    \item Notice that $\frac{1}{n(n+1)}$ can be rewritten as $\frac{1}{n} - \frac{1}{n+1}$.
-    \item Rewrite the entire sum: $(\frac{1}{1} - \frac{1}{2}) + (\frac{1}{2} - \frac{1}{3}) + (\frac{1}{3} - \frac{1}{4}) + \dots + (\frac{1}{99} - \frac{1}{100})$.
-    \item Notice how the terms cancel: the $-\frac{1}{2}$ cancels with the $+\frac{1}{2}$, the $-\frac{1}{3}$ cancels with the $+\frac{1}{3}$, and so on.
-    \item Everything disappears except the first part of the first term ($1$) and the second part of the last term ($-\frac{1}{100}$).
-    \item The total is exactly $1 - \frac{1}{100} = \frac{99}{100}$.
+    \item Notice that $\frac{1}{k(k+1)} = \frac{1}{k} - \frac{1}{k+1}$ (check: $\frac{(k+1) - k}{k(k+1)} = \frac{1}{k(k+1)}$).
+    \item Expand the sum: $\bigl(1 - \frac{1}{2}\bigr) + \bigl(\frac{1}{2} - \frac{1}{3}\bigr) + \bigl(\frac{1}{3} - \frac{1}{4}\bigr) + \dots + \bigl(\frac{1}{99} - \frac{1}{100}\bigr)$.
+    \item Every interior fraction cancels: $-\frac{1}{2} + \frac{1}{2} = 0$, $-\frac{1}{3} + \frac{1}{3} = 0$, and so on.
+    \item Only the first head and final tail survive: $1 - \frac{1}{100} = \mathbf{\frac{99}{100}}$.
 \end{enumerate}
 
-\begin{calloutbox}{The Unifying Idea: Prefix Sums and Telescoping Are Duals}
-Prefix sums and telescoping sums are two faces of the exact same principle:
+\begin{calloutbox}{The Unifying Idea: Discrete Calculus Duals}
+Prefix sums, telescoping sums, and difference arrays are three views of the exact same symmetry (the discrete Fundamental Theorem of Calculus):
 \begin{itemize}
-    \item In a \textbf{telescoping sum}, adding consecutive differences causes all internal terms to cancel:
-    $$ \sum_{i=L}^{R} (P[i+1] - P[i]) = P[R+1] - P[L] $$
-    \item In a \textbf{prefix sum query}, you evaluate the sum of elements by converting it into a difference of two prefix markers:
-    $$ \sum_{i=L}^{R} A[i] = P[R+1] - P[L] $$
-    \item In a \textbf{difference array}, you record only where values start and stop changing. Summing those changes recovers the modified array.
+    \item \textbf{Telescoping:} Summing consecutive differences recovers the endpoints: $\sum_{i=L}^{R} (P[i+1] - P[i]) = P[R+1] - P[L]$.
+    \item \textbf{Prefix Sum:} Storing running sums turns any range sum into one difference: $\sum_{i=L}^{R} A[i] = P[R+1] - P[L]$.
+    \item \textbf{Difference Array:} Storing only where values start and stop changing turns range updates into two $O(1)$ boundary markers; one prefix pass restores the full array.
 \end{itemize}
-Whenever a problem involves ranges and sums, remember: differencing turns range operations into $O(1)$ boundary markers, and prefix summation turns them back into values.
 \end{calloutbox}
 
-\subsection{\texorpdfstring{Difference Arrays (Range Updates in $O(1)$)}{Difference Arrays (Range Updates in O(1))}}
-Why the naive approach fails:
-Suppose you have an array of size $N = 100{,}000$, initially all zeros. A process requests $Q = 100{,}000$ operations of the form: ``add $v$ to every element from index $L$ to index $R$''. If you run a loop from $L$ to $R$ for each update, each update takes up to $O(N)$ operations. In total, this requires $Q \times N = 10^{10}$ steps, causing Time Limit Exceeded (TLE).
+\begin{tryitbox}{Derive}{Step-2 Telescoping Collapse}{ex7}
+Using the identity $\frac{2}{k(k+2)} = \frac{1}{k} - \frac{1}{k+2}$, expand the first few and last few terms of
+\[
+    \sum_{k=1}^{n} \frac{2}{k(k+2)} \quad (n \ge 2)
+\]
+to find its exact closed form (careful: how many terms survive at each end?), then evaluate it at $n = 10$.
+\end{tryitbox}
 
-What the efficient technique is:
-Instead of modifying every number in the range, you mark only the two endpoints in a \textbf{difference array} $D$:
+\subsection{\texorpdfstring{Difference Arrays (Batch Range Updates in $O(1)$)}{Difference Arrays (Batch Range Updates in O(1))}}
+
+\begin{notationbox}[Symbols Used in Difference Arrays]
+$D[0 \dots N]$ & Difference array of size $N + 1$ recording boundary changes & $D[0] = A[0],\; D[i] = A[i] - A[i-1]$ \\
+$[L, R],\; v$ & Inclusive range to increment by value $v$ & Add $+3$ on $[1, 3]$ \\
+$A[0 \dots N-1]$ & Final array reconstructed via prefix sum of $D$ & $A[i] = A[i - 1] + D[i]$ \\
+\end{notationbox}
+
+\painbeat Suppose you maintain an array of $N = 10^5$ zeros and must process $Q = 10^5$ range additions: ``add $v$ to every cell in $[L, R]$.'' Updating every cell with a loop takes $O(Q \cdot N) = 10^{10}$ writes and times out.
+
+\ahabeat Think of a difference array $D$ as the \textbf{discrete derivative} (inverse of a prefix sum): instead of painting every cell inside $[L, R]$, drop just two boundary impulses---``turn on $+v$ at $L$'' ($D[L] \mathrel{+}= v$) and ``turn off $-v$ right after $R$'' ($D[R + 1] \mathrel{-}= v$). One final $O(N)$ prefix scan sweeps those impulses across their exact intervals!
+
+\begin{formulabox}[Difference Array $O(1)$ Range Update and $O(N)$ Reconstruction]
+\[
+    \text{Update } [L, R] \text{ by } +v:\quad D[L] \mathrel{+}= v, \;\; D[R + 1] \mathrel{-}= v
+    \qquad\qquad
+    \text{Reconstruct:}\quad A[i] = \sum_{k=0}^{i} D[k]
+\]
+\textbf{Read this as:} Every update touches only two slots ($O(1)$). Running a single cumulative sum over $D$ at the end recovers every modified element in $O(N)$ total time ($O(Q + N)$ overall).
+\end{formulabox}
+
+\invariantbeat{Difference Sweep} During reconstruction, the running total \texttt{running} at index $i$ equals the exact sum of all active interval updates whose range $[L, R]$ contains $i$ (plus the initial base value $A_0[i]$).
+
+\examplebeat Trace Figure~\ref{fig:diff-array} for an all-zero array of length $N = 5$ (allocate $D$ of size $N + 1 = 6$):
 \begin{enumerate}
-    \item Add $v$ at the starting index: $D[L] \mathrel{+}= v$. This indicates that starting at index $L$, all future elements increase by $v$.
-    \item Subtract $v$ just past the ending index: $D[R + 1] \mathrel{-}= v$. This cancels the $+v$ increase for all elements beyond $R$.
-\end{enumerate}
-Each update takes only two operations ($O(1)$ time). After finishing all $Q$ updates, you compute the prefix sum of $D$ in a single pass. That single pass propagates the changes and reconstructs the final values for all $N$ elements in $O(N)$ total time.
-
-\textbf{Worked Trace:}
-Let our initial array have length $N = 5$, with all elements $0$.
-We create a difference array $D$ of size $N + 1 = 6$ initialized to zero:
-$$ D = [0, 0, 0, 0, 0, 0] $$
-We receive two updates:
-\begin{enumerate}
-    \item Update 1: Add $+3$ to range $[1, 3]$:
-    \begin{itemize}
-        \item Add $+3$ at index 1: $D[1] \mathrel{+}= 3$.
-        \item Subtract $3$ at index $3 + 1 = 4$: $D[4] \mathrel{-}= 3$.
-        \item State of $D$: $[0, 3, 0, 0, -3, 0]$.
-    \end{itemize}
-    \item Update 2: Add $+2$ to range $[2, 4]$:
-    \begin{itemize}
-        \item Add $+2$ at index 2: $D[2] \mathrel{+}= 2$.
-        \item Subtract $2$ at index $4 + 1 = 5$: $D[5] \mathrel{-}= 2$.
-        \item State of $D$: $[0, 3, 2, 0, -3, -2]$.
-    \end{itemize}
-\end{enumerate}
-
-
-
-\begin{enumerate}
-    \setcounter{enumi}{2}
-    \item Reconstruction pass: compute prefix sums of $D$ for indices $0$ to $4$:
-    \begin{itemize}
-        \item $A[0] = D[0] = \mathbf{0}$
-        \item $A[1] = A[0] + D[1] = 0 + 3 = \mathbf{3}$
-        \item $A[2] = A[1] + D[2] = 3 + 2 = \mathbf{5}$
-        \item $A[3] = A[2] + D[3] = 5 + 0 = \mathbf{5}$
-        \item $A[4] = A[3] + D[4] = 5 + (-3) = \mathbf{2}$
-    \end{itemize}
-    \item Final reconstructed array: $A = [0, 3, 5, 5, 2]$.
-    \item Verification: Index 1 received $+3$. Index 2 received $+3 + 2 = 5$. Index 3 received $+3 + 2 = 5$. Index 4 received $+2$. The reconstruction matches perfectly in $O(N)$ operations.
+    \item \textbf{Update 1:} Add $+3$ to $[1, 3]$ $\implies D[1] \mathrel{+}= 3,\; D[4] \mathrel{-}= 3$. Now $D = [0, 3, 0, 0, -3, 0]$.
+    \item \textbf{Update 2:} Add $+2$ to $[2, 4]$ $\implies D[2] \mathrel{+}= 2,\; D[5] \mathrel{-}= 2$. Now $D = [0, 3, 2, 0, -3, -2]$.
+    \item \textbf{Reconstruct ($i = 0 \dots 4$):}
+    $A[0] = 0$,\; $A[1] = 0 + 3 = 3$,\; $A[2] = 3 + 2 = 5$,\; $A[3] = 5 + 0 = 5$,\; $A[4] = 5 - 3 = 2$.
+    \item Final array is $A = [0, 3, 5, 5, 2]$ (index 5 is only the sentinel slot holding $-2$).
 \end{enumerate}
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+    % Top Title Banner (natural coordinates x = 0.0 to 15.2, generous clearance above +3)
+    \node[font=\small\bfseries, primaryblue] at (7.6, 7.05)
+        {Difference Array Boundary Impulses: $D[L] \mathrel{+}= v, \quad D[R+1] \mathrel{-}= v$};
+
+    % Axis for D at y = 4.75
+    \draw[->, thick, draw=codeframe] (0.7, 4.75) -- (14.6, 4.75) node[right=2pt, font=\scriptsize, codegray] {Index};
+
+    % Ticks & Index numbers placed on the opposite side of each impulse
+    \foreach \i/\pos/\txt in {0/below/0, 1/below/1, 2/below/2, 3/below/3, 4/above/4, 5/above/5} {
+        \pgfmathsetmacro{\xpos}{2.1 + \i * 2.15}
+        \draw[thick, draw=codeframe] (\xpos, 4.65) -- (\xpos, 4.85);
+        \node[font=\scriptsize\bfseries, codegray, \pos=3pt] at (\xpos, 4.75) {idx \txt};
+    }
+
+    % Upward Impulses (start of range additions)
+    % idx 1: x = 4.25 (+3)
+    \draw[->, line width=1.6pt, primaryblue, -{Stealth[length=5pt]}] (4.25, 4.75) -- (4.25, 6.0)
+        node[above=2pt, font=\small\bfseries, primaryblue] {$+3$};
+    % idx 2: x = 6.40 (+2)
+    \draw[->, line width=1.6pt, primaryblue, -{Stealth[length=5pt]}] (6.40, 4.75) -- (6.40, 5.62)
+        node[above=2pt, font=\small\bfseries, primaryblue] {$+2$};
+
+    % Downward Impulses (boundary cancellations at R + 1)
+    % idx 4: x = 10.70 (-3)
+    \draw[->, line width=1.6pt, accentamber, dashed, -{Stealth[length=5pt]}] (10.70, 4.75) -- (10.70, 3.5)
+        node[below=2pt, font=\small\bfseries, accentamber] {$-3$};
+    % idx 5: x = 12.85 (-2)
+    \draw[->, line width=1.6pt, accentamber, dashed, -{Stealth[length=5pt]}] (12.85, 4.75) -- (12.85, 3.88)
+        node[below=2pt, font=\small\bfseries, accentamber] {$-2$};
+
+    % Middle Transition Banner
+    \draw[draw=primaryblue!30, fill=codebg, rounded corners=3pt, thick] (0.5, 2.2) rectangle (14.9, 2.85);
+    \node[font=\small\bfseries, primaryblue] at (7.7, 2.525) {
+        Prefix Sum Scan: $A[i] = A[i - 1] + D[i] \implies \text{Restores Updated Array in One } O(N) \text{ Pass}$
+    };
+
+    % Bottom: Reconstructed Array Bar Chart (y baseline at -0.55)
+    \begin{scope}[yshift=-0.55cm]
+        \draw[->, thick, draw=codeframe] (0.7, 0) -- (14.6, 0) node[right=2pt, font=\scriptsize, codegray] {Index};
+
+        % idx 0: 0
+        \draw[fill=codebg, draw=codeframe, thick] (1.6, 0) rectangle (2.6, 0.06);
+        \node[above=2pt, font=\scriptsize, codegray] at (2.1, 0.06) {0};
+        \node[below=2pt, font=\scriptsize, codegray] at (2.1, 0) {idx 0};
+
+        % idx 1: 3 (height 0.90)
+        \draw[fill=primaryblue!10, draw=primaryblue, thick] (3.75, 0) rectangle (4.75, 0.90);
+        \node[above=2pt, font=\small\bfseries, primaryblue] at (4.25, 0.90) {3};
+        \node[below=2pt, font=\scriptsize, codegray] at (4.25, 0) {idx 1};
+
+        % idx 2: 5 (height 1.50)
+        \draw[fill=primaryblue!14, draw=primaryblue, thick] (5.90, 0) rectangle (6.90, 1.50);
+        \node[above=2pt, font=\small\bfseries, primaryblue] at (6.40, 1.50) {5};
+        \node[below=2pt, font=\scriptsize, codegray] at (6.40, 0) {idx 2};
+
+        % idx 3: 5 (height 1.50)
+        \draw[fill=primaryblue!14, draw=primaryblue, thick] (8.05, 0) rectangle (9.05, 1.50);
+        \node[above=2pt, font=\small\bfseries, primaryblue] at (8.55, 1.50) {5};
+        \node[below=2pt, font=\scriptsize, codegray] at (8.55, 0) {idx 3};
+
+        % idx 4: 2 (height 0.60)
+        \draw[fill=primaryblue!10, draw=primaryblue, thick] (10.20, 0) rectangle (11.20, 0.60);
+        \node[above=2pt, font=\small\bfseries, primaryblue] at (10.70, 0.60) {2};
+        \node[below=2pt, font=\scriptsize, codegray] at (10.70, 0) {idx 4};
+
+        \node[font=\bfseries\small, primaryblue, align=center] at (13.15, 0.75) {Reconstructed\\Array $A$};
+    \end{scope}
+\end{tikzpicture}
+\caption{Difference array boundary impulses and prefix-sum integration. Updates $[1, 3] + 3$ and $[2, 4] + 2$ place solid upward starts and dashed downward cancellations in $O(1)$; one left-to-right scan restores $A = [0, 3, 5, 5, 2]$.}
+\label{fig:diff-array}
+\end{figure}
+
+\begin{watchoutbox}[Watch Out --- Sentinel Size $N + 1$ and Online Queries]
+Two rules make difference arrays safe:
+\begin{itemize}
+    \item \textbf{Always allocate size $N + 1$:} When an update reaches the final index $R = N - 1$, $D[R + 1] = D[N]$ writes into the extra sentinel slot instead of crashing out of bounds.
+    \item \textbf{Offline batching only:} If a problem interleaves range updates and point/range queries \emph{online}, reconstructing $D$ on every query degrades to $O(QN)$---use a Fenwick Tree or Segment Tree (Module 16) instead.
+\end{itemize}
+\end{watchoutbox}
+
+\begin{tryitbox}{Debug}{Two Classic Bugs in a Difference Array}{ex8}
+Spot \textbf{both} bugs in this C++ range-update helper for an array of size \texttt{n}:
+\begin{lstlisting}[numbers=none, xleftmargin=4pt, framexleftmargin=4pt]
+std::vector<std::int64_t> diff(n, 0); // Bug 1
+void add_range(std::size_t left, std::size_t right, std::int64_t val) {
+    diff[left] += val;
+    diff[right] -= val;               // Bug 2
+}
+\end{lstlisting}
+Explain what fails for \texttt{add\_range(1, 3, +5)} on \texttt{n = 4} and how to fix both lines.
+\end{tryitbox}
+
+% ============================================================================
 \section{Worked Examples}
+% ============================================================================
+
+Each example below is designed to be reproduced completely on scratch paper without a computer.
 
 \begin{example}[The Staircase Problem]
-You have $N = 15$ blocks. Can you build a staircase where step 1 has 1 block, step 2 has 2 blocks, and so on?
+You have $N = 15$ blocks. Can you build a complete staircase where row $1$ has $1$ block, row $2$ has $2$ blocks, and row $k$ has $k$ blocks?
 \begin{enumerate}
-    \item A staircase of height $k$ requires $1 + 2 + \dots + k$ blocks.
-    \item We know this is an arithmetic series with sum $k(k+1)/2$.
-    \item We need to solve $k(k+1)/2 = 15$.
-    \item Multiply by 2: $k(k+1) = 30$.
-    \item We need two consecutive integers that multiply to 30. We test $5 \times 6 = 30$.
-    \item So $k = 5$. You can build a complete staircase of height 5.
+    \item A complete staircase of height $k$ needs $1 + 2 + \dots + k = \frac{k(k + 1)}{2}$ blocks.
+    \item Set the closed-form sum equal to $15$: $\frac{k(k + 1)}{2} = 15$.
+    \item Multiply both sides by $2$: $k(k + 1) = 30$.
+    \item Find two consecutive positive integers whose product is $30$: $5 \times 6 = 30$.
+    \item Therefore $k = \mathbf{5}$ (for huge $N \le 10^{18}$, solve via integer binary search on $k$ in $O(\log N)$ or the quadratic formula $k = \lfloor(\sqrt{1 + 8N} - 1)/2\rfloor$).
 \end{enumerate}
 \end{example}
 
-\begin{example}[2D Matrix Block Sum: Range Queries in a Grid]
-You have a grid of numbers and you frequently need to find the sum of all numbers in a specific rectangle within the grid. How do you answer queries in $O(1)$ time?
+\begin{example}[2D Matrix Block Sum on a Concrete $3 \times 4$ Grid]
+Given the $3 \times 4$ grid below, build its $4 \times 5$ prefix table $P$ and compute the sum of the shaded submatrix from $(r_1, c_1) = (1, 1)$ to $(r_2, c_2) = (2, 3)$ in $O(1)$ time (matching Figure~\ref{fig:prefix-sum-2d}).
+\[
+    \text{Grid} = \begin{bmatrix} 1 & 2 & 0 & 3 \\ 4 & \mathbf{1} & \mathbf{2} & \mathbf{1} \\ 2 & \mathbf{3} & \mathbf{1} & \mathbf{4} \end{bmatrix}
+\]
 \begin{enumerate}
-    \item Use a 2D prefix sum. A cell $(r, c)$ in the 2D prefix sum array stores the total sum of the rectangle from the top-left corner $(0,0)$ down to $(r-1, c-1)$.
-    \item To build it, you use the inclusion-exclusion principle: $P[r][c] = \text{Grid}[r-1][c-1] + P[r-1][c] + P[r][c-1] - P[r-1][c-1]$. You subtract the diagonal because you added that overlapping area twice.
-    \item To query the sum of a rectangle from $(r_1, c_1)$ to $(r_2, c_2)$, you take the big rectangle $P[r_2+1][c_2+1]$, subtract the rectangle above it $P[r_1][c_2+1]$, subtract the rectangle to its left $P[r_2+1][c_1]$, and add back the top-left piece you subtracted twice $P[r_1][c_1]$.
-\end{enumerate}
-
-
-
-\begin{enumerate}
-    \setcounter{enumi}{3}
-    \item This mathematically perfectly isolates region D.
-    \item Because evaluating the formula requires only 4 array lookups and arithmetic, any 2D rectangle query takes $O(1)$ time.
-\end{enumerate}
-\end{example}
-
-\begin{example}[Sum of Multiples: Project Euler \#1]
-Find the sum of all multiples of 3 or 5 strictly below 1000.
-\begin{enumerate}
-    \item Summing multiples of 3 means $3 + 6 + 9 + \dots + 999 = 3 \times (1 + 2 + 3 + \dots + 333)$.
-    \item Summing multiples of 5 means $5 + 10 + 15 + \dots + 995 = 5 \times (1 + 2 + 3 + \dots + 199)$.
-    \item If we add these two sums, we double-count the numbers that are multiples of both 3 and 5 (multiples of 15). We must subtract the sum of multiples of 15, which is $15 \times (1 + 2 + \dots + 66)$.
-    \item We can use our arithmetic series formula $n(n+1)/2$ for each part:
+    \item Initialize $P$ with dimensions $(3 + 1) \times (4 + 1) = 4 \times 5$, setting row $0$ and column $0$ to $0$.
+    \item Fill each row using $P[r+1][c+1] = \text{Grid}[r][c] + P[r][c+1] + P[r+1][c] - P[r][c]$:
     \begin{itemize}
-        \item Multiples of 3: $3 \times \frac{333 \times 334}{2} = 3 \times 55611 = 166833$.
-        \item Multiples of 5: $5 \times \frac{199 \times 200}{2} = 5 \times 19900 = 99500$.
-        \item Multiples of 15: $15 \times \frac{66 \times 67}{2} = 15 \times 2211 = 33165$.
+        \item Row 1: $P[1] = [0,\; 1,\; 3,\; 3,\; 6]$.
+        \item Row 2: $P[2][1] = 4 + 1 = 5$,\; $P[2][2] = 1 + 3 + 5 - 1 = 8$,\; $P[2][3] = 2 + 3 + 8 - 3 = 10$,\; $P[2][4] = 1 + 6 + 10 - 3 = 14 \implies P[2] = [0,\; 5,\; 8,\; 10,\; 14]$.
+        \item Row 3: $P[3][1] = 2 + 5 = 7$,\; $P[3][2] = 3 + 8 + 7 - 5 = 13$,\; $P[3][3] = 1 + 10 + 13 - 8 = 16$,\; $P[3][4] = 4 + 14 + 16 - 10 = 24 \implies P[3] = [0,\; 7,\; 13,\; 16,\; 24]$.
     \end{itemize}
-    \item Final answer: $166833 + 99500 - 33165 = \mathbf{233168}$.
+    \item Evaluate the 4-corner Inclusion-Exclusion query for $(r_1, c_1) = (1, 1)$ to $(r_2, c_2) = (2, 3)$ (Region $D$ in Figure~\ref{fig:prefix-sum-2d}):
+    \[
+        \text{Sum}(D) = P[3][4] - P[1][4] - P[3][1] + P[1][1] = 24 - 6 - 7 + 1 = \mathbf{12}.
+    \]
+    \item Verify directly from the bold cells: $1 + 2 + 1 + 3 + 1 + 4 = 12$. Exactly 4 lookups!
+\end{enumerate}
+\end{example}
+
+\begin{example}[Sum of Multiples of 3 or 5 Below 1000 (Project Euler \#1)]
+Find the sum of all positive multiples of $3$ or $5$ strictly below $1{,}000$ in $O(1)$ time.
+\begin{enumerate}
+    \item Factor each set of multiples into a triangular sum:
+    \begin{itemize}
+        \item Multiples of $3$ up to $999$: $k_3 = \lfloor 999 / 3 \rfloor = 333 \implies 3 \times \frac{333 \times 334}{2} = 3 \times 55{,}611 = 166{,}833$.
+        \item Multiples of $5$ up to $995$: $k_5 = \lfloor 999 / 5 \rfloor = 199 \implies 5 \times \frac{199 \times 200}{2} = 5 \times 19{,}900 = 99{,}500$.
+    \end{itemize}
+    \item Adding both double-counts multiples of $\operatorname{lcm}(3, 5) = 15$ (up to $990$):
+    \[
+        k_{15} = \lfloor 999 / 15 \rfloor = 66 \implies 15 \times \frac{66 \times 67}{2} = 15 \times 2{,}211 = 33{,}165.
+    \]
+    \item Combine via Inclusion-Exclusion: $166{,}833 + 99{,}500 - 33{,}165 = \mathbf{233{,}168}$.
 \end{enumerate}
 \end{example}
 
 \begin{example}[Finding the Missing Number]
-Given an array containing $n$ distinct numbers taken from the range $[0, n]$, find the one number that is missing.
+Given an array of $n$ distinct integers taken from $\{0, 1, \dots, n\}$, find the one missing value in $O(n)$ time and $O(1)$ extra space.
 \begin{enumerate}
-    \item Suppose the array is $[3, 0, 1]$. Here $n = 3$, so numbers should be from $0$ to $3$.
-    \item The expected sum of all numbers from $0$ to $n$ is given by Gauss's sum formula:
-    $$ S_{\text{expected}} = \frac{n(n+1)}{2} = \frac{3 \times 4}{2} = 6. $$
-    \item Compute the actual sum of the elements present in the array:
-    $$ S_{\text{actual}} = 3 + 0 + 1 = 4. $$
-    \item The missing number is:
-    $$ \text{Missing} = S_{\text{expected}} - S_{\text{actual}} = 6 - 4 = \mathbf{2}. $$
-    \item By using the sum formula, we solved the problem in $O(n)$ time and $O(1)$ extra space without sorting or allocating a hash set.
+    \item Take $A = [3, 0, 1]$ ($n = 3$, expected universe $\{0, 1, 2, 3\}$).
+    \item Expected total via Gauss's sum: $S_{\text{expected}} = \frac{n(n + 1)}{2} = \frac{3 \times 4}{2} = 6$.
+    \item Actual total of elements present: $S_{\text{actual}} = 3 + 0 + 1 = 4$.
+    \item Subtract to expose the missing value: $6 - 4 = \mathbf{2}$ (zero sorting, zero hash table).
 \end{enumerate}
 \end{example}
 
-\begin{example}[Static Range Sum Queries]
-Given an array of integers:
-$$ \text{nums} = [-2, 0, 3, -5, 2, -1] $$
-compute the sum of elements between indices $i$ and $j$ inclusive for multiple queries.
+\begin{example}[Static Range Sum Queries with Negative Numbers]
+Given $\text{nums} = [-2, 0, 3, -5, 2, -1]$, answer multiple inclusive range sum queries in $O(1)$ each.
 \begin{enumerate}
-    \item Build prefix sum array $P$ of length $n + 1 = 7$, with $P[0] = 0$:
-    \begin{itemize}
-        \item $P[0] = 0$
-        \item $P[1] = 0 + (-2) = -2$
-        \item $P[2] = -2 + 0 = -2$
-        \item $P[3] = -2 + 3 = 1$
-        \item $P[4] = 1 + (-5) = -4$
-        \item $P[5] = -4 + 2 = -2$
-        \item $P[6] = -2 + (-1) = -3$
-    \end{itemize}
-    Prefix array: $P = [0, -2, -2, 1, -4, -2, -3]$.
-    \item Query 1: sum from index 0 to 2 $\implies P[3] - P[0] = 1 - 0 = \mathbf{1}$.
-    \item Query 2: sum from index 2 to 5 $\implies P[6] - P[2] = -3 - (-2) = \mathbf{-1}$.
-    \item Query 3: sum from index 0 to 5 $\implies P[6] - P[0] = -3 - 0 = \mathbf{-3}$.
-    \item Every query evaluates in $O(1)$ operations with zero loops.
+    \item Build $P$ of length $6 + 1 = 7$ starting with $P[0] = 0$:
+    \[
+        P = [0,\; -2,\; -2,\; 1,\; -4,\; -2,\; -3].
+    \]
+    \item Query $[0, 2] \implies P[3] - P[0] = 1 - 0 = \mathbf{1}$ (check: $-2 + 0 + 3 = 1$).
+    \item Query $[2, 5] \implies P[6] - P[2] = -3 - (-2) = \mathbf{-1}$ (check: $3 - 5 + 2 - 1 = -1$).
+    \item Query $[0, 5] \implies P[6] - P[0] = -3 - 0 = \mathbf{-3}$ (notice negatives work identically to positives!).
 \end{enumerate}
 \end{example}
 
-\section{C++ Implementations}
+\begin{example}[Batch Flight Bookings on a Non-Zero Schedule]
+Five flights (indices $0 \dots 4$) already carry $A_0 = [10, 5, 8, 12, 6]$ passengers. Three bulk updates arrive: $+20$ on $[0, 2]$, $+15$ on $[1, 4]$, and $-5$ on $[2, 3]$. Find the final passenger count per flight using a difference array.
+\begin{enumerate}
+    \item Initialize $D$ of size $5 + 1 = 6$ from $A_0$ ($D[0] = A_0[0],\; D[i] = A_0[i] - A_0[i - 1],\; D[5] = 0$):
+    \[
+        D = [10,\; -5,\; 3,\; 4,\; -6,\; 0].
+    \]
+    \item Apply $+20$ on $[0, 2]$: $D[0] \mathrel{+}= 20,\; D[3] \mathrel{-}= 20 \implies D = [30,\; -5,\; 3,\; -16,\; -6,\; 0]$.
+    \item Apply $+15$ on $[1, 4]$: $D[1] \mathrel{+}= 15,\; D[5] \mathrel{-}= 15 \implies D = [30,\; 10,\; 3,\; -16,\; -6,\; -15]$.
+    \item Apply $-5$ on $[2, 3]$: $D[2] \mathrel{+}= (-5),\; D[4] \mathrel{-}= (-5) \implies D = [30,\; 10,\; -2,\; -16,\; -1,\; -15]$.
+    \item Prefix scan ($i = 0 \dots 4$): $A = [\mathbf{30},\; \mathbf{40},\; \mathbf{38},\; \mathbf{22},\; \mathbf{21}]$. Peak load is $40$ passengers on flight $1$.
+\end{enumerate}
+\end{example}
 
-\subsection{Computing Sum Formulas Safely}
-Before showing the code, we must consider how large our numbers get. If $n$ is $10^9$, computing $n(n+1)/2$ means computing $10^9 \times 10^9$, which is $10^{18}$. A standard 32-bit integer overflows at about $2 \times 10^9$. Therefore, whenever computing these formulas in C++, we must use 64-bit integers (\texttt{std::int64\_t} or \texttt{long long}) to prevent overflow. Furthermore, division by 2 or 6 happens after multiplication, so the intermediate step can get very large.
+% ============================================================================
+\section{C++23 Implementations}
+% ============================================================================
 
-\begin{lstlisting}[caption={Closed-form Sum Formulas and C++23 Ranges}]
-#include <cstdint>
-#include <ranges>
+Every listing below is standalone C++23, uses 64-bit signed integers (\texttt{std::int64\_t}) for cumulative sums, guards boundary inputs, and avoids unsigned wrap-around bugs.
+
+\subsection{Overflow-Safe Closed-Form Sum Formulas and C++23 Ranges}
+
+Before multiplying factors like $n(n + 1)$ or $n(n + 1)(2n + 1)$, divide out the denominator factors ($2$ and $3$) from whichever terms are divisible by them. Because $\gcd(2, 3) = 1$, dividing early is always exact and multiplies your safe 64-bit headroom. For \texttt{geometric\_sum}, binary exponentiation computes $r^{n+1}$ in $O(\log n)$ time, and dividing $(r^{n+1} - 1) / (r - 1)$ before multiplying by $a$ avoids avoidable overflow.
+
+\begin{lstlisting}[caption={Overflow-Safe Closed-Form Formulas, Binary Exponentiation, and C++23 Ranges}]
 #include <algorithm>
+#include <cstdint>
+#include <functional>
+#include <ranges>
 
-// 1. We take a 64-bit integer 'n'.
-// 2. We compute n * (n + 1) / 2 using 64-bit math to prevent overflow.
-// 3. We return the result.
+// Computes 1 + 2 + ... + n in O(1) time.
+// Divides the even factor by 2 first to double 64-bit overflow headroom.
 [[nodiscard]] constexpr std::int64_t sum_first_n(std::int64_t n) noexcept {
-    return n * (n + 1) / 2;
+    if (n <= 0) return 0;
+    return (n % 2 == 0) ? (n / 2) * (n + 1) : n * ((n + 1) / 2);
 }
 
-// 1. For contrast, here is the same sum computed in O(N) using C++23 ranges.
-// 2. We generate a lazy sequence from 1 to n using std::views::iota.
-// 3. We fold the sequence using std::ranges::fold_left with 0LL.
+// For contrast: O(N) lazy range fold using C++23 std::views::iota + fold_left.
 [[nodiscard]] constexpr std::int64_t sum_first_n_loop(std::int64_t n) noexcept {
-    auto r = std::views::iota(1LL, n + 1);
-    return std::ranges::fold_left(r, 0LL, std::plus<>{});
+    if (n <= 0) return 0;
+    auto seq = std::views::iota(std::int64_t{1}, n + 1);
+    return std::ranges::fold_left(seq, std::int64_t{0}, std::plus<>{});
 }
 
-// 1. We compute the sum of squares.
-// 2. We use 64-bit math. The numerator fits in 64 bits for n up to about 10^6.
-// 3. We divide by 6 at the very end.
+// Computes 1^2 + 2^2 + ... + n^2 in O(1) time.
+// Factors out 2 and 3 before multiplying to delay 64-bit overflow up to n ~ 3e6.
 [[nodiscard]] constexpr std::int64_t sum_squares(std::int64_t n) noexcept {
-    return n * (n + 1) * (2 * n + 1) / 6;
+    if (n <= 0) return 0;
+    std::int64_t a = n;
+    std::int64_t b = n + 1;
+    std::int64_t c = 2 * n + 1;
+    if (a % 2 == 0) a /= 2;
+    else b /= 2;
+    if (a % 3 == 0) a /= 3;
+    else if (b % 3 == 0) b /= 3;
+    else c /= 3;
+    return a * b * c;
 }
 
-// 1. Sum of cubes equals the square of the sum of integers.
-// 2. We compute sum_first_n(n) and then square it.
+// Computes 1^3 + 2^3 + ... + n^3 = (sum_first_n(n))^2 in O(1) time.
 [[nodiscard]] constexpr std::int64_t sum_cubes(std::int64_t n) noexcept {
-    std::int64_t s = sum_first_n(n);
+    if (n <= 0) return 0;
+    const std::int64_t s = sum_first_n(n);
     return s * s;
 }
 
-// 1. Geometric sum: a * (r^(n+1) - 1) / (r - 1) for r != 1.
-// 2. Uses a simple loop to compute r^(n+1) since n is typically small.
-// 3. Returns a * n when r == 1 (all terms equal a).
+// Computes sum_{i=0}^{n} a * r^i in O(log n) time via binary exponentiation.
+// Returns 0 for n < 0, and a * (n + 1) when r == 1 (all n + 1 terms equal a).
 [[nodiscard]] constexpr std::int64_t geometric_sum(
         std::int64_t a, std::int64_t r, std::int64_t n) noexcept {
+    if (n < 0) return 0;
     if (r == 1) return a * (n + 1);
-    std::int64_t r_power = 1;
-    for (std::int64_t i = 0; i <= n; ++i) r_power *= r;
-    return a * (r_power - 1) / (r - 1);
+    std::int64_t r_pow = 1;
+    std::int64_t base = r;
+    std::int64_t exp = n + 1;
+    while (exp > 0) {
+        if (exp & 1) r_pow *= base;
+        exp >>= 1;
+        if (exp > 0) base *= base; // Skip unused final squaring to avoid overflow
+    }
+    // (r^(n+1) - 1) is always an exact integer multiple of (r - 1)
+    return a * ((r_pow - 1) / (r - 1));
 }
 \end{lstlisting}
 
-\subsection{What is a Prefix Sum?}
-A prefix sum array is the algorithmic equivalent of a running total. Imagine you are a cashier keeping a receipt tape. After each item, the tape shows the total so far. If a customer asks ``What was the subtotal for items 3 through 7?'', you do not need to re-scan those items. You just look at the running total after item 7 and subtract the running total after item 2. The difference is exactly the cost of items 3 through 7.
+\subsection{1D Prefix Sum Data Structure}
 
-In code, you build one array of running totals in $O(N)$ time, and from then on, every range sum query is answered in $O(1)$ --- just one subtraction.
+The constructor accepts a lightweight \texttt{std::span<const int>} (compatible with \texttt{std::vector}, \texttt{std::array}, or C-arrays with zero copies) and builds the $(N + 1)$-element running total in $O(N)$ time. Every inclusive query $[L, R]$ validates bounds safely and returns in $O(1)$.
 
-\subsection{1D Prefix Sum Array}
-A prefix sum array takes an input vector and produces a new vector of size $N+1$. We build it by keeping a running total. We provide a helper function to answer queries so the user does not have to remember the index math.
-
-\begin{lstlisting}[caption={1D Prefix Sum Data Structure}]
-#include <vector>
-#include <span>
+\begin{lstlisting}[caption={1D Prefix Sum Data Structure with Safe Bounds Checking}]
+#include <cstddef>
 #include <cstdint>
+#include <span>
 #include <stdexcept>
+#include <vector>
 
 class PrefixSum1D {
 private:
-    std::vector<std::int64_t> prefix;
+    std::vector<std::int64_t> prefix_;
 
 public:
-    // 1. Pre-condition: We receive a view over integers (std::span accepts std::vector, std::array, etc.).
-    // 2. We create a prefix array with one extra element initialized to 0.
-    // 3. We loop through the input, adding the current element to the running total.
-    // 4. Post-condition: The prefix array is ready for O(1) queries.
-    explicit PrefixSum1D(std::span<const int> data) {
-        prefix.resize(data.size() + 1, 0);
+    explicit PrefixSum1D(std::span<const int> data)
+        : prefix_(data.size() + 1, 0) {
         for (std::size_t i = 0; i < data.size(); ++i) {
-            prefix[i + 1] = prefix[i] + data[i];
+            prefix_[i + 1] = prefix_[i] + data[i];
         }
     }
 
-    // 1. Pre-condition: User requests sum from 'left' index to 'right' index (inclusive).
-    // 2. We use the formula P[right+1] - P[left] to get the sum instantly.
-    // 3. Post-condition: The sum is returned.
+    // Returns sum of data[left..right] inclusive in O(1) time.
     [[nodiscard]] std::int64_t query(std::size_t left, std::size_t right) const {
-        if (left > right || right >= prefix.size() - 1) {
-            throw std::out_of_range("Invalid range");
+        if (left > right || right >= prefix_.size() - 1) {
+            throw std::out_of_range("Invalid 1D query range");
         }
-        return prefix[right + 1] - prefix[left];
+        return prefix_[right + 1] - prefix_[left];
     }
 };
 \end{lstlisting}
 
-\subsection{What is a 2D Prefix Sum?}
-A 2D prefix sum extends the running-total idea to a grid. In a matrix, cell $(r+1, c+1)$ in the prefix table stores the sum of all cells in the rectangular subgrid from the top-left $(0, 0)$ down to $(r, c)$.
+\subsection{2D Prefix Sum Data Structure}
 
-To compute any subgrid sum from row $r_1$ to $r_2$ and column $c_1$ to $c_2$, we take the entire rectangle from $(0,0)$ to $(r_2, c_2)$, subtract the rectangle above $r_1$, subtract the rectangle left of $c_1$, and add back the top-left corner that was subtracted twice (the inclusion-exclusion principle).
+Storing \texttt{rows\_} and \texttt{cols\_} explicitly keeps bounds validation completely immune to unsigned \texttt{r2 + 1} wrap-around and validates that the input matrix is rectangular. Construction runs in $O(R \cdot C)$ time; every rectangular query runs in $O(1)$ time via four lookups.
 
-\subsection{2D Prefix Sum Array}
-\begin{lstlisting}[caption={2D Prefix Sum Data Structure}]
-#include <vector>
+\begin{lstlisting}[caption={2D Prefix Sum Data Structure (Wrap-Safe Inclusion-Exclusion)}]
+#include <cstddef>
 #include <cstdint>
 #include <stdexcept>
+#include <vector>
 
 class PrefixSum2D {
 private:
-    std::vector<std::vector<std::int64_t>> prefix;
+    std::size_t rows_ = 0;
+    std::size_t cols_ = 0;
+    std::vector<std::vector<std::int64_t>> prefix_;
 
 public:
-    // 1. Pre-condition: We receive a 2D grid of numbers.
-    // 2. We allocate (rows + 1) x (cols + 1) filled with zeros.
-    // 3. We fill prefix table using inclusion-exclusion.
-    // 4. Post-condition: Subgrid queries are ready for O(1) evaluation.
     explicit PrefixSum2D(const std::vector<std::vector<int>>& grid) {
         if (grid.empty() || grid[0].empty()) return;
-        const std::size_t rows = grid.size();
-        const std::size_t cols = grid[0].size();
-        prefix.assign(rows + 1, std::vector<std::int64_t>(cols + 1, 0));
+        rows_ = grid.size();
+        cols_ = grid[0].size();
+        prefix_.assign(rows_ + 1, std::vector<std::int64_t>(cols_ + 1, 0));
 
-        for (std::size_t r = 0; r < rows; ++r) {
-            for (std::size_t c = 0; c < cols; ++c) {
-                prefix[r + 1][c + 1] = grid[r][c]
-                                     + prefix[r][c + 1]
-                                     + prefix[r + 1][c]
-                                     - prefix[r][c];
+        for (std::size_t r = 0; r < rows_; ++r) {
+            if (grid[r].size() != cols_) {
+                throw std::invalid_argument("Grid rows must have equal length");
+            }
+            for (std::size_t c = 0; c < cols_; ++c) {
+                prefix_[r + 1][c + 1] = grid[r][c]
+                                      + prefix_[r][c + 1]
+                                      + prefix_[r + 1][c]
+                                      - prefix_[r][c];
             }
         }
     }
 
-    // 1. Query rectangle from (r1, c1) to (r2, c2) inclusive.
-    // 2. Uses inclusion-exclusion in O(1) time.
+    // Returns sum of subgrid [r1..r2, c1..c2] inclusive in O(1) time.
     [[nodiscard]] std::int64_t query(std::size_t r1, std::size_t c1,
                                      std::size_t r2, std::size_t c2) const {
-        if (prefix.empty() || r1 > r2 || c1 > c2 || r2 + 1 >= prefix.size() || c2 + 1 >= prefix[0].size()) {
-            throw std::out_of_range("Invalid 2D range");
+        if (rows_ == 0 || r1 > r2 || c1 > c2 || r2 >= rows_ || c2 >= cols_) {
+            throw std::out_of_range("Invalid 2D query range");
         }
-        return prefix[r2 + 1][c2 + 1]
-             - prefix[r1][c2 + 1]
-             - prefix[r2 + 1][c1]
-             + prefix[r1][c1];
+        return prefix_[r2 + 1][c2 + 1]
+             - prefix_[r1][c2 + 1]
+             - prefix_[r2 + 1][c1]
+             + prefix_[r1][c1];
     }
 };
 \end{lstlisting}
 
-\subsection{What is a Difference Array?}
-A difference array allows you to apply bulk additions to any subsegment $[L, R]$ in $O(1)$ time without iterating over the segment. Instead of updating every number, you place two ``markers'': $+v$ at the start index $L$, and $-v$ at index $R+1$.
-
-When all updates are finished, running a single cumulative sum (a prefix scan) pushes each $+v$ forward across its range until the $-v$ cancels it out. This replaces $Q \times O(N)$ loops with $Q \times O(1)$ marker placements followed by a single $O(N)$ prefix pass.
-
 \subsection{Difference Array Implementation}
-\begin{lstlisting}[caption={Difference Array for O(1) Range Updates}]
-#include <vector>
+
+This class supports both zero-initialized arrays (\texttt{DifferenceArray(n)}) and pre-populated base arrays (\texttt{DifferenceArray(base)}). Because \texttt{diff\_} allocates $N + 1$ entries, updating up to the very last element \texttt{right = n - 1} safely writes to the sentinel slot \texttt{diff\_[n]}.
+
+\begin{lstlisting}[caption={Difference Array Supporting Zero and Non-Zero Initial Arrays}]
+#include <cstddef>
 #include <cstdint>
+#include <span>
 #include <stdexcept>
+#include <vector>
 
 class DifferenceArray {
 private:
-    std::vector<std::int64_t> diff;
-    std::size_t n;
+    std::size_t n_;
+    std::vector<std::int64_t> diff_;
 
 public:
-    // 1. Pre-condition: Initialize difference array for an array of size n.
-    // 2. Allocate n + 1 cells initialized to 0 to safely support R + 1 indexing.
-    // 3. Post-condition: Ready for O(1) range updates.
-    explicit DifferenceArray(std::size_t size) : diff(size + 1, 0), n(size) {}
+    // Start from an all-zero array of length 'size'.
+    explicit DifferenceArray(std::size_t size) : n_(size), diff_(size + 1, 0) {}
 
-    // 1. Pre-condition: Add value 'val' to all elements in [left, right] inclusive.
-    // 2. Mark +val at left boundary, -val at right + 1 boundary.
-    // 3. Post-condition: Range updated in O(1) time.
-    void add_range(std::size_t left, std::size_t right, std::int64_t val) {
-        if (left > right || right >= n) {
-            throw std::out_of_range("Invalid range for update");
+    // Start from an existing base array in O(N) time.
+    explicit DifferenceArray(std::span<const int> base)
+        : n_(base.size()), diff_(base.size() + 1, 0) {
+        if (!base.empty()) {
+            diff_[0] = base[0];
+            for (std::size_t i = 1; i < n_; ++i) {
+                diff_[i] = static_cast<std::int64_t>(base[i]) - base[i - 1];
+            }
         }
-        diff[left] += val;
-        diff[right + 1] -= val;
     }
 
-    // 1. Pre-condition: All range updates have been applied.
-    // 2. Run a prefix sum pass over the difference array.
-    // 3. Post-condition: Returns the final reconstructed array of size n.
+    // Adds 'val' to every element in [left, right] inclusive in O(1) time.
+    void add_range(std::size_t left, std::size_t right, std::int64_t val) {
+        if (left > right || right >= n_) {
+            throw std::out_of_range("Invalid range for update");
+        }
+        diff_[left] += val;
+        diff_[right + 1] -= val;
+    }
+
+    // Reconstructs the final array after all updates in one O(N) prefix pass.
     [[nodiscard]] std::vector<std::int64_t> reconstruct() const {
-        std::vector<std::int64_t> result(n, 0);
+        std::vector<std::int64_t> result(n_, 0);
         std::int64_t running = 0;
-        for (std::size_t i = 0; i < n; ++i) {
-            running += diff[i];
+        for (std::size_t i = 0; i < n_; ++i) {
+            running += diff_[i];
             result[i] = running;
         }
         return result;
@@ -617,113 +1232,305 @@ public:
 };
 \end{lstlisting}
 
+% ============================================================================
 \section{Problem Pattern Recognition}
-\subsection*{Step 1: What does the problem ask for?}
-\begin{itemize}
-   \item \textbf{``Find the total sum of this range''}: Points to Prefix Sums if the array is static.
-   \item \textbf{``Apply many interval additions, then query the final array''}: Points to Difference Arrays.
-   \item \textbf{``Sum numbers that follow a strict pattern (like multiples)''}: Points to Arithmetic Series formulas.
-   \item \textbf{``Sum powers of a number''}: Points to Geometric Series formulas.
-\end{itemize}
+% ============================================================================
 
-\subsection*{Step 2: What is the key constraint?}
-\begin{itemize}
-   \item \textbf{Number of Queries:} If you need to sum a range once, a simple loop is fine. If you have $10^5$ queries, you absolutely must use Prefix Sums.
-   \item \textbf{Range Updates vs Point Queries:} If you must update intervals repeatedly in batch, use a Difference Array ($O(1)$ update, $O(N)$ rebuild).
-   \item \textbf{Value of $N$:} If you need the sum of $10^{12}$ items, you cannot afford a loop at all. You must find a closed-form formula. A computer does about $10^8$ operations per second.
-\end{itemize}
+Before coding, run this three-step check to separate $O(1)$ math formulas from $O(N)$ precomputation tools and dynamic tree structures.
 
-\subsection*{Quick Reference Table}
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
-\hline
-\textbf{Keywords in the Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
-``sum of a subsegment'', ``total cost between days X and Y'' & Add a contiguous slice of an array many times. & Prefix Sums \\ \hline
-``add $v$ to range $[L, R]$'', ``interval additions'', ``batch range updates'' & Apply batch interval additions without loops. & Difference Array \\ \hline
-``sum of all multiples'', ``sum of an arithmetic progression'' & The elements grow by a constant addition. & Arithmetic Sum Formula \\ \hline
-``double each day'', ``powers of 2'', ``sum of geometric progression'' & The elements grow by a constant multiplication. & Geometric Sum Formula \\ \hline
-``sum of terms like 1/(x(x+1))'', ``fraction series'' & The terms might cancel each other out. & Telescoping Sum \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begin{calloutbox}{Three-Step Summation \& Range Triage}
+\begin{enumerate}
+    \item \textbf{What does the problem ask for?}
+    \begin{itemize}
+        \item Repeated subarray/submatrix sums on \emph{fixed} data $\to$ \textbf{1D / 2D Prefix Sums}.
+        \item Many batch interval additions followed by a final readout $\to$ \textbf{Difference Array}.
+        \item Sum of evenly spaced numbers, multiples, or squares/cubes $\to$ \textbf{Arithmetic / Power Sum Formula}.
+        \item Sum of doubling quantities or compound ratios $\to$ \textbf{Geometric Series}.
+    \end{itemize}
+    \item \textbf{Do updates and queries interleave online?} If every range update is followed by immediate queries, static prefix sums and difference arrays are too slow---step up to a \textbf{Fenwick Tree} or \textbf{Segment Tree} (Module 16).
+    \item \textbf{Is $N$ too large for a direct loop?}
+    \begin{itemize}
+        \item $N \le 10^7$ with $1$ query $\to$ Direct $O(N)$ loop is fine.
+        \item $N > 10^8$ $\to$ Loop will time out; you \emph{must} derive a closed-form formula or $O(\log N)$ method.
+        \item $N \le 10^6$ and $Q \ge 10^5$ $\to$ $O(QN)$ fails; use $O(N + Q)$ Prefix Sums or Difference Arrays.
+    \end{itemize}
+\end{enumerate}
+\end{calloutbox}
 
-\subsection*{Step 3: Is the input too large for a direct solution?}
-\begin{itemize}
-   \item If $N \le 10^7$, a direct loop in C++ takes less than a second.
-   \item If $N > 10^8$, a loop will Time Out on most coding platforms. You must use math formulas.
-   \item If array sizes are $> 10^6$ and queries are $> 10^5$, Prefix Sums are required.
-\end{itemize}
+\subsection*{Keyword-to-Tool Lookup Table}
 
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.1cm}}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``sum of subarray $[L, R]$'', ``total between days $X$ and $Y$'' & Many range queries on a static 1D array & 1D Prefix Sum ($O(1)$ query) \\
+``sum of a rectangle / submatrix'', ``grid block sum'' & Many rectangular queries on a static 2D grid & 2D Prefix Sum (4-corner formula) \\
+``add $v$ to range $[L, R]$'', ``interval bookings'', ``peak overlap'' & Batch interval updates, then read final array & Difference Array ($O(1)$ update) \\
+``sum of all multiples'', ``evenly spaced'', ``staircase rows'' & Terms change by a constant addition $+d$ & Arithmetic Series Formula \\
+``double each step'', ``powers of $r$'', ``compound growth'' & Terms change by a constant multiplier $\times r$ & Geometric Series Formula \\
+``sum of $\frac{1}{k(k+1)}$'', ``adjacent terms cancel'' & Partial fractions or consecutive differences & Telescoping Sum \\
+``missing number in $0..N$'' & Compare expected Gauss sum to actual sum & $\frac{n(n+1)}{2} - \sum A[i]$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
+
+% ============================================================================
 \section{Summary and Complexity Reference}
+% ============================================================================
 
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
-\hline
-\textbf{Task / Operation} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
-Direct Loop Sum & $O(N)$ & $O(1)$ & One-off sums where $N$ is small enough to run quickly. \\ \hline
-Arithmetic Sum Formula & $O(1)$ & $O(1)$ & Summing sequences that grow by constant additions. \\ \hline
-Geometric Sum Formula & $O(1)$ & $O(1)$ & Summing sequences that grow by constant multiplications. \\ \hline
-Build 1D Prefix Sum & $O(N)$ & $O(N)$ & Once at the start of a program to prepare for 1D range queries. \\ \hline
-1D Prefix Sum Query & $O(1)$ & $O(1)$ & Whenever you need to sum a subarray in $O(1)$ time. \\ \hline
-Build 2D Prefix Sum & $O(R \times C)$ & $O(R \times C)$ & Once at the start to prepare a grid for submatrix queries. \\ \hline
-2D Prefix Sum Query & $O(1)$ & $O(1)$ & Whenever you need to sum a rectangular submatrix in $O(1)$ time. \\ \hline
-Difference Array Range Update & $O(1)$ & $O(1)$ & Apply $+v$ to range $[L, R]$ during batch updates. \\ \hline
-Difference Array Reconstruct & $O(N)$ & $O(N)$ & Single prefix pass to recover final modified array. \\ \hline
-\end{tabularx}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.8cm} >{\centering\arraybackslash}p{1.6cm} >{\centering\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Task / Operation}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Space}} & \textcolor{primaryblue}{\textbf{Use When}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Direct loop sum & $O(N)$ & $O(1)$ & One-off sum over arbitrary data with $N \le 10^7$ \\
+Arithmetic / squares / cubes sum & $O(1)$ & $O(1)$ & Evenly spaced terms, multiples, or power sums \\
+Geometric sum (binary exp.) & $O(\log n)$ & $O(1)$ & Exact integer sum $\sum_{i=0}^{n} ar^i$ for general $r$ \\
+Geometric sum ($r = 2$ bit shift) & $O(1)$ & $O(1)$ & Powers of two: $(2^{n+1} - 1)$ when $n < 62$ \\
+Infinite geometric sum ($|r| < 1$) & $O(1)$ & $O(1)$ & Convergent real-valued series $\frac{a}{1 - r}$ \\
+Telescoping sum collapse & $O(1)$ & $O(1)$ & Terms split into canceling differences $f(i) - f(i+1)$ \\
+Build 1D Prefix Sum & $O(N)$ & $O(N)$ & Once upfront to prepare a static 1D array \\
+1D Prefix Sum query $[L, R]$ & $O(1)$ & $O(1)$ & Answering any subarray sum via $P[R+1] - P[L]$ \\
+Build 2D Prefix Sum & $O(R \cdot C)$ & $O(R \cdot C)$ & Once upfront to prepare a static 2D matrix \\
+2D Prefix Sum query & $O(1)$ & $O(1)$ & Any rectangular block sum via 4 lookups \\
+Difference Array range update & $O(1)$ & $O(1)$ & Recording $+v$ on $[L, R]$ during batch updates \\
+Difference Array reconstruct & $O(N)$ & $O(N)$ & Single prefix scan to recover final modified array \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
-\section{Glossary of Terms and Symbols}
+% ============================================================================
+\section{Glossary}
+% ============================================================================
 
-\subsection{Core Concepts}
+\subsection*{Core Concepts}
 \begin{itemize}
-    \item \textbf{Sequence:} An ordered list of numbers. Like an array.
-    \item \textbf{Series:} The total value you get when you add the numbers of a sequence together.
-    \item \textbf{Arithmetic Progression:} A sequence where the gap between consecutive numbers is constant (for example, $+3$ each time).
-    \item \textbf{Geometric Progression:} A sequence where you multiply by a constant to get the next number (for example, $\times 2$ each time).
-    \item \textbf{Prefix Sum:} An array where each position stores the running total of all elements up to that point.
-    \item \textbf{Difference Array:} An auxiliary array that records boundary changes ($+v$ at start, $-v$ after end) so that a prefix sum recovers interval modifications in $O(N)$ total time.
-    \item \textbf{Telescoping Sum:} A sum where adjacent parts of the terms cancel each other out, leaving only the ends.
-    \item \textbf{Closed-form Formula:} A mathematical expression that gives the answer directly without needing a loop.
-    \item \textbf{Common Difference:} The amount you add in an arithmetic progression.
+    \item \textbf{Arithmetic Progression (AP):} A sequence where the difference $d$ between every adjacent pair of terms is constant (e.g., $5, 8, 11, 14$).
+    \item \textbf{Closed-Form Formula:} A direct mathematical expression that computes an answer in $O(1)$ (or $O(\log n)$) operations without looping through every term.
+    \item \textbf{Common Difference ($d$):} The fixed number added at each step of an arithmetic progression.
+    \item \textbf{Common Ratio ($r$):} The fixed factor multiplied at each step of a geometric progression.
+    \item \textbf{Convergent Series:} An infinite series whose partial sums approach a finite limit (e.g., geometric series with $|r| < 1$).
+    \item \textbf{Difference Array:} An auxiliary array of size $N + 1$ storing consecutive changes so batch range additions take $O(1)$ each and one $O(N)$ prefix scan restores the full array.
+    \item \textbf{Geometric Progression (GP):} A sequence where each term is multiplied by a fixed ratio $r$ to obtain the next term.
+    \item \textbf{Inclusion-Exclusion (2D):} Computing a subgrid sum by subtracting top and left prefix strips and adding back their doubly subtracted top-left overlap.
+    \item \textbf{Prefix Sum:} A cumulative running-total array (padded with $P[0] = 0$) enabling $O(1)$ range sum queries.
+    \item \textbf{Sequence:} An ordered list of numbers indexed by position (like an array).
+    \item \textbf{Series:} The sum obtained by adding the terms of a sequence together.
+    \item \textbf{Telescoping Sum:} A series whose terms rewrite as differences so that all interior pieces cancel, leaving only the outer boundary terms.
 \end{itemize}
 
-\subsection{Mathematical Symbols}
+\subsection*{Mathematical Symbols}
 \begin{itemize}
-    \item $a$: Usually the first term in a sequence.
-    \item $d$: The common difference in an arithmetic sequence.
-    \item $r$: The constant ratio in a geometric sequence.
-    \item $n$: The number of terms we are dealing with.
-    \item $a_n$: The $n$-th specific item in a sequence.
-    \item $S_n$: The sum of the first $n$ terms of a sequence ($a_1 + a_2 + \dots + a_n$).
-    \item $P[i]$: The $i$-th entry in a prefix sum array, storing the cumulative sum up to index $i-1$.
-    \item $D[i]$: An entry in a difference array storing the net change starting at index $i$.
-    \item $\sum$ (Sigma): The mathematical symbol for a loop that adds things up. $\sum_{i=1}^{n}$ means "start $i$ at 1, go up to $n$, and add them all together".
-    \item $|r|$ (Absolute Value): The distance of a number from zero, ignoring its sign. $|-0.5| = 0.5$.
+    \item $a$ or $a_1$: First term of a sequence ($a_0$ when 0-indexed, as in geometric series).
+    \item $a_n$: The $n$-th term of a sequence.
+    \item $d$: Common difference in an arithmetic progression ($a_{i+1} - a_i$).
+    \item $r$: Common ratio in a geometric progression ($a_{i+1} / a_i$).
+    \item $|r|$: Absolute value (magnitude ignoring sign; e.g., $|-0.5| = 0.5$).
+    \item $n$ or $N$: Number of terms or length of an array; $R, C$ denote grid rows and columns.
+    \item $S_n$: Partial sum of the first $n$ terms ($a_1 + a_2 + \dots + a_n$).
+    \item $\sum_{i=L}^{R} f(i)$ \textbf{(Sigma):} Summation loop adding $f(i)$ for every integer $i$ from $L$ to $R$ inclusive.
+    \item $A[i]$: Element at 0-based index $i$ in the original input array.
+    \item $P[k]$ (1D) / $P[r][c]$ (2D): Prefix sum storing the total of the first $k$ items (or top-left $r \times c$ cells).
+    \item $D[i]$: Entry $i$ in a difference array storing the net boundary change starting at index $i$.
+    \item $[L, R]$: Closed (inclusive) index interval containing every integer $i$ with $L \le i \le R$.
+    \item $\lfloor x \rfloor$: Floor function---largest integer $\le x$ (e.g., $\lfloor 999 / 5 \rfloor = 199$).
 \end{itemize}
 
+% ============================================================================
 \section{Further Reading}
+% ============================================================================
 
-\subsection{Free Online Resources (Start Here)}
+\subsection*{Free Online Resources (Start Here)}
 \begin{itemize}
-    \item \textbf{cp-algorithms.com}: Excellent resource for competitive programming techniques, including prefix sums and 2D prefix sums.
-    \item \textbf{Project Euler (projecteuler.net)}: Problem 1 (Multiples of 3 and 5) and Problem 6 (Sum square difference) are perfect practice for these formulas.
-    \item \textbf{Art of Problem Solving (AoPS)} (\texttt{artofproblemsolving.com/wiki}) --- Free wiki with beginner-friendly explanations of sequences and series, written by the competitive mathematics community.
+    \item \textbf{CP-Algorithms} (\texttt{cp-algorithms.com}) --- Clean reference implementations and intuition for 1D/2D prefix sums, difference arrays, and their dynamic generalizations (Fenwick and Segment Trees).
+    \item \textbf{Project Euler} (\texttt{projecteuler.net}) --- Problem 1 (Multiples of 3 and 5) and Problem 6 (Sum Square Difference) directly test the closed-form formulas in Section~2.
+    \item \textbf{Art of Problem Solving Wiki} (\texttt{artofproblemsolving.com/wiki}) --- Beginner-friendly visual derivations of arithmetic, geometric, and telescoping sums.
+    \item \textbf{Brilliant.org} (\texttt{brilliant.org}) --- Interactive visual lessons on Gauss pairing, geometric convergence, and discrete sums.
 \end{itemize}
 
-\subsection{Books (When You Are Ready to Go Deeper)}
+\subsection*{Books (When You Are Ready to Go Deeper)}
 \begin{itemize}
-    \item \textbf{Concrete Mathematics by Ronald Graham, Donald Knuth, and Oren Patashnik}: A fantastic but challenging book covering discrete math, sums, and sequences. Good for intermediate to advanced readers.
-    \item \textbf{Competitive Programming 4 by Steven Halim}: Covers algorithmic uses of sequences and sums, including complex range queries.
+    \item K.\ H.\ Rosen, \emph{Discrete Mathematics and Its Applications} --- Clear undergraduate introduction to sequences, summations, and closed forms. (Beginner--Intermediate)
+    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- Practical algorithmic uses of prefix sums, 2D grids, and range query data structures. (Intermediate)
+    \item R.\ L.\ Graham, D.\ E.\ Knuth, O.\ Patashnik, \emph{Concrete Mathematics} --- Deep, witty masterclass on sums, discrete calculus, perturbation methods, and finite differences. (Advanced)
 \end{itemize}
 
+% ============================================================================
+\section*{Practice Sheet: Mixed Pen-and-Paper Drills}
+\addcontentsline{toc}{section}{Practice Sheet: Mixed Pen-and-Paper Drills}
+\markboth{Practice Sheet: Mixed Pen-and-Paper Drills}{}
+% ============================================================================
+
+\noindent
+Solve these six mixed cold-start drills on scratch paper \emph{without} flipping back to the chapter. Each drill exercises a different thinking mode with zero hints about which section applies.
+
+\begin{tryitbox}{Triage}{Cold-Start Tool Selection}{ex9}
+Pick the right tool and state the time complexity for each disguised scenario:
+\begin{enumerate}
+    \item \textbf{Telemetry Dashboard:} Given $N = 2 \times 10^5$ fixed per-second CPU readings, answer $Q = 10^5$ queries for the \emph{average} CPU reading over any window $[L, R]$.
+    \item \textbf{Cloud Peak Load:} Across $N = 10^5$ one-minute slots (initially $0$), $5 \times 10^4$ scheduled jobs each consume $+c_j$ cores during $[s_j, e_j]$. Find the single busiest minute.
+    \item \textbf{Giant Sum:} Compute the exact sum of all multiples of $7$ between $1$ and $10^{12}$ (assume 128-bit or modular output).
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Trace}{Six-Element Difference Array Reconstruction}{ex10}
+Start with an all-zero array of length $N = 6$ (indices $0 \dots 5$) and a difference array $D$ of length $7$. Apply two batch range updates in order:
+\begin{enumerate}
+    \item Add $+4$ to $[1, 4]$.
+    \item Add $-2$ to $[3, 5]$.
+\end{enumerate}
+Write the updated array $D[0 \dots 6]$ and reconstruct the final array $A[0 \dots 5]$ via a prefix scan.
+\end{tryitbox}
+
+\begin{tryitbox}{Debug}{Two Bugs in a 2D Prefix Sum Query}{ex11}
+Spot \textbf{both} bugs in this \texttt{PrefixSum2D::query} method:
+\begin{lstlisting}[numbers=none, xleftmargin=4pt, framexleftmargin=4pt]
+std::int64_t query(std::size_t r1, std::size_t c1,
+                   std::size_t r2, std::size_t c2) const {
+    if (r2 + 1 >= prefix_.size() || c2 + 1 >= prefix_[0].size())
+        return 0;                                         // Bug 1
+    return prefix_[r2 + 1][c2 + 1] - prefix_[r1][c2 + 1]
+         - prefix_[r2 + 1][c1] - prefix_[r1][c1];         // Bug 2
+}
+\end{lstlisting}
+Explain why each line can produce wrong answers or memory errors, and write the fixed version.
+\end{tryitbox}
+
+\begin{tryitbox}{Twist}{Difference Array on a Non-Zero Starting Array}{ex12}
+An array starts as $A_0 = [10, 12, 15, 11, 14]$. Convert $A_0$ into a difference array $D[0 \dots 5]$, apply $+5$ to $[1, 3]$ and $-3$ to $[0, 2]$, and reconstruct the final modified array $A$.
+\end{tryitbox}
+
+\begin{tryitbox}{Edge Cases}{Boundary Stress Test}{ex13}
+Evaluate every boundary case cleanly without guessing:
+\begin{enumerate}
+    \item A 1-element query $[i, i]$ on a 1D prefix array $P$: what does $P[i + 1] - P[i]$ equal?
+    \item Geometric sum $\sum_{i=0}^{n} 5 \cdot (-1)^i$ for $n = 4$ and for $n = 5$.
+    \item Arithmetic progression with $a_1 = 9,\; d = 0,\; n = 100$: what is $S_{100}$?
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Derive}{Sum of the First $n$ Even Squares}{ex14}
+Find a closed-form formula for $E(n) = 2^2 + 4^2 + 6^2 + \dots + (2n)^2$ by factoring out a constant and reusing $\sum_{i=1}^{n} i^2$. Verify your formula by hand at $n = 3$.
+\end{tryitbox}
+
+% ============================================================================
+\section*{Solutions to Pen-and-Paper Exercises}
+\addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
+\markboth{Solutions to Pen-and-Paper Exercises}{}
+% ============================================================================
+
+\begin{enumerate}
+    \item \label{sol:ex1}\textbf{Exercise 1 (Trace) --- Arithmetic Progression Jump \& Membership:}
+    Here $a_1 = 7,\; d = 5$.
+    \textbf{(1)} $a_{25} = 7 + 24 \times 5 = \mathbf{127}$.
+    \textbf{(2)} Check $(142 - 7) / 5 = 135 / 5 = 27$ (exact integer, so \textbf{yes}): $n - 1 = 27 \implies n = \mathbf{28}$ ($a_{28} = 7 + 27 \times 5 = 142$).
+    \trapnote{Computing $a_{25} = 7 + 25 \times 5 = 132$ (off-by-one hop) or reporting $n = 27$ instead of $n = 28$.}
+
+    \item \label{sol:ex2}\textbf{Exercise 2 (Derive) --- Shifted Range Sum Two Ways:}
+    Number of terms in $[11, 30]$ is $n = 30 - 11 + 1 = 20$.
+    \textbf{(1)} Gauss pairing: $\frac{20}{2}(11 + 30) = 10 \times 41 = \mathbf{410}$.
+    \textbf{(2)} Prefix difference: $\frac{30 \times 31}{2} - \frac{10 \times 11}{2} = 465 - 55 = \mathbf{410}$.
+    \trapnote{Computing $n = 30 - 11 = 19$ (missing the inclusive $+1$) or subtracting $S(11)$ instead of $S(10)$, which accidentally drops $11$ itself.}
+
+    \item \label{sol:ex3}\textbf{Exercise 3 (Edge Cases) --- Empty Sums \& 32-Bit Overflow:}
+    \textbf{(1)} At $n = 0$, both sums are $0$; at $n = 1$, both equal $1$.
+    \textbf{(2)} At $n = 1{,}023$: $1023 \times 1024 \times 2047 = 2{,}144{,}338{,}944 \le 2^{31}-1$. At $n = \mathbf{1{,}024}$: $1024 \times 1025 \times 2049 = 2{,}150{,}630{,}400 > 2{,}147{,}483{,}647$, overflowing 32-bit \texttt{int} even though the true sum ($358{,}438{,}400$) fits easily!
+    \trapnote{Assuming a formula is safe in 32-bit \texttt{int} just because the \emph{final} answer fits---always check the largest \emph{intermediate} product before division.}
+
+    \item \label{sol:ex4}\textbf{Exercise 4 (Twist) --- Three Geometric Series:}
+    \textbf{(1)} $a = 5, r = 3, n = 4 \implies 5 \cdot \frac{3^5 - 1}{3 - 1} = 5 \cdot \frac{242}{2} = \mathbf{605}$.
+    \textbf{(2)} $a = 8, r = -\frac{1}{2}$ ($|r| < 1$) $\implies \frac{8}{1 - (-1/2)} = \frac{8}{3/2} = \mathbf{\frac{16}{3}}$.
+    \textbf{(3)} $r = 1$ with $n = 9$ means $10$ terms (indices $0..9$): $7 \times 10 = \mathbf{70}$.
+    \trapnote{Writing $1 - \frac{1}{2} = \frac{1}{2}$ instead of $1 - (-\frac{1}{2}) = \frac{3}{2}$ in (2), or multiplying $7 \times 9 = 63$ instead of $7 \times 10$ in (3).}
+
+    \item \label{sol:ex5}\textbf{Exercise 5 (Trace) --- 1D Prefix Array with Negatives:}
+    $P = [0,\; 4,\; 2,\; 9,\; 6,\; 11]$.
+    Queries: $[1, 3] = P[4] - P[1] = 6 - 4 = \mathbf{2}$;\;
+    $[0, 4] = P[5] - P[0] = 11 - 0 = \mathbf{11}$;\;
+    $[2, 2] = P[3] - P[2] = 9 - 2 = \mathbf{7}$.
+    \trapnote{Evaluating $P[R] - P[L]$ instead of $P[R + 1] - P[L]$, which drops the right endpoint $A[R]$.}
+
+    \item \label{sol:ex6}\textbf{Exercise 6 (Trace) --- $3 \times 3$ Prefix Table \& 4-Corner Query:}
+    Row 0: $[0, 0, 0, 0]$;\; Row 1: $[0, 2, 3, 6]$;\; Row 2: $[0, 6, 7, 12]$;\; Row 3: $[0, 7, 13, 20]$.
+    Query $(1, 1)$ to $(2, 2)$: $P[3][3] - P[1][3] - P[3][1] + P[1][1] = 20 - 6 - 7 + 2 = \mathbf{9}$ (direct check: $0 + 2 + 5 + 2 = 9$).
+    \trapnote{Forgetting to \emph{subtract} $P[r][c]$ while building $P[r+1][c+1]$, which inflates every interior cell and ruins every query.}
+
+    \item \label{sol:ex7}\textbf{Exercise 7 (Derive) --- Step-2 Telescoping Collapse:}
+    Expanding $(1 - \frac{1}{3}) + (\frac{1}{2} - \frac{1}{4}) + (\frac{1}{3} - \frac{1}{5}) + \dots + (\frac{1}{n-1} - \frac{1}{n+1}) + (\frac{1}{n} - \frac{1}{n+2})$, cancellation skips by $2$, so \textbf{two} positive terms survive at the start and \textbf{two} negative terms survive at the end:
+    \[
+        \frac{3}{2} - \frac{1}{n + 1} - \frac{1}{n + 2}.
+    \]
+    At $n = 10$: $\frac{3}{2} - \frac{1}{11} - \frac{1}{12} = \frac{198 - 12 - 11}{132} = \mathbf{\frac{175}{132}}$.
+    \trapnote{Keeping only $1 - \frac{1}{n+2}$ by reflex from the step-1 telescoping case---always write out 3 terms at each end to see the cancellation stride!}
+
+    \item \label{sol:ex8}\textbf{Exercise 8 (Debug) --- Two Difference Array Bugs:}
+    \textbf{Bug 1:} \texttt{diff} has size \texttt{n} instead of \texttt{n + 1}, so updating \texttt{right = n - 1} would write out of bounds at \texttt{diff[n]} once Bug 2 is fixed.
+    \textbf{Bug 2:} \texttt{diff[right] -= val} cancels $+5$ at index $3$ instead of index $4$, so \texttt{add\_range(1, 3, +5)} yields $[0, 5, 5, 0]$ instead of $[0, 5, 5, 5]$.
+    \textbf{Fix:} Allocate \texttt{diff(n + 1, 0)} and write \texttt{diff[right + 1] -= val;}.
+    \trapnote{Forgetting that $[L, R]$ is \emph{inclusive}---the update stays active through $R$ and turns off at $R + 1$.}
+
+    \item \label{sol:ex9}\textbf{Exercise 9 (Triage) --- Cold-Start Tool Selection:}
+    \textbf{(1)} 1D Prefix Sum: $O(N)$ build, $O(1)$ per query (divide $P[R+1]-P[L]$ by $R-L+1$).
+    \textbf{(2)} Difference Array: $O(Q + N)$ total (mark $+c_j$ at $s_j$ and $-c_j$ at $e_j+1$, then take the maximum during the $O(N)$ prefix scan).
+    \textbf{(3)} Arithmetic Series closed form: $O(1)$ time ($k = \lfloor 10^{12}/7 \rfloor$, sum $= 7 \cdot \frac{k(k+1)}{2}$).
+    \trapnote{Trying to use a Prefix Sum for (2) when the problem actually asks for batch range \emph{updates}, or writing a loop for (3) when $N = 10^{12}$.}
+
+    \item \label{sol:ex10}\textbf{Exercise 10 (Trace) --- 6-Element Difference Array:}
+    After $+4$ on $[1, 4]$: $D = [0, 4, 0, 0, 0, -4, 0]$.
+    After $-2$ on $[3, 5]$: $D = [0,\; 4,\; 0,\; -2,\; 0,\; -4,\; 2]$ (note $-(-2) = +2$ at $D[6]$!).
+    Prefix scan over $i = 0 \dots 5$: $A = [\mathbf{0,\; 4,\; 4,\; 2,\; 2,\; -2}]$.
+    \trapnote{Writing $D[6] \mathrel{-}= 2$ instead of $D[6] \mathrel{-}= (-2)$ when subtracting a negative update value $v = -2$.}
+
+    \item \label{sol:ex11}\textbf{Exercise 11 (Debug) --- Two 2D Prefix Query Bugs:}
+    \textbf{Bug 1:} If \texttt{r2 == SIZE\_MAX}, \texttt{r2 + 1} wraps to \texttt{0}, bypassing the bounds check (also fails to check empty \texttt{prefix\_} or \texttt{r1 > r2 || c1 > c2}). Fix: check \texttt{rows\_ == 0 || r1 > r2 || c1 > c2 || r2 >= rows\_ || c2 >= cols\_}.
+    \textbf{Bug 2:} The last term is \texttt{- prefix\_[r1][c1]} instead of \texttt{+ prefix\_[r1][c1]}, subtracting corner $A$ a third time instead of adding it back!
+    \trapnote{Memorizing ``three minuses'' in 2D queries---the sign alternates ($+ - - +$) because two subtractions double-remove the top-left overlap.}
+
+    \item \label{sol:ex12}\textbf{Exercise 12 (Twist) --- Non-Zero Base Difference Array:}
+    Initial $D = [10,\; 2,\; 3,\; -4,\; 3,\; 0]$.
+    After $+5$ on $[1, 3]$ ($D[1] \mathrel{+}= 5,\; D[4] \mathrel{-}= 5$): $[10,\; 7,\; 3,\; -4,\; -2,\; 0]$.
+    After $-3$ on $[0, 2]$ ($D[0] \mathrel{+}= (-3),\; D[3] \mathrel{-}= (-3)$): $D = [7,\; 7,\; 3,\; -1,\; -2,\; 0]$.
+    Reconstructed array: $A = [\mathbf{7,\; 14,\; 17,\; 16,\; 14}]$.
+    \trapnote{Setting $D = A_0$ directly instead of $D[i] = A_0[i] - A_0[i - 1]$---that would take a prefix sum of $A_0$ on top of the updates!}
+
+    \item \label{sol:ex13}\textbf{Exercise 13 (Edge Cases) --- Boundary Stress Test:}
+    \textbf{(1)} $P[i + 1] - P[i] = A[i]$ (single element).
+    \textbf{(2)} $n = 4$ (5 terms: $5 - 5 + 5 - 5 + 5$) $= \mathbf{5}$; $n = 5$ (6 terms) $= \mathbf{0}$.
+    \textbf{(3)} $d = 0$ means $100$ copies of $9$: $S_{100} = 100 \times 9 = \mathbf{900}$.
+    \trapnote{Assuming $r = -1$ is invalid in the finite geometric formula---only $r = 1$ divides by zero; $r = -1$ gives denominator $-2$ and works cleanly!}
+
+    \item \label{sol:ex14}\textbf{Exercise 14 (Derive) --- Sum of First $n$ Even Squares:}
+    Factor out $2^2 = 4$:
+    \[
+        E(n) = \sum_{i=1}^{n} (2i)^2 = 4 \sum_{i=1}^{n} i^2 = 4 \cdot \frac{n(n + 1)(2n + 1)}{6} = \mathbf{\frac{2n(n + 1)(2n + 1)}{3}}.
+    \]
+    Verify at $n = 3$: $2^2 + 4^2 + 6^2 = 4 + 16 + 36 = 56$, and $\frac{2 \times 3 \times 4 \times 7}{3} = 56$.
+    \trapnote{Factoring out $2$ instead of $2^2 = 4$ from $(2i)^2$---exponents distribute over products.}
+\end{enumerate}
+
+% ============================================================================
 \section*{Version History}
 \addcontentsline{toc}{section}{Version History}
+\markboth{Version History}{}
+% ============================================================================
 
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Date} & \textbf{Change} \\ \hline
-2026-09-27 & Document created. \\ \hline
-2026-10-03 & Audited and refactored against skill guidelines; added intuition diagrams, worked steps, C++23 ranges, and corrected table layouts. \\ \hline
-2026-10-03 & Fixed empty grid segfault in 2D Prefix Sum query method. \\ \hline
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\bfseries}l >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Date}} & \textcolor{primaryblue}{\textbf{Change}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+2026-09-27 & Document created. \\
+2026-10-03 & Audited and refactored against skill guidelines; added intuition diagrams, worked steps, C++23 ranges, and corrected table layouts. \\
+2026-10-03 & Fixed empty grid segfault in 2D Prefix Sum query method. \\
+2026-11-25 & Overhauled to canonical print-first layout; fixed BOM, overview/TOC order, enumerate jump, line breaks, and C++23 bugs (functional header, binary-exp geometric sum, wrap-safe 2D bounds); embedded Gauss Pairing and fixed Diagrams 8, 9, 32; added 4-beat Origin Stories, local notation boxes, 8 inline drills, 6-drill Practice Sheet, and solutions with trap notes. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
+\endgroup
+\end{center}
 
 \end{document}

@@ -19,6 +19,8 @@ To keep token usage predictable and reviews manageable, execute this plan in sho
   - Completed `learning_materials/01.combinatorics_permutations.tex` across all applicable phases (Phase 1.3 bug fixes + Phase 3 embedded & visually verified fixed Diagrams 4, 40, and new Catalan Reflection Principle diagram + Phase 4.3 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
 - **Session 4 (Done — `2026-11-25`):**
   - Completed `learning_materials/09.string_algorithms.tex` full stub expansion and overhaul across all applicable phases (Phase 2.1 rewrite & expansion + Phase 3 fixed & embedded Diagrams 29--31 + Phase 4.11 canonical print-first layout, 4-beat Origin Stories, local `notationbox` table, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics) and synced Module 09 into `learning_materials/00.problem_solving_guide.tex`.
+- **Session 5 (Done — `2026-11-25`):**
+  - Completed `learning_materials/04.sequences_and_series.tex` across all applicable phases (Phase 1.6 bug fixes + Phase 3 embedded & visually verified Gauss Pairing diagram and fixed Diagrams 8, 9, and 32 + Phase 4.6 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
 - **Ongoing Sessions (1 Module per Fresh Session):**
   - Follow the exact same single-module vertical slice (Phases 1/2 + 3 + 4 + verification + Progress Matrix update + commit) for whichever module the user selects next.
   - Suggested order: `11` → `12` → `00.problem_solving_guide.tex` → `10` → `09` → `06` → `07` → (`08`, `05`, `04`, `03`, `02`, `01`, `00.cpp_reference.tex` on demand) → delete `learning_materials/diagrams_review.tex` once all diagrams are migrated → Phase 5 (`13`–`16`) just-in-time.
@@ -127,10 +129,10 @@ Fix every confirmed factual error, C++23 compile/UB defect, formatting glitch, a
   - [ ] Replace `i * i <= n` with `i <= n / i` (prevents signed overflow UB, L520/542/545/579/708); fix `INT64_MIN` negation UB in `gcd`/`lcm` (L605/614); qualify `std::int64_t`.
   - [ ] Rename misleading "Linear Sieve" (`FastFactorizer`, L396/L656) to "Smallest Prime Factor (SPF) Sieve" (or implement true $O(N)$ Euler linear sieve), fix narrowing cast on L674, add Segmented Sieve C++23 code, and fix Segmented Sieve complexity row (L803).
   - [ ] Deduplicate Example 6.5 (identical to Sec 5.4) and pick fresh numbers for Examples 6.2 & 6.3.
-- [ ] **1.6 `learning_materials/04.sequences_and_series.tex`:**
-  - [ ] Strip UTF-8 BOM; move `\begin{abstract}...\end{abstract}` **before** `\tableofcontents \newpage` (L82–90).
-  - [ ] Fix broken enumerate jump 8 → 10 (L244–250), missing `\\` line breaks (L128–131), `1x1` math formatting (L166), and orphaned `"region D"` text (L370 — resolved alongside D32 in Phase 3).
-  - [ ] Add missing `#include <functional>` in `sum_first_n_loop` (L450), fix `geometric_sum` comment/complexity mismatch (L469–472 vs L664), and fix `r2 + 1` unsigned wrap risk in `PrefixSum2D::query` (L561).
+- [x] **1.6 `learning_materials/04.sequences_and_series.tex`:** *(Completed 2026-11-25)*
+  - [x] Strip UTF-8 BOM; move `\begin{abstract}...\end{abstract}` **before** `\tableofcontents \newpage` (replaced with canonical Title Banner + `overviewbox` before `\tableofcontents`).
+  - [x] Fix broken enumerate jump 8 → 10 (L244–250), missing `\\` line breaks (L128–131), `1x1` math formatting (L166), and orphaned `"region D"` text (L370 — resolved alongside D32 in Phase 3).
+  - [x] Add missing `#include <functional>` in `sum_first_n_loop` (L450), fix `geometric_sum` comment/complexity mismatch (upgraded to $O(\log n)$ binary exponentiation with accurate `r == 1` comment and complexity row), and fix `r2 + 1` unsigned wrap risk in `PrefixSum2D::query` (L561).
 - [ ] **1.7 `learning_materials/05.recursion_and_backtracking.tex`:**
   - [ ] Strip UTF-8 BOM; restore stripped generic backtracking template (L157–159).
   - [ ] Fix `solveNQueens(0)` crash (`std::bad_alloc` on `2 * n - 1`, L498–507); replace C-style casts (L391/417/444); guard `factorial` domain (L333); add remaining-elements pruning to `backtrackCombinations` (L450).
@@ -234,7 +236,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 - [x] Embed D4, D40 → `01.combinatorics_permutations.tex` *(fixed D4 slot-label clearance, D40 platform/UTF-8/double-scaling/border collisions, and added Catalan Reflection Principle diagram; visually verified 2026-11-25)*.
 - [ ] Embed D5, D38 → `02.modular_arithmetic.tex` (replaces missing L110 figure).
 - [ ] Embed D6, D7, D39 → `03.number_theory.tex` (replaces empty L390–394).
-- [ ] Embed D8, D9, D32 → `04.sequences_and_series.tex` (resolves orphaned `"region D"`).
+- [x] Embed D8, D9, D32 → `04.sequences_and_series.tex` *(added Gauss Pairing diagram; fixed D8 arrow label routing, D9 title clearance, and D32 double-scaling, panel padding, and `c_2+1`/`r_2+1` prefix boundary labels; resolves orphaned `"region D"`; visually verified 2026-11-25)*.
 - [ ] Embed D10, D11, D12 + Subsets/N-Queens `forest` trees → `05.recursion_and_backtracking.tex`.
 - [ ] Embed D13, D14, D33, D34 + Coin Change & Edit Distance diagrams → `06.dynamic_programming.tex`.
 - [ ] Embed D15 (3-way), D16, D17, D18, D35, D36 + DFS 3-color → `07.graph_algorithms.tex`.
@@ -265,10 +267,10 @@ Apply the **Pedagogical Blueprint** (4-Beat Origin Stories, local `notationbox` 
   - *Origin Stories:* Why divisors pair around $\sqrt{N}$; why Eratosthenes starts marking at $p^2$; why $\gcd(a,b) = \gcd(b, a \bmod b)$ (rectangle tiling); why $O(N \log\log N)$ is nearly linear; why Segmented Sieve works without $O(R)$ RAM.
   - *Local `notationbox`:* Divisibility ($a \mid b$), $\gcd/\operatorname{lcm}$, Prime Factorization ($\prod p_i^{a_i}$), $\phi(n)$.
   - *Pen & Paper Drills (3):* Factorize 360 and count divisors via $\prod(a_i+1)$, trace Sieve on $[20, 35]$, compute $\phi(36)$ via formula and verify by listing coprimes.
-- [ ] **4.6 `04.sequences_and_series.tex`:**
+- [x] **4.6 `04.sequences_and_series.tex`:** *(Completed 2026-11-25)*
   - *Origin Stories:* Gauss pairing intuition for arithmetic sums; shift-and-subtract derivation for geometric sums (no magic formula!); why prefix sums trade $O(N)$ build for $O(1)$ queries; why difference arrays are the discrete derivative (inverse of prefix sum).
   - *Local `notationbox`:* Summation ($\sum$), Arithmetic/Geometric params ($a_1, d, r$), Prefix/Diff arrays ($P[i], D[i]$).
-  - *Pen & Paper Drills (3):* Apply 2 range updates to a 6-element difference array and reconstruct; compute a 2D submatrix sum using the 4-corner formula; collapse a telescoping sum.
+  - *Pen & Paper Drills (8 inline + 6 Practice Sheet):* Apply 2 range updates to a 6-element difference array and reconstruct; compute a 2D submatrix sum using the 4-corner formula; collapse a step-2 telescoping sum; plus full 6-mode inline & Practice Sheet coverage with trap diagnostics.
 - [ ] **4.7 `05.recursion_and_backtracking.tex`:**
   - *Origin Stories:* Why recursion is literally an implicit stack; how "Choose → Explore → Undo" avoids copying state; why pruning cuts exponential trees early; why sorting + `i > start && nums[i] == nums[i-1]` skips duplicate branches without a hash set.
   - *Local `notationbox`:* State tuple, Branching factor ($b$), Depth ($d$), Complexity ($O(b^d)$).
@@ -325,7 +327,7 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `01.combinatorics_permutations.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `02.modular_arithmetic.tex` | `[ ]` | N/A | `[ ]` (D5, D38) | `[ ]` | `[ ]` | `[ ]` |
 | `03.number_theory.tex` | `[ ]` | N/A | `[ ]` (D6, D7, D39) | `[ ]` | `[ ]` | `[ ]` |
-| `04.sequences_and_series.tex` | `[ ]` | N/A | `[ ]` (D8, D9, D32) | `[ ]` | `[ ]` | `[ ]` |
+| `04.sequences_and_series.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `05.recursion_and_backtracking.tex` | `[ ]` | N/A | `[ ]` (D10–12 + 2 `forest`) | `[ ]` | `[ ]` | `[ ]` |
 | `06.dynamic_programming.tex` | `[ ]` | N/A | `[ ]` (D13–14, D33–34 + 2) | `[ ]` | `[ ]` | `[ ]` |
 | `07.graph_algorithms.tex` | `[ ]` | N/A | `[ ]` (D15–18, D35–36 + 1) | `[ ]` | `[ ]` | `[ ]` |
