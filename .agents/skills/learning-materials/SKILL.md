@@ -104,42 +104,56 @@ Every document is written for a reader who:
 
 ---
 
-## Pedagogical Writing Style ("Zero Unanswered 'But Why?'", Anti-Wall-of-Text)
+## Print-First & Screen-Friendly Rule (Strict)
 
-Every monograph must actively build intuition rather than presenting formulas or algorithms out of thin air, while remaining crisp and scannable:
+Every learning material must work equally well **when printed on paper** and **when read on screen**:
 
-1. **The 4-Beat "Origin Story" (For Every Major Algorithm / Technique, ~12–15 lines total)**:
-   - **The Pain Point** (1–2 sentences): What breaks or scales poorly with the obvious brute-force idea?
-   - **The "Aha!" Observation** (1–2 sentences): What structural property, symmetry, or invariant enables the shortcut? Explain *where the idea came from*.
-   - **Concrete Mini-Example First, Formula Second**: Walk through a tiny 3-to-5-element numerical case *before* writing the general recurrence, sum, or identity so every symbol already maps to concrete numbers.
-   - **When It Breaks** (1–2 sentences): Provide one sharp counterexample proving why a precondition matters (e.g., negative edges break Dijkstra; `{1, 3, 4}` breaks greedy coin change).
-2. **Local Symbol Mini-Tables (`notationbox`)**:
-   - Keep the complete Glossary in Section 9, **and** place a compact 3-column `\begin{notationbox}` right at the start of any subsection that uses 2+ domain symbols so readers never have to flip to the back of the PDF to decode notation.
-3. **Pen-and-Paper "Try It Yourself" Drills (`tryitbox`) + Answer Key**:
-   - Include **2–4 short (2–3 minute) pen-and-paper checkpoints** per monograph after key subsections, using small concrete inputs (4–6 elements).
-   - Rotate across three high-retention formats: **Hand-Trace Drill**, **Break-It Challenge** (construct a small counterexample), and **Predict-Before-Reading**.
-   - **Zero inline spoilers**: Place brief, step-by-step solutions in an unnumbered **Solutions to Pen-and-Paper Exercises** section right before Version History, cross-linked with `\hyperlink` / `\hypertarget`.
-4. **Anti-Wall-of-Text Discipline**:
-   - **Paragraph cap**: Keep prose paragraphs to **4–5 lines (~60–80 words)** maximum. Break longer explanations into numbered steps, one-line **Loop Invariant** callouts, compact `Naive vs. Insight` mini-tables, or diagrams.
+- **No web-only navigation cues**: Never rely on clickable links such as `[Check Answer]` as the primary way to navigate. Instead, number every exercise (`Exercise 1`, `Exercise 2`, ...) and display a quiet printed page reference (`Answer: p.~\pageref*{sol:exN}` in muted gray).
+- **Pencil-ready workspace**: Include blank fill-in mini-tables or dotted pencil lines (`\pencillines{N}`) inside Pen & Paper exercises so a reader with a printed copy can work directly on the sheet.
+- **Per-section page breaks**: Every major `\section` (and unnumbered final sections like Solutions and Version History) starts on a fresh page (`\renewcommand{\sectionbreak}{\clearpage}` right after `\tableofcontents`) with running headers and `Page N` footers (`fancyhdr`).
+- **Keep short cards intact**: Callout, formula, warning, and exercise boxes must NOT split awkwardly across page boundaries (omit `breakable` on short boxes).
+- **Grayscale-safe color harmony**: Use cohesive, muted semantic colors (dark high-contrast text, soft `3%–14%` fills, thick left accent bars, and distinct line styles solid vs. dashed) so pages stay crisp even on a black-and-white laser printer.
+
+---
+
+## Pedagogical Writing Style ("Zero Unanswered 'But Why?'", De-Alienating Math, Anti-Wall-of-Text)
+
+Every guide must actively build intuition rather than presenting formulas or algorithms out of thin air, while remaining crisp, colorful, and scannable:
+
+1. **The 4-Beat "Origin Story" with Semantic Lead-In Labels (For Every Major Algorithm / Technique)**:
+   - Use colored lead-in macros (`\painbeat`, `\ahabeat`, `\examplebeat`, and `watchoutbox`) so readers instantly see the narrative arc instead of uniform black paragraphs:
+     - **The Problem** (`\painbeat`, amber): What breaks or scales poorly with the obvious brute-force idea?
+     - **The "Aha!" Insight** (`\ahabeat`, teal): What structural property, symmetry, or invariant makes the shortcut possible?
+     - **Mini-Example First** (`\examplebeat`, blue): Walk through a tiny 3-to-5-element numerical case *before* writing any general formula so every symbol maps to concrete numbers.
+     - **When It Breaks** (`watchoutbox`, amber): One sharp counterexample proving why a precondition matters.
+2. **De-Alienating Equations & Symbols (`formulabox` + Plain-English Prose)**:
+   - Wrap key equations in a `\begin{formulabox}` that pairs the formula immediately with a **"Read this as:"** plain-English translation.
+   - Avoid unnecessary formal math notation in prose (prefer plain English words and concrete arrays like `[1, 3, 5, 8]` over dense symbols like `$\forall$`, `$\not<$`, or `$\langle s_0, \dots \rangle$`).
+3. **Local Symbol Mini-Tables (`notationbox`)**:
+   - Keep the complete Glossary in Section 8, **and** place a clean borderless-vertical `booktabs` `\begin{notationbox}` right at the start of any subsection that introduces 2+ domain symbols.
+4. **Abundant Pen-and-Paper Practice (`tryitbox`) + Answer Key**:
+   - Include **6–9 short (1–3 minute) pen-and-paper exercises** distributed throughout the guide right after key concepts, subsections, and patterns.
+   - Rotate across high-retention formats: **Concept Check**, **Fill-In Table**, **Hand-Trace Drill**, **Break-It Challenge**, **Predict Complexity**, and **Pattern Triage**.
+   - **Zero inline spoilers & zero clickable web links**: Number every exercise automatically (`Exercise 1`, `Exercise 2`, ...), show a quiet printed page reference (`Answer: p.~\pageref*{sol:exN}`), include blank tables or `\pencillines{N}` for printed copies, and place concise step-by-step solutions with `\label{sol:exN}` in **Solutions to Pen-and-Paper Exercises** right before Version History.
+5. **Anti-Wall-of-Text Discipline**:
+   - **Paragraph cap**: Keep prose paragraphs to **4–5 lines (~60–80 words)** maximum. Break longer explanations into numbered steps, colored `\invariantbeat{...}` one-liners, compact `Naive vs. Shortcut` tables, or diagrams.
 
 ---
 
 ## Mandatory Document Structure
 
-Ten sections, strictly in this order:
+Ten sections, strictly in this order (with every `\section` from Section 1 onward starting on a fresh page):
 
-1. **Abstract** — 3–5 plain-English sentences. What the document covers and
-   who it is for. No academic jargon. No banned words.
+1. **Title Banner & "What You'll Learn" Overview Card (`overviewbox`)** — Modern tinted title banner (no academic `\begin{abstract}` or "Technical Monograph" framing) followed by a friendly 3–5 sentence `overviewbox` summarizing what the guide covers and who it is for, then `\tableofcontents`.
 2. **Foundations / Core Concepts** — Start from absolute zero. Concepts in
    increasing complexity. Every concept has a concrete real-world or programming
    analogy.
 3. **Main Topic Sections** — Sub-topics in logical order. Every subsection
    opens with a local `notationbox` when introducing 2+ symbols, uses the 4-beat
-   Origin Story, and contains at least one fully worked step-by-step example
-   with concrete numbers.
+   Origin Story + `formulabox` / `watchoutbox`, contains a worked step-by-step
+   example, and ends with a pencil-ready `tryitbox`.
 4. **Key Algorithmic Patterns** — Why naive/brute-force fails → what the
-   efficient technique is (plain English first) → at least one fully worked
-   trace on a small input.
+   efficient technique is (plain English first) → visual diagrams and traces on small inputs.
 5. **Worked Examples** — 4–6 distinct examples covering different techniques.
    Every step numbered and explained so it can be reproduced on paper.
 6. **C++ Implementations** — Modern C++23, `std::ranges`/`std::views` where
@@ -148,10 +162,10 @@ Ten sections, strictly in this order:
    non-trivial algorithm.
 7. **Problem Pattern Recognition** — Three-step decision process (What does the
    problem ask for? → What is the key constraint? → Is input too large for direct
-   solution?) plus a 3-column table:
-   `| Keywords in the Problem | Plain English Meaning | Tool to Use |`.
-8. **Summary and Complexity Reference** — 4-column table:
-   `| Task | Time | Space | Use When |`.
+   solution?) plus a modern `booktabs` 3-column table (`Keywords in the Problem`,
+   `Plain English Meaning`, `Tool to Use`) and a quick Pattern Triage exercise.
+8. **Summary and Complexity Reference** — Modern `booktabs` 4-column table:
+   `Task / Operation`, `Time`, `Space`, `Use When`.
 9. **Glossary** — Two subsections: *Core Concepts* and *Mathematical Symbols*.
    Every symbol and domain term used in the document must be defined here.
 10. **Further Reading** — Free online resources first (e.g. `cp-algorithms.com`,
@@ -160,21 +174,22 @@ Ten sections, strictly in this order:
 
 ### Solutions to Pen-and-Paper Exercises (Required When `tryitbox` Is Used)
 
-When a monograph contains `\begin{tryitbox}` checkpoints, include an unnumbered
+When a guide contains `\begin{tryitbox}` checkpoints, include an unnumbered
 `\section*{Solutions to Pen-and-Paper Exercises}` (added to the table of
-contents) placed immediately **after Further Reading** and **before Version
-History**. Each solution uses `\hypertarget{sol:<id>}{...}` matching its
-exercise's `\hyperlink{sol:<id>}{[Check Answer]}` and gives a concise,
-verifiable step-by-step check. It is not counted among the ten sections above.
+contents, starting on its own fresh page) placed immediately **after Further
+Reading** and **before Version History**. Each solution uses `\label{sol:<id>}`
+matching its exercise's printed `Answer: p.~\pageref*{sol:<id>}` reference and
+gives a concise, verifiable step-by-step check. It is not counted among the ten
+sections above.
 
 ### Version History (Required Final Section)
 
-Every document ends with a **Version History** section, placed after Further
-Reading (and after Solutions to Pen-and-Paper Exercises, if present) and before
-`\end{document}`. It is an unnumbered section that still appears in the table
-of contents. It is not counted among the ten sections above.
+Every document ends with a **Version History** section (on its own fresh page),
+placed after Further Reading (and after Solutions to Pen-and-Paper Exercises, if
+present) and before `\end{document}`. It is an unnumbered section that still
+appears in the table of contents. It is not counted among the ten sections above.
 
-- It is a two-column table: **Date** and **Change**.
+- It is a modern `booktabs` two-column table: **Date** and **Change**.
 - Dates use the ISO format `YYYY-MM-DD`.
 - Creating the file is itself a change, so every document has at least one row:
   `Document created.`
@@ -193,8 +208,10 @@ of contents. It is not counted among the ten sections above.
 ## Canonical LaTeX Styling and Preamble
 
 Do not copy from or rely on any individual `.tex` file in the repository. Use
-the exact self-contained styling and preamble defined below for every learning
-material document.
+the exact self-contained modern print+screen preamble defined below for every
+learning material document (clean sans-serif Helvetica + `sfmath`, `titlesec`
+high-contrast banners + per-section page breaks, `tcolorbox` semantic cards,
+`booktabs` borderless-vertical tables, and `fancyhdr` running headers/footers).
 
 ```latex
 \documentclass[11pt,a4paper]{article}
@@ -202,13 +219,23 @@ material document.
 % --- Core LaTeX Packages ---
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[margin=1in]{geometry}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[margin=0.85in, headheight=15pt]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{xcolor}
-\usepackage{listings}
-\usepackage{hyperref}
+\usepackage[helvet]{sfmath}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{xltabular}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[explicit]{titlesec}
+\usepackage[skins,breakable]{tcolorbox}
+\usepackage{listings}
+\usepackage{hyperref}
 \usepackage{graphicx}
 
 % --- Optional Diagram Packages (uncomment when document contains diagrams) ---
@@ -216,13 +243,72 @@ material document.
 % \usepackage{tikz}
 % \usetikzlibrary{arrows.meta,positioning,decorations.pathreplacing}
 
-% --- Unified Color Palette ---
+% --- Unified Print-Safe Color Palette ---
 \definecolor{primaryblue}{RGB}{24, 75, 140}
-\definecolor{codebg}{RGB}{248, 249, 250}
-\definecolor{codeframe}{RGB}{210, 215, 222}
-\definecolor{codegreen}{RGB}{40, 130, 60}
+\definecolor{accentteal}{RGB}{15, 118, 110}
+\definecolor{accentamber}{RGB}{180, 83, 9}
+\definecolor{accentred}{RGB}{185, 28, 28}
+\definecolor{codebg}{RGB}{246, 248, 250}
+\definecolor{codeframe}{RGB}{208, 215, 222}
+\definecolor{codegreen}{RGB}{34, 120, 58}
 \definecolor{codeblue}{RGB}{20, 90, 180}
-\definecolor{codegray}{RGB}{120, 120, 120}
+\definecolor{codegray}{RGB}{105, 115, 125}
+
+% --- Global Typography & Spacing ---
+\linespread{1.08}
+\renewcommand{\arraystretch}{1.35}
+\setlength{\tabcolsep}{7pt}
+\setlist[itemize]{itemsep=3pt, topsep=4pt, leftmargin=1.5em}
+\setlist[enumerate]{itemsep=4pt, topsep=4pt, leftmargin=1.6em}
+
+% --- Running Header & Footer (Screen + Print Navigation) ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{codegray}\textbf{<Document Title>}}
+\fancyhead[R]{\footnotesize\color{codegray}\nouppercase{\leftmark}}
+\fancyfoot[C]{\footnotesize\color{codegray}Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{codeframe}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{}}
+
+% --- Section & Subsection Styling (High-Contrast + Per-Section Page Breaks) ---
+\newcommand{\sectionbreak}{}
+
+\titleformat{\section}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {\colorbox{primaryblue}{\color{white}\bfseries\Large\;\thesection\;}\hspace{0.55em}#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+\titlespacing*{\section}{0pt}{4pt}{14pt}
+
+\titleformat{name=\section,numberless}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{primaryblue!90!black}}
+  {}
+  {0pt}
+  {\begin{tcolorbox}[
+      enhanced, colback=primaryblue!6, colframe=primaryblue!6,
+      borderline west={3.5pt}{0pt}{primaryblue},
+      sharp corners=west, arc=2pt,
+      left=8pt, right=8pt, top=5pt, bottom=5pt,
+      boxsep=0pt, before skip=0pt, after skip=0pt
+  ]\large\bfseries\color{primaryblue!90!black}\thesubsection\hspace{0.55em}#1\end{tcolorbox}}
+\titlespacing*{\subsection}{0pt}{18pt}{8pt}
+
+\titleformat{name=\subsection,numberless}[block]
+  {\normalsize\bfseries\color{accentteal}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{2pt}{\color{accentteal!40}\titlerule[0.7pt]}]
+\titlespacing*{\subsection}{0pt}{14pt}{6pt}
 
 % --- Canonical Shared TikZ Styles (uncomment alongside \usepackage{tikz}) ---
 % \tikzset{
@@ -245,51 +331,109 @@ material document.
     pdfauthor={Antigravity Engineering}
 }
 
-% --- Theorem & Definition Environments ---
+% --- Example Environment ---
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{example}{Example}[section]
 
-% --- Callout Box Environment ---
-\newenvironment{calloutbox}[1]{
-    \par\vspace{0.3cm}
-    \noindent\begin{tabular}{|p{0.96\textwidth}|}
-    \hline
-    \vspace{0.1cm}
-    \textbf{#1}\par\vspace{0.1cm}
-}{
-    \vspace{0.1cm}
-    \\ \hline
-    \end{tabular}
-    \vspace{0.3cm}\par
+% --- Semantic Narrative Beat Labels ---
+\newcommand{\painbeat}{\textbf{\color{accentamber}The Problem:} }
+\newcommand{\ahabeat}{\textbf{\color{accentteal}The ``Aha!'' Insight:} }
+\newcommand{\examplebeat}{\textbf{\color{primaryblue}Mini-Example First:} }
+\newcommand{\breaksbeat}{\textbf{\color{accentred}When It Breaks:} }
+\newcommand{\invariantbeat}[1]{\par\noindent\textbf{\color{accentteal}Loop Invariant (#1):} }
+
+% --- Modern Overview Card (Replaces Academic Abstract) ---
+\newtcolorbox{overviewbox}[1][What You'll Learn]{
+    enhanced, breakable,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
 }
 
-% --- Local Symbol Mini-Table Environment ---
+% --- Key Takeaway / Core Rule Box ---
+\newtcolorbox{calloutbox}[1]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Plain-English Formula Card (De-Alienates Math) ---
+\newtcolorbox{formulabox}[1][Formula in Plain English]{
+    enhanced,
+    colback=primaryblue!4, colframe=primaryblue!22,
+    borderline west={3.5pt}{0pt}{primaryblue},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=6pt, bottom=6pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\small\bfseries\color{primaryblue},
+    title={#1},
+    attach title to upper={\par\vspace{2pt}}
+}
+
+% --- Watch-Out / Edge-Case Warning Box ---
+\newtcolorbox{watchoutbox}[1][Watch Out --- When It Breaks]{
+    enhanced,
+    colback=accentamber!6, colframe=accentamber!30,
+    borderline west={3.5pt}{0pt}{accentamber},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentamber},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Local Symbol Mini-Table Environment (Modern Booktabs, Zero Vertical Grid) ---
 \newenvironment{notationbox}[1][Symbols Used Here]{
-    \par\vspace{0.2cm}
+    \par\vspace{0.15cm}
     \noindent\textbf{\small\color{primaryblue}#1}\par\vspace{0.1cm}
-    \noindent\footnotesize\tabularx{\textwidth}{|l|X|>{\raggedright\arraybackslash}p{3.6cm}|}
-    \hline
-    \textbf{Symbol} & \textbf{Plain-English Meaning} & \textbf{Example / Type} \\ \hline
+    \begingroup
+    \footnotesize
+    \rowcolors{2}{codebg}{white}
+    \noindent\tabularx{\textwidth}{>{\raggedright\arraybackslash\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.8cm}}
+    \arrayrulecolor{primaryblue}\toprule[1.1pt]
+    \rowcolor{primaryblue!10}
+    \textcolor{primaryblue}{\textbf{Symbol}} & \textcolor{primaryblue}{\textbf{Plain-English Meaning}} & \textcolor{primaryblue}{\textbf{Example / Type}} \\
+    \arrayrulecolor{codeframe}\midrule[0.6pt]
 }{
-    \endtabularx\normalsize
-    \vspace{0.25cm}\par
+    \arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+    \endtabularx
+    \endgroup
+    \vspace{0.2cm}\par
 }
 
-% --- Pen-and-Paper Try-It-Yourself Exercise Environment ---
-\newenvironment{tryitbox}[2]{
-    \par\vspace{0.25cm}
-    \noindent\begin{tabular}{|p{0.96\textwidth}|}
-    \hline
-    \vspace{0.05cm}
-    \textbf{\color{codegreen}Pen \& Paper --- Try It Yourself (#1)}\hfill{\footnotesize\hyperlink{sol:#2}{[Check Answer]}}\par\vspace{0.1cm}
-}{
-    \vspace{0.05cm}
-    \\ \hline
-    \end{tabular}
-    \vspace{0.25cm}\par
+% --- Print-First Pen-and-Paper Exercise Environment (Numbered + Page Ref, No Web Links) ---
+\newcounter{exercise}
+\newtcolorbox{tryitbox}[2]{
+    enhanced,
+    step=exercise,
+    colback=codegreen!3, colframe=codegreen!45,
+    colbacktitle=codegreen!14, coltitle=codegreen!85!black,
+    borderline west={3.5pt}{0pt}{codegreen},
+    arc=3pt, boxrule=0.6pt,
+    left=10pt, right=10pt, top=7pt, bottom=8pt,
+    toptitle=4pt, bottomtitle=4pt,
+    before skip=10pt, after skip=10pt,
+    fonttitle=\bfseries,
+    title={Pen \& Paper --- Exercise \theexercise: #1 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#2}}}
+}
+
+% --- Pencil Workspace Helper (Dotted Lines for Printed Copies; requires tikz/pgffor) ---
+\newcommand{\pencillines}[1]{%
+    \par\vspace{3pt}%
+    \foreach \n in {1,...,#1}{%
+        \noindent\textcolor{codegray!55}{\dotfill}\par\vspace{6pt}%
+    }%
 }
 
 % --- Modern C++ Code Listing Setup ---
@@ -298,13 +442,17 @@ material document.
     basicstyle=\footnotesize\ttfamily,
     keywordstyle=\color{codeblue}\bfseries,
     commentstyle=\color{codegreen}\itshape,
-    stringstyle=\color{orange!80!black},
+    stringstyle=\color{accentamber},
     numberstyle=\tiny\color{codegray},
     numbers=left,
     numbersep=8pt,
+    xleftmargin=14pt,
+    framexleftmargin=8pt,
     backgroundcolor=\color{codebg},
     frame=single,
     rulecolor=\color{codeframe},
+    aboveskip=8pt,
+    belowskip=10pt,
     breaklines=true,
     breakatwhitespace=true,
     tabsize=4,
@@ -312,64 +460,94 @@ material document.
     captionpos=b
 }
 
-% --- Title Block ---
-\title{\vspace{-1.5cm}\textbf{\Huge <Document Title>}\\[0.3cm]
-\Large <Document Subtitle>}
-\author{Technical Monograph}
-\date{\today}
-
 \begin{document}
 
-\maketitle
+% --- Modern Title Banner (No Academic Paper Abstract/Author Block) ---
+\thispagestyle{plain}
+\begin{tcolorbox}[
+    enhanced,
+    colback=primaryblue!6, colframe=primaryblue!20,
+    borderline west={5pt}{0pt}{primaryblue},
+    arc=4pt, boxrule=0.6pt,
+    left=14pt, right=14pt, top=12pt, bottom=12pt,
+    before skip=0pt, after skip=10pt
+]
+    {\footnotesize\bfseries\color{accentteal}MODULE XX \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
+    {\Huge\bfseries\color{primaryblue}<Document Title>}\\[5pt]
+    {\large\color{codegray}<Document Subtitle>}\\[6pt]
+    {\footnotesize\color{codegray}Updated \today\quad$\cdot$\quad Designed for both screen reading and printed pen-and-paper practice}
+\end{tcolorbox}
 
-\begin{abstract}
-\noindent
-<3-5 plain English sentences summarizing topic, scope, and audience>
-\end{abstract}
+\begin{overviewbox}[What You'll Learn]
+<3-5 plain-English sentences summarizing topic, scope, and audience>
+\end{overviewbox}
 
-\tableofcontents
-\newpage
+\vspace{2pt}
+{\setlength{\parskip}{1pt}\small\tableofcontents}
+
+% Every major section starts cleanly on a new page
+\renewcommand{\sectionbreak}{\clearpage}
 
 % Document sections follow here...
 
 % --- Solutions to Pen-and-Paper Exercises (include whenever tryitbox is used) ---
 % \section*{Solutions to Pen-and-Paper Exercises}
 % \addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
+% \markboth{Solutions to Pen-and-Paper Exercises}{}
 % \begin{enumerate}
-%     \item \hypertarget{sol:ex1}{\textbf{<Exercise Title>:}} <Concise verifiable solution.>
+%     \item \label{sol:ex1}\textbf{Exercise 1 --- <Exercise Title>:} <Concise verifiable solution.>
 % \end{enumerate}
 
 % --- Version History (always the last section of the document) ---
 \section*{Version History}
 \addcontentsline{toc}{section}{Version History}
+\markboth{Version History}{}
 
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Date} & \textbf{Change} \\ \hline
-<YYYY-MM-DD> & Document created. \\ \hline
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\bfseries}l >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Date}} & \textcolor{primaryblue}{\textbf{Change}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+<YYYY-MM-DD> & Document created. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
+\endgroup
+\end{center}
 
 \end{document}
 ```
 
-### Table Layout Conventions
+### Modern Table Layout Conventions (Zero Vertical Grid Lines)
+
+Never use 1999-style vertical grid lines (`|...|...|`) or cramped `\hline` borders in informational tables. Use `booktabs` (`\toprule`, `\midrule`, `\bottomrule`), a soft `\rowcolor{primaryblue!10}` header row, gentle `\rowcolors{2}{codebg}{white}` zebra striping, and explicit wrapping column widths (`>{\raggedright\arraybackslash}p{...}` / `X`) so wide columns never crush narrow ones. (Light gray cell grids are reserved strictly for blank pencil fill-in worksheets inside `tryitbox`.)
 
 - **Pattern Recognition Table**:
   ```latex
-  \begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
-  \hline
-  \textbf{Keywords in the Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
-  ... & ... & ... \\ \hline
-  \end{tabularx}
+  \begingroup\small\rowcolors{2}{codebg}{white}
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+  \arrayrulecolor{primaryblue}\toprule[1.2pt]
+  \rowcolor{primaryblue!10}
+  \textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+  \arrayrulecolor{codeframe}\midrule[0.6pt]
+  ... & ... & ... \\
+  \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+  \end{tabularx}\endgroup
   ```
-- **Complexity and Summary Table**:
+- **Complexity and Summary Table** (use `xltabular` when > 15 rows):
   ```latex
-  \begin{tabularx}{\textwidth}{|l|l|l|X|}
-  \hline
-  \textbf{Task / Operation} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
-  ... & ... & ... & ... \\ \hline
-  \end{tabularx}
+  \begingroup\small\rowcolors{2}{codebg}{white}
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.3cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\raggedright\arraybackslash}X}
+  \arrayrulecolor{primaryblue}\toprule[1.2pt]
+  \rowcolor{primaryblue!10}
+  \textcolor{primaryblue}{\textbf{Task / Operation}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Space}} & \textcolor{primaryblue}{\textbf{Use When}} \\
+  \arrayrulecolor{codeframe}\midrule[0.6pt]
+  ... & ... & ... & ... \\
+  \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+  \end{tabularx}\endgroup
   ```
 
 ---

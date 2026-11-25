@@ -11,10 +11,10 @@
 To keep token usage predictable and reviews manageable, execute this plan in short, single-module sessions:
 
 - **Session 1 (Done — `2026-11-24`):** Phase 0 foundation (`.agents/skills/learning-materials/SKILL.md` + `scripts/verify_learning_materials.py` + this plan).
-- **Session 2 (Gold-Standard Pilot — Done `2026-11-24`):**
-  - Completed `learning_materials/11.monotonic_stacks_and_queues.tex` across all applicable phases (Phase 1.11 bug fixes + Phase 3 embedded & visually verified Diagrams 22--24 + Phase 4.13 4-beat Origin Stories, local `notationbox` tables, 3 `tryitbox` pen-and-paper drills + Solutions appendix) and synced the Stock Span fix into `learning_materials/00.problem_solving_guide.tex`.
-  - Also fixed `notationbox` in `SKILL.md` to use `\tabularx` / `\endtabularx` (required by `tabularx` inside `\newenvironment`) with `>{\raggedright\arraybackslash}p{3.6cm}`.
-  - **Stopped after the pilot module** so the user can inspect the compiled PDF format before applying it to the remaining modules.
+- **Session 2 (Gold-Standard Pilot — Done `2026-11-24`, Redesigned `2026-11-25`):**
+  - Completed `learning_materials/11.monotonic_stacks_and_queues.tex` across all applicable phases (Phase 1.11 bug fixes + Phase 3 embedded & visually verified Diagrams 22--24 + Phase 4.13 Origin Stories, local `notationbox` tables, and expanded **9 pencil-ready `tryitbox` exercises** + Solutions appendix) and synced the Stock Span fix into `learning_materials/00.problem_solving_guide.tex`.
+  - Incorporated user PDF review feedback into both Module 11 and the canonical `SKILL.md` template: sans-serif typography (Helvetica + `sfmath`), modern Title Banner + `overviewbox` (replacing academic `Abstract`), automatic per-section page breaks (`\clearpage`), high-contrast colored section/subsection banners, borderless-vertical `booktabs` tables with wrapping columns, plain-English `formulabox`/`watchoutbox` cards, **Print-First rule** (no clickable `[Check Answer]` links; printed `Answer: p. XX` references + pencil fill-in workspace), and 3-pass `.aux`-stabilized PDF verification in `scripts/verify_learning_materials.py`.
+  - **Stopped after the pilot module** so the user can confirm the revised PDF format before applying it to the remaining modules.
 - **Ongoing Sessions (1 Module per Fresh Session):**
   - Follow the exact same single-module vertical slice (Phases 1/2 + 3 + 4 + verification + Progress Matrix update + commit) for whichever module the user selects next.
   - Suggested order: `11` → `12` → `00.problem_solving_guide.tex` → `10` → `09` → `06` → `07` → (`08`, `05`, `04`, `03`, `02`, `01`, `00.cpp_reference.tex` on demand) → delete `learning_materials/diagrams_review.tex` once all diagrams are migrated → Phase 5 (`13`–`16`) just-in-time.
@@ -29,69 +29,40 @@ Before starting any work item from this plan:
 2. **Batch per module when practical:** When working on an existing monograph `XX.<topic>.tex`, prefer completing its **Phase 1 (Bug Fixes) + Phase 3 (Diagram Integration) + Phase 4 (Pedagogical Upgrade)** in a single cohesive pass so the document is compiled, visually inspected, and gets one clean Version History entry instead of three separate churn cycles.
 3. **Mandatory Verification Gate before checking `[x]`:**
    - **Automated Hygiene & C++23 check:** Run `python3 scripts/verify_learning_materials.py learning_materials/XX.<topic>.tex --cpp` (verifies zero BOMs, zero raw Markdown/Unicode/platform names, Clean Directory Policy, and `g++ -std=c++23 -fsyntax-only -Wall -Wextra`).
-   - **Build & Selective Visual Inspection (Pass 4 of `SKILL.md`):** Run with `--pdf --render-diagrams <external_scratch_dir>` (or `--pages ...` for `notationbox`/`tryitbox` pages), inspect the rendered PNGs for collisions/overflows/color harmony, and delete temporary PNGs immediately afterward.
+   - **Build & Selective Visual Inspection (Pass 4 of `SKILL.md`):** Run with `--pdf --render-diagrams <external_scratch_dir>` (or `--pages ...` for `notationbox`/`tryitbox`/table pages), inspect the rendered PNGs for collisions/overflows/color harmony and exact page numbers, and delete temporary PNGs immediately afterward.
    - **Version History:** Append a single concise one-line entry (`YYYY-MM-DD | ...`) to the edited `.tex` file.
    - **Clean Directory Policy:** Confirm `learning_materials/` contains **only** `XX.<topic>.tex` (and compiled `.pdf` if kept locally; `.pdf` is gitignored). Never store scripts, plans, or scratch files inside `learning_materials/`.
 4. **Update this file:** Check off completed `[x]` boxes, record the date in the **Progress Matrix**, and note any newly discovered issues under the relevant phase.
 
 ---
 
-## Pedagogical Blueprint: Eliminating "But Why?" Without Walls of Text
+## Pedagogical & Visual Blueprint: Screen + Print Friendly, Zero "Alien Math"
 
-Every monograph upgrade (Phase 2, Phase 4, and all future modules in Phase 5) must follow these four concrete, anti-wall-of-text design rules:
+Every module upgrade (Phase 2, Phase 4, and all future modules in Phase 5) must follow the canonical design in `.agents/skills/learning-materials/SKILL.md`:
 
-### 1. The 4-Beat "Origin Story" Pattern (For Every Major Algorithm / Technique)
-Never introduce a formula, recurrence, or trick out of thin air. Structure each algorithm's motivation in four tight beats (~12–15 lines total):
-- **The Pain Point (1–2 sentences):** What breaks or blows up with the obvious brute-force idea?
-- **The "Aha!" Observation (1–2 sentences):** What structural property, symmetry, or invariant makes the shortcut possible? (*Where the algorithm actually came from.*)
-- **Concrete Mini-Example First, Formula Second:** Walk through a tiny 3-to-5-element numerical case *before* writing the general equation so every symbol maps to a number the reader just saw.
-- **When It Breaks (1–2 sentences):** One sharp counterexample showing *why* a precondition is non-negotiable (e.g., negative edges break Dijkstra; `{1, 3, 4}` breaks greedy coin change; symmetric `<` bounds double-count duplicate subarray minimums).
+### 1. Print-First & Modern Typography Discipline
+- **Works on paper AND screen:** No clickable `[Check Answer]` web links; use numbered exercises (`Exercise 1`, `Exercise 2`, ...) with quiet printed page references (`Answer: p.~\pageref*{sol:exN}`), running headers/footers (`fancyhdr`), and blank fill-in tables or `\pencillines{N}` for pencil practice.
+- **No academic paper framing:** Replace `\begin{abstract}` and `Technical Monograph` with a modern Title Banner + warm teal `overviewbox` (*"What You'll Learn"*).
+- **Clean sans-serif + clear visual hierarchy:** Helvetica (`helvet`) + matching `sfmath`, automatic `\clearpage` before every `\section`, bold blue section number badges + underline rules, and tinted left-accent subsection banners.
+- **Modern `booktabs` tables:** Zero vertical grid lines (`|...|`) on informational tables; use soft tinted headers (`primaryblue!10`), zebra striping (`codebg`), and explicit wrapping column widths (`p{...}` / `X`) so narrow pages never crush data.
 
-### 2. Local "Symbols Used Here" Mini-Tables (`notationbox`)
-Keep the comprehensive **Glossary** in Section 9, **and** place a compact 3-column inline notation box right at the top of any subsection that uses 2+ domain symbols so the reader never has to flip to the back of the PDF:
+### 2. The 4-Beat "Origin Story" + Plain-English Formula Cards
+Never introduce a formula, recurrence, or trick out of thin air. Structure each algorithm's motivation with colored lead-in tags (`\painbeat`, `\ahabeat`, `\examplebeat`, `watchoutbox`) and pair every key equation with a **`formulabox`** (*"Read this as: ..."*) so math never feels alien:
+- **The Problem (`\painbeat`, amber):** What breaks or blows up with the obvious brute-force idea?
+- **The "Aha!" Insight (`\ahabeat`, teal):** What structural property, symmetry, or invariant makes the shortcut possible?
+- **Mini-Example First (`\examplebeat`, blue):** Walk through a tiny 3-to-5-element numerical case *before* writing any general formula.
+- **When It Breaks (`watchoutbox`, amber):** One sharp counterexample showing *why* a precondition is non-negotiable.
 
-```latex
-% Canonical inline notation strip (in SKILL.md preamble)
-\newenvironment{notationbox}[1][Symbols Used Here]{
-    \par\vspace{0.2cm}
-    \noindent\textbf{\small\color{primaryblue}#1}\par\vspace{0.1cm}
-    \noindent\footnotesize\tabularx{\textwidth}{|l|X|>{\raggedright\arraybackslash}p{3.6cm}|}
-    \hline
-    \textbf{Symbol} & \textbf{Plain-English Meaning} & \textbf{Example / Type} \\ \hline
-}{
-    \endtabularx\normalsize
-    \vspace{0.25cm}\par
-}
-```
+### 3. Local "Symbols Used Here" Mini-Tables (`notationbox`)
+Keep the comprehensive **Glossary** in Section 8, **and** place a compact borderless-vertical `booktabs` `notationbox` right at the top of any subsection that uses 2+ domain symbols.
 
-### 3. Pen-and-Paper "Try It Yourself" Exercises (`tryitbox`) + Answer Key Appendix
-Add **2–4 short pen-and-paper checkpoints per monograph** right after key subsections. Each drill must take **2–3 minutes on paper** (small inputs: 4–6 items, never tedious grinds) and rotate across three high-retention formats:
-- **Hand-Trace Drill:** Fill in a 5-cell table or trace 4 stack/deque states on paper.
-- **Break-It Challenge:** Construct a tiny counterexample that breaks a naive/wrong rule (builds deep intuition for preconditions).
-- **Predict-Before-Reading:** Predict the next transition, pruned branch, or complexity before revealing the result.
+### 4. Abundant Pen-and-Paper Practice (`tryitbox`) + Answer Key Appendix
+Include **6–9 short (1–3 minute) pencil-ready exercises per module** placed right after key concepts, subsections, and patterns (rotating across Concept Check, Fill-In Table, Hand-Trace Drill, Break-It Challenge, Predict Complexity, and Pattern Triage). Keep each box intact (non-splitting across pages) with blank tables or `\pencillines{N}` and place numbered solutions (`\label{sol:exN}`) in **Solutions to Pen-and-Paper Exercises** right before Version History.
 
-**No inline spoilers:** Place brief, numbered **Answer Keys** in an unnumbered `\section*{Solutions to Pen-and-Paper Exercises}` right before `Version History`, cross-linked via `\hypertarget` / `\hyperlink` so PDF readers can jump to check their work and jump right back.
-
-```latex
-% Canonical pen-and-paper exercise box (in SKILL.md preamble)
-\newenvironment{tryitbox}[2]{
-    \par\vspace{0.25cm}
-    \noindent\begin{tabular}{|p{0.96\textwidth}|}
-    \hline
-    \vspace{0.05cm}
-    \textbf{\color{codegreen}Pen \& Paper — Try It Yourself (#1)}\hfill{\footnotesize\hyperlink{sol:#2}{[Check Answer]}}\par\vspace{0.1cm}
-}{
-    \vspace{0.05cm}
-    \\ \hline
-    \end{tabular}
-    \vspace{0.25cm}\par
-}
-```
-
-### 4. Anti-Wall-of-Text Formatting Discipline
-- **5-line paragraph cap:** No prose paragraph exceeds ~4–5 rendered lines (~60–80 words). Split longer explanations into numbered steps, invariant boxes, before-vs-after mini-tables, or diagrams.
-- **One-line Loop Invariant Callouts:** For every non-trivial loop, state in one bold sentence what remains true before and after every iteration.
-- **Before vs. After Micro-Tables:** Summarize `Naive Idea` vs. `Key Insight` vs. `Speedup` in 2–3 rows instead of 2 paragraphs of prose.
+### 5. Anti-Wall-of-Text Formatting Discipline
+- **5-line paragraph cap:** No prose paragraph exceeds ~4–5 rendered lines (~60–80 words).
+- **One-line Loop Invariant Callouts (`\invariantbeat{...}`):** State in one clear sentence what remains true before and after every iteration.
+- **Before vs. After Micro-Tables:** Summarize `Naive Approach` vs. `Shortcut` vs. `Speedup` in a clean `booktabs` table.
 
 ---
 

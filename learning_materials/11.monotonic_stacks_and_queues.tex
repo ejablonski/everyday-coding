@@ -3,26 +3,95 @@
 % --- Core LaTeX Packages ---
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[margin=1in]{geometry}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[margin=0.85in, headheight=15pt]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{xcolor}
-\usepackage{listings}
-\usepackage{hyperref}
+\usepackage[helvet]{sfmath}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{xltabular}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[explicit]{titlesec}
+\usepackage[skins,breakable]{tcolorbox}
+\usepackage{listings}
+\usepackage{hyperref}
 \usepackage{graphicx}
 
 % --- Diagram Packages ---
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,decorations.pathreplacing}
 
-% --- Unified Color Palette ---
+% --- Unified Print-Safe Color Palette ---
 \definecolor{primaryblue}{RGB}{24, 75, 140}
-\definecolor{codebg}{RGB}{248, 249, 250}
-\definecolor{codeframe}{RGB}{210, 215, 222}
-\definecolor{codegreen}{RGB}{40, 130, 60}
+\definecolor{accentteal}{RGB}{15, 118, 110}
+\definecolor{accentamber}{RGB}{180, 83, 9}
+\definecolor{accentred}{RGB}{185, 28, 28}
+\definecolor{codebg}{RGB}{246, 248, 250}
+\definecolor{codeframe}{RGB}{208, 215, 222}
+\definecolor{codegreen}{RGB}{34, 120, 58}
 \definecolor{codeblue}{RGB}{20, 90, 180}
-\definecolor{codegray}{RGB}{120, 120, 120}
+\definecolor{codegray}{RGB}{105, 115, 125}
+
+% --- Global Typography & Spacing ---
+\linespread{1.08}
+\renewcommand{\arraystretch}{1.35}
+\setlength{\tabcolsep}{7pt}
+\setlist[itemize]{itemsep=3pt, topsep=4pt, leftmargin=1.5em}
+\setlist[enumerate]{itemsep=4pt, topsep=4pt, leftmargin=1.6em}
+
+% --- Running Header & Footer (Screen + Print Navigation) ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{codegray}\textbf{Monotonic Stacks and Queues}}
+\fancyhead[R]{\footnotesize\color{codegray}\nouppercase{\leftmark}}
+\fancyfoot[C]{\footnotesize\color{codegray}Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{codeframe}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{}}
+
+% --- Section & Subsection Styling (Clear Visual Hierarchy + Section Page Breaks) ---
+\newcommand{\sectionbreak}{}
+
+\titleformat{\section}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {\colorbox{primaryblue}{\color{white}\bfseries\Large\;\thesection\;}\hspace{0.55em}#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+\titlespacing*{\section}{0pt}{4pt}{14pt}
+
+\titleformat{name=\section,numberless}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{primaryblue!90!black}}
+  {}
+  {0pt}
+  {\begin{tcolorbox}[
+      enhanced, colback=primaryblue!6, colframe=primaryblue!6,
+      borderline west={3.5pt}{0pt}{primaryblue},
+      sharp corners=west, arc=2pt,
+      left=8pt, right=8pt, top=5pt, bottom=5pt,
+      boxsep=0pt, before skip=0pt, after skip=0pt
+  ]\large\bfseries\color{primaryblue!90!black}\thesubsection\hspace{0.55em}#1\end{tcolorbox}}
+\titlespacing*{\subsection}{0pt}{18pt}{8pt}
+
+\titleformat{name=\subsection,numberless}[block]
+  {\normalsize\bfseries\color{accentteal}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{2pt}{\color{accentteal!40}\titlerule[0.7pt]}]
+\titlespacing*{\subsection}{0pt}{14pt}{6pt}
 
 % --- Canonical Shared TikZ Styles ---
 \tikzset{
@@ -35,7 +104,7 @@
     lmprunedarrow/.style={-{Stealth[length=5pt]}, thick, dashed, red!70!black}
 }
 
-% --- Hyperref Setup ---
+% --- Hyperref Setup (Subtle Links, Print-Friendly) ---
 \hypersetup{
     colorlinks=true,
     linkcolor=primaryblue,
@@ -45,51 +114,109 @@
     pdfauthor={Antigravity Engineering}
 }
 
-% --- Theorem & Definition Environments ---
+% --- Example Environment (Clean Accent Styling) ---
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{example}{Example}[section]
 
-% --- Callout Box Environment ---
-\newenvironment{calloutbox}[1]{
-    \par\vspace{0.3cm}
-    \noindent\begin{tabular}{|p{0.96\textwidth}|}
-    \hline
-    \vspace{0.1cm}
-    \textbf{#1}\par\vspace{0.1cm}
-}{
-    \vspace{0.1cm}
-    \\ \hline
-    \end{tabular}
-    \vspace{0.3cm}\par
+% --- Semantic Narrative Beat Labels ---
+\newcommand{\painbeat}{\textbf{\color{accentamber}The Problem:} }
+\newcommand{\ahabeat}{\textbf{\color{accentteal}The ``Aha!'' Insight:} }
+\newcommand{\examplebeat}{\textbf{\color{primaryblue}Mini-Example First:} }
+\newcommand{\breaksbeat}{\textbf{\color{accentred}When It Breaks:} }
+\newcommand{\invariantbeat}[1]{\par\noindent\textbf{\color{accentteal}Loop Invariant (#1):} }
+
+% --- Modern Overview Card (Replaces Academic Abstract) ---
+\newtcolorbox{overviewbox}[1][What You'll Learn]{
+    enhanced, breakable,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
 }
 
-% --- Local Symbol Mini-Table Environment ---
+% --- Key Takeaway / Core Rule Box ---
+\newtcolorbox{calloutbox}[1]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Plain-English Formula Card (De-Alienates Math) ---
+\newtcolorbox{formulabox}[1][Formula in Plain English]{
+    enhanced,
+    colback=primaryblue!4, colframe=primaryblue!22,
+    borderline west={3.5pt}{0pt}{primaryblue},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=6pt, bottom=6pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\small\bfseries\color{primaryblue},
+    title={#1},
+    attach title to upper={\par\vspace{2pt}}
+}
+
+% --- Watch-Out / Edge-Case Warning Box ---
+\newtcolorbox{watchoutbox}[1][Watch Out --- When It Breaks]{
+    enhanced,
+    colback=accentamber!6, colframe=accentamber!30,
+    borderline west={3.5pt}{0pt}{accentamber},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentamber},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Local Symbol Mini-Table Environment (Modern Booktabs, Zero Vertical Grid) ---
 \newenvironment{notationbox}[1][Symbols Used Here]{
-    \par\vspace{0.2cm}
+    \par\vspace{0.15cm}
     \noindent\textbf{\small\color{primaryblue}#1}\par\vspace{0.1cm}
-    \noindent\footnotesize\tabularx{\textwidth}{|l|X|>{\raggedright\arraybackslash}p{3.6cm}|}
-    \hline
-    \textbf{Symbol} & \textbf{Plain-English Meaning} & \textbf{Example / Type} \\ \hline
+    \begingroup
+    \footnotesize
+    \rowcolors{2}{codebg}{white}
+    \noindent\tabularx{\textwidth}{>{\raggedright\arraybackslash\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.8cm}}
+    \arrayrulecolor{primaryblue}\toprule[1.1pt]
+    \rowcolor{primaryblue!10}
+    \textcolor{primaryblue}{\textbf{Symbol}} & \textcolor{primaryblue}{\textbf{Plain-English Meaning}} & \textcolor{primaryblue}{\textbf{Example / Type}} \\
+    \arrayrulecolor{codeframe}\midrule[0.6pt]
 }{
-    \endtabularx\normalsize
-    \vspace{0.25cm}\par
+    \arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+    \endtabularx
+    \endgroup
+    \vspace{0.2cm}\par
 }
 
-% --- Pen-and-Paper Try-It-Yourself Exercise Environment ---
-\newenvironment{tryitbox}[2]{
-    \par\vspace{0.25cm}
-    \noindent\begin{tabular}{|p{0.96\textwidth}|}
-    \hline
-    \vspace{0.05cm}
-    \textbf{\color{codegreen}Pen \& Paper --- Try It Yourself (#1)}\hfill{\footnotesize\hyperlink{sol:#2}{[Check Answer]}}\par\vspace{0.1cm}
-}{
-    \vspace{0.05cm}
-    \\ \hline
-    \end{tabular}
-    \vspace{0.25cm}\par
+% --- Print-First Pen-and-Paper Exercise Environment (Numbered + Page Ref, No Web Links) ---
+\newcounter{exercise}
+\newtcolorbox{tryitbox}[2]{
+    enhanced,
+    step=exercise,
+    colback=codegreen!3, colframe=codegreen!45,
+    colbacktitle=codegreen!14, coltitle=codegreen!85!black,
+    borderline west={3.5pt}{0pt}{codegreen},
+    arc=3pt, boxrule=0.6pt,
+    left=10pt, right=10pt, top=7pt, bottom=8pt,
+    toptitle=4pt, bottomtitle=4pt,
+    before skip=10pt, after skip=10pt,
+    fonttitle=\bfseries,
+    title={Pen \& Paper --- Exercise \theexercise: #1 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#2}}}
+}
+
+% --- Pencil Workspace Helper (Dotted Lines for Printed Copies) ---
+\newcommand{\pencillines}[1]{%
+    \par\vspace{3pt}%
+    \foreach \n in {1,...,#1}{%
+        \noindent\textcolor{codegray!55}{\dotfill}\par\vspace{6pt}%
+    }%
 }
 
 % --- Modern C++ Code Listing Setup ---
@@ -98,13 +225,17 @@
     basicstyle=\footnotesize\ttfamily,
     keywordstyle=\color{codeblue}\bfseries,
     commentstyle=\color{codegreen}\itshape,
-    stringstyle=\color{orange!80!black},
+    stringstyle=\color{accentamber},
     numberstyle=\tiny\color{codegray},
     numbers=left,
     numbersep=8pt,
+    xleftmargin=14pt,
+    framexleftmargin=8pt,
     backgroundcolor=\color{codebg},
     frame=single,
     rulecolor=\color{codeframe},
+    aboveskip=8pt,
+    belowskip=10pt,
     breaklines=true,
     breakatwhitespace=true,
     tabsize=4,
@@ -112,61 +243,83 @@
     captionpos=b
 }
 
-% --- Title Block ---
-\title{\vspace{-1.5cm}\textbf{\Huge Monotonic Stacks and Queues}\\[0.3cm]
-\Large Linear-Time Range Queries, Nearest Extrema, and Sliding Windows}
-\author{Technical Monograph}
-\date{\today}
-
 \begin{document}
 
-\maketitle
+% --- Modern Title Banner (Print & Screen Friendly, No Academic Paper Look) ---
+\thispagestyle{plain}
+\begin{tcolorbox}[
+    enhanced,
+    colback=primaryblue!6, colframe=primaryblue!20,
+    borderline west={5pt}{0pt}{primaryblue},
+    arc=4pt, boxrule=0.6pt,
+    left=14pt, right=14pt, top=12pt, bottom=12pt,
+    before skip=0pt, after skip=10pt
+]
+    {\footnotesize\bfseries\color{accentteal}MODULE 11 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
+    {\Huge\bfseries\color{primaryblue}Monotonic Stacks and Queues}\\[5pt]
+    {\large\color{codegray}Linear-Time Nearest Neighbors, Range Spans, and Sliding Windows}\\[6pt]
+    {\footnotesize\color{codegray}Updated \today\quad$\cdot$\quad Designed for both screen reading and printed pen-and-paper practice}
+\end{tcolorbox}
 
-\begin{abstract}
-\noindent
-This document covers monotonic stacks and monotonic queues (deques), specialized data structures that maintain elements in sorted order to answer nearest-neighbor and sliding-window queries in linear time. It is written for programmers who want an intuitive, visual explanation of why discarding dominated elements turns slow nested loops into amortized constant-time updates. We cover the four nearest extrema queries, index-based span calculations, duplicate symmetry breaking, histogram rectangle expansion, lexicographical digit removal, and sliding-window extrema. Complete C++23 implementations, pen-and-paper drills, and pattern-recognition rules provide practical templates for sequence algorithms.
-\end{abstract}
+\begin{overviewbox}[What You'll Learn]
+This guide explains \textbf{monotonic stacks} and \textbf{monotonic deques}---simple sorted buffers that turn slow nested array scans into fast single-pass $O(N)$ solutions. Instead of starting with abstract proofs, we build every technique from concrete numbers and visual traces so you always see \emph{why} throwing away dominated elements is safe. You will practice the four nearest-neighbor queries, index-based spans, duplicate tie-breaking, largest rectangle in a histogram, removing $K$ digits, and sliding-window maximums, backed by clean C++23 templates and nine pen-and-paper exercises.
+\end{overviewbox}
 
-\tableofcontents
-\newpage
+\vspace{2pt}
+{\setlength{\parskip}{1pt}\small\tableofcontents}
+
+% Start every subsequent major section cleanly on a new page
+\renewcommand{\sectionbreak}{\clearpage}
 
 % ============================================================================
 \section{Foundations / Core Concepts}
 % ============================================================================
 
-\subsection{What Is Monotonicity?}
+\subsection{What Does ``Monotonic'' Actually Mean?}
 
-A sequence is called \emph{monotonic} if its values move in only one direction, never reversing course. For a sequence $S = \langle s_0, s_1, \dots, s_{k-1} \rangle$:
+A list of numbers is \textbf{monotonic} if it only moves in one direction---never going up and then back down:
 \begin{itemize}
-    \item \textbf{Monotonically increasing}: $s_0 \le s_1 \le \dots \le s_{k-1}$ (or strictly increasing when each relation is $<$).
-    \item \textbf{Monotonically decreasing}: $s_0 \ge s_1 \ge \dots \ge s_{k-1}$ (or strictly decreasing when each relation is $>$).
+    \item \textbf{Increasing (going up)}: like $[1, 3, 5, 8]$, or $[1, 3, 3, 8]$ if equal neighbors are allowed.
+    \item \textbf{Decreasing (going down)}: like $[9, 6, 4, 1]$, or $[9, 6, 6, 1]$ if equal neighbors are allowed.
 \end{itemize}
 
-A standard stack accepts pushes in any order. A \textbf{monotonic stack} adds one invariant: before pushing a new element $x$, we pop from the top until inserting $x$ keeps the stack sorted from bottom to top.
+A normal stack lets you push anything on top. A \textbf{monotonic stack} enforces one simple rule: before pushing a new value $x$, pop items off the top until pushing $x$ keeps the stack sorted from bottom to top.
 
-\subsection{Why Discarding Elements Is Safe: The Skyline Shadow Proof}
+\subsection{Why Throwing Away Elements Is Safe: The Skyline Shadow Proof}
 
-\textbf{The Pain Point:} Finding the first taller building to the right of every building in a skyline naively requires scanning rightward from each index, taking $O(N^2)$ comparisons on a descending skyline.
+\painbeat Finding the first taller building to the right of every building in a row naively takes a nested loop: from each building, walk rightward until you see a taller one. On a staircase going downhill, that checks roughly $N^2 / 2$ pairs.
 
-\textbf{The ``Aha!'' Observation:} Imagine standing in a flat concert crowd looking toward the stage. If a $185\text{ cm}$ person stands directly in front of a $170\text{ cm}$ person, nobody behind them can ever see the $170\text{ cm}$ person first---the taller, closer person casts a permanent \emph{shadow}.
+\ahabeat Imagine standing in a flat concert crowd looking toward the stage. If a $185\text{ cm}$ person stands directly in front of a $170\text{ cm}$ person, nobody further back can ever see the $170\text{ cm}$ person first. The taller, closer person casts a permanent \textbf{shadow} over the shorter one.
 
-\textbf{Concrete Mini-Example:} Suppose heights seen so far from the right are $[170, 185]$. For any viewer standing further left, $185$ is both closer and taller than $170$, so $170$ can never be the nearest taller neighbor for anyone to its left. Throwing away $170$ leaves only useful candidates, which automatically form a sorted (monotonic) staircase.
-
-\textbf{When It Breaks:} This elimination relies on asking for the \emph{nearest} greater (or smaller) item. If a problem instead asks for the \emph{second} greater element, or the maximum over an arbitrary non-contiguous subset, a shadowed element might still matter and cannot be discarded on first sight.
+\examplebeat Suppose you scan heights from right to left and have seen $[170, 185]$ (with $185$ closer to all viewers on the left). For any viewer standing further left, $185$ is both \emph{closer} and \emph{taller} than $170$. So $170$ can never be the first taller neighbor for anyone left of it---throwing $170$ away loses nothing, and the surviving candidates automatically form a sorted staircase.
 
 \begin{calloutbox}{The Elimination Principle}
-If a newer element is both ``better'' (larger for a max query, smaller for a min query) and closer to all future queries than an older element, the older element is permanently dominated and can be popped immediately.
+Whenever a newer element is both \textbf{better} (larger for a max query, smaller for a min query) and \textbf{closer} to all future queries than an older element, the older element is permanently dominated and can be popped immediately.
 \end{calloutbox}
+
+\begin{watchoutbox}[When It Breaks]
+Shadow elimination only works when you want the \textbf{nearest} greater (or smaller) item. If a problem instead asks for the \emph{second} greater element, or the maximum over an arbitrary non-contiguous subset, a shadowed item might still matter and cannot be discarded on first sight.
+\end{watchoutbox}
+
+\begin{tryitbox}{Skyline Shadows Check}{ex1}
+You want the \textbf{Next Greater Element} (first taller building to the right). Suppose three buildings from left to right have heights $[160, 190, 175]$.
+\begin{enumerate}
+    \item For any viewer standing to the left of $160$, which building height is permanently shadowed and can be discarded? Why?
+    \item Which building heights remain on the stack (list from bottom to top)?
+\end{enumerate}
+\pencillines{2}
+\end{tryitbox}
 
 \subsection{Monotonic Stack vs. Monotonic Deque}
 
-A stack operates at one end only, whereas a \textbf{monotonic deque} (double-ended queue) maintains a sorted list of candidates across a moving interval $[i - K + 1, i]$:
+A stack only adds and removes from one end. A \textbf{monotonic deque} (double-ended queue) adds a second exit at the front so it can track the maximum or minimum inside a moving window of width $K$:
+
 \begin{itemize}
-    \item \textbf{Monotonic Stack}: Answers \emph{nearest-neighbor} queries (first strictly greater or smaller element to the left or right). Waiting elements sit on the stack until an arriving element resolves and pops them.
-    \item \textbf{Monotonic Deque}: Answers \emph{sliding-window extremum} queries (maximum or minimum inside a window of length $K$). It performs two evictions:
+    \item \textbf{Monotonic Stack}: Best for \emph{nearest-neighbor} questions (first larger or smaller value to the left or right). Waiting indices sit on the stack until an incoming value resolves and pops them.
+    \item \textbf{Monotonic Deque}: Best for \emph{sliding-window} questions (largest or smallest value inside the current $K$-element window). It trims from both ends:
     \begin{enumerate}
-        \item \emph{Back eviction}: Pops dominated elements from the back as new elements arrive.
-        \item \emph{Front eviction}: Pops expired elements from the front once their index falls left of $i - K + 1$.
+        \item \textbf{Back eviction}: Pop smaller (dominated) elements from the back when a better value arrives.
+        \item \textbf{Front eviction}: Pop expired elements from the front once the window moves past their index.
     \end{enumerate}
 \end{itemize}
 
@@ -178,178 +331,196 @@ A stack operates at one end only, whereas a \textbf{monotonic deque} (double-end
 \label{sec:four_queries}
 
 \begin{notationbox}[Symbols Used in This Subsection]
-$A[i]$ & Value at $0$-based index $i$ of the input array & \texttt{int} (e.g., $A[2] = 4$) \\ \hline
-$N$ & Number of elements in $A$ & $N = \texttt{A.size()}$ \\ \hline
-$\text{NGE}, \text{PGE}$ & Next Greater ($j > i$) and Previous Greater ($j < i$) element & First $A[j] > A[i]$ \\ \hline
-$\text{NSE}, \text{PSE}$ & Next Smaller ($j > i$) and Previous Smaller ($j < i$) element & First $A[j] < A[i]$ \\ \hline
+$A[i]$ & Value at $0$-based position $i$ in the array & \texttt{int} (e.g., $A[2] = 4$) \\
+$N$ & Total number of elements in $A$ & $N = \texttt{A.size()}$ \\
+NGE / PGE & Next Greater (to the right) / Previous Greater (to the left) & First value $> A[i]$ \\
+NSE / PSE & Next Smaller (to the right) / Previous Smaller (to the left) & First value $< A[i]$ \\
 \end{notationbox}
 
-Many array problems reduce to finding, for every $A[i]$, the nearest index to its left or right whose value crosses a strict threshold:
+Most monotonic-stack problems boil down to one of four simple questions for every position $i$:
 \begin{enumerate}
-    \item \textbf{Next Greater Element (NGE)}: First index $j > i$ with $A[j] > A[i]$.
-    \item \textbf{Previous Greater Element (PGE)}: First index $j < i$ with $A[j] > A[i]$.
-    \item \textbf{Next Smaller Element (NSE)}: First index $j > i$ with $A[j] < A[i]$.
-    \item \textbf{Previous Smaller Element (PSE)}: First index $j < i$ with $A[j] < A[i]$.
+    \item \textbf{Next Greater Element (NGE)}: First position to the right ($j > i$) where $A[j] > A[i]$.
+    \item \textbf{Previous Greater Element (PGE)}: First position to the left ($j < i$) where $A[j] > A[i]$.
+    \item \textbf{Next Smaller Element (NSE)}: First position to the right ($j > i$) where $A[j] < A[i]$.
+    \item \textbf{Previous Smaller Element (PSE)}: First position to the left ($j < i$) where $A[j] < A[i]$.
 \end{enumerate}
 
-\textbf{Loop Invariant (Decreasing Stack for NGE, Left-to-Right):} At the start of iteration $i$, the stack holds indices of all earlier elements that have not yet seen a greater value to their right, ordered from bottom to top in non-increasing order of $A[\cdot]$.
+\invariantbeat{Decreasing Stack for NGE, Left-to-Right} Before processing index $i$, the stack holds all earlier indices that still haven't seen a larger number to their right, ordered from bottom to top from largest value to smallest.
 
-\begin{calloutbox}{Rule of Stack Monotonicity}
+\begin{calloutbox}{Quick Rule: Which Stack Order Do I Need?}
 \begin{itemize}
-    \item To find a \textbf{Greater} element, keep a \textbf{decreasing stack} (bottom to top). An arriving larger value breaks the decreasing order and pops smaller waiting items.
-    \item To find a \textbf{Smaller} element, keep an \textbf{increasing stack} (bottom to top). An arriving smaller value breaks the increasing order and pops larger waiting items.
-    \item To find a \textbf{Next} element ($j > i$), either scan left-to-right (resolving items on pop) or scan right-to-left (reading the surviving stack top).
-    \item To find a \textbf{Previous} element ($j < i$), scan left-to-right and read the surviving stack top after popping.
+    \item Looking for a \textbf{Greater} neighbor? Keep a \textbf{decreasing stack}. A bigger incoming number breaks the decreasing order and pops smaller waiting items.
+    \item Looking for a \textbf{Smaller} neighbor? Keep an \textbf{increasing stack}. A smaller incoming number breaks the increasing order and pops taller waiting items.
+    \item Looking \textbf{Right (Next)}? Either scan left-to-right (answer items when popped) or right-to-left (read the surviving top). Looking \textbf{Left (Previous)}? Always scan left-to-right.
 \end{itemize}
 \end{calloutbox}
 
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
-\hline
-\textbf{Query Target} & \textbf{Stack Invariant} & \textbf{Iteration Order} & \textbf{Pop Condition for Candidate $x$} \\ \hline
-Next Greater (NGE) & Decreasing & L-to-R (on pop) / R-to-L (top) & L-to-R: $A[\text{top}] < x$; R-to-L: $A[\text{top}] \le x$ \\ \hline
-Previous Greater (PGE) & Decreasing & Left-to-Right & Pop top while $A[\text{top}] \le x$ \\ \hline
-Next Smaller (NSE) & Increasing & L-to-R (on pop) / R-to-L (top) & L-to-R: $A[\text{top}] > x$; R-to-L: $A[\text{top}] \ge x$ \\ \hline
-Previous Smaller (PSE) & Increasing & Left-to-Right & Pop top while $A[\text{top}] \ge x$ \\ \hline
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{2.9cm} >{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Query Target}} & \textcolor{primaryblue}{\textbf{Stack Order}} & \textcolor{primaryblue}{\textbf{Scan Direction}} & \textcolor{primaryblue}{\textbf{When to Pop the Top for $x$}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Next Greater (NGE) & Decreasing & Left-to-Right (on pop)\newline or Right-to-Left (top) & L-to-R: pop while $A[\text{top}] < x$\newline R-to-L: pop while $A[\text{top}] \le x$ \\
+Previous Greater (PGE) & Decreasing & Left-to-Right & Pop while $A[\text{top}] \le x$; surviving top is answer \\
+Next Smaller (NSE) & Increasing & Left-to-Right (on pop)\newline or Right-to-Left (top) & L-to-R: pop while $A[\text{top}] > x$\newline R-to-L: pop while $A[\text{top}] \ge x$ \\
+Previous Smaller (PSE) & Increasing & Left-to-Right & Pop while $A[\text{top}] \ge x$; surviving top is answer \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
-\vspace{0.3cm}
+\endgroup
+\end{center}
 
-\begin{example}[Worked Trace of the Four Extrema Queries]
-Consider array $A = [3, 1, 4, 2]$ of length $N = 4$ with indices $0, 1, 2, 3$. We trace each of the four queries:
+\begin{example}[Worked Trace of All Four Queries on $A = {[3, 1, 4, 2]}$]
+With indices $0, 1, 2, 3$ and $-1$ meaning ``none exists'':
 \begin{enumerate}
-    \item \textbf{Next Greater Element (NGE)}:
-    \begin{itemize}
-        \item $A[0] = 3$: scans right past $1$, hits $A[2] = 4 > 3 \implies \text{NGE}[0] = 4$ (index $2$).
-        \item $A[1] = 1$: hits $A[2] = 4 > 1 \implies \text{NGE}[1] = 4$ (index $2$).
-        \item $A[2] = 4$ and $A[3] = 2$: no larger element to the right $\implies -1$.
-    \end{itemize}
-    Result: $\text{NGE} = [4, 4, -1, -1]$.
-
-    \item \textbf{Previous Greater Element (PGE)}:
-    \begin{itemize}
-        \item $A[0] = 3$: nothing to the left $\implies -1$.
-        \item $A[1] = 1$: hits $A[0] = 3 > 1 \implies \text{PGE}[1] = 3$ (index $0$).
-        \item $A[2] = 4$: neither $1$ nor $3$ exceeds $4 \implies -1$.
-        \item $A[3] = 2$: hits $A[2] = 4 > 2 \implies \text{PGE}[3] = 4$ (index $2$).
-    \end{itemize}
-    Result: $\text{PGE} = [-1, 3, -1, 4]$.
-
-    \item \textbf{Next Smaller Element (NSE)}:
-    \begin{itemize}
-        \item $A[0] = 3$: hits $A[1] = 1 < 3 \implies \text{NSE}[0] = 1$ (index $1$).
-        \item $A[1] = 1$: no smaller element to the right $\implies -1$.
-        \item $A[2] = 4$: hits $A[3] = 2 < 4 \implies \text{NSE}[2] = 2$ (index $3$).
-        \item $A[3] = 2$: nothing to the right $\implies -1$.
-    \end{itemize}
-    Result: $\text{NSE} = [1, -1, 2, -1]$.
-
-    \item \textbf{Previous Smaller Element (PSE)}:
-    \begin{itemize}
-        \item $A[0] = 3$ and $A[1] = 1$: no smaller element to the left $\implies -1$.
-        \item $A[2] = 4$: hits $A[1] = 1 < 4 \implies \text{PSE}[2] = 1$ (index $1$).
-        \item $A[3] = 2$: skips $4$, hits $A[1] = 1 < 2 \implies \text{PSE}[3] = 1$ (index $1$).
-    \end{itemize}
-    Result: $\text{PSE} = [-1, -1, 1, 1]$.
+    \item \textbf{Next Greater (NGE)}: $3 \to 4$ (idx $2$), $1 \to 4$ (idx $2$), $4 \to -1$, $2 \to -1$. Result: $[4, 4, -1, -1]$.
+    \item \textbf{Previous Greater (PGE)}: $3 \to -1$, $1 \to 3$ (idx $0$), $4 \to -1$, $2 \to 4$ (idx $2$). Result: $[-1, 3, -1, 4]$.
+    \item \textbf{Next Smaller (NSE)}: $3 \to 1$ (idx $1$), $1 \to -1$, $4 \to 2$ (idx $3$), $2 \to -1$. Result: $[1, -1, 2, -1]$.
+    \item \textbf{Previous Smaller (PSE)}: $3 \to -1$, $1 \to -1$, $4 \to 1$ (idx $1$), $2 \to 1$ (idx $1$). Result: $[-1, -1, 1, 1]$.
 \end{enumerate}
 \end{example}
 
-\subsection{Why Storing Indices Dominates Storing Values}
+\begin{tryitbox}{Four Nearest Queries Table}{ex2}
+For the array $A = [6, 2, 5, 4]$ (indices $0, 1, 2, 3$), fill in the nearest value for each query below (write $-1$ when no such element exists):
 
-Beginners often push raw values $A[i]$ onto the stack, which breaks down as soon as distances or duplicates appear. Storing array \textbf{indices} $i$ instead strictly dominates storing values:
+\vspace{4pt}
+\begin{center}
+\begingroup
+\small
+\arrayrulecolor{codeframe}
+\begin{tabularx}{0.96\linewidth}{|>{\bfseries}p{3.6cm}|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
+\hline
+\rowcolor{codegreen!10}
+Query & $i = 0$ ($6$) & $i = 1$ ($2$) & $i = 2$ ($5$) & $i = 3$ ($4$) \\ \hline
+Next Greater (NGE) & & & & \\ \hline
+Previous Greater (PGE) & & & & \\ \hline
+Next Smaller (NSE) & & & & \\ \hline
+Previous Smaller (PSE) & & & & \\ \hline
+\end{tabularx}
+\endgroup
+\end{center}
+\end{tryitbox}
+
+\subsection{Why Storing Indices Always Beats Storing Raw Values}
+
+A common beginner mistake is pushing raw numbers $A[i]$ onto the stack. Pushing \textbf{array indices} $i$ instead gives you everything for free:
 \begin{enumerate}
-    \item \textbf{Direct Value Lookup}: Given index $i$, $A[i]$ is available in $O(1)$ time. The reverse fails whenever two positions hold equal values.
-    \item \textbf{Instant Spans and Widths}: When index $i$ pops waiting index $j$, the distance is immediately $i - j$ with no extra bookkeeping.
+    \item \textbf{Value is one lookup away}: From index $i$, you always know $A[i]$ in $O(1)$ time. From a raw value like $5$, you cannot tell \emph{which} $5$ it was when duplicates exist.
+    \item \textbf{Distances are one subtraction away}: When incoming index $i$ pops waiting index $j$, the gap between them is instantly $i - j$.
 \end{enumerate}
 
-\begin{example}[Distance Calculation and Duplicate Resolution with Indices]
-Consider $A = [5, 2, 5, 7]$. We want the distance (span) to the Next Greater Element for each position.
+\begin{example}[Why Raw Values Fail on $A = {[5, 2, 5, 7]}$]
+Suppose we want the distance (span) from each entry to its Next Greater Element:
 \begin{enumerate}
-    \item \textbf{Why Raw Values Fail}: Pushing raw values produces $[5, 5]$ before $7$ arrives. When $7$ pops both $5$s, you cannot tell which $5$ lived at index $0$ and which lived at index $2$.
-    \item \textbf{How Index Storing Succeeds}:
+    \item \textbf{Raw values fail}: Before $7$ arrives, the stack holds $[5, 5]$. When $7$ pops both $5$s, you cannot tell which $5$ belongs to index $0$ (distance $3$) and which belongs to index $2$ (distance $1$).
+    \item \textbf{Indices succeed cleanly}:
     \begin{itemize}
         \item $i = 0$ ($5$): push $0$. Stack: $[0]$.
         \item $i = 1$ ($2$): $2 < 5$, push $1$. Stack: $[0, 1]$.
-        \item $i = 2$ ($5$): $5 > A[1]$, pop $1$ ($\text{span}[1] = 2 - 1 = 1$). Push $2$. Stack: $[0, 2]$.
-        \item $i = 3$ ($7$): $7 > A[2]$, pop $2$ ($\text{span}[2] = 3 - 2 = 1$). Next $7 > A[0]$, pop $0$ ($\text{span}[0] = 3 - 0 = 3$). Push $3$. Stack: $[3]$.
+        \item $i = 2$ ($5$): $5 > A[1] = 2$, so pop $1$ and record $\text{span}[1] = 2 - 1 = 1$. Push $2$. Stack: $[0, 2]$.
+        \item $i = 3$ ($7$): pop $2$ ($\text{span}[2] = 3 - 2 = 1$), then pop $0$ ($\text{span}[0] = 3 - 0 = 3$). Push $3$. Stack: $[3]$.
     \end{itemize}
-    Output spans: $[3, 1, 1, 0]$ (where $0$ means no greater element exists).
+    Final spans: $[3, 1, 1, 0]$ (where $0$ means no larger value lies to the right).
 \end{enumerate}
 \end{example}
 
-\begin{tryitbox}{Hand-Trace Drill}{ex1}
-Trace \textbf{Next Greater Element (NGE)} from left to right on $A = [2, 5, 3, 7, 1]$ using a decreasing monotonic stack of \emph{indices}. Write down the stack contents after each step $i = 0, 1, 2, 3, 4$, and state the final $\text{NGE}$ value array (using $-1$ when none exists).
+\begin{tryitbox}{Hand-Trace Index Stack \& Spans}{ex3}
+Trace \textbf{Next Greater Element} and its index distance ($\text{span} = i - \text{popped}$) from left to right on $A = [2, 5, 3, 7, 1]$ using a decreasing stack of \emph{indices}. Fill in each row:
+
+\vspace{4pt}
+\begin{center}
+\begingroup
+\small
+\arrayrulecolor{codeframe}
+\begin{tabularx}{0.96\linewidth}{|c|c|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{3.0cm}|}
+\hline
+\rowcolor{codegreen!10}
+\textbf{$i$} & \textbf{$A[i]$} & \textbf{Popped index $\to$ NGE and span} & \textbf{Stack After} \\ \hline
+$0$ & $2$ & & \\ \hline
+$1$ & $5$ & & \\ \hline
+$2$ & $3$ & & \\ \hline
+$3$ & $7$ & & \\ \hline
+$4$ & $1$ & & \\ \hline
+\end{tabularx}
+\endgroup
+\end{center}
 \end{tryitbox}
 
-\subsection{Handling Duplicate Values and Avoiding Double-Counting}
+\subsection{Handling Duplicate Values Without Double-Counting}
 \label{sec:duplicates}
 
 \begin{notationbox}[Symbols Used in This Subsection]
-$\text{PLE}[i]$ & Previous Less Element: nearest $j < i$ with $A[j] < A[i]$ (strict) & $-1$ if none exists \\ \hline
-$\text{NLE}[i]$ & Next Less or Equal Element: nearest $j > i$ with $A[j] \le A[i]$ (non-strict) & $N$ if none exists \\ \hline
-$(i - \text{PLE}[i])(\text{NLE}[i] - i)$ & Number of contiguous subarrays where $A[i]$ is the designated minimum & \texttt{long long} \\ \hline
+$\text{PLE}[i]$ & Previous Less Element: nearest left index with $A[j] < A[i]$ (strict) & $-1$ if none exists \\
+$\text{NLE}[i]$ & Next Less or Equal Element: nearest right index with $A[j] \le A[i]$ & $N$ if none exists \\
+$\text{left}_i,\;\text{right}_i$ & Choices for subarray start ($i - \text{PLE}[i]$) and end ($\text{NLE}[i] - i$) & Positive integers \\
 \end{notationbox}
 
-\textbf{The Pain Point:} To sum the minimum of every contiguous subarray in $O(N)$ time, we want to count how many subarrays have $A[i]$ as their minimum and add $A[i] \times \text{count}_i$. When an array has duplicate minimums like $A = [2, 1, 2, 1]$, both $1$s can claim subarrays containing them both, corrupting the sum.
+\painbeat Suppose you want the sum of $\min(B)$ across \emph{every} contiguous subarray $B$ in $O(N)$ time. The trick is to count how many subarrays have $A[i]$ as their minimum, then add $A[i] \times \text{count}_i$. But if the array has duplicate minimums like $A = [2, 1, 2, 1]$, both $1$s fight over subarrays containing them both!
 
-\textbf{The ``Aha!'' Observation:} Every subarray has a unique \emph{rightmost} (last) occurrence of its minimum value (or symmetrically, a unique \emph{leftmost} occurrence). By making one boundary strict ($<$) and the opposite boundary non-strict ($\le$), every tied subarray is assigned to exactly one index with zero overlap and zero gaps.
+\ahabeat Every subarray containing tied minimums has one unique \textbf{rightmost (last)} copy of that minimum. If we let each index expand \emph{past} equal values on its left (strict stop $<$) but \emph{stop} at equal values on its right (non-strict stop $\le$), every tied subarray is claimed by its rightmost minimum---never twice and never zero times.
 
-\textbf{Concrete Mini-Example First:} Take $A = [2, 1, 2, 1]$ ($N = 4$, so $\frac{4 \times 5}{2} = 10$ contiguous subarrays). Two subarrays contain both $1$s: $A[0 \dots 3] = [2, 1, 2, 1]$ and $A[1 \dots 3] = [1, 2, 1]$.
+\examplebeat Take $A = [2, 1, 2, 1]$ ($N = 4$, giving $10$ total contiguous subarrays). Two subarrays contain both $1$s: $[2, 1, 2, 1]$ and $[1, 2, 1]$.
 \begin{itemize}
-    \item Let the left stop be \textbf{strict} ($A[j] < A[i]$, so equal values to the left do \emph{not} stop expansion) and the right stop be \textbf{non-strict} ($A[j] \le A[i]$, so equal values to the right \emph{do} stop expansion).
-    \item Then $i = 1$ stops right before $i = 3$, while $i = 3$ stretches left across $i = 1$. Both tied subarrays belong uniquely to $i = 3$ (their \textbf{last / rightmost} minimum).
+    \item Index $1$ ($A[1] = 1$) stops on the right at index $3$ (because $A[3] = 1 \le 1$). So index $1$ claims only the $4$ subarrays ending before index $3$.
+    \item Index $3$ ($A[3] = 1$) does \emph{not} stop on the left at index $1$ (because $1$ is not strictly less than $1$). So index $3$ claims $[2, 1, 2, 1]$ and $[1, 2, 1]$ uniquely!
 \end{itemize}
 
-\textbf{General Formula:} With $\text{PLE}[i]$ strict ($<$) and $\text{NLE}[i]$ non-strict ($\le$), the number of subarrays uniquely owned by index $i$ is:
+\begin{formulabox}[Subarray Contribution Formula --- In Plain English]
 $$
 \text{count}_i = (i - \text{PLE}[i]) \times (\text{NLE}[i] - i)
 $$
-(Using non-strict $\le$ on the left and strict $<$ on the right is equally valid and designates the \emph{first / leftmost} occurrence instead.)
+\textbf{Read this as:} \emph{(number of valid start positions on the left, including $i$)} $\times$ \emph{(number of valid end positions on the right, including $i$)}. Using strict $<$ on the left and non-strict $\le$ on the right assigns every tied subarray to its \textbf{last (rightmost)} minimum. (Swapping them to $\le$ left and $<$ right assigns ties to the \textbf{first} minimum instead.)
+\end{formulabox}
 
-\textbf{When It Breaks:} Using the \emph{same} comparison on both sides always fails on duplicates:
+\begin{watchoutbox}[When It Breaks --- Symmetric Comparisons]
+Using the \emph{same} comparison on both sides always breaks when duplicates exist:
 \begin{itemize}
-    \item \textbf{Both strict ($<$)}: Equal values never stop expansion on either side, so both $i = 1$ and $i = 3$ claim $[2, 1, 2, 1]$ and $[1, 2, 1]$, \textbf{double-counting} ($12$ subarrays instead of $10$).
-    \item \textbf{Both non-strict ($\le$)}: Equal values stop expansion on both sides, so neither $i = 1$ nor $i = 3$ can cross the other, \textbf{under-counting} ($8$ subarrays instead of $10$).
+    \item \textbf{Both strict ($<$ on left and right)}: Equal values never stop expansion on either side, so both $1$s claim $[2, 1, 2, 1]$ and $[1, 2, 1]$ --- \textbf{double-counting} ($12$ subarrays instead of $10$).
+    \item \textbf{Both non-strict ($\le$ on left and right)}: Equal values stop expansion on both sides, so neither $1$ can reach the other --- \textbf{under-counting} ($8$ subarrays instead of $10$).
 \end{itemize}
+\end{watchoutbox}
 
-\begin{example}[Symmetry Breaking Verification on $A = \text{[2, 1, 2, 1]}$]
-We verify all three boundary rules on $A = [2, 1, 2, 1]$ (total true subarrays $= 10$):
+\begin{example}[Checking All Three Rules on $A = {[2, 1, 2, 1]}$ (True Total $= 10$ Subarrays)]
+Comparing all three boundary strategies side by side:
 \begin{enumerate}
-    \item \textbf{Both Strict ($<$ on Left and Right --- Double-Counts)}:
-    \begin{itemize}
-        \item $i = 1$: $L = -1$, $R = 4$ ($A[3]=1$ is not $< 1$) $\implies (1 - (-1)) \times (4 - 1) = 6$ subarrays (claims both $[2,1,2,1]$ and $[1,2,1]$).
-        \item $i = 3$: $L = -1$ ($A[1]=1$ is not $< 1$), $R = 4 \implies (3 - (-1)) \times (4 - 3) = 4$ subarrays (also claims both $[2,1,2,1]$ and $[1,2,1]$).
-        \item $i = 0$ and $i = 2$ each claim $1$ subarray ($[2]$). Total $= 6 + 4 + 1 + 1 = 12$ ($2$ over-counted).
-    \end{itemize}
-    \item \textbf{Both Non-Strict ($\le$ on Left and Right --- Under-Counts)}:
-    \begin{itemize}
-        \item $i = 1$: $L = -1$, $R = 3$ (stopped by $A[3]=1 \le 1$) $\implies 2 \times 2 = 4$ subarrays.
-        \item $i = 3$: $L = 1$ (stopped by $A[1]=1 \le 1$), $R = 4 \implies 2 \times 1 = 2$ subarrays.
-        \item $i = 0$ and $i = 2$ each claim $1$ subarray. Total $= 4 + 2 + 1 + 1 = 8$ ($[2,1,2,1]$ and $[1,2,1]$ are missed).
-    \end{itemize}
-    \item \textbf{Asymmetric (Strict $<$ Left, Non-Strict $\le$ Right --- Exact)}:
+    \item \textbf{Both Strict ($<$) --- Double-Counts ($12$)}: $i=1$ claims $2 \times 3 = 6$ subarrays; $i=3$ claims $4 \times 1 = 4$; $i=0, 2$ claim $1$ each. Sum $= 6 + 4 + 1 + 1 = 12$ ($2$ duplicates).
+    \item \textbf{Both Non-Strict ($\le$) --- Under-Counts ($8$)}: $i=1$ claims $2 \times 2 = 4$; $i=3$ claims $2 \times 1 = 2$; $i=0, 2$ claim $1$ each. Sum $= 4 + 2 + 1 + 1 = 8$ ($2$ missed).
+    \item \textbf{Asymmetric (Strict $<$ Left, Non-Strict $\le$ Right) --- Exact ($10$)}:
     \begin{itemize}
         \item $i = 1$: $\text{PLE}[1] = -1$, $\text{NLE}[1] = 3 \implies 2 \times 2 = 4$ ($[2, 1], [2, 1, 2], [1], [1, 2]$).
         \item $i = 3$: $\text{PLE}[3] = -1$, $\text{NLE}[3] = 4 \implies 4 \times 1 = 4$ ($[2, 1, 2, 1], [1, 2, 1], [2, 1], [1]$).
-        \item $i = 0$ and $i = 2$: $1$ each. Total $= 4 + 4 + 1 + 1 = 10$, an exact partition.
+        \item $i = 0$ and $i = 2$: $1$ each ($[2]$). Total $= 4 + 4 + 1 + 1 = 10$, an exact partition.
     \end{itemize}
 \end{enumerate}
 \end{example}
+
+\begin{tryitbox}{Break-It Challenge --- Duplicate Subarrays}{ex4}
+Consider the tiny array $A = [1, 3, 1]$ (indices $0, 1, 2$; there are $6$ contiguous subarrays in total).
+\begin{enumerate}
+    \item How many subarrays are counted if \textbf{both} left and right stops use strict $<$? Which subarray gets double-counted?
+    \item How many subarrays are counted if \textbf{both} stops use non-strict $\le$? Which subarray is missed?
+    \item Compute $\text{PLE}$ (strict $<$) and $\text{NLE}$ (non-strict $\le$) for all $3$ indices, verify the counts sum to $6$, and find the total sum of subarray minimums.
+\end{enumerate}
+\pencillines{3}
+\end{tryitbox}
 
 \subsection{Boundary Expansion: Largest Rectangle in Histogram}
 
 \begin{notationbox}[Symbols Used in This Subsection]
-$H[i]$ & Height of the $i$-th histogram bar (each bar has unit width $1$) & Non-negative \texttt{int} \\ \hline
-$L$ & Left boundary: index of first bar left of $i$ strictly shorter than $H[i]$ & $\text{PSE}[i]$ ($-1$ if none) \\ \hline
-$R$ & Right boundary: index of first bar right of $i$ strictly shorter than $H[i]$ & $\text{NSE}[i]$ ($N$ if none) \\ \hline
-$\text{Width}$ & Horizontal span of the widest rectangle of height $H[i]$ & $R - L - 1$ \\ \hline
+$H[i]$ & Height of bar $i$ (every bar has width $1$) & Non-negative \texttt{int} \\
+$L$ & First bar to the left strictly shorter than $H[i]$ (blocking wall) & $\text{PSE}[i]$ ($-1$ if none) \\
+$R$ & First bar to the right strictly shorter than $H[i]$ (blocking wall) & $\text{NSE}[i]$ ($N$ if none) \\
+$\text{Width}$ & Number of contiguous bars strictly between $L$ and $R$ & $R - L - 1$ \\
 \end{notationbox}
 
-\textbf{The Pain Point:} Testing every pair of left and right bar indices $[l, r]$ and tracking the minimum bar height between them requires $O(N^2)$ pairs.
+\painbeat Checking every pair of left and right bars $[l, r]$ and tracking the shortest bar between them visits $O(N^2)$ pairs.
 
-\textbf{The ``Aha!'' Observation:} Any maximum-area rectangle must have its top edge flush with at least one bar $H[i]$ (otherwise you could grow it upward). Flipping the question from ``pick two endpoints'' to ``pick the bottleneck bar $i$ and expand it as wide as possible'' reduces the search to $N$ bars.
+\ahabeat Any largest rectangle must touch the top of at least one bar $H[i]$---otherwise you could stretch it taller. Flip the question from ``try every pair of edges'' to ``treat each bar $i$ as the ceiling and stretch it left and right until a shorter bar blocks you.''
 
-\textbf{Concrete Mini-Example First:} Look at bar $2$ ($H[2] = 5$) in $H = [2, 1, 5, 6, 2, 3]$ (Figure~\ref{fig:histogram_expansion}). Moving left, bar $1$ ($H[1]=1 < 5$) stops expansion at $L = 1$. Moving right, bar $3$ ($H[3]=6 \ge 5$) fits, and bar $4$ ($H[4]=2 < 5$) stops expansion at $R = 4$. The open interval $(1, 4)$ contains bars $\{2, 3\}$, giving width $4 - 1 - 1 = 2$ and area $5 \times 2 = 10$.
+\examplebeat Look at bar $2$ ($H[2] = 5$) in $H = [2, 1, 5, 6, 2, 3]$ (Figure~\ref{fig:histogram_expansion}). Going left, bar $1$ (height $1 < 5$) blocks us at $L = 1$. Going right, bar $3$ (height $6 \ge 5$) fits underneath, and bar $4$ (height $2 < 5$) blocks us at $R = 4$. Bars $\{2, 3\}$ sit strictly between walls $1$ and $4$, giving width $4 - 1 - 1 = 2$ and area $5 \times 2 = 10$.
 
 \begin{figure}[htbp]
 \centering
@@ -389,18 +560,18 @@ $\text{Width}$ & Horizontal span of the widest rectangle of height $H[i]$ & $R -
 
     % --- Right Panel: Monotonic Stack Calculation Card (x: 8.4 to 15.3) ---
     \draw[card] (8.4, -0.2) rectangle (15.3, 5.0);
-    \node[anchor=north west, font=\bfseries\small, text=primaryblue] at (8.65, 4.78) {Monotonic Stack Boundary Logic:};
+    \node[anchor=north west, font=\bfseries\small, text=primaryblue] at (8.65, 4.82) {Monotonic Stack Boundary Logic:};
 
-    \node[anchor=north west, font=\scriptsize, align=left, text width=6.3cm] at (8.65, 4.30) {
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.3cm] at (8.65, 4.38) {
         \textbf{Width Formulation:}\\
-        $\text{Width} = R - L - 1 = 4 - 1 - 1 = \mathbf{2}$\\[3pt]
+        $\text{Width} = R - L - 1 = 4 - 1 - 1 = \mathbf{2}$\\[2pt]
         \textbf{Max Area for Bar 2:}\\
         $\text{Area} = H[2] \times \text{Width} = 5 \times 2 = \mathbf{10}$
     };
 
-    \draw[draw=codeframe!70] (8.65, 2.82) -- (15.05, 2.82);
+    \draw[draw=codeframe!70] (8.65, 2.65) -- (15.05, 2.65);
 
-    \node[anchor=north west, font=\scriptsize, align=left, text width=6.3cm] at (8.65, 2.66) {
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.3cm] at (8.65, 2.52) {
         \textbf{Single-Pass Stack Mechanism:}\\
         $\bullet$ Stack stores indices in increasing height.\\
         $\bullet$ When arriving bar satisfies $H[R] \le H[\text{top}]$:\\
@@ -408,9 +579,9 @@ $\text{Width}$ & Horizontal span of the widest rectangle of height $H[i]$ & $R -
         \quad -- Right stop is $R$; left stop is $L = \text{new top}$.
     };
 
-    \draw[draw=codeframe!70] (8.65, 0.72) -- (15.05, 0.72);
+    \draw[draw=codeframe!70] (8.65, 0.65) -- (15.05, 0.65);
 
-    \node[anchor=north west, font=\tiny\bfseries, text=codegreen] at (8.65, 0.45) {
+    \node[anchor=north west, font=\tiny\bfseries, text=codegreen] at (8.65, 0.42) {
         Amortized Complexity: $O(N)$ Time $\mid$ $O(N)$ Space
     };
 \end{tikzpicture}
@@ -418,83 +589,113 @@ $\text{Width}$ & Horizontal span of the widest rectangle of height $H[i]$ & $R -
 \label{fig:histogram_expansion}
 \end{figure}
 
-In general, for any bar $i$ bounded by $L$ and $R$:
+\begin{formulabox}[Histogram Rectangle Formula --- In Plain English]
 $$
 \text{Width} = R - L - 1, \qquad \text{Area} = H[i] \times (R - L - 1)
 $$
-A single pass with an increasing monotonic stack computes both $L$ and $R$ at once: when bar $R$ pops bar $i$, the right boundary is $R$ and the left boundary $L$ is the new stack top (or $-1$ if empty).
+\textbf{Read this as:} Count how many bars sit \emph{strictly between} the left shorter wall $L$ and the right shorter wall $R$, then multiply by bar $i$'s height. An increasing stack finds both walls in one pass: when bar $R$ pops bar $i$, the right wall is $R$ and the left wall $L$ is the new stack top (or $-1$ if the stack becomes empty).
+\end{formulabox}
 
-\textbf{When It Breaks:} If you omit the trailing sentinel bar (height $-1$ at index $N$), bars that never meet a shorter bar to their right stay on the stack forever. On an increasing histogram like $H = [1, 2, 3]$, zero bars get popped and the algorithm falsely returns area $0$.
+\begin{watchoutbox}[When It Breaks --- Missing Sentinel]
+If you forget the fake trailing bar of height $-1$ at index $N$, bars that never meet a shorter bar to their right stay stuck on the stack forever. On an increasing histogram like $H = [1, 2, 3]$, nothing gets popped and the loop falsely returns $0$.
+\end{watchoutbox}
 
-\begin{example}[Numerical Bar-by-Bar Expansion for Histogram]
-For $H = [2, 1, 5, 6, 2, 3]$ in Figure~\ref{fig:histogram_expansion}, the maximal rectangle anchored at each bar $i$ is:
+\begin{example}[Bar-by-Bar Expansion for $H = {[2, 1, 5, 6, 2, 3]}$]
+Computing the widest rectangle anchored at each bar:
 \begin{enumerate}
-    \item \textbf{Bar $0$ ($H[0] = 2$)}: $L = -1$, $R = 1 \implies \text{Width} = 1$, $\text{Area} = 2 \times 1 = 2$.
-    \item \textbf{Bar $1$ ($H[1] = 1$)}: $L = -1$, $R = 6 \implies \text{Width} = 6$, $\text{Area} = 1 \times 6 = 6$.
-    \item \textbf{Bar $2$ ($H[2] = 5$)}: $L = 1$, $R = 4 \implies \text{Width} = 2$, $\text{Area} = 5 \times 2 = 10$.
-    \item \textbf{Bar $3$ ($H[3] = 6$)}: $L = 2$, $R = 4 \implies \text{Width} = 1$, $\text{Area} = 6 \times 1 = 6$.
-    \item \textbf{Bar $4$ ($H[4] = 2$)}: $L = 1$, $R = 6 \implies \text{Width} = 4$, $\text{Area} = 2 \times 4 = 8$.
-    \item \textbf{Bar $5$ ($H[5] = 3$)}: $L = 4$, $R = 6 \implies \text{Width} = 1$, $\text{Area} = 3 \times 1 = 3$.
+    \item \textbf{Bar $0$ ($2$)}: $L = -1, R = 1 \to \text{Width} = 1$, $\text{Area} = 2 \times 1 = 2$.
+    \item \textbf{Bar $1$ ($1$)}: $L = -1, R = 6 \to \text{Width} = 6$, $\text{Area} = 1 \times 6 = 6$.
+    \item \textbf{Bar $2$ ($5$)}: $L = 1, R = 4 \to \text{Width} = 2$, $\text{Area} = 5 \times 2 = 10$.
+    \item \textbf{Bar $3$ ($6$)}: $L = 2, R = 4 \to \text{Width} = 1$, $\text{Area} = 6 \times 1 = 6$.
+    \item \textbf{Bar $4$ ($2$)}: $L = 1, R = 6 \to \text{Width} = 4$, $\text{Area} = 2 \times 4 = 8$.
+    \item \textbf{Bar $5$ ($3$)}: $L = 4, R = 6 \to \text{Width} = 1$, $\text{Area} = 3 \times 1 = 3$.
 \end{enumerate}
-The maximum area over all bars is $\max(2, 6, 10, 6, 8, 3) = 10$, achieved at bar $2$.
+Largest area across all six bars: $\max(2, 6, 10, 6, 8, 3) = 10$.
 \end{example}
 
-\begin{tryitbox}{Break-It Challenge}{ex2}
-\textbf{(a)} For $H = [3, 1, 4, 2]$, compute $L$, $R$, $\text{Width} = R - L - 1$, and $\text{Area}$ for every bar $i \in \{0, 1, 2, 3\}$, and find the maximum rectangle area.\\
-\textbf{(b) Break It:} Construct a $3$-bar histogram where forgetting the trailing sentinel bar (height $-1$ at index $N$) causes the stack loop to return $0$ instead of the true maximum area.
+\begin{tryitbox}{Histogram Table \& Sentinel Break-It}{ex5}
+\textbf{(a)} For $H = [3, 1, 4, 2]$ ($N = 4$), fill in the table below and circle the maximum area:
+
+\vspace{4pt}
+\begin{center}
+\begingroup
+\small
+\arrayrulecolor{codeframe}
+\begin{tabularx}{0.96\linewidth}{|c|c|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
+\hline
+\rowcolor{codegreen!10}
+\textbf{Bar $i$} & \textbf{Height $H[i]$} & \textbf{Left Wall $L$} & \textbf{Right Wall $R$} & \textbf{Width ($R - L - 1$)} & \textbf{Area} \\ \hline
+$0$ & $3$ & & & & \\ \hline
+$1$ & $1$ & & & & \\ \hline
+$2$ & $4$ & & & & \\ \hline
+$3$ & $2$ & & & & \\ \hline
+\end{tabularx}
+\endgroup
+\end{center}
+\vspace{4pt}
+\textbf{(b) Break It:} Write a $3$-bar histogram where forgetting the trailing sentinel $-1$ makes the stack loop return $0$ instead of the true maximum area, and state the true maximum area.
+\pencillines{1}
 \end{tryitbox}
 
 \subsection{Monotonic Deque for Sliding Window Range Extrema}
 
 \begin{notationbox}[Symbols Used in This Subsection]
-$K$ & Fixed length of the sliding window ($1 \le K \le N$) & \texttt{int} \\ \hline
-$[i - K + 1, i]$ & Active index window ending at step $i$ (for $i \ge K - 1$) & Closed range of size $K$ \\ \hline
-\texttt{dq.front()} & Index of the current window maximum (oldest surviving candidate) & Front of \texttt{std::deque<int>} \\ \hline
-\texttt{dq.back()} & Index of the most recently inserted candidate & Back of \texttt{std::deque<int>} \\ \hline
+$K$ & Fixed number of elements inside the sliding window & $1 \le K \le N$ \\
+$[i - K + 1,\; i]$ & Active window of indices ending at current step $i$ & Full once $i \ge K - 1$ \\
+\texttt{dq.front()} & Index of the current window's maximum value & Oldest survivor in deque \\
+\texttt{dq.back()} & Index of the most recently added candidate & Right end of deque \\
 \end{notationbox}
 
-\textbf{The Pain Point:} Scanning all $K$ elements inside every window takes $O(NK)$ time (up to $2.5 \times 10^9$ steps when $N = 10^5, K = 5 \times 10^4$). A balanced BST or max-heap cuts this to $O(N \log K)$, which still pays a logarithmic factor per step.
+\painbeat Scanning all $K$ elements inside every window takes $O(NK)$ time (up to $2.5 \times 10^9$ steps when $N = 10^5, K = 5 \times 10^4$). Even a max-heap pays $O(\log K)$ per step.
 
-\textbf{The ``Aha!'' Observation:} When a new element $A[i]$ enters the right side of the window, any older element already in the window with $A[j] \le A[i]$ is doubly beaten: $A[i]$ is at least as large \emph{and} will expire later. Thus $A[j]$ can never be the maximum of this window or any future window.
+\ahabeat When a new element $A[i]$ enters the window, any older element already sitting in the window with value $\le A[i]$ loses on \emph{both} fronts: $A[i]$ is at least as big \textbf{and} will stay inside the window longer. Those older candidates can never win a future window and can be dropped from the back immediately.
 
-\textbf{Concrete Mini-Example First:} Suppose the window holds $[4, 2]$ (indices $0, 1$) and $A[2] = 5$ arrives. Both $2$ and $4$ are $\le 5$ and older than $5$, so we pop both from the back, leaving only $[5]$. Every surviving candidate in the deque is therefore strictly decreasing from front to back, so \texttt{dq.front()} is always the window maximum.
+\examplebeat Suppose the deque currently holds values $[4, 2]$ and $5$ arrives. Both $2$ and $4$ are $\le 5$ and older than $5$, so we pop both from the back, leaving just $[5]$. Because every weaker older item is evicted on sight, the deque stays strictly decreasing from front to back---making \texttt{dq.front()} the window maximum in $O(1)$ time.
 
-\textbf{Loop Invariant (Sliding Window Maximum Deque):} After step $i$, \texttt{dq} contains only indices within $[i - K + 1, i]$, sorted in strictly increasing order of index and strictly decreasing order of value $A[\cdot]$.
+\invariantbeat{Sliding Window Maximum Deque} After step $i$, \texttt{dq} holds only indices inside $[i - K + 1, i]$, sorted in strictly increasing order of index and strictly decreasing order of value.
 
 \begin{enumerate}
-    \item \textbf{Front expiry}: If $\texttt{dq.front()} \le i - K$, it has left the window; call \texttt{dq.pop\_front()}.
+    \item \textbf{Front expiry}: If $\texttt{dq.front()} \le i - K$, it fell off the left edge; call \texttt{dq.pop\_front()}.
     \item \textbf{Back domination}: While $A[\texttt{dq.back()}] \le A[i]$, call \texttt{dq.pop\_back()}.
-    \item \textbf{Push \& query}: Push $i$ to the back; once $i \ge K - 1$, record $A[\texttt{dq.front()}]$.
+    \item \textbf{Push \& read}: Push $i$ onto the back; once $i \ge K - 1$, read $A[\texttt{dq.front()}]$.
 \end{enumerate}
 
-\textbf{When It Breaks:} Omitting the front expiry check leaves stale maximums stuck at the front forever. On $A = [9, 1, 1, 1]$ with $K = 2$, the front stays at index $0$ ($9$) even for windows $[1, 1]$, returning $[9, 9, 9]$ instead of $[9, 1, 1]$.
+\begin{watchoutbox}[When It Breaks --- Missing Front Expiry]
+Forgetting the front-expiry check leaves old champions stuck at the front forever. On $A = [9, 1, 1, 1]$ with $K = 2$, index $0$ (value $9$) stays at the front even for windows $[1, 1]$, falsely reporting $[9, 9, 9]$ instead of $[9, 1, 1]$.
+\end{watchoutbox}
 
-\begin{example}[Step-by-Step Monotonic Deque Sliding Window Trace]
-Let $A = [4, 2, 5, 1, 3]$ with window size $K = 3$. We find the maximum of each window:
+\begin{example}[Step-by-Step Sliding Window Trace on $A = {[4, 2, 5, 1, 3]}$, $K = 3$]
+Tracking the deque indices at each step:
 \begin{enumerate}
-    \item \textbf{$i = 0$, $A[0] = 4$}: Push $0$. Deque indices: $[0]$ (values: $[4]$).
-    \item \textbf{$i = 1$, $A[1] = 2$}: $2 < 4$, push $1$. Deque: $[0, 1]$ (values: $[4, 2]$).
-    \item \textbf{$i = 2$, $A[2] = 5$}:
-    \begin{itemize}
-        \item Back evictions: $A[1] = 2 \le 5$ (pop $1$); $A[0] = 4 \le 5$ (pop $0$).
-        \item Push $2$. Deque: $[2]$ (values: $[5]$). Window $[0 \dots 2]$ max $= A[2] = 5$.
-    \end{itemize}
-    \item \textbf{$i = 3$, $A[3] = 1$}:
-    \begin{itemize}
-        \item Front $2 > 3 - 3 = 0$ (still valid). $1 < 5$, push $3$. Deque: $[2, 3]$ (values: $[5, 1]$).
-        \item Window $[1 \dots 3]$ max $= A[2] = 5$.
-    \end{itemize}
-    \item \textbf{$i = 4$, $A[4] = 3$}:
-    \begin{itemize}
-        \item Front $2 > 4 - 3 = 1$ (valid). Back eviction: $A[3] = 1 \le 3$ (pop $3$).
-        \item Push $4$. Deque: $[2, 4]$ (values: $[5, 3]$). Window $[2 \dots 4]$ max $= A[2] = 5$.
-    \end{itemize}
+    \item $i = 0$ ($4$): push $0$. Deque indices: $[0]$ (values $[4]$).
+    \item $i = 1$ ($2$): $2 < 4$, push $1$. Deque: $[0, 1]$ (values $[4, 2]$).
+    \item $i = 2$ ($5$): pop $1$ ($2 \le 5$) and pop $0$ ($4 \le 5$) from back; push $2$. Deque: $[2]$ ($[5]$). Window $[0 \dots 2]$ max $= 5$.
+    \item $i = 3$ ($1$): front $2 > 3 - 3 = 0$ (still in window); $1 < 5$, push $3$. Deque: $[2, 3]$ ($[5, 1]$). Window $[1 \dots 3]$ max $= 5$.
+    \item $i = 4$ ($3$): front $2 > 4 - 3 = 1$ (still in window); pop $3$ ($1 \le 3$) from back; push $4$. Deque: $[2, 4]$ ($[5, 3]$). Window $[2 \dots 4]$ max $= 5$.
 \end{enumerate}
-Final window maximums: $[5, 5, 5]$, computed in amortized $O(1)$ per step.
+Final window maximums: $[5, 5, 5]$.
 \end{example}
 
-\begin{tryitbox}{Hand-Trace \& Predict Drill}{ex3}
-Trace \textbf{Sliding Window Maximum} with $K = 3$ on $A = [4, 1, 3, 5, 2]$. After each step $i = 0 \dots 4$, write the deque's stored \emph{indices}, the emitted window maximum (for $i \ge 2$), and identify which index is evicted from the \textbf{front} versus which indices are evicted from the \textbf{back}.
+\begin{tryitbox}{Sliding Window Deque Trace \& Eviction Types}{ex6}
+Trace \textbf{Sliding Window Maximum} ($K = 3$) on $A = [4, 1, 3, 5, 2]$. Fill in the table below, noting whether each evicted index was popped from the \textbf{front} (expired) or \textbf{back} (dominated):
+
+\vspace{4pt}
+\begin{center}
+\begingroup
+\small
+\arrayrulecolor{codeframe}
+\begin{tabularx}{0.96\linewidth}{|c|c|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{2.3cm}|>{\centering\arraybackslash}p{2.2cm}|}
+\hline
+\rowcolor{codegreen!10}
+\textbf{$i$} & \textbf{$A[i]$} & \textbf{Evictions (front or back?)} & \textbf{Deque Indices} & \textbf{Window Max} \\ \hline
+$0$ & $4$ & & & --- \\ \hline
+$1$ & $1$ & & & --- \\ \hline
+$2$ & $3$ & & & \\ \hline
+$3$ & $5$ & & & \\ \hline
+$4$ & $2$ & & & \\ \hline
+\end{tabularx}
+\endgroup
+\end{center}
 \end{tryitbox}
 
 % ============================================================================
@@ -503,7 +704,7 @@ Trace \textbf{Sliding Window Maximum} with $K = 3$ on $A = [4, 1, 3, 5, 2]$. Aft
 
 \subsection{Why Naive Brute-Force Fails}
 
-A naive algorithm searches for the Next Greater Element with a nested scan:
+The obvious way to find every Next Greater Element runs an inner scan for each starting index:
 \begin{lstlisting}[numbers=none]
 // Naive O(N^2) search
 for (int i = 0; i < n; ++i) {
@@ -515,26 +716,35 @@ for (int i = 0; i < n; ++i) {
 }
 \end{lstlisting}
 
-On a strictly descending array $[10^5, 10^5 - 1, \dots, 1]$, every index $i$ inspects all $N - 1 - i$ elements to its right before giving up:
-$$
-\sum_{i=0}^{N-1} (N - 1 - i) = \frac{N(N - 1)}{2} = O(N^2)
-$$
-At $N = 10^5$, that is $\approx 5 \times 10^9$ comparisons, far beyond a typical $1$-second budget ($\approx 10^8$ operations).
+On a strictly descending list $[10^5, 10^5 - 1, \dots, 1]$, every element scans all remaining items to its right and finds nothing:
 
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{3.4cm}|X|X|p{2.3cm}|}
-\hline
-\textbf{Problem Class} & \textbf{Naive Approach} & \textbf{Monotonic Insight} & \textbf{Speedup} \\ \hline
-Nearest Extrema & Inner loop scans right/left per element & Stack keeps only undominated candidates & $O(N^2) \to O(N)$ \\ \hline
-Histogram Area & Check all $\binom{N}{2}$ pairs $[l, r]$ & Expand each bar $i$ to $\text{PSE}$ and $\text{NSE}$ & $O(N^2) \to O(N)$ \\ \hline
-Sliding Window Max & Rescan $K$ elements (or heap $O(\log K)$) & Deque evicts expired front \& dominated back & $O(NK) \to O(N)$ \\ \hline
+\begin{formulabox}[Brute-Force Comparison Count --- In Plain English]
+$$
+(N - 1) + (N - 2) + \dots + 1 + 0 = \frac{N(N - 1)}{2} = O(N^2)
+$$
+\textbf{Read this as:} At $N = 10^5$, the inner loop runs about $5 \times 10^9$ comparisons---roughly $50\times$ slower than a typical $1$-second budget ($\approx 10^8$ operations).
+\end{formulabox}
+
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.2cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{2.4cm}}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Problem Class}} & \textcolor{primaryblue}{\textbf{Naive Approach}} & \textcolor{primaryblue}{\textbf{Monotonic Shortcut}} & \textcolor{primaryblue}{\textbf{Speedup}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Nearest Extrema & Inner loop walks left/right per item & Stack keeps only undominated items & $O(N^2) \to O(N)$ \\
+Histogram Area & Test all $\binom{N}{2}$ pairs of walls $[l, r]$ & Expand each bar $i$ to $\text{PSE}$ and $\text{NSE}$ & $O(N^2) \to O(N)$ \\
+Sliding Window Max & Rescan $K$ items (or heap $O(\log K)$) & Deque drops expired front \& weak back & $O(NK) \to O(N)$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
-\vspace{0.3cm}
+\endgroup
+\end{center}
 
-\subsection{The Amortized Linear Time Invariant}
+\subsection{Why a \texttt{while} Inside a \texttt{for} Is Still Linear Time}
 
-\textbf{The Pain Point:} Seeing a \texttt{while} loop nested inside a \texttt{for} loop looks like $O(N^2)$ at first glance:
+\painbeat Looking at a \texttt{while} loop nested inside a \texttt{for} loop makes almost everyone suspect $O(N^2)$ time:
 \begin{lstlisting}[numbers=none]
 for (int i = 0; i < n; ++i) {
     while (!st.empty() && A[st.top()] < A[i]) {
@@ -545,18 +755,27 @@ for (int i = 0; i < n; ++i) {
 }
 \end{lstlisting}
 
-\textbf{The ``Aha!'' Observation (Charge the Element, Not the Iteration):} Instead of bounding the worst single iteration (which can pop up to $N - 1$ items), count how many times each individual element touches the stack across the \emph{entire} run:
+\ahabeat Stop counting ``worst work per iteration'' (yes, one step can pop $N - 1$ items!) and instead count \textbf{total actions per element} over the whole run:
 \begin{itemize}
-    \item Each index $i \in \{0, \dots, N - 1\}$ is pushed onto the stack \textbf{exactly once} ($\le N$ pushes total).
-    \item Only an element currently on the stack can be popped, so each index is popped \textbf{at most once} ($\le N$ pops total).
-    \item The \texttt{while} loop body executes once per pop.
+    \item Every index enters the stack \textbf{exactly once} ($N$ pushes total).
+    \item An index can only be popped if it is on the stack, so every index leaves \textbf{at most once} ($\le N$ pops total).
+    \item The inner \texttt{while} body runs once per pop.
 \end{itemize}
 
-Therefore the nested loop executes at most $N$ pushes plus $N$ pops across all iterations combined, giving $O(N)$ total time and $O(1)$ amortized cost per element. The exact same $2N$ push/pop budget holds for the monotonic deque.
+Across the entire program, the loop executes at most $N$ pushes plus $N$ pops ($2N$ stack operations total), giving $O(N)$ overall time---an average (amortized) cost of $O(1)$ per item. The exact same $2N$ budget holds for the monotonic deque.
+
+\begin{tryitbox}{Predict the Exact Push \& Pop Budget}{ex7}
+Trace the NGE loop above mentally on $A = [10, 9, 8, 7, 6, 100]$ ($N = 6$):
+\begin{enumerate}
+    \item Which single iteration triggers the most pops, and how many pops happen in that one step?
+    \item Across all $6$ iterations combined, what is the \textbf{exact total} number of pushes and \textbf{exact total} number of pops?
+\end{enumerate}
+\pencillines{2}
+\end{tryitbox}
 
 \subsection{Visualizing Cascading Pops}
 
-Figure~\ref{fig:cascading_pops} traces a single arrival in $A = [7, 4, 2, 6]$. The stack holds $[7, 4, 2]$ in decreasing order; arriving value $6$ pops $2$ and $4$ in a cascade, records $6$ as their NGE, stops at $7 > 6$, and pushes $6$.
+Figure~\ref{fig:cascading_pops} zooms in on a single arrival in $A = [7, 4, 2, 6]$. The stack holds $[7, 4, 2]$ in decreasing order; when $6$ arrives, it pops $2$ and $4$ in a cascade, writes $6$ as their Next Greater Element, stops at $7 > 6$, and pushes $6$.
 
 \begin{figure}[htbp]
 \centering
@@ -636,7 +855,7 @@ Figure~\ref{fig:cascading_pops} traces a single arrival in $A = [7, 4, 2, 6]$. T
 
 \subsection{Visualizing the Monotonic Deque Sliding Window}
 
-Figure~\ref{fig:deque_sliding_window} illustrates how the monotonic deque maintains sliding-window maximums for $K = 3$ at the moment $A[4] = 5$ enters window $[2 \dots 4]$.
+Figure~\ref{fig:deque_sliding_window} shows both deque evictions working together when $A[4] = 5$ enters window $[2 \dots 4]$ ($K = 3$).
 
 \begin{figure}[htbp]
 \centering
@@ -664,8 +883,7 @@ Figure~\ref{fig:deque_sliding_window} illustrates how the monotonic deque mainta
         \fi
     }
 
-    % Sliding window bounding frame around indices 2 (x=4.9), 3 (x=6.8), 4 (x=8.7)
-    % Cell 2 left edge = 4.15, Cell 4 right edge = 9.45 -> frame 3.95..9.65 (0.20cm symmetric padding)
+    % Sliding window bounding frame around indices 2, 3, 4 with symmetric 0.20cm padding
     \draw[draw=primaryblue, line width=1.6pt, rounded corners=4pt] (3.95, 4.05) rectangle (9.65, 5.65);
     \node[anchor=south, font=\scriptsize\bfseries, text=primaryblue] at (6.80, 5.70) {Active Window $W_4 = [-1, -3, 5]$};
 
@@ -715,183 +933,171 @@ Figure~\ref{fig:deque_sliding_window} illustrates how the monotonic deque mainta
 \subsection{Example 1: Next Greater Element (NGE)}
 \label{ex:nge}
 
-\textbf{Problem Statement}: Given array $A = [4, 5, 2, 25, 10, 8]$, find the Next Greater Element for every element. If none exists, output $-1$.
+\textbf{Goal}: Given $A = [4, 5, 2, 25, 10, 8]$, find the first strictly greater value to the right of each entry (or $-1$ if none).
 
-\textbf{Method}: Iterate left-to-right maintaining a decreasing stack of indices. Any index still on the stack at the end has no greater element to its right.
+\textbf{Strategy}: Scan left-to-right with a decreasing stack of indices. Anything still left on the stack at the end stays $-1$.
 
 \begin{enumerate}
-    \item \textbf{Initialize}: $ans = [-1, -1, -1, -1, -1, -1]$, $st = []$.
-    \item \textbf{$i = 0$, $A[0] = 4$}: Stack empty. Push $0$. Stack: $[0]$.
-    \item \textbf{$i = 1$, $A[1] = 5$}: $A[0] = 4 < 5 \implies$ pop $0$, set $ans[0] = 5$. Push $1$. Stack: $[1]$.
-    \item \textbf{$i = 2$, $A[2] = 2$}: $A[1] = 5 \not< 2$. Push $2$. Stack: $[1, 2]$.
-    \item \textbf{$i = 3$, $A[3] = 25$}:
-    \begin{itemize}
-        \item $A[2] = 2 < 25 \implies$ pop $2$, set $ans[2] = 25$.
-        \item $A[1] = 5 < 25 \implies$ pop $1$, set $ans[1] = 25$.
-        \item Stack empty. Push $3$. Stack: $[3]$.
-    \end{itemize}
-    \item \textbf{$i = 4$, $A[4] = 10$}: $A[3] = 25 \not< 10$. Push $4$. Stack: $[3, 4]$.
-    \item \textbf{$i = 5$, $A[5] = 8$}: $A[4] = 10 \not< 8$. Push $5$. Stack: $[3, 4, 5]$.
-    \item \textbf{Completion}: Indices $3, 4, 5$ remain unresolved, keeping $-1$.
+    \item \textbf{Start}: $ans = [-1, -1, -1, -1, -1, -1]$, stack $st = []$.
+    \item \textbf{$i = 0$ ($4$)}: Stack empty. Push $0$. Stack: $[0]$.
+    \item \textbf{$i = 1$ ($5$)}: $4 < 5$, so pop $0$ and set $ans[0] = 5$. Push $1$. Stack: $[1]$.
+    \item \textbf{$i = 2$ ($2$)}: $5$ is not less than $2$, so push $2$. Stack: $[1, 2]$.
+    \item \textbf{$i = 3$ ($25$)}: Pop $2$ ($2 < 25 \to ans[2] = 25$); pop $1$ ($5 < 25 \to ans[1] = 25$). Push $3$. Stack: $[3]$.
+    \item \textbf{$i = 4$ ($10$)}: $25 > 10$, push $4$. Stack: $[3, 4]$.
+    \item \textbf{$i = 5$ ($8$)}: $10 > 8$, push $5$. Stack: $[3, 4, 5]$.
+    \item \textbf{Finish}: Indices $3, 4, 5$ never got popped, so they keep $-1$.
 \end{enumerate}
 
-\noindent\textbf{Final Result}: $ans = [5, 25, 25, -1, -1, -1]$.
+\textbf{Answer}: $ans = [5, 25, 25, -1, -1, -1]$.
 
 \subsection{Example 2: Daily Temperature Span (Index Distance)}
 
-\textbf{Problem Statement}: Given daily temperatures $T = [73, 74, 75, 71, 69, 72, 76, 73]$, find how many days you must wait until a warmer temperature occurs. If no warmer day exists, record $0$.
+\textbf{Goal}: Given daily temperatures $T = [73, 74, 75, 71, 69, 72, 76, 73]$, find how many days until a warmer day (or $0$ if never).
 
-\textbf{Method}: Maintain a decreasing stack of indices. When day $i$ is warmer than day $st.\text{top}()$, the span is $i - st.\text{top}()$.
+\textbf{Strategy}: Decreasing stack of day indices. When day $i$ warms past the top day, record $\text{span} = i - \text{top}$.
 
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|c|c|c|X|X|c|}
-\hline
-\textbf{Day $i$} & \textbf{Temp $T[i]$} & \textbf{Stack Before} & \textbf{Popped Indices} & \textbf{Span Result ($i - \text{top}$)} & \textbf{Stack After} \\ \hline
-$0$ & $73$ & $[]$ & None & None & $[0]$ \\ \hline
-$1$ & $74$ & $[0]$ & $0$ ($73 < 74$) & $span[0] = 1 - 0 = 1$ & $[1]$ \\ \hline
-$2$ & $75$ & $[1]$ & $1$ ($74 < 75$) & $span[1] = 2 - 1 = 1$ & $[2]$ \\ \hline
-$3$ & $71$ & $[2]$ & None & None & $[2, 3]$ \\ \hline
-$4$ & $69$ & $[2, 3]$ & None & None & $[2, 3, 4]$ \\ \hline
-$5$ & $72$ & $[2, 3, 4]$ & $4$ ($69 < 72$), $3$ ($71 < 72$) & $span[4] = 5 - 4 = 1$, $span[3] = 5 - 3 = 2$ & $[2, 5]$ \\ \hline
-$6$ & $76$ & $[2, 5]$ & $5$ ($72 < 76$), $2$ ($75 < 76$) & $span[5] = 6 - 5 = 1$, $span[2] = 6 - 2 = 4$ & $[6]$ \\ \hline
-$7$ & $73$ & $[6]$ & None & None & $[6, 7]$ \\ \hline
+\begin{center}
+\begingroup
+\footnotesize
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{c c >{\raggedright\arraybackslash}p{2.0cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{1.9cm}}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Day $i$}} & \textcolor{primaryblue}{\textbf{$T[i]$}} & \textcolor{primaryblue}{\textbf{Stack Before}} & \textcolor{primaryblue}{\textbf{Popped Indices}} & \textcolor{primaryblue}{\textbf{Recorded Span ($i - \text{top}$)}} & \textcolor{primaryblue}{\textbf{Stack After}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+$0$ & $73$ & $[]$ & None & --- & $[0]$ \\
+$1$ & $74$ & $[0]$ & $0$ ($73 < 74$) & $span[0] = 1 - 0 = 1$ & $[1]$ \\
+$2$ & $75$ & $[1]$ & $1$ ($74 < 75$) & $span[1] = 2 - 1 = 1$ & $[2]$ \\
+$3$ & $71$ & $[2]$ & None & --- & $[2, 3]$ \\
+$4$ & $69$ & $[2, 3]$ & None & --- & $[2, 3, 4]$ \\
+$5$ & $72$ & $[2, 3, 4]$ & $4$ ($69 < 72$), $3$ ($71 < 72$) & $span[4] = 1$, $span[3] = 2$ & $[2, 5]$ \\
+$6$ & $76$ & $[2, 5]$ & $5$ ($72 < 76$), $2$ ($75 < 76$) & $span[5] = 1$, $span[2] = 4$ & $[6]$ \\
+$7$ & $73$ & $[6]$ & None & --- & $[6, 7]$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
-\vspace{0.3cm}
+\endgroup
+\end{center}
 
-\noindent\textbf{Final Result}: $span = [1, 1, 4, 2, 1, 1, 0, 0]$.
+\textbf{Answer}: $span = [1, 1, 4, 2, 1, 1, 0, 0]$.
 
 \subsection{Example 3: Largest Rectangle in Histogram Trace}
 
-\textbf{Problem Statement}: Heights $H = [2, 1, 5, 6, 2, 3]$. Compute the maximum rectangular area.
+\textbf{Goal}: Heights $H = [2, 1, 5, 6, 2, 3]$. Find the largest rectangular area.
 
-\textbf{Method}: Maintain an increasing stack of indices. Append a sentinel bar of height $-1$ at index $6$ to flush all remaining bars.
+\textbf{Strategy}: Increasing stack of indices, plus a fake sentinel bar of height $-1$ at index $6$ to flush every remaining bar.
 
 \begin{enumerate}
-    \item \textbf{Initialize}: $max\_area = 0$, $st = []$.
-    \item \textbf{$i = 0$, $H[0] = 2$}: Push $0$. Stack: $[0]$.
-    \item \textbf{$i = 1$, $H[1] = 1$}: $H[0] = 2 > 1$. Pop $0$.
+    \item \textbf{$i = 0$ ($2$)}: Push $0$. Stack: $[0]$.
+    \item \textbf{$i = 1$ ($1$)}: $2 > 1 \to$ pop $0$ ($h = 2$, stack empty so $L = -1$, width $= 1 - (-1) - 1 = 1$, area $= 2$). Push $1$. Stack: $[1]$.
+    \item \textbf{$i = 2$ ($5$)} and \textbf{$i = 3$ ($6$)}: Both increasing; push $2$, then $3$. Stack: $[1, 2, 3]$.
+    \item \textbf{$i = 4$ ($2$)}:
     \begin{itemize}
-        \item $h = 2$, stack empty ($L = -1$), $\text{Width} = 1 - (-1) - 1 = 1$, $\text{Area} = 2$. $max\_area = 2$.
-        \item Push $1$. Stack: $[1]$.
+        \item Pop $3$ ($6 > 2$): $L = 2$, width $= 4 - 2 - 1 = 1$, area $= 6 \times 1 = 6$.
+        \item Pop $2$ ($5 > 2$): $L = 1$, width $= 4 - 1 - 1 = 2$, area $= 5 \times 2 = 10$ (new best!).
+        \item Top is $1$ ($H[1] = 1 \le 2$), stop. Push $4$. Stack: $[1, 4]$.
     \end{itemize}
-    \item \textbf{$i = 2$, $H[2] = 5$}: Push $2$. Stack: $[1, 2]$.
-    \item \textbf{$i = 3$, $H[3] = 6$}: Push $3$. Stack: $[1, 2, 3]$.
-    \item \textbf{$i = 4$, $H[4] = 2$}: $H[3] = 6 > 2$.
-    \begin{itemize}
-        \item Pop $3$: $h = 6$, new top $L = 2$, $\text{Width} = 4 - 2 - 1 = 1$, $\text{Area} = 6$. $max\_area = 6$.
-        \item Pop $2$ ($H[2] = 5 > 2$): $h = 5$, new top $L = 1$, $\text{Width} = 4 - 1 - 1 = 2$, $\text{Area} = 10$. $max\_area = 10$.
-        \item Top is $1$ ($H[1] = 1 \le 2$). Stop. Push $4$. Stack: $[1, 4]$.
-    \end{itemize}
-    \item \textbf{$i = 5$, $H[5] = 3$}: Push $5$. Stack: $[1, 4, 5]$.
+    \item \textbf{$i = 5$ ($3$)}: $3 > 2$, push $5$. Stack: $[1, 4, 5]$.
     \item \textbf{$i = 6$ (Sentinel $-1$)}: Flushes remaining bars:
     \begin{itemize}
-        \item Pop $5$: $h = 3$, $L = 4$, $\text{Width} = 6 - 4 - 1 = 1$, $\text{Area} = 3$.
-        \item Pop $4$: $h = 2$, $L = 1$, $\text{Width} = 6 - 1 - 1 = 4$, $\text{Area} = 8$.
-        \item Pop $1$: $h = 1$, $L = -1$, $\text{Width} = 6 - (-1) - 1 = 6$, $\text{Area} = 6$.
+        \item Pop $5$: $h = 3$, $L = 4$, width $= 1$, area $= 3$.
+        \item Pop $4$: $h = 2$, $L = 1$, width $= 4$, area $= 8$.
+        \item Pop $1$: $h = 1$, $L = -1$, width $= 6$, area $= 6$.
     \end{itemize}
 \end{enumerate}
 
-\noindent\textbf{Final Result}: $max\_area = 10$ (spanning indices $2$ and $3$).
+\textbf{Answer}: $max\_area = 10$ (spanning bars $2$ and $3$).
 
 \subsection{Example 4: Sliding Window Maximum Trace}
 
-\textbf{Problem Statement}: $A = [1, 3, -1, -3, 5, 3, 6, 7]$, window size $K = 3$. Compute the maximum for each window.
+\textbf{Goal}: $A = [1, 3, -1, -3, 5, 3, 6, 7]$, window size $K = 3$. Find each window's maximum.
 
 \begin{enumerate}
-    \item $i = 0$, $A[0] = 1$: Deque: $[0]$.
-    \item $i = 1$, $A[1] = 3$: $1 \le 3$, pop $0$ from back. Push $1$. Deque: $[1]$.
-    \item $i = 2$, $A[2] = -1$: $A[\text{back}] = 3 \le -1$ is false. Push $2$. Deque: $[1, 2]$. Window $[0 \dots 2]$ max $= A[1] = 3$.
-    \item $i = 3$, $A[3] = -3$: Front $1 > 3 - 3 = 0$; $-1 \le -3$ is false. Push $3$. Deque: $[1, 2, 3]$. Window $[1 \dots 3]$ max $= A[1] = 3$.
-    \item $i = 4$, $A[4] = 5$:
-    \begin{itemize}
-        \item Front check: $1 \le 4 - 3 = 1$, expired! Pop $1$ from front.
-        \item Back pops: $-3 \le 5 \implies$ pop $3$; $-1 \le 5 \implies$ pop $2$.
-        \item Push $4$. Deque: $[4]$. Window $[2 \dots 4]$ max $= A[4] = 5$.
-    \end{itemize}
-    \item $i = 5$, $A[5] = 3$: Push $5$. Deque: $[4, 5]$. Window $[3 \dots 5]$ max $= A[4] = 5$.
-    \item $i = 6$, $A[6] = 6$: Pop $5$ ($3 \le 6$) and $4$ ($5 \le 6$) from back. Push $6$. Deque: $[6]$. Window $[4 \dots 6]$ max $= A[6] = 6$.
-    \item $i = 7$, $A[7] = 7$: Pop $6$ ($6 \le 7$) from back. Push $7$. Deque: $[7]$. Window $[5 \dots 7]$ max $= A[7] = 7$.
+    \item $i = 0$ ($1$): Push $0$. Deque: $[0]$.
+    \item $i = 1$ ($3$): $1 \le 3$, pop $0$ from back; push $1$. Deque: $[1]$.
+    \item $i = 2$ ($-1$): Back value $3 \le -1$ is false; push $2$. Deque: $[1, 2]$. Window $[0 \dots 2]$ max $= A[1] = 3$.
+    \item $i = 3$ ($-3$): Front $1 > 3 - 3 = 0$ (valid); $-1 \le -3$ is false; push $3$. Deque: $[1, 2, 3]$. Window $[1 \dots 3]$ max $= 3$.
+    \item $i = 4$ ($5$): Front $1 \le 4 - 3 = 1$ (expired, pop front!); back pops $3$ ($-3 \le 5$) and $2$ ($-1 \le 5$); push $4$. Deque: $[4]$. Window $[2 \dots 4]$ max $= 5$.
+    \item $i = 5$ ($3$): Push $5$. Deque: $[4, 5]$. Window $[3 \dots 5]$ max $= 5$.
+    \item $i = 6$ ($6$): Pop $5$ ($3 \le 6$) and $4$ ($5 \le 6$) from back; push $6$. Deque: $[6]$. Window $[4 \dots 6]$ max $= 6$.
+    \item $i = 7$ ($7$): Pop $6$ ($6 \le 7$) from back; push $7$. Deque: $[7]$. Window $[5 \dots 7]$ max $= 7$.
 \end{enumerate}
 
-\noindent\textbf{Final Result}: Window maximums $= [3, 3, 5, 5, 6, 7]$.
+\textbf{Answer}: $[3, 3, 5, 5, 6, 7]$.
 
 \subsection{Example 5: Sum of Subarray Minimums (Handling Duplicates)}
 \label{ex:subarray_mins}
 
-\textbf{Problem Statement}: Given array $A = [3, 1, 2, 1]$, compute the sum of $\min(B)$ over all contiguous subarrays $B$, modulo $10^9 + 7$.
+\textbf{Goal}: Given $A = [3, 1, 2, 1]$, sum $\min(B)$ over all $10$ contiguous subarrays modulo $10^9 + 7$.
 
-\textbf{Method}: Break duplicate ties by assigning each subarray to the \emph{last} (rightmost) occurrence of its minimum:
-\begin{itemize}
-    \item $\text{PLE}[i]$: Previous Less Element using a \emph{strict} comparison ($A[j] < A[i]$).
-    \item $\text{NLE}[i]$: Next Less or Equal Element using a \emph{non-strict} comparison ($A[j] \le A[i]$).
-\end{itemize}
+\textbf{Strategy}: Use strict $\text{PLE}$ ($<$) on the left and non-strict $\text{NLE}$ ($\le$) on the right so tied subarrays belong uniquely to their rightmost minimum.
 
 \begin{enumerate}
-    \item \textbf{Step 1: Compute $\text{PLE}$ (Strict $<$, pop while $A[\text{top}] \ge A[i]$)}:
+    \item \textbf{Pass 1 --- $\text{PLE}$ (strict $<$, pop while $A[\text{top}] \ge A[i]$)}:
     \begin{itemize}
-        \item $i = 0$ ($3$): stack empty $\implies \text{PLE}[0] = -1$. Push $0$. Stack: $[0]$.
-        \item $i = 1$ ($1$): $3 \ge 1$, pop $0 \implies \text{PLE}[1] = -1$. Push $1$. Stack: $[1]$.
-        \item $i = 2$ ($2$): $1 < 2$, no pop $\implies \text{PLE}[2] = 1$. Push $2$. Stack: $[1, 2]$.
-        \item $i = 3$ ($1$): $2 \ge 1$ (pop $2$), $1 \ge 1$ (pop $1$) $\implies \text{PLE}[3] = -1$. Push $3$. Stack: $[3]$.
+        \item $i=0$ ($3$): stack empty $\to -1$, stack $[0]$.
+        \item $i=1$ ($1$): pop $0$ ($3 \ge 1$) $\to -1$, stack $[1]$.
+        \item $i=2$ ($2$): $1 < 2$ $\to 1$, stack $[1, 2]$.
+        \item $i=3$ ($1$): pop $2$ ($2 \ge 1$), pop $1$ ($1 \ge 1$) $\to -1$, stack $[3]$.
     \end{itemize}
     Result: $\text{PLE} = [-1, -1, 1, -1]$.
 
-    \item \textbf{Step 2: Compute $\text{NLE}$ (Non-strict $\le$, scan right-to-left, pop while $A[\text{top}] > A[i]$)}:
+    \item \textbf{Pass 2 --- $\text{NLE}$ (non-strict $\le$, scan right-to-left, pop while $A[\text{top}] > A[i]$)}:
     \begin{itemize}
-        \item $i = 3$ ($1$): stack empty $\implies \text{NLE}[3] = 4$. Push $3$. Stack: $[3]$.
-        \item $i = 2$ ($2$): $1 \ngtr 2$, no pop $\implies \text{NLE}[2] = 3$. Push $2$. Stack: $[3, 2]$.
-        \item $i = 1$ ($1$): $2 > 1$ (pop $2$), $1 \ngtr 1$ (stop!) $\implies \text{NLE}[1] = 3$. Push $1$. Stack: $[3, 1]$.
-        \item $i = 0$ ($3$): $1 \ngtr 3$, no pop $\implies \text{NLE}[0] = 1$. Push $0$. Stack: $[3, 1, 0]$.
+        \item $i=3$ ($1$): stack empty $\to 4$, stack $[3]$.
+        \item $i=2$ ($2$): $1$ is not $> 2 \to 3$, stack $[3, 2]$.
+        \item $i=1$ ($1$): pop $2$ ($2 > 1$); $1$ is not $> 1$ (stop!) $\to 3$, stack $[3, 1]$.
+        \item $i=0$ ($3$): $1$ is not $> 3 \to 1$, stack $[3, 1, 0]$.
     \end{itemize}
     Result: $\text{NLE} = [1, 3, 3, 4]$.
 
-    \item \textbf{Step 3: Subarray Contribution Products}:
+    \item \textbf{Contributions $(i - \text{PLE}[i]) \times (\text{NLE}[i] - i) \times A[i]$}:
     \begin{itemize}
-        \item $i = 0$ ($3$): $(0 - (-1)) \times (1 - 0) = 1 \implies 3 \times 1 = 3$ ($[3]$).
-        \item $i = 1$ ($1$): $(1 - (-1)) \times (3 - 1) = 4 \implies 1 \times 4 = 4$ ($[3,1], [3,1,2], [1], [1,2]$).
-        \item $i = 2$ ($2$): $(2 - 1) \times (3 - 2) = 1 \implies 2 \times 1 = 2$ ($[2]$).
-        \item $i = 3$ ($1$): $(3 - (-1)) \times (4 - 3) = 4 \implies 1 \times 4 = 4$ ($[3,1,2,1], [1,2,1], [2,1], [1]$).
+        \item $i=0$ ($3$): $1 \times 1 = 1$ subarray $\to 3 \times 1 = 3$.
+        \item $i=1$ ($1$): $2 \times 2 = 4$ subarrays $\to 1 \times 4 = 4$.
+        \item $i=2$ ($2$): $1 \times 1 = 1$ subarray $\to 2 \times 1 = 2$.
+        \item $i=3$ ($1$): $4 \times 1 = 4$ subarrays $\to 1 \times 4 = 4$.
     \end{itemize}
-
-    \item \textbf{Step 4: Total Sum}:
-    $$
-    \text{Total Sum} = 3 + 4 + 2 + 4 = 13 \pmod{10^9 + 7}
-    $$
-    Notice that $A[0 \dots 3] = [3, 1, 2, 1]$ and $A[1 \dots 3] = [1, 2, 1]$ are claimed uniquely by $i = 3$ (the last occurrence of $1$), while $A[1 \dots 2] = [1, 2]$ is claimed by $i = 1$. All $10$ subarrays are counted once.
 \end{enumerate}
 
-\noindent\textbf{Final Result}: Total subarray minimum sum $= 13$.
+\textbf{Answer}: $3 + 4 + 2 + 4 = 13 \pmod{10^9 + 7}$.
 
-\subsection{Example 6: Remove $K$ Digits (Lexicographical Monotonic Stack)}
+\subsection{Example 6: Remove $K$ Digits (Lexicographical Stack)}
 \label{ex:remove_k_digits}
 
-\textbf{Problem Statement}: Given a non-negative integer string $S = \texttt{"1432219"}$ and removal budget $K = 3$, remove exactly $K$ digits to form the smallest possible integer.
+\textbf{Goal}: Remove exactly $K = 3$ digits from $S = \texttt{"1432219"}$ to make the smallest possible number.
 
-\textbf{Method}: A smaller digit in an earlier (more significant) place value always beats any change in later digits. Maintain a non-decreasing stack of digits: whenever an incoming digit $d$ is strictly smaller than the stack top and $K > 0$, pop the larger top digit and decrement $K$.
+\textbf{Strategy}: A smaller digit on the left beats any digit change further right. Keep a non-decreasing stack of digits; whenever a smaller digit arrives and $K > 0$, pop the larger top digit and spend $1$ removal.
 
 \begin{enumerate}
-    \item $d = \texttt{'1'}$: stack empty, push $\texttt{'1'}$. Stack: $\texttt{"1"}$, $K = 3$.
-    \item $d = \texttt{'4'}$: $\texttt{'1'} \le \texttt{'4'}$, push $\texttt{'4'}$. Stack: $\texttt{"14"}$, $K = 3$.
-    \item $d = \texttt{'3'}$: $\texttt{'4'} > \texttt{'3'}$ and $K = 3 > 0 \implies$ pop $\texttt{'4'}$ ($K = 2$). $\texttt{'1'} \le \texttt{'3'}$, stop. Push $\texttt{'3'}$. Stack: $\texttt{"13"}$, $K = 2$.
-    \item $d = \texttt{'2'}$: $\texttt{'3'} > \texttt{'2'}$ and $K = 2 > 0 \implies$ pop $\texttt{'3'}$ ($K = 1$). $\texttt{'1'} \le \texttt{'2'}$, stop. Push $\texttt{'2'}$. Stack: $\texttt{"12"}$, $K = 1$.
-    \item $d = \texttt{'2'}$: $\texttt{'2'} \not> \texttt{'2'}$ (do not waste budget on equal digits). Push $\texttt{'2'}$. Stack: $\texttt{"122"}$, $K = 1$.
-    \item $d = \texttt{'1'}$: $\texttt{'2'} > \texttt{'1'}$ and $K = 1 > 0 \implies$ pop $\texttt{'2'}$ ($K = 0$). Budget spent; push $\texttt{'1'}$. Stack: $\texttt{"121"}$, $K = 0$.
-    \item $d = \texttt{'9'}$: $K = 0$, push $\texttt{'9'}$. Stack: $\texttt{"1219"}$, $K = 0$.
-    \item \textbf{Post-processing}: If $K > 0$ remains (e.g., $\texttt{"12345"}$), pop $K$ largest digits from the back; then strip leading zeros (returning $\texttt{"0"}$ if empty).
+    \item \texttt{'1'}, \texttt{'4'}: push both. Stack: \texttt{"14"}, $K = 3$.
+    \item \texttt{'3'}: $\texttt{'4'} > \texttt{'3'}$ and $K > 0 \to$ pop \texttt{'4'} ($K = 2$), push \texttt{'3'}. Stack: \texttt{"13"}.
+    \item \texttt{'2'}: $\texttt{'3'} > \texttt{'2'}$ and $K > 0 \to$ pop \texttt{'3'} ($K = 1$), push \texttt{'2'}. Stack: \texttt{"12"}.
+    \item \texttt{'2'}: equal to top---keep it to save budget! Stack: \texttt{"122"}, $K = 1$.
+    \item \texttt{'1'}: $\texttt{'2'} > \texttt{'1'}$ and $K > 0 \to$ pop \texttt{'2'} ($K = 0$), push \texttt{'1'}. Stack: \texttt{"121"}.
+    \item \texttt{'9'}: budget spent ($K = 0$), push \texttt{'9'}. Stack: \texttt{"1219"}.
+    \item \textbf{Cleanup}: If $K > 0$ remains at the end, chop $K$ digits off the right end; then strip any leading zeros (returning \texttt{"0"} if empty).
 \end{enumerate}
 
-\noindent\textbf{Final Result}: $\texttt{"1219"}$.
+\textbf{Answer}: \texttt{"1219"}.
+
+\begin{tryitbox}{Remove $K$ Digits Edge Cases}{ex8}
+Trace \textbf{Remove $K$ Digits} on two tricky edge cases:
+\begin{enumerate}
+    \item $S = \texttt{"10200"}$ with $K = 1$ (watch out for leading zeros!).
+    \item $S = \texttt{"12345"}$ with $K = 2$ (watch out for leftover removal budget!).
+\end{enumerate}
+\pencillines{2}
+\end{tryitbox}
 
 % ============================================================================
 \section{C++ Implementations}
 % ============================================================================
 
-All implementations use modern C++23. Sequence inputs are passed as \texttt{std::span<const int>} or \texttt{std::string\_view} for zero-copy views, with explicit sizing and \texttt{[[nodiscard]]}.
+All listings below are standalone modern C++23 functions taking zero-copy \texttt{std::span<const int>} or \texttt{std::string\_view} inputs, compiled cleanly with \texttt{-Wall -Wextra}.
 
 \subsection{Next Greater Element}
 
-We scan left-to-right keeping indices of unresolved elements in a decreasing stack backed by \texttt{std::vector<int>}. Whenever \texttt{nums[i]} exceeds \texttt{nums[stack.back()]}, it resolves and pops that index immediately.
+Scan left-to-right storing unresolved indices in a decreasing \texttt{std::vector<int>} stack. Whenever \texttt{nums[i]} exceeds \texttt{nums[stack.back()]}, it immediately resolves and pops that waiting index.
 
 \begin{lstlisting}[caption=Next Greater Element in C++23]
 #include <vector>
@@ -917,7 +1123,7 @@ We scan left-to-right keeping indices of unresolved elements in a decreasing sta
 
 \subsection{Next Smaller Element}
 
-Mirroring NGE, we maintain an increasing monotonic stack of indices. Whenever an incoming value is strictly smaller than the value at the stack top, it pops and resolves all waiting taller entries.
+Flip the comparison to maintain an increasing monotonic stack. Any arriving number strictly smaller than the top resolves and pops waiting taller entries.
 
 \begin{lstlisting}[caption=Next Smaller Element in C++23]
 #include <vector>
@@ -943,7 +1149,7 @@ Mirroring NGE, we maintain an increasing monotonic stack of indices. Whenever an
 
 \subsection{Distance to Next Warmer Day (Span Calculation)}
 
-Because the stack stores indices rather than raw temperatures, the waiting distance for each popped day is simply \texttt{i - prev\_index}.
+Because the stack stores indices, the waiting distance for each resolved day is simply \texttt{i - prev\_index}.
 
 \begin{lstlisting}[caption=Span Calculation / Daily Temperatures in C++23]
 #include <vector>
@@ -969,7 +1175,7 @@ Because the stack stores indices rather than raw temperatures, the waiting dista
 
 \subsection{Largest Rectangle in Histogram}
 
-An increasing stack tracks candidate bars (assuming non-negative heights). When a shorter or equal bar arrives at index \texttt{i}, every popped bar knows both its right boundary (\texttt{i}) and its left boundary (the new stack top, or \texttt{-1}). A sentinel height \texttt{-1} at \texttt{i == n} flushes all remaining bars.
+An increasing stack tracks candidate bars (assuming non-negative heights). When bar \texttt{i} pops a taller or equal bar, \texttt{i} is the right wall and the new stack top (or \texttt{-1}) is the left wall. The fake sentinel \texttt{-1} at \texttt{i == n} guarantees every bar gets evaluated.
 
 \begin{lstlisting}[caption=Largest Rectangle in Histogram in C++23]
 #include <vector>
@@ -1001,7 +1207,7 @@ An increasing stack tracks candidate bars (assuming non-negative heights). When 
 
 \subsection{Sliding Window Maximum with Monotonic Deque}
 
-A \texttt{std::deque<int>} stores indices in strictly decreasing order of value. Each iteration removes any expired front index, purges dominated back indices, pushes \texttt{i}, and emits \texttt{nums[dq.front()]} once the window reaches size \texttt{k}.
+A \texttt{std::deque<int>} holds indices in strictly decreasing order of value: evict expired indices from the front, evict weaker values from the back, push \texttt{i}, and emit \texttt{nums[dq.front()]} once the window is full.
 
 \begin{lstlisting}[caption=Sliding Window Maximum in C++23]
 #include <vector>
@@ -1041,7 +1247,7 @@ A \texttt{std::deque<int>} stores indices in strictly decreasing order of value.
 
 \subsection{Sum of Subarray Minimums with Duplicate Prevention}
 
-Two linear passes compute strict $\text{PLE}$ (left) and non-strict $\text{NLE}$ (right), assigning every subarray uniquely to the last occurrence of its minimum. Modular reduction uses positive normalization so negative array entries stay safe.
+Two linear passes compute strict \texttt{ple} (left) and non-strict \texttt{nle} (right), giving every subarray a unique rightmost minimum. Positive modular normalization keeps negative entries safe.
 
 \begin{lstlisting}[caption=Sum of Subarray Minimums with Symmetry Breaking in C++23]
 #include <vector>
@@ -1090,7 +1296,7 @@ Two linear passes compute strict $\text{PLE}$ (left) and non-strict $\text{NLE}$
 
 \subsection{Remove $K$ Digits (Lexicographical Monotonic Stack)}
 
-Using \texttt{std::string} directly as a non-decreasing stack avoids extra allocations. We pop larger preceding digits while the budget \texttt{k} allows, trim any leftover removals from the right end, and strip leading zeros.
+Using \texttt{std::string} directly as a non-decreasing stack avoids extra allocations. Pop strictly larger preceding digits while budget \texttt{k} allows, trim leftover removals from the back, and strip leading zeros.
 
 \begin{lstlisting}[caption=Remove K Digits with Monotonic Stack in C++23]
 #include <string>
@@ -1129,64 +1335,86 @@ Using \texttt{std::string} directly as a non-decreasing stack avoids extra alloc
 \section{Problem Pattern Recognition}
 % ============================================================================
 
-When analyzing an unfamiliar problem, apply this three-step decision check:
+When you meet an unfamiliar sequence problem, walk through these three quick checks:
 
 \subsection*{Step 1: What Does the Problem Ask For?}
 \begin{itemize}
-    \item \textbf{Nearest Extrema Queries}: First strictly larger or smaller element to the left or right $\implies$ Monotonic Stack.
-    \item \textbf{Index Distance / Waiting Time}: Days or steps until a threshold is crossed $\implies$ Monotonic Stack storing indices.
-    \item \textbf{Subarray Extremum Contributions / Histogram Area}: Sum of subarray mins/maxes or widest bounded rectangle $\implies$ Monotonic Stack with boundary expansion and symmetry breaking.
-    \item \textbf{Sliding Window Extremum}: Running min or max over shifting interval $[i - K + 1, i]$ $\implies$ Monotonic Deque.
-    \item \textbf{Lexicographically Optimal Subsequence}: Remove $K$ digits/characters to minimize or maximize the remaining sequence $\implies$ Monotonic Stack with removal budget.
+    \item \textbf{Nearest Extrema}: First strictly larger or smaller item to the left or right $\to$ \textbf{Monotonic Stack}.
+    \item \textbf{Waiting Distance / Span}: Steps or days until a threshold is crossed $\to$ \textbf{Monotonic Stack of indices}.
+    \item \textbf{Subarray Contributions / Histogram Area}: Sum of subarray mins/maxes or widest bounded rectangle $\to$ \textbf{Monotonic Stack with boundary expansion \& tie-breaking}.
+    \item \textbf{Sliding Window Min/Max}: Running extremum over moving range $[i - K + 1, i]$ $\to$ \textbf{Monotonic Deque}.
+    \item \textbf{Smallest/Largest Subsequence}: Remove $K$ digits/characters $\to$ \textbf{Monotonic Stack with removal budget}.
 \end{itemize}
 
 \subsection*{Step 2: What Is the Key Constraint?}
 \begin{itemize}
-    \item \textbf{Domination Property}: Does a newer, better element make an older element permanently useless for every future query? If yes, discard dominated items immediately.
-    \item \textbf{Contiguous Ranges}: Does the query depend on contiguous order rather than arbitrary subsets? Monotonic stacks and deques rely on index order.
-    \item \textbf{Duplicate Values}: Can values repeat? Apply asymmetric bounds (strict on one side, non-strict on the other) whenever partitioning subarrays.
+    \item \textbf{Domination}: Does a newer, better item make an older item permanently useless for every future query?
+    \item \textbf{Contiguous Order}: Does the answer depend on left-to-right index order (rather than arbitrary subsets)?
+    \item \textbf{Duplicates}: Can values repeat? If partitioning subarrays, pair one strict ($<$) wall with one non-strict ($\le$) wall.
 \end{itemize}
 
-\subsection*{Step 3: Is Input Too Large for Direct Solution?}
+\subsection*{Step 3: Is Input Too Large for Brute Force?}
 \begin{itemize}
-    \item \textbf{$N \le 10^3$}: An $O(N^2)$ double loop takes $\approx 10^6$ operations and passes easily.
-    \item \textbf{$N \ge 10^5$}: An $O(N^2)$ scan takes $\approx 10^{10}$ operations and triggers Time Limit Exceeded (TLE). A monotonic stack or deque runs in $O(N)$ ($\approx 10^5$ operations), finishing in well under $0.05$ seconds.
+    \item \textbf{$N \le 10^3$}: A nested $O(N^2)$ loop does $\approx 10^6$ steps and passes easily.
+    \item \textbf{$N \ge 10^5$}: A nested loop does $\approx 10^{10}$ steps (TLE). A monotonic stack or deque finishes in $O(N)$ ($\approx 10^5$ steps, well under $0.05$ seconds).
 \end{itemize}
 
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
-\hline
-\textbf{Keywords in the Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
-``next greater element'', ``first warmer day'' & Find the first larger value to the right of each element. & Decreasing Monotonic Stack \\ \hline
-``stock span'', ``previous greater element'' & Count consecutive prior days with lower or equal price (stops at first strictly greater). & Decreasing Monotonic Stack \\ \hline
-``previous / next smaller element'' & Find the nearest strictly smaller value to the left or right. & Increasing Monotonic Stack \\ \hline
-``largest rectangle in histogram'' & Expand bar width left and right until a shorter bar appears. & Increasing Monotonic Stack with sentinel \\ \hline
-``maximum/minimum in sliding window of size $K$'' & Query range extremum over a continuously shifting interval. & Monotonic Deque (double-ended eviction) \\ \hline
-``sum of subarray minimums'' & Sum the minimum of every contiguous subarray. & Monotonic Stack with symmetry breaking \\ \hline
-``remove $K$ digits to create smallest number'' & Maintain smallest lexicographical sequence of remaining digits. & Increasing Monotonic Stack with removal budget \\ \hline
-``visible buildings / line of sight'' & Count buildings visible before being blocked by a taller one. & Decreasing Monotonic Stack \\ \hline
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``next greater element'', ``first warmer day'' & Find the first larger value to the right of each element. & Decreasing Monotonic Stack \\
+``stock span'', ``previous greater element'' & Count consecutive prior days with lower or equal price (stops at first strictly greater). & Decreasing Monotonic Stack \\
+``previous / next smaller element'' & Find the nearest strictly smaller value to the left or right. & Increasing Monotonic Stack \\
+``largest rectangle in histogram'' & Expand bar width left and right until a shorter bar appears. & Increasing Monotonic Stack with sentinel \\
+``maximum/minimum in sliding window of size $K$'' & Query range extremum over a continuously shifting interval. & Monotonic Deque (double-ended eviction) \\
+``sum of subarray minimums'' & Sum the minimum of every contiguous subarray. & Monotonic Stack with symmetry breaking \\
+``remove $K$ digits to create smallest number'' & Maintain smallest lexicographical sequence of remaining digits. & Increasing Monotonic Stack with removal budget \\
+``visible buildings / line of sight'' & Count buildings visible before being blocked by a taller one. & Decreasing Monotonic Stack \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
-\vspace{0.3cm}
+\endgroup
+\end{center}
+
+\begin{tryitbox}{Quick Pattern Triage --- Pick the Right Tool}{ex9}
+Without writing code, write down the exact data structure and monotonicity direction (\textbf{Decreasing Stack}, \textbf{Increasing Stack}, or \textbf{Increasing/Decreasing Deque}) for each task:
+\begin{enumerate}
+    \item \textbf{Daily Stock Span}: For each day, count consecutive prior days (including today) whose price was $\le$ today's price.
+    \item \textbf{Rolling Minimum Latency}: Maintain the smallest latency among the last $K$ server readings as new readings stream in.
+    \item \textbf{Widest Shelf Under Uneven Ceiling}: Given ceiling heights $C[0 \dots N-1]$, find the largest rectangle that fits underneath.
+\end{enumerate}
+\pencillines{3}
+\end{tryitbox}
 
 % ============================================================================
 \section{Summary and Complexity Reference}
 % ============================================================================
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
-\hline
-\textbf{Task / Operation} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
-Next / Previous Greater Element & $O(N)$ & $O(N)$ & Nearest larger neighbor needed for each array element. \\ \hline
-Next / Previous Smaller Element & $O(N)$ & $O(N)$ & Nearest smaller neighbor needed for each array element. \\ \hline
-Index Distance / Span Query & $O(N)$ & $O(N)$ & Number of steps or days between an element and its threshold. \\ \hline
-Largest Histogram Rectangle & $O(N)$ & $O(N)$ & Finding largest rectangular area bounded by vertical bars. \\ \hline
-Sliding Window Extremum & $O(N)$ & $O(K)$ & Finding running minimum or maximum across a sliding window. \\ \hline
-Subarray Extremum Contributions & $O(N)$ & $O(N)$ & Summing minimum or maximum values over all contiguous subarrays. \\ \hline
-Remove $K$ Digits / Subsequence & $O(N)$ & $O(N)$ & Deleting $K$ elements to form the lexicographically smallest result. \\ \hline
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.3cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Task / Operation}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Space}} & \textcolor{primaryblue}{\textbf{Use When}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Next / Previous Greater Element & $O(N)$ & $O(N)$ & Nearest larger neighbor needed for each element. \\
+Next / Previous Smaller Element & $O(N)$ & $O(N)$ & Nearest smaller neighbor needed for each element. \\
+Index Distance / Span Query & $O(N)$ & $O(N)$ & Steps or days between an item and its threshold. \\
+Largest Histogram Rectangle & $O(N)$ & $O(N)$ & Largest rectangular area bounded by vertical bars. \\
+Sliding Window Extremum & $O(N)$ & $O(K)$ & Running min or max over a shifting window of width $K$. \\
+Subarray Extremum Contributions & $O(N)$ & $O(N)$ & Summing minimums or maximums over all subarrays. \\
+Remove $K$ Digits / Subsequence & $O(N)$ & $O(N)$ & Deleting $K$ items to form the smallest sequence. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
-\vspace{0.3cm}
+\endgroup
+\end{center}
 
 % ============================================================================
 \section{Glossary}
@@ -1194,29 +1422,28 @@ Remove $K$ Digits / Subsequence & $O(N)$ & $O(N)$ & Deleting $K$ elements to for
 
 \subsection{Core Concepts}
 \begin{itemize}
-    \item \textbf{Monotonic Stack}: A stack whose elements from bottom to top stay strictly or non-strictly sorted (increasing or decreasing).
+    \item \textbf{Monotonic Stack}: A stack whose elements stay sorted from bottom to top (always increasing or always decreasing).
     \item \textbf{Monotonic Deque}: A double-ended queue maintaining sorted candidates for $O(1)$ amortized sliding-window queries via front expiry and back dominance eviction.
-    \item \textbf{Cascading Pops}: Sequential popping of multiple stack entries when an incoming element violates the monotonic invariant.
-    \item \textbf{Domination}: A property where a newer element is both more optimal in value and stays alive longer, making an older element permanently useless.
-    \item \textbf{Amortized $O(1)$}: Although one step may trigger up to $N$ pops, every element is pushed once and popped at most once across the entire run, averaging constant work per item.
+    \item \textbf{Cascading Pops}: Popping several items in a row when a single incoming element breaks the monotonic order.
+    \item \textbf{Domination}: When a newer item is both better in value and stays relevant longer, making an older item permanently useless.
+    \item \textbf{Amortized $O(1)$}: Even if one step triggers many pops, each item is pushed once and popped at most once over the whole run, averaging constant work per item.
     \item \textbf{Symmetry Breaking}: Pairing a strict comparison ($<$) on one boundary with a non-strict comparison ($\le$) on the opposite boundary so tied subarrays are counted exactly once.
 \end{itemize}
 
 \subsection{Mathematical Symbols}
 \begin{itemize}
     \item $N$: Number of elements in the array.
-    \item $K$: Fixed length of a sliding window, or digit removal budget.
-    \item $O(N)$: Linear time complexity, proportional to the input size.
+    \item $K$: Sliding window width, or digit removal budget.
+    \item $O(N)$: Linear time complexity, proportional to input size.
     \item $A[i]$: Value at $0$-based index $i$ of array $A$.
     \item $H[i]$: Height of the $i$-th bar in a histogram.
-    \item $L, R$: Left and right bounding indices limiting horizontal expansion of a histogram bar.
+    \item $L, R$: Left and right blocking indices limiting horizontal expansion of a histogram bar.
     \item $\text{NGE}, \text{PGE}$: Next Greater Element and Previous Greater Element.
     \item $\text{NSE}, \text{PSE}$: Next Smaller Element and Previous Smaller Element.
     \item $\text{PLE}, \text{NLE}$: Previous Less Element (strict $<$) and Next Less or Equal Element (non-strict $\le$) for symmetry breaking.
-    \item $\text{MOD}$: Large prime modulus (commonly $10^9 + 7$) used to prevent integer overflow.
-    \item $\le, \ge$: Non-strict inequalities (inclusive of duplicates).
-    \item $<, >$: Strict inequalities (exclusive of duplicates).
-    \item $\sum$: Summation of terms.
+    \item $\text{MOD}$: Large prime modulus ($10^9 + 7$) used to prevent integer overflow.
+    \item $\le, \ge$: Non-strict inequalities (equal values satisfy the condition).
+    \item $<, >$: Strict inequalities (equal values do not satisfy the condition).
 \end{itemize}
 
 % ============================================================================
@@ -1225,70 +1452,105 @@ Remove $K$ Digits / Subsequence & $O(N)$ & $O(N)$ & Deleting $K$ elements to for
 
 \subsection*{Free Online Resources (Start Here)}
 \begin{itemize}
-    \item \textbf{CP-Algorithms} (\texttt{cp-algorithms.com}) --- Comprehensive algorithmic articles covering minimum stack, minimum queue, and sliding window extrema.
-    \item \textbf{Art of Problem Solving Wiki} (\texttt{artofproblemsolving.com/wiki}) --- Intuitive guides on discrete mathematics, bounds, and order relations.
-    \item \textbf{Brilliant.org} (\texttt{brilliant.org}) --- Interactive exercises on amortized time complexity, stack invariants, and sliding window patterns.
+    \item \textbf{CP-Algorithms} (\texttt{cp-algorithms.com}) --- Clear articles on minimum stacks, minimum queues, and sliding-window extrema.
+    \item \textbf{Art of Problem Solving Wiki} (\texttt{artofproblemsolving.com/wiki}) --- Friendly guides on discrete bounds and order relations.
+    \item \textbf{Brilliant.org} (\texttt{brilliant.org}) --- Interactive visual exercises on amortized analysis, stack invariants, and sliding windows.
 \end{itemize}
 
 \subsection*{Books (When You Are Ready to Go Deeper)}
 \begin{itemize}
-    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- Dedicated chapter on linear data structures, monotonic stacks, and sliding window deques. (Intermediate)
-    \item S.\ Skiena, \emph{The Algorithm Design Manual} --- Clear visual treatments of stack-based algorithmic paradigms and sequence processing. (Intermediate)
-    \item T.\ H.\ Cormen, C.\ E.\ Leiserson, R.\ L.\ Rivest, C.\ Stein, \emph{Introduction to Algorithms} --- Formal mathematical foundations of amortized analysis, aggregate methods, and potential functions. (Advanced)
+    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- Dedicated chapter on linear data structures, monotonic stacks, and sliding-window deques. (Intermediate)
+    \item S.\ Skiena, \emph{The Algorithm Design Manual} --- Clear visual treatments of stack-based paradigms and sequence processing. (Intermediate)
+    \item T.\ H.\ Cormen, C.\ E.\ Leiserson, R.\ L.\ Rivest, C.\ Stein, \emph{Introduction to Algorithms} --- Formal treatment of amortized analysis, aggregate methods, and potential functions. (Advanced)
 \end{itemize}
 
 % ============================================================================
 \section*{Solutions to Pen-and-Paper Exercises}
 \addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
+\markboth{Solutions to Pen-and-Paper Exercises}{}
 % ============================================================================
 
 \begin{enumerate}
-    \item \hypertarget{sol:ex1}{\textbf{Next Greater Element Trace on $A = [2, 5, 3, 7, 1]$:}}
-    Initialize $\text{NGE} = [-1, -1, -1, -1, -1]$, stack $st = []$.
-    \begin{itemize}
-        \item $i = 0$ ($2$): push $0$. $st = [0]$.
-        \item $i = 1$ ($5$): $A[0] = 2 < 5 \implies$ pop $0$, $\text{NGE}[0] = 5$. Push $1$. $st = [1]$.
-        \item $i = 2$ ($3$): $A[1] = 5 \not< 3$. Push $2$. $st = [1, 2]$.
-        \item $i = 3$ ($7$): $A[2] = 3 < 7 \implies$ pop $2$, $\text{NGE}[2] = 7$; $A[1] = 5 < 7 \implies$ pop $1$, $\text{NGE}[1] = 7$. Push $3$. $st = [3]$.
-        \item $i = 4$ ($1$): $A[3] = 7 \not< 1$. Push $4$. $st = [3, 4]$.
-    \end{itemize}
-    Final result: $\text{NGE} = [5, 7, 7, -1, -1]$.
+    \item \label{sol:ex1}\textbf{Exercise 1 --- Skyline Shadows Check:}
+    \textbf{(1)} Only height $175$ (index $2$) is permanently shadowed, because $190$ (index $1$) stands closer to all viewers on the left \emph{and} is taller.
+    \textbf{(2)} The stack (bottom to top) keeps $[190, 160]$. Height $160$ is \emph{not} shadowed because a viewer of height $150$ hits $160$ first, whereas a viewer of height $170$ looks over $160$ and hits $190$.
 
-    \item \hypertarget{sol:ex2}{\textbf{Histogram Expansion for $H = [3, 1, 4, 2]$ \& Sentinel Break-It:}}
-    \textbf{(a)} Bar-by-bar bounds ($N = 4$):
+    \item \label{sol:ex2}\textbf{Exercise 2 --- Four Nearest Queries on $A = [6, 2, 5, 4]$:}
     \begin{itemize}
-        \item Bar $0$ ($3$): $L = -1, R = 1 \implies \text{Width} = 1$, $\text{Area} = 3 \times 1 = 3$.
-        \item Bar $1$ ($1$): $L = -1, R = 4 \implies \text{Width} = 4$, $\text{Area} = 1 \times 4 = 4$.
-        \item Bar $2$ ($4$): $L = 1, R = 3 \implies \text{Width} = 1$, $\text{Area} = 4 \times 1 = 4$.
-        \item Bar $3$ ($2$): $L = 1, R = 4 \implies \text{Width} = 2$, $\text{Area} = 2 \times 2 = 4$.
+        \item $\text{NGE} = [-1, 5, -1, -1]$
+        \item $\text{PGE} = [-1, 6, 6, 5]$
+        \item $\text{NSE} = [2, -1, 4, -1]$
+        \item $\text{PSE} = [-1, -1, 2, 2]$
     \end{itemize}
-    Maximum area is $\max(3, 4, 4, 4) = 4$.\\
-    \textbf{(b)} Take any strictly increasing histogram such as $H = [2, 4, 6]$. Every incoming bar is taller than the stack top, so zero pops occur during $i = 0, 1, 2$. Without the sentinel $-1$ at $i = 3$, the loop ends with $max\_area = 0$ instead of the true maximum $8$ (bars $1$ and $2$ at height $4$).
 
-    \item \hypertarget{sol:ex3}{\textbf{Sliding Window Maximum ($K = 3$) on $A = [4, 1, 3, 5, 2]$:}}
+    \item \label{sol:ex3}\textbf{Exercise 3 --- Hand-Trace Index Stack \& Spans on $A = [2, 5, 3, 7, 1]$:}
     \begin{itemize}
-        \item $i = 0$ ($4$): push $0$. Deque: $[0]$.
-        \item $i = 1$ ($1$): $4 > 1$, push $1$. Deque: $[0, 1]$.
-        \item $i = 2$ ($3$): pop $1$ from \textbf{back} ($1 \le 3$); push $2$. Deque: $[0, 2]$. Window $[0 \dots 2]$ max $= A[0] = 4$.
-        \item $i = 3$ ($5$): pop $0$ from \textbf{front} (expired: $0 \le 3 - 3$); pop $2$ from \textbf{back} ($3 \le 5$); push $3$. Deque: $[3]$. Window $[1 \dots 3]$ max $= A[3] = 5$.
-        \item $i = 4$ ($2$): front $3 > 4 - 3$; $5 > 2$; push $4$. Deque: $[3, 4]$. Window $[2 \dots 4]$ max $= A[3] = 5$.
+        \item $i = 0$ ($2$): none popped. Stack: $[0]$.
+        \item $i = 1$ ($5$): pop $0$ ($\text{NGE}[0] = 5$, $\text{span}[0] = 1 - 0 = 1$). Stack: $[1]$.
+        \item $i = 2$ ($3$): none popped. Stack: $[1, 2]$.
+        \item $i = 3$ ($7$): pop $2$ ($\text{NGE}[2] = 7$, $\text{span}[2] = 1$); pop $1$ ($\text{NGE}[1] = 7$, $\text{span}[1] = 2$). Stack: $[3]$.
+        \item $i = 4$ ($1$): none popped. Stack: $[3, 4]$.
     \end{itemize}
-    Final output: $[4, 5, 5]$. Index $0$ was evicted from the \textbf{front} (expired); indices $1$ and $2$ were evicted from the \textbf{back} (dominated).
+    Final arrays: $\text{NGE} = [5, 7, 7, -1, -1]$ and $\text{span} = [1, 2, 1, 0, 0]$.
+
+    \item \label{sol:ex4}\textbf{Exercise 4 --- Duplicate Subarrays on $A = [1, 3, 1]$:}
+    \begin{itemize}
+        \item \textbf{(1) Both strict ($<$)}: counts are $3 + 1 + 3 = 7$. Subarray $[1, 3, 1]$ is double-counted by both $i = 0$ and $i = 2$.
+        \item \textbf{(2) Both non-strict ($\le$)}: counts are $2 + 1 + 2 = 5$. Subarray $[1, 3, 1]$ is missed completely.
+        \item \textbf{(3) Strict $\text{PLE}$ + Non-strict $\text{NLE}$}: $\text{PLE} = [-1, 0, -1]$, $\text{NLE} = [2, 2, 3]$. Counts: $i=0 \to 1 \times 2 = 2$, $i=1 \to 1 \times 1 = 1$, $i=2 \to 3 \times 1 = 3$ (sum $= 6$). Sum of minimums $= 1(2) + 3(1) + 1(3) = 8$.
+    \end{itemize}
+
+    \item \label{sol:ex5}\textbf{Exercise 5 --- Histogram $H = [3, 1, 4, 2]$ \& Sentinel Break-It:}
+    \textbf{(a)} Bar $0$ ($3$): $L=-1, R=1, W=1, \text{Area}=3$. Bar $1$ ($1$): $L=-1, R=4, W=4, \text{Area}=4$. Bar $2$ ($4$): $L=1, R=3, W=1, \text{Area}=4$. Bar $3$ ($2$): $L=1, R=4, W=2, \text{Area}=4$. Maximum area $= 4$.\\
+    \textbf{(b)} Any strictly increasing histogram such as $H = [2, 4, 6]$ triggers zero pops during $i = 0, 1, 2$; without sentinel $-1$, the loop returns $0$ instead of the true maximum $8$ (bars $1$ and $2$ at height $4$).
+
+    \item \label{sol:ex6}\textbf{Exercise 6 --- Sliding Window Maximum ($K = 3$) on $A = [4, 1, 3, 5, 2]$:}
+    \begin{itemize}
+        \item $i=0$ ($4$): none. Deque: $[0]$.
+        \item $i=1$ ($1$): none. Deque: $[0, 1]$.
+        \item $i=2$ ($3$): pop $1$ from \textbf{back} ($1 \le 3$). Deque: $[0, 2]$. Max $= 4$.
+        \item $i=3$ ($5$): pop $0$ from \textbf{front} (expired: $0 \le 3 - 3$); pop $2$ from \textbf{back} ($3 \le 5$). Deque: $[3]$. Max $= 5$.
+        \item $i=4$ ($2$): none. Deque: $[3, 4]$. Max $= 5$.
+    \end{itemize}
+    Final window maximums: $[4, 5, 5]$.
+
+    \item \label{sol:ex7}\textbf{Exercise 7 --- Exact Push \& Pop Budget on $A = [10, 9, 8, 7, 6, 100]$:}
+    \textbf{(1)} Iteration $i = 5$ ($100$) triggers $5$ pops in a single step (all earlier indices $4, 3, 2, 1, 0$).
+    \textbf{(2)} Across the entire run, there are exactly $6$ pushes ($= N$) and $5$ pops ($\le N$), proving total work never exceeds $2N = 12$ operations.
+
+    \item \label{sol:ex8}\textbf{Exercise 8 --- Remove $K$ Digits Edge Cases:}
+    \textbf{(1)} \texttt{"10200"}, $K = 1$: \texttt{'0'} pops \texttt{'1'} ($K = 0$), leaving stack \texttt{"0200"}; stripping leading zeros yields \texttt{"200"}.
+    \textbf{(2)} \texttt{"12345"}, $K = 2$: zero pops during the scan; leftover $K = 2$ trims \texttt{'5'} and \texttt{'4'} from the back, yielding \texttt{"123"}.
+
+    \item \label{sol:ex9}\textbf{Exercise 9 --- Quick Pattern Triage:}
+    \textbf{(1)} Daily Stock Span $\to$ \textbf{Decreasing Monotonic Stack} (finds Previous Greater Element).
+    \textbf{(2)} Rolling Minimum Latency $\to$ \textbf{Increasing Monotonic Deque} (front holds window minimum).
+    \textbf{(3)} Widest Shelf Under Uneven Ceiling $\to$ \textbf{Increasing Monotonic Stack with trailing sentinel} (identical to Largest Rectangle in Histogram).
 \end{enumerate}
 
 % ============================================================================
 \section*{Version History}
 \addcontentsline{toc}{section}{Version History}
+\markboth{Version History}{}
 % ============================================================================
 
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Date} & \textbf{Change} \\ \hline
-2026-10-11 & Document created. \\ \hline
-2026-10-11 & Added concrete worked examples to all Main Topic subsections, added Next Smaller Element C++ implementation, canonicalized 3-step pattern recognition, and expanded duplicate trace and glossary. \\ \hline
-2026-10-12 & Moved embedded TikZ diagrams to central review document (Diagrams 22--24 in diagrams\_review.pdf) and preserved figure placeholders. \\ \hline
-2026-11-24 & Fixed duplicate symmetry-breaking explanation, Stock Span pattern row, and Example 4 typo; embedded Diagrams 22--24; added Remove K Digits example and C++23 code, 4-beat Origin Stories, local notation boxes, and 3 pen-and-paper drills with solutions. \\ \hline
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\bfseries}l >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Date}} & \textcolor{primaryblue}{\textbf{Change}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+2026-10-11 & Document created. \\
+2026-10-11 & Added concrete worked examples to all Main Topic subsections, added Next Smaller Element C++ implementation, canonicalized 3-step pattern recognition, and expanded duplicate trace and glossary. \\
+2026-10-12 & Moved embedded TikZ diagrams to central review document (Diagrams 22--24 in diagrams\_review.pdf) and preserved figure placeholders. \\
+2026-11-24 & Fixed duplicate symmetry-breaking explanation, Stock Span pattern row, and Example 4 typo; embedded Diagrams 22--24; added Remove K Digits example and C++23 code, 4-beat Origin Stories, local notation boxes, and 3 pen-and-paper drills with solutions. \\
+2026-11-25 & Redesigned layout for screen and print: switched to sans-serif typography (Helvetica + sfmath), replaced academic Abstract with Overview card, added automatic section page breaks, styled high-contrast colored headers/subheaders/callouts/formula cards, modernized tables with booktabs, removed clickable answer links in favor of printed page numbers, and expanded pen-and-paper practice to 9 pencil-ready exercises. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
+\endgroup
+\end{center}
 
 \end{document}

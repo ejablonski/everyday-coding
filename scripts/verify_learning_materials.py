@@ -175,10 +175,12 @@ def check_tex_hygiene(tex_path: Path, fix_bom: bool) -> tuple[list[str], list[st
     if r"\tableofcontents" not in text:
         errors.append("[Structure] Missing '\\tableofcontents'.")
     else:
-        abs_pos = text.find(r"\begin{abstract}")
+        intro_pos = text.find(r"\begin{overviewbox}")
+        if intro_pos == -1:
+            intro_pos = text.find(r"\begin{abstract}")
         toc_pos = text.find(r"\tableofcontents")
-        if abs_pos != -1 and toc_pos < abs_pos:
-            errors.append("[Structure] '\\tableofcontents' appears before '\\begin{abstract}'.")
+        if intro_pos != -1 and toc_pos < intro_pos:
+            errors.append("[Structure] '\\tableofcontents' appears before overview/abstract.")
 
     # 8. T1 fontenc hazard for < or > inside \texttt
     has_t1 = r"\usepackage[T1]{fontenc}" in text
@@ -188,11 +190,11 @@ def check_tex_hygiene(tex_path: Path, fix_bom: bool) -> tuple[list[str], list[st
             "(renders as inverted punctuation under OT1)."
         )
 
-    # 9. tryitbox hyperlink / hypertarget consistency
+    # 9. tryitbox solution reference consistency (\label{sol:...} or legacy \hypertarget{sol:...})
     linked = set(re.findall(r"\\begin\{tryitbox\}\{[^}]*\}\{([^}]+)\}", text))
-    targets = set(re.findall(r"\\hypertarget\{sol:([^}]+)\}", text))
+    targets = set(re.findall(r"\\(?:label|hypertarget)\{sol:([^}]+)\}", text))
     for missing in sorted(linked - targets):
-        errors.append(f"[TryIt] Exercise '{missing}' has no matching \\hypertarget{{sol:{missing}}}.")
+        errors.append(f"[TryIt] Exercise '{missing}' has no matching \\label{{sol:{missing}}}.")
     for orphan in sorted(targets - linked):
         warnings.append(f"[TryIt] Solution target 'sol:{orphan}' has no matching tryitbox.")
 
@@ -294,8 +296,10 @@ def build_pdf_and_render(
         return errors, warnings, rendered
 
     diagram_pages: set[int] = set()
+    aux_file = tex_path.with_suffix(".aux")
+    prev_aux = ""
     try:
-        for run_idx in (1, 2):
+        for run_idx in (1, 2, 3):
             proc = subprocess.run(
                 [pdflatex, "-interaction=nonstopmode", tex_path.name],
                 cwd=tex_path.parent,
@@ -309,8 +313,11 @@ def build_pdf_and_render(
                     + (" | ".join(tail) if tail else "inspect LaTeX syntax")
                 )
                 return errors, warnings, rendered
+            curr_aux = aux_file.read_text(encoding="utf-8", errors="ignore") if aux_file.exists() else ""
+            if run_idx >= 2 and curr_aux == prev_aux:
+                break
+            prev_aux = curr_aux
 
-        aux_file = tex_path.with_suffix(".aux")
         if aux_file.exists():
             aux_text = aux_file.read_text(encoding="utf-8", errors="ignore")
             for m in FIG_LABEL_PAGE_RE.finditer(aux_text):
