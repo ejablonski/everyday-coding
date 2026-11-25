@@ -318,6 +318,25 @@ This is the unified pattern recognition index. Each row merges the quick-referen
 \end{tabularx}
 \vspace{0.3cm}
 
+\subsection{Pattern Matching, Hashing, Tries, and Palindromes (Module 09: String Algorithms)}
+
+\vspace{0.2cm}
+\noindent
+\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
+\hline
+\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
+``find all occurrences of $P$ in $T$'' & Exact linear-time substring search without rewinding. & KMP ($\pi$-array) or Z-Algorithm \\ \hline
+``is $S$ built by repeating a substring?'' & Shortest exact repeating period of a string. & KMP ($N \bmod (N - \pi[N-1]) = 0$) \\ \hline
+``is $B$ a cyclic rotation of $A$?'' & Wrap-around substring check across concatenation. & Search $B$ inside $A + A$ \\ \hline
+``sum of LCP scores of all suffixes'' & Longest common prefix starting at every suffix $i$. & Z-Algorithm ($Z$-array) \\ \hline
+``compare many substrings in $O(1)$'', ``longest repeated substring'' & Fast slice equality or binary search on length. & Prefix Double Rolling Hash (Rabin-Karp) \\ \hline
+``prefix lookup'', ``autocomplete dictionary'' & Match prefixes across $W$ words in $O(L)$ time. & Flat Vector-Pool Trie \\ \hline
+``maximum XOR of two numbers'' & Greedily pick opposite bits from MSB to LSB. & Bitwise Trie ($\Sigma = \{0, 1\}$) \\ \hline
+``longest palindromic substring'' ($N \le 10^5$) & Linear-time mirror symmetry over all centers. & Manacher's Algorithm ($O(N)$) \\ \hline
+``shortest palindrome by prepending'' & Longest palindromic prefix of $S$. & KMP on $S + \text{`\#'} + \operatorname{rev}(S)$ \\ \hline
+\end{tabularx}
+\vspace{0.3cm}
+
 \subsection{Making the Best Local Choice (Module 10: Greedy Algorithms)}
 
 \vspace{0.2cm}
@@ -405,6 +424,7 @@ This section lists every topic document in the library. Finished documents are m
 06. Dynamic Programming & $\checkmark$ Available & State definition, transitions, memoization vs tabulation, 1D/2D grids, knapsack family, two-sequence (LCS/edit distance), interval DP, space optimization, and bitmask DP. \\ \hline
 07. Graph Algorithms & $\checkmark$ Available & Graph representations, BFS, DFS, 2D grid flood fill, Dijkstra shortest paths, Kahn's topological sort, Disjoint Set Union (DSU), Kruskal's MST, Bellman-Ford, Floyd-Warshall, and bipartite 2-coloring. \\ \hline
 08. Binary Search & $\checkmark$ Available & Interval halving, search invariants, lower/upper bounds, binary search on the answer, rotated array searches, peak element finding, and continuous floating-point bisection. \\ \hline
+09. String Algorithms & $\checkmark$ Available & Polynomial double rolling hashing (Rabin-Karp), KMP prefix function ($\pi$-array), Z-algorithm, flat vector-pool and bitwise tries, string periodicity, and linear-time palindromes (Manacher). \\ \hline
 10. Greedy Algorithms & $\checkmark$ Available & Greedy choice property, optimal substructure, interval scheduling, fractional knapsack, and Huffman/rope merging. \\ \hline
 11. Monotonic Stacks and Queues & $\checkmark$ Available & Monotonic stacks and deques, Next/Previous Greater/Smaller Element, span calculations, histogram rectangle expansion, sliding window extrema, and subarray contribution accounting. \\ \hline
 12. Bit Manipulation and Bitmasks & $\checkmark$ Available & Fundamental bit representations (LSB, MSB, two's complement), bitwise arithmetic identities, Brian Kernighan's algorithm, prefix XOR queries, submask enumeration ($O(3^N)$), Gosper's hack, bit frequency ledgers, and bitmask DP. \\ \hline
@@ -415,8 +435,8 @@ This section lists every topic document in the library. Finished documents are m
 
 Each planned module lists the scope it is expected to cover. Nothing below is final.
 
-\begin{calloutbox}{09. String Algorithms --- Under Construction}
-\textbf{Status:} TODO. \textbf{Expected scope:} Knuth-Morris-Pratt pattern matching, tries, sliding window technique, hashing of substrings. \textbf{Why it matters:} problems about substrings, prefixes, repeated patterns, and text search.
+\begin{calloutbox}{Upcoming Planned Modules (13--16)}
+\textbf{Status:} Planned. \textbf{Expected scope:} 13.\ Two Pointers \& Sliding Window; 14.\ Heaps \& Priority Queues; 15.\ Trees \& BSTs; 16.\ Fenwick \& Segment Trees.
 \end{calloutbox}
 
 % ============================================================================
@@ -467,6 +487,10 @@ Binary search on answer & $O(C \cdot \log R)$ & $O(1)$ & Optimization over monot
 Rotated array search & $O(\log N)$ & $O(1)$ & Cyclically shifted sorted unique array. \\ \hline
 Peak element search & $O(\log N)$ & $O(1)$ & Finding local maximum in array with distinct neighbors. \\ \hline
 Continuous binary search & $O(\text{iters} \cdot C)$ & $O(1)$ & Real-valued root or threshold on continuous function. \\ \hline
+Prefix Double Rolling Hash & $O(N)$ build, $O(1)$ query & $O(N)$ & Collision-safe substring equality and binary search on length. \\ \hline
+KMP / Z-Algorithm Search & $O(N + M)$ & $O(M)$ / $O(N + M)$ & Exact linear-time pattern search, periods, suffix LCPs. \\ \hline
+Trie Insert / Search / Prefix & $O(L)$ & $O(\text{nodes} \cdot \Sigma)$ & Dictionary prefix lookup, autocomplete, bitwise XOR queries. \\ \hline
+Manacher's Algorithm & $O(N)$ & $O(N)$ & Longest palindromic substring or all palindrome radii. \\ \hline
 Greedy interval scheduling & $O(N \log N)$ & $O(1)$ & Maximize non-overlapping timeline events. \\ \hline
 Greedy knapsack/matching & $O(N \log N)$ & $O(1)$ & Sorting-based choices on divisible or pairable items. \\ \hline
 Next / Previous Greater Element & $O(N)$ & $O(N)$ & Nearest larger neighbor needed for each array element. \\ \hline
@@ -509,6 +533,9 @@ Bit Frequency Ledger Accumulation & $O(B \cdot N)$ & $O(B)$ & Independent column
     \item \textbf{Bitmask}: An integer interpreted as a compact boolean array or subset where bit $i = 1$ indicates inclusion of element $i$.
     \item \textbf{Two's Complement}: The standard binary encoding for signed integers where the MSB has negative weight $-2^{N-1}$.
     \item \textbf{Self-Inverse}: An algebraic operator that undoes itself, satisfying $x \oplus x = 0$.
+    \item \textbf{Trie (Prefix Tree)}: A character-indexed tree storing a dictionary of strings so insert, search, and prefix lookups run in $O(L)$ time independent of dictionary size.
+    \item \textbf{Double Rolling Hash}: Two independent polynomial string hashes evaluated modulo distinct large primes, enabling $O(1)$ substring equality queries with negligible collision risk.
+    \item \textbf{Border}: A proper prefix of a string that is also its suffix; the foundation of KMP pattern matching and string periodicity.
 \end{itemize}
 
 \subsection{Mathematical Symbols}
@@ -526,6 +553,7 @@ Bit Frequency Ledger Accumulation & $O(B \cdot N)$ & $O(B)$ & Independent column
     \item $\phi(N)$: Euler's totient, the count of numbers from $1$ to $N$ that share no prime factor with $N$.
     \item $C_n$: The $n$-th Catalan number, which counts valid parenthesis strings of $n$ pairs and many similar structures.
     \item $\alpha(N)$: The inverse Ackermann function, an extraordinarily slow-growing function ($\le 4$ for all practical inputs).
+    \item $\pi[i], Z[i], \Sigma$: KMP prefix function, Z-function (suffix-prefix LCP), and alphabet size.
     \item $\prod$: ``Product of'', the multiplication analogue of the summation sign.
     \item $\checkmark$: Marks a module that is complete.
 \end{itemize}
@@ -567,6 +595,7 @@ Bit Frequency Ledger Accumulation & $O(B \cdot N)$ & $O(B)$ & Independent column
 2026-10-11 & Added Monotonic Stacks and Queues module to Available registry, synced 7 pattern recognition rows, and added monotonic complexity entries. \\ \hline
 2026-10-12 & Added Bit Manipulation and Bitmasks module to Available registry, synced 6 pattern recognition rows, and added bit manipulation complexity entries and glossary definitions. \\ \hline
 2026-11-24 & Fixed Stock Span row in Module 11 pattern table (Decreasing Monotonic Stack / Previous Greater Element) and added dedicated row for Previous/Next Smaller Element. \\ \hline
+2026-11-25 & Promoted 09. String Algorithms to Available registry and synced its pattern recognition rows, complexity entries, and glossary definitions. \\ \hline
 \end{tabularx}
 
 \end{document}

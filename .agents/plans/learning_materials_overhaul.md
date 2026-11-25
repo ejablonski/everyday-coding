@@ -17,6 +17,8 @@ To keep token usage predictable and reviews manageable, execute this plan in sho
   - **Stopped after the pilot module** so the user can confirm the final pilot format before applying it to the remaining modules.
 - **Session 3 (Done — `2026-11-25`):**
   - Completed `learning_materials/01.combinatorics_permutations.tex` across all applicable phases (Phase 1.3 bug fixes + Phase 3 embedded & visually verified fixed Diagrams 4, 40, and new Catalan Reflection Principle diagram + Phase 4.3 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
+- **Session 4 (Done — `2026-11-25`):**
+  - Completed `learning_materials/09.string_algorithms.tex` full stub expansion and overhaul across all applicable phases (Phase 2.1 rewrite & expansion + Phase 3 fixed & embedded Diagrams 29--31 + Phase 4.11 canonical print-first layout, 4-beat Origin Stories, local `notationbox` table, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics) and synced Module 09 into `learning_materials/00.problem_solving_guide.tex`.
 - **Ongoing Sessions (1 Module per Fresh Session):**
   - Follow the exact same single-module vertical slice (Phases 1/2 + 3 + 4 + verification + Progress Matrix update + commit) for whichever module the user selects next.
   - Suggested order: `11` → `12` → `00.problem_solving_guide.tex` → `10` → `09` → `06` → `07` → (`08`, `05`, `04`, `03`, `02`, `01`, `00.cpp_reference.tex` on demand) → delete `learning_materials/diagrams_review.tex` once all diagrams are migrated → Phase 5 (`13`–`16`) just-in-time.
@@ -174,17 +176,17 @@ Fix every confirmed factual error, C++23 compile/UB defect, formatting glitch, a
 
 Both files are ~310–375 lines (vs. 850–1,100 lines for full modules) and need comprehensive expansion adhering to the **Pedagogical Blueprint** above.
 
-- [ ] **2.1 Rewrite & Expand `learning_materials/09.string_algorithms.tex` (~800+ lines):**
-  - [ ] Adopt the canonical preamble (with `T1` fontenc, `tikz`, `notationbox`, `tryitbox`), add `\tableofcontents \newpage`, and remove the broken `\rowcolor` callout box.
-  - [ ] Deepen existing topics with 4-beat Origin Stories & local symbol tables:
+- [x] **2.1 Rewrite & Expand `learning_materials/09.string_algorithms.tex` (~800+ lines):** *(Completed 2026-11-25 — expanded to 30-page canonical print-first monograph)*
+  - [x] Adopt the canonical preamble (with `T1` fontenc, `tikz`, `notationbox`, `tryitbox`), add `\tableofcontents \newpage`, and remove the broken `\rowcolor` callout box.
+  - [x] Deepen existing topics with 4-beat Origin Stories & local symbol tables:
     - Polynomial Rolling Hash + **Double Hashing** (why single mod $10^9+7$ fails the birthday paradox at $N = 10^5$!).
     - KMP Prefix Function ($\pi$-array) — intuitive border/overlap derivation (*why* `j = pi[j - 1]` never skips a valid match).
     - Tries (Prefix Trees) — flat vector pool vs. pointer trees + bitwise Trie bonus note.
-  - [ ] Add missing core string techniques: **Z-Algorithm** ($Z[i]$ vs. $\pi[i]$ comparison) and **Palindrome Techniques** (Expand Around Center + Manacher's intuition).
-  - [ ] Replace the 2-sentence bullet list in Section 4 with **5 full step-by-step worked examples** reproducible on paper.
-  - [ ] Fix & expand C++23 implementations: fix `computePi` `noexcept` & signed/unsigned warnings; add `Trie::starts_with` & bounds safety; add **Rabin-Karp Double Hash**, **Z-Algorithm**, and **Manacher's** implementations.
-  - [ ] Add 3 pen-and-paper `tryitbox` exercises + Solutions appendix.
-  - [ ] **Sync `09.string_algorithms.tex` into `00.problem_solving_guide.tex`** (move from Under Construction to Available, add Pattern Recognition rows, Complexity rows, and Glossary entries).
+  - [x] Add missing core string techniques: **Z-Algorithm** ($Z[i]$ vs. $\pi[i]$ comparison) and **Palindrome Techniques** (Expand Around Center + Manacher's intuition).
+  - [x] Replace the 2-sentence bullet list in Section 4 with **5 full step-by-step worked examples** reproducible on paper.
+  - [x] Fix & expand C++23 implementations: fix `computePi` `noexcept` & signed/unsigned warnings; add `Trie::starts_with` & bounds safety; add **Rabin-Karp Double Hash**, **Z-Algorithm**, and **Manacher's** implementations.
+  - [x] Add 8 inline + 6 Practice Sheet pen-and-paper `tryitbox` exercises + Solutions appendix with trap diagnostics.
+  - [x] **Sync `09.string_algorithms.tex` into `00.problem_solving_guide.tex`** (move from Under Construction to Available, add Pattern Recognition rows, Complexity rows, and Glossary entries).
 - [ ] **2.2 Rewrite & Expand `learning_materials/10.greedy_algorithms.tex` (~800+ lines):**
   - [ ] Add the core **"But Why Does Greedy Work?"** methodology:
     - **Exchange Argument** (step-by-step recipe: take an optimal solution, swap one choice with the greedy choice, prove it cannot get worse).
@@ -208,8 +210,8 @@ All 41 diagrams currently sit unintegrated in `learning_materials/diagrams_revie
 
 ### 3.1 Fix Factual, Policy & Metadata Blockers in `diagrams_review.tex`
 - [x] **D40 (L3337):** Remove `LeetCode 62` platform-agnostic violation; replace UTF-8 `—` (L3328) with `---`. *(Fixed when embedded into Module 01 on 2026-11-25.)*
-- [ ] **D30 (L2306–2308, KMP):** Fix shifted pattern cells after fallback `j = pi[3] = 2` so `P[2] = 'A'` aligns under `T[4] = 'A'` (followed by `P[3] = 'B'`, `P[4] = 'C'`).
-- [ ] **D31 (L2335–2381, Rabin-Karp):** Separate window length `L` from prime modulus `M`; fix precomputation time to $O(L)$; fix birthday collision probability for $N = 10^5, M = 10^9+7$ (`~99.3%`, or state `~5%` for $N = 10^4$).
+- [x] **D30 (L2306–2308, KMP):** Fix shifted pattern cells after fallback `j = pi[3] = 2` so `P[2] = 'A'` aligns under `T[4] = 'A'` (followed by `P[3] = 'B'`, `P[4] = 'C'`). *(Fixed & embedded into Module 09 on 2026-11-25.)*
+- [x] **D31 (L2335–2381, Rabin-Karp):** Separate window length `L` from prime modulus `M`; fix precomputation time to $O(L)$; fix birthday collision probability for $N = 10^5, M = 10^9+7$ (`~99.3%`, or state `~5%` for $N = 10^4$). *(Fixed & embedded into Module 09 on 2026-11-25.)*
 - [ ] **D1 (L157–172 vs L202–203, Memory Layout):** Make stack addresses *decrease* in the "Stack Grows Down" direction and fix invalid C++ `int* ptr = 0x55aa10;`.
 - [ ] **D18 (L1416, DSU):** Clarify that $O(\alpha(N))$ requires **both** path compression and union by rank/size.
 - [ ] **D38 (L3050 vs L3054):** Reconcile squaring count (`3` vs `4`) in binary exponentiation badge.
@@ -237,7 +239,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 - [ ] Embed D13, D14, D33, D34 + Coin Change & Edit Distance diagrams → `06.dynamic_programming.tex`.
 - [ ] Embed D15 (3-way), D16, D17, D18, D35, D36 + DFS 3-color → `07.graph_algorithms.tex`.
 - [ ] Embed D19, D20, D37 + Lower/Upper Bound duplicates → `08.binary_search.tex`.
-- [ ] Embed D29, D30, D31 → `09.string_algorithms.tex`.
+- [x] Embed D29, D30, D31 → `09.string_algorithms.tex` *(fixed D29 `"car"` edge collision, D30 KMP fallback shift alignment & title clearance, D31 window `L` vs modulus `M`, birthday paradox `99.3%`, & double-scaling; visually verified 2026-11-25)*.
 - [ ] Embed D21 + Fractional Knapsack / Counterexample / Exchange Argument → `10.greedy_algorithms.tex`.
 - [x] Embed D22, D23, D24 → `11.monotonic_stacks_and_queues.tex` (replaces 3 text stubs; fixed D24 blue frame collision and D22 label/card spacing). *(Completed 2026-11-24)*
 - [ ] Embed D25, D26, D27, D28, D41 → `12.bit_manipulation_and_bitmasks.tex` (replaces 4 text stubs).
@@ -283,7 +285,7 @@ Apply the **Pedagogical Blueprint** (4-Beat Origin Stories, local `notationbox` 
   - *Origin Stories:* Why off-by-one infinite loops happen (and how the `[left, right)` half-open invariant makes them impossible); how "Binary Search on the Answer" turns optimization into a `FFFTTT` yes/no feasibility check; why rotated arrays always have at least one sorted half.
   - *Local `notationbox`:* Search interval $[L, R)$, Predicate $P(x) \in \{F, T\}$, Monotonic boundary $x^*$.
   - *Pen & Paper Drills (3):* Hand-trace `lower_bound` vs. `upper_bound` on `[2, 4, 4, 4, 7]`; design the feasibility predicate $P(x)$ for shipping packages in $D$ days; trace rotated search on `[6, 7, 1, 2, 3, 4, 5]` for target `2`.
-- [ ] **4.11 `09.string_algorithms.tex`:** *(Fold into Phase 2.1 rewrite.)*
+- [x] **4.11 `09.string_algorithms.tex`:** *(Completed 2026-11-25 alongside Phase 2.1 rewrite.)*
 - [ ] **4.12 `10.greedy_algorithms.tex`:** *(Fold into Phase 2.2 rewrite.)*
 - [x] **4.13 `11.monotonic_stacks_and_queues.tex`:** *(Completed 2026-11-24)*
   - *Origin Stories:* Why dominated elements can *never* be the answer again (skyline shadow proof); why `while` inside `for` is still $O(N)$ (each element pays 1 push + at most 1 pop); why strict/non-strict tie-breaking partitions duplicate subarrays cleanly.
@@ -328,7 +330,7 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `06.dynamic_programming.tex` | `[ ]` | N/A | `[ ]` (D13–14, D33–34 + 2) | `[ ]` | `[ ]` | `[ ]` |
 | `07.graph_algorithms.tex` | `[ ]` | N/A | `[ ]` (D15–18, D35–36 + 1) | `[ ]` | `[ ]` | `[ ]` |
 | `08.binary_search.tex` | `[ ]` | N/A | `[ ]` (D19–20, D37 + 1) | `[ ]` | `[ ]` | `[ ]` |
-| `09.string_algorithms.tex` | `[ ]` | `[ ]` | `[ ]` (D29–31) | `[ ]` | `[ ]` | `[ ]` |
+| `09.string_algorithms.tex` | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `10.greedy_algorithms.tex` | `[ ]` | `[ ]` | `[ ]` (D21 + 3) | `[ ]` | `[ ]` | `[ ]` |
 | `11.monotonic_stacks_and_queues.tex` | DONE (2026-11-24) | N/A | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) |
 | `12.bit_manipulation_and_bitmasks.tex` | `[ ]` | N/A | `[ ]` (D25–28, D41) | `[ ]` | `[ ]` | `[ ]` |

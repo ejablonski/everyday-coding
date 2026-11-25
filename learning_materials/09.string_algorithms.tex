@@ -2,21 +2,113 @@
 
 % --- Core LaTeX Packages ---
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\ttdefault}{txtt}
+\usepackage{upquote}
+\usepackage[margin=0.85in, headheight=15pt]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{xcolor}
+\usepackage[helvet]{sfmath}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[explicit]{titlesec}
+\usepackage[skins,breakable]{tcolorbox}
 \usepackage{listings}
 \usepackage{hyperref}
-\usepackage{tabularx}
 \usepackage{graphicx}
 
-% --- Unified Color Palette ---
+% --- Diagram Packages ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,decorations.pathreplacing}
+
+% --- Unified Print-Safe Color Palette ---
 \definecolor{primaryblue}{RGB}{24, 75, 140}
-\definecolor{codebg}{RGB}{248, 249, 250}
-\definecolor{codeframe}{RGB}{210, 215, 222}
-\definecolor{codegreen}{RGB}{40, 130, 60}
-\definecolor{codeblue}{RGB}{20, 90, 180}
-\definecolor{codegray}{RGB}{120, 120, 120}
+\definecolor{accentteal}{RGB}{15, 118, 110}
+\definecolor{accentamber}{RGB}{180, 83, 9}
+\definecolor{accentred}{RGB}{185, 28, 28}
+\definecolor{codebg}{RGB}{246, 248, 250}
+\definecolor{codeframe}{RGB}{204, 212, 220}
+\definecolor{codeink}{RGB}{24, 30, 38}
+\definecolor{codekw}{RGB}{126, 34, 206}
+\definecolor{codetype}{RGB}{0, 118, 138}
+\definecolor{codegreen}{RGB}{22, 138, 66}
+\definecolor{codeblue}{RGB}{15, 92, 212}
+\definecolor{codestr}{RGB}{194, 65, 12}
+\definecolor{codegray}{RGB}{105, 115, 125}
+
+% --- Global Typography & Spacing ---
+\linespread{1.08}
+\renewcommand{\arraystretch}{1.35}
+\setlength{\tabcolsep}{7pt}
+\setlist[itemize]{itemsep=3pt, topsep=4pt, leftmargin=1.5em}
+\setlist[enumerate]{itemsep=4pt, topsep=4pt, leftmargin=1.6em}
+
+% --- Running Header & Footer (Screen + Print Navigation) ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{codegray}\textbf{String Algorithms}}
+\fancyhead[R]{\footnotesize\color{codegray}\nouppercase{\leftmark}}
+\fancyfoot[C]{\footnotesize\color{codegray}Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{codeframe}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{}}
+
+% --- Section & Subsection Styling (High-Contrast + Per-Section Page Breaks) ---
+\newcommand{\sectionbreak}{}
+
+\titleformat{\section}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {\colorbox{primaryblue}{\color{white}\bfseries\Large\;\thesection\;}\hspace{0.55em}#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+\titlespacing*{\section}{0pt}{4pt}{14pt}
+
+\titleformat{name=\section,numberless}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{primaryblue!90!black}}
+  {}
+  {0pt}
+  {\begin{tcolorbox}[
+      enhanced, colback=primaryblue!6, colframe=primaryblue!6,
+      borderline west={3.5pt}{0pt}{primaryblue},
+      sharp corners=west, arc=2pt,
+      left=8pt, right=8pt, top=5pt, bottom=5pt,
+      boxsep=0pt, before skip=0pt, after skip=0pt
+  ]\large\bfseries\color{primaryblue!90!black}\thesubsection\hspace{0.55em}#1\end{tcolorbox}}
+\titlespacing*{\subsection}{0pt}{18pt}{8pt}
+
+\titleformat{name=\subsection,numberless}[block]
+  {\normalsize\bfseries\color{accentteal}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{2pt}{\color{accentteal!40}\titlerule[0.7pt]}]
+\titlespacing*{\subsection}{0pt}{14pt}{6pt}
+
+% --- Canonical Shared TikZ Styles ---
+\tikzset{
+    lmbox/.style={draw=codeframe, fill=codebg, thick, rounded corners=2pt, inner sep=4pt, font=\small},
+    lmactive/.style={draw=primaryblue, fill=primaryblue!8, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=primaryblue},
+    lmaccepted/.style={draw=codegreen, fill=codegreen!10, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=codegreen},
+    lmpruned/.style={draw=red!70!black, fill=red!70!black!6, thick, dashed, rounded corners=2pt, inner sep=4pt, font=\small, text=red!70!black},
+    lmarrow/.style={-{Stealth[length=5pt]}, thick, primaryblue},
+    lmmuted/.style={-{Stealth[length=5pt]}, thick, codegray},
+    lmprunedarrow/.style={-{Stealth[length=5pt]}, thick, dashed, red!70!black}
+}
 
 % --- Hyperref Setup ---
 \hypersetup{
@@ -25,234 +117,797 @@
     citecolor=primaryblue,
     urlcolor=primaryblue,
     pdftitle={String Algorithms},
-    pdfpagemode=UseNone,
-    pdfdisplaydoctitle=true
+    pdfauthor={Antigravity Engineering}
 }
 
-% --- Code Listing Style ---
+% --- Example Environment ---
+\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
+
+% --- Semantic Narrative Beat Labels & Solution Trap Diagnostic ---
+\newcommand{\painbeat}{\textbf{\color{accentamber}The Problem:} }
+\newcommand{\ahabeat}{\textbf{\color{accentteal}The ``Aha!'' Insight:} }
+\newcommand{\examplebeat}{\textbf{\color{primaryblue}Mini-Example First:} }
+\newcommand{\breaksbeat}{\textbf{\color{accentred}When It Breaks:} }
+\newcommand{\invariantbeat}[1]{\par\noindent\textbf{\color{accentteal}Loop Invariant (#1):} }
+\newcommand{\trapnote}[1]{\par\smallskip\noindent{\footnotesize\textbf{\color{accentamber}Common trap:} #1}}
+
+% --- Modern Overview Card ---
+\newtcolorbox{overviewbox}[1][What You'll Learn]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Key Takeaway / Core Rule Box ---
+\newtcolorbox{calloutbox}[1]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Plain-English Formula Card ---
+\newtcolorbox{formulabox}[1][Formula in Plain English]{
+    enhanced,
+    colback=primaryblue!4, colframe=primaryblue!22,
+    borderline west={3.5pt}{0pt}{primaryblue},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=6pt, bottom=6pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\small\bfseries\color{primaryblue},
+    title={#1},
+    attach title to upper={\par\vspace{2pt}}
+}
+
+% --- Watch-Out / Edge-Case Warning Box ---
+\newtcolorbox{watchoutbox}[1][Watch Out --- When It Breaks]{
+    enhanced,
+    colback=accentamber!6, colframe=accentamber!30,
+    borderline west={3.5pt}{0pt}{accentamber},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentamber},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Local Symbol Mini-Table Environment ---
+\newenvironment{notationbox}[1][Symbols Used Here]{
+    \par\vspace{0.15cm}
+    \noindent\textbf{\small\color{primaryblue}#1}\par\vspace{0.1cm}
+    \begingroup
+    \footnotesize
+    \rowcolors{2}{codebg}{white}
+    \noindent\tabularx{\textwidth}{>{\raggedright\arraybackslash\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.8cm}}
+    \arrayrulecolor{primaryblue}\toprule[1.1pt]
+    \rowcolor{primaryblue!10}
+    \textcolor{primaryblue}{\textbf{Symbol}} & \textcolor{primaryblue}{\textbf{Plain-English Meaning}} & \textcolor{primaryblue}{\textbf{Example / Type}} \\
+    \arrayrulecolor{codeframe}\midrule[0.6pt]
+}{
+    \arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+    \endtabularx
+    \endgroup
+    \vspace{0.2cm}\par
+}
+
+% --- Print-First Pen-and-Paper Exercise Environment ---
+\newcounter{exercise}
+\newtcolorbox{tryitbox}[3]{
+    enhanced,
+    step=exercise,
+    colback=codegreen!3, colframe=codegreen!45,
+    colbacktitle=codegreen!14, coltitle=codegreen!85!black,
+    borderline west={3.5pt}{0pt}{codegreen},
+    arc=3pt, boxrule=0.6pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    toptitle=4pt, bottomtitle=4pt,
+    before skip=9pt, after skip=9pt,
+    fonttitle=\bfseries,
+    title={Exercise \theexercise\hspace{0.5em}{\colorbox{codegreen!85!black}{\color{white}\scriptsize\bfseries\;#1\;}}\hspace{0.5em}#2 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#3}}}
+}
+
+% --- Modern C++23 Code Listing Setup ---
 \lstset{
     language=C++,
-    backgroundcolor=\color{codebg},
-    basicstyle=\ttfamily\small,
-    keywordstyle=\color{codeblue}\bfseries,
-    stringstyle=\color{codegreen},
-    commentstyle=\color{codegray}\itshape,
-    numbers=left,
+    basicstyle=\small\ttfamily\color{codeink},
+    keywordstyle=\color{codekw}\bfseries,
+    morekeywords={constexpr,noexcept,nullptr,static_assert,auto,override,final,decltype,concept,requires},
+    keywordstyle=[2]\color{codetype}\bfseries,
+    morekeywords=[2]{std,vector,span,deque,string,string_view,size_t,int64_t,uint32_t,uint64_t,optional,pair,tuple,array,priority_queue,unordered_map,unordered_set,map,set,ranges,views,nodiscard},
+    moredelim=[l][\color{codeblue}\bfseries]{\#},
+    deletestring=[b]',
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codestr},
     numberstyle=\tiny\color{codegray},
-    stepnumber=1,
-    numbersep=10pt,
+    numbers=left,
+    numbersep=8pt,
+    xleftmargin=24pt,
+    framexleftmargin=22pt,
+    framexrightmargin=4pt,
+    framextopmargin=4pt,
+    framexbottommargin=4pt,
+    backgroundcolor=\color{codebg},
     frame=single,
     rulecolor=\color{codeframe},
-    tabsize=4,
-    captionpos=b,
+    aboveskip=8pt,
+    belowskip=10pt,
     breaklines=true,
-    breakatwhitespace=false,
+    breakatwhitespace=true,
+    tabsize=4,
     showstringspaces=false,
-    escapeinside={(*@}{@*)}
+    captionpos=b
 }
 
-% --- Custom Environments ---
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{lemma}[theorem]{Lemma}
-
-\newenvironment{calloutbox}[1]{
-    \vspace{0.3cm}
-    \noindent
-    \begin{tabularx}{\textwidth}{|X|}
-    \hline
-    \rowcolor{codebg}
-    \textbf{#1} \\
-    \hline
-}{
-    \\ \hline
-    \end{tabularx}
-    \vspace{0.3cm}
-}
-
-% ============================================================================
 \begin{document}
+
+% --- Modern Title Banner ---
+\thispagestyle{plain}
+\begin{tcolorbox}[
+    enhanced,
+    colback=primaryblue!6, colframe=primaryblue!20,
+    borderline west={5pt}{0pt}{primaryblue},
+    arc=4pt, boxrule=0.6pt,
+    left=14pt, right=14pt, top=12pt, bottom=12pt,
+    before skip=0pt, after skip=10pt
+]
+    {\footnotesize\bfseries\color{accentteal}MODULE 09 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
+    {\Huge\bfseries\color{primaryblue}String Algorithms}\\[5pt]
+    {\large\color{codegray}Rolling Hashing, KMP, Z-Algorithm, Tries, and Linear-Time Palindromes}\\[6pt]
+    {\footnotesize\color{codegray}Updated \today}
+\end{tcolorbox}
+
+\begin{overviewbox}[What You'll Learn]
+Naive string comparisons re-read the same characters over and over, turning innocent loops into $O(N \cdot M)$ timeouts on $10^5$-character inputs. This guide builds linear-time string intuition from scratch: how strings map to polynomial integers in \textbf{Rabin-Karp Double Hashing}, how \textbf{KMP} and the \textbf{Z-Algorithm} recycle prior matches so pointers never rewind, how \textbf{Tries} compress dictionaries for $O(L)$ prefix lookup, and how \textbf{Manacher's Algorithm} finds every palindrome in $O(N)$. Every technique is backed by diagrams, paper-reproducible traces, C++23 templates, eight inline drills, and a mixed practice sheet.
+\end{overviewbox}
+
+\vspace{2pt}
+{\setlength{\parskip}{1pt}\small\tableofcontents}
+
+% Every major section starts cleanly on a new page
+\renewcommand{\sectionbreak}{\clearpage}
+
+% ============================================================================
+\section{Foundations of String Processing}
 % ============================================================================
 
-\title{\vspace{-2cm}\Huge \textbf{String Algorithms}}
-\author{Everyday Coding \\ \Large \textit{Pattern Matching, Tries, and Hashing}}
-\date{}
-\maketitle
+To a computer, a string is just a contiguous array of small integers (typically ASCII bytes). Because characters have numeric codes, we can index arrays with \texttt{c - 'a'}, build polynomials out of them, and exploit overlapping structure to avoid re-scanning text.
 
-\begin{abstract}
-String algorithms process sequences of characters efficiently. This document covers pattern matching, hashing, and prefix trees. These tools allow rapid searching through vast bodies of text. We will explore how to avoid redundant comparisons and how to structure dictionaries for instantaneous lookup.
-\end{abstract}
+\subsection{Substrings, Subsequences, Prefixes, Suffixes, and Borders}
 
-% ============================================================================
-\section{Foundations}
-% ============================================================================
+Misreading one word in a string prompt sends you down the wrong algorithm family. Keep these five definitions razor-sharp:
 
-A string is a sequence of characters stored in contiguous memory. Each character maps to a numeric value based on an encoding scheme, typically ASCII or UTF-8. Because strings are just arrays of numbers, mathematical operations can be applied to them to enable fast searching.
-
-\subsection{Substrings, Subsequences, and Prefixes}
-Understanding the distinction between these terms is essential before solving any string problem:
 \begin{itemize}
-    \item \textbf{Substring}: A contiguous slice of characters from the string. For example, "app" is a substring of "apple".
-    \item \textbf{Subsequence}: A sequence derived by deleting zero or more characters without changing the order. For example, "ape" is a subsequence of "apple".
-    \item \textbf{Prefix}: A substring that starts at the first character.
-    \item \textbf{Suffix}: A substring that ends at the last character.
+    \item \textbf{Substring:} A \emph{contiguous} slice $S[l \dots r]$. For $S = \text{``apple''}$, \texttt{"app"} and \texttt{"ppl"} are substrings, but \texttt{"ape"} is not. A length-$N$ string has $N(N + 1)/2$ non-empty substrings.
+    \item \textbf{Subsequence:} Formed by deleting zero or more characters \emph{without} reordering the rest (\texttt{"ape"} is a subsequence of \texttt{"apple"}). Subsequence problems usually belong to Dynamic Programming (Module~06), not string matching.
+    \item \textbf{Prefix:} A substring anchored at index $0$, i.e., $S[0 \dots k]$.
+    \item \textbf{Suffix:} A substring anchored at the end, i.e., $S[k \dots N - 1]$.
+    \item \textbf{Border:} A string that is \emph{both} a \textbf{proper} prefix (not the whole string) and a suffix of $S$. For \texttt{"ababa"}, the borders are \texttt{"a"} and \texttt{"aba"}. Borders are the secret engine behind both KMP and string periodicity!
 \end{itemize}
 
+\subsection{Strings in Modern C++: \texttt{std::string} vs.\ \texttt{std::string\_view}}
+
+Slicing a \texttt{std::string} with \texttt{s.substr(l, len)} allocates a brand-new heap buffer and copies $O(\text{len})$ characters. Calling \texttt{substr} inside a loop over $N$ indices silently turns an $O(N)$ idea into $O(N^2)$!
+
+\begin{calloutbox}{Zero-Copy Slices With \texttt{std::string\_view}}
+Pass read-only strings by value as \texttt{std::string\_view} (just a pointer + length, 16 bytes). Calling \texttt{sv.substr(l, len)}, \texttt{sv.remove\_prefix(k)}, or \texttt{sv.remove\_suffix(k)} runs in strictly $O(1)$ time with zero allocations.
+\end{calloutbox}
+
+\begin{watchoutbox}[Watch Out --- Dangling \texttt{std::string\_view}]
+A \texttt{std::string\_view} does \emph{not} own its characters. Never return a \texttt{std::string\_view} pointing into a temporary or local \texttt{std::string} that gets destroyed when the function exits---always ensure the backing string outlives the view.
+\end{watchoutbox}
+
+\begin{tryitbox}{Triage}{Substring, Subsequence, or Border?}{ex1}
+Consider $S = \text{``abracadabra''}$ (length $11$). Answer each quick check:
+\begin{enumerate}
+    \item Is \texttt{"aca"} a substring, a subsequence, or both? What about \texttt{"aaaa"}?
+    \item List \emph{all} non-empty \textbf{borders} of $S$ (proper prefixes that are also suffixes).
+    \item Why is calling \texttt{s.substr(i)} inside a loop $i = 0 \dots N - 1$ slow on \texttt{std::string} but fast on \texttt{std::string\_view}?
+\end{enumerate}
+\end{tryitbox}
+
 % ============================================================================
-\section{Main Topics}
+\section{Core String Algorithms}
 % ============================================================================
 
-\subsection{Polynomial Rolling Hash}
-Comparing two strings of length $N$ character by character takes $O(N)$ time. By converting a string into a large integer called a hash, we can compare strings in $O(1)$ time. A polynomial rolling hash treats a string as a number in a specific base $B$, evaluated modulo a large prime $M$.
+\begin{notationbox}[Symbols Used in Section 2]
+$N,\; M$ & Lengths of text $T$ and pattern $P$ (or single string $S$ of length $N$) & $N \le 10^5$ \\
+$\Sigma$ & Alphabet size (number of distinct valid characters) & $\Sigma = 26$ (\texttt{'a'--'z'}) \\
+$B,\; M_1,\; M_2$ & Polynomial hash base and large prime moduli & $B = 31,\; M_1 = 10^9{+}7$ \\
+$\pi[i]$ & KMP prefix function: longest border length of prefix $S[0 \dots i]$ & $\pi(\text{"ABABC"}) = [0,0,1,2,0]$ \\
+$Z[i]$ & Z-function: longest common prefix of $S$ and suffix $S[i \dots N-1]$ & $Z(\text{"aabxaab"})[4] = 3$ \\
+\end{notationbox}
 
-\noindent \textbf{Worked Example: Hashing "cat"} \\
-Let $B = 31$ and $M = 10^9+7$. We map characters to values: 'a'=1, 'b'=2, 'c'=3, 't'=20.
+\subsection{Polynomial Rolling Hash and Double Hashing (Rabin-Karp)}
+
+\painbeat Checking whether two length-$L$ substrings are equal character by character takes $O(L)$ time. Sliding a length-$L$ pattern across a length-$N$ text takes $O(N \cdot L)$ time, which times out on $N = 10^5, L = 5 \times 10^4$.
+
+\ahabeat Treat a string like a base-$B$ integer! Just as \texttt{"234"} in base $10$ equals $2 \cdot 10^2 + 3 \cdot 10 + 4$, map each letter to $1 \dots 26$ and evaluate the polynomial modulo a large prime $M$. When a window slides right by one character, you evict the leftmost term, multiply by $B$, and add the new rightmost character---updating the entire fingerprint in $O(1)$!
+
+\examplebeat Hashing \texttt{"cat"} with $B = 31$, $M = 10^9 + 7$, and mapping $\text{'a'} \to 1, \text{'b'} \to 2, \text{'c'} \to 3, \text{'t'} \to 20$:
 \begin{enumerate}
-    \item Hash for "c": $3 \pmod{M} = 3$
-    \item Hash for "ca": $(3 \times 31 + 1) \pmod{M} = 94$
-    \item Hash for "cat": $(94 \times 31 + 20) \pmod{M} = 2934$
+    \item $H(\text{``c''}) = 3$.
+    \item $H(\text{``ca''}) = (3 \times 31 + 1) \bmod M = 94$.
+    \item $H(\text{``cat''}) = (94 \times 31 + 20) \bmod M = 2{,}934$.
 \end{enumerate}
 
-\subsection{The KMP Algorithm and Prefix Function}
-The Knuth-Morris-Pratt (KMP) algorithm finds all occurrences of a pattern of length $M$ in a text of length $N$ in $O(N+M)$ time. It does this by preprocessing the pattern to create a $\pi$ array (prefix function). The value $\pi[i]$ stores the length of the longest proper prefix of the pattern that is also a suffix of the pattern up to index $i$.
+Better yet, precompute \textbf{prefix hashes} $H[0] = 0$, $H[i + 1] = (H[i] \cdot B + \text{val}(S[i])) \bmod M$, and powers $P[k] = B^k \bmod M$. Then \emph{any} half-open substring $S[l \dots r)$ can be hashed in $O(1)$ time (just like a prefix sum, shifted by $B^{r - l}$):
 
-\noindent \textbf{Worked Example: Computing $\pi$ for "ABABC"}
+\begin{formulabox}[O(1) Prefix Rolling Hash Query for $S[l \dots r)$]
+\[
+    \text{hash}(S[l \dots r)) = \Bigl(H[r] - H[l] \cdot B^{r - l}\Bigr) \bmod M
+\]
+\textbf{Read this as:} Subtract the left prefix shifted up to align with $H[r]$; always add $M$ before taking $\bmod\, M$ in C++ to prevent negative remainders.
+\end{formulabox}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    tapebox/.style={draw=codeframe, fill=white, thick, minimum width=1.45cm, minimum height=0.72cm, font=\small\ttfamily, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Outer Container Frame (width 15.6cm, zero scaling)
+    \draw[card] (0.0, -5.55) rectangle (15.6, 5.80);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 5.52)
+        {Rabin-Karp Rolling Hash Mechanics: Window Shift \texttt{"abc"} $\to$ \texttt{"bcd"} (Window $L = 3$)};
+
+    % --- Top Panel: Text Tape ---
+    \node[anchor=west, font=\small\bfseries, text=primaryblue] at (0.3, 3.55) {Text $T$:};
+    \foreach \idx/\ch in {0/a, 1/b, 2/c, 3/d, 4/e, 5/f} {
+        \pgfmathsetmacro{\cx}{2.5 + \idx * 2.15}
+        \node[tapebox] (C\idx) at (\cx, 3.55) {\textbf{\ch}};
+        \node[above=2pt of C\idx, font=\tiny\ttfamily, text=codegray] {idx \idx};
+    }
+
+    % Window W1 frame [0..2] (clears idx labels cleanly)
+    \draw[draw=primaryblue, line width=1.3pt, rounded corners=3pt] (1.55, 3.00) rectangle (7.75, 4.35);
+    \node[anchor=south, font=\scriptsize\bfseries, text=primaryblue] at (4.65, 4.40) {Window $W_1 = \text{``abc''}$ ($H_1$)};
+
+    % Window W2 frame [1..3]
+    \draw[draw=codegreen, line width=1.3pt, dashed, rounded corners=3pt] (3.70, 2.80) rectangle (9.90, 4.05);
+    \node[anchor=north, font=\scriptsize\bfseries, text=codegreen] at (6.80, 2.75) {Window $W_2 = \text{``bcd''}$ ($H_2$)};
+
+    % Eviction & Ingestion Arrows
+    \draw[-{Stealth[length=5pt]}, thick, red!70!black] (2.5, 3.00) -- (2.5, 2.02)
+        node[midway, left=2pt, font=\tiny\bfseries] {$-\,\text{'a'} \cdot B^2$};
+    \node[below=1pt, font=\tiny\bfseries, text=red!70!black] at (2.5, 2.02) {Evict Outgoing};
+
+    \draw[{Stealth[length=5pt]}-, thick, codegreen] (8.95, 3.00) -- (8.95, 2.02)
+        node[midway, right=2pt, font=\tiny\bfseries] {$+\,\text{'d'}$};
+    \node[below=1pt, font=\tiny\bfseries, text=codegreen] at (8.95, 2.02) {Ingest Incoming};
+
+    % --- Middle Panel: 3-Stage Algebraic Update ---
+    \draw[draw=codeframe!70] (0.3, 1.52) -- (15.3, 1.52);
+    \node[anchor=west, font=\small\bfseries, text=primaryblue] at (0.3, 1.18)
+        {Three-Stage Algebraic Update (Base $B$, Window Length $L = 3$, Prime Modulus $M$):};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=14.8cm] at (0.3, 0.92) {
+        \textbf{Initial Hash:} $H_1 = \bigl(\text{'a'} \cdot B^2 + \text{'b'} \cdot B + \text{'c'}\bigr) \bmod M$\\[3pt]
+        \textbf{1.\ Evict High Term:} $H' = \bigl(H_1 - \text{'a'} \cdot B^{L-1}\bigr) \bmod M = \bigl(\text{'b'} \cdot B + \text{'c'}\bigr) \bmod M$\\[3pt]
+        \textbf{2.\ Shift Left ($\times B$):} $H'' = \bigl(H' \times B\bigr) \bmod M = \bigl(\text{'b'} \cdot B^2 + \text{'c'} \cdot B\bigr) \bmod M$\\[3pt]
+        \textbf{3.\ Ingest Low Term:} $H_2 = \bigl(H'' + \text{'d'}\bigr) \bmod M = \bigl(\text{'b'} \cdot B^2 + \text{'c'} \cdot B + \text{'d'}\bigr) \bmod M$
+    };
+
+    % --- Bottom Card: Birthday Paradox & Double Hashing ---
+    \draw[draw=codeframe!90, fill=white, rounded corners=3pt, thick] (0.3, -5.25) rectangle (15.3, -2.05);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.5, -2.20)
+        {Double Hashing Collision Defense \& Complexity:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=14.4cm] at (0.5, -2.62) {
+        $\bullet$ \textbf{Single Hash Risk (Birthday Paradox):} With $M = 10^9 + 7$, hashing $N = 10^4$ substrings has $\approx 5\%$ collision risk; by $N = 10^5$ substrings, collision probability jumps to $1 - e^{-N^2/(2M)} \approx \mathbf{99.3\%}$!\\[2pt]
+        $\bullet$ \textbf{Double Hashing Solution:} Maintain two independent pairs $(B_1, M_1) = (31, 10^9{+}7)$ and $(B_2, M_2) = (37, 10^9{+}9)$. Combined collision risk drops to $\approx N^2/(2 M_1 M_2) \approx \mathbf{5 \times 10^{-9}}$ at $N = 10^5$.\\[2pt]
+        $\bullet$ \textbf{Runtime:} Precomputing powers up to $B^{L-1} \bmod M$ takes $O(L)$ time ($O(N)$ for prefix hashes); each window slide is strictly $\mathbf{O(1)}$.
+    };
+\end{tikzpicture}
+\caption{Rabin-Karp polynomial rolling hash mechanics for window length $L = 3$ and prime modulus $M$. Double hashing defeats birthday-paradox collisions on $10^5$-scale inputs.}
+\label{fig:rabin_karp_rolling}
+\end{figure}
+
+\begin{watchoutbox}[Watch Out --- Two Classic Rolling Hash Traps]
 \begin{enumerate}
-    \item $i=0$ ('A'): No proper prefix possible. $\pi[0] = 0$.
-    \item $i=1$ ('B'): Suffix is "B", prefix is "A". They do not match. $\pi[1] = 0$.
-    \item $i=2$ ('A'): Suffix is "A", prefix is "A". Match of length 1. $\pi[2] = 1$.
-    \item $i=3$ ('B'): Suffix is "AB", prefix is "AB". Match of length 2. $\pi[3] = 2$.
-    \item $i=4$ ('C'): Suffix is "C", "BC", etc. Prefix is "A", "AB", etc. No match. $\pi[4] = 0$.
+    \item \textbf{Never map \texttt{'a' $\to$ 0}:} If \texttt{'a'} has value $0$, then \texttt{"a"}, \texttt{"aa"}, and \texttt{"aaa"} all hash to $0$! Always map \texttt{c - 'a' + 1} (values $1 \dots 26$).
+    \item \textbf{Single hash fails at $N = 10^5$:} Even without adversarial tests, comparing $10^5$ substring hashes under a single modulus $M = 10^9 + 7$ collides with $99.3\%$ probability by the Birthday Paradox. Always use \textbf{Double Hashing} (Figure~\ref{fig:rabin_karp_rolling}).
+\end{enumerate}
+\end{watchoutbox}
+
+\begin{tryitbox}{Debug}{Two Subtle Rolling Hash Bugs}{ex2}
+Spot \textbf{both} bugs in this rolling-hash substring helper (assume $M = 10^9 + 7$ and lowercase strings):
+\begin{lstlisting}[numbers=none, xleftmargin=4pt, framexleftmargin=4pt]
+// Precompute: H[i + 1] = (H[i] * 31 + (s[i] - 'a')) % M;
+int64_t getHash(int l, int r) { // half-open [l, r)
+    return (H[r] - H[l] * powB[r - l]) % M;
+}
+\end{lstlisting}
+Construct the smallest counterexample that breaks Bug 1, and explain why Bug 2 can return a negative number in C++.
+\end{tryitbox}
+
+\subsection{The KMP Algorithm and Prefix Function ($\pi$-Array)}
+
+\painbeat Suppose you search for $P = \text{``ABABC''}$ inside $T = \text{``ABABABC''}$. After matching \texttt{"ABAB"} ($j = 4$), you hit a mismatch: $T[4] = \text{'A'} \neq P[4] = \text{'C'}$. A naive loop throws away everything it learned and rewinds $T$ back to index $1$!
+
+\ahabeat Look closely at the characters you \emph{already} matched: $T[0 \dots 3] = P[0 \dots 3] = \text{``ABAB''}$. Its longest border is \texttt{"AB"} (length $\pi[3] = 2$). That means the suffix $T[2 \dots 3] = \text{``AB''}$ \emph{already matches} the prefix $P[0 \dots 1] = \text{``AB''}$! So you slide the pattern forward so $P[2]$ sits under $T[4]$---zero rewinding of the text pointer $i$!
+
+\textbf{Why \texttt{j = pi[j - 1]} Never Skips a Valid Match:} Any valid alignment of $P$ ending right before $i$ must have its matched prefix equal to a suffix of $P[0 \dots j - 1]$---i.e., a \emph{border} of $P[0 \dots j - 1]$. Since $\pi[j - 1]$ is the \emph{longest} border, jumping straight to $j \leftarrow \pi[j - 1]$ tries the next longest valid candidate without skipping any possible match.
+
+\begin{formulabox}[KMP Prefix Function ($\pi$-Array) \& Exact Periodicity Test]
+\[
+    \pi[i] = \max\Bigl\{\, k \in [0, i] \;:\; S[0 \dots k - 1] = S[i - k + 1 \dots i] \,\Bigr\} \qquad (\pi[0] = 0)
+\]
+\textbf{Read this as:} $\pi[i]$ is the length of the longest proper prefix of $S[0 \dots i]$ that matches its own suffix. The shortest repeating block candidate has length $p = N - \pi[N - 1]$; $S$ is an exact repetition of a smaller block iff $p < N$ and $N \bmod p = 0$.
+\end{formulabox}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    cell/.style={draw=codeframe, fill=white, thick, minimum width=1.18cm, minimum height=0.68cm, font=\small\ttfamily, align=center},
+    matchcell/.style={draw=codegreen, fill=codegreen!16, line width=1.2pt, minimum width=1.18cm, minimum height=0.68cm, font=\small\ttfamily\bfseries, text=codegreen, align=center},
+    failcell/.style={draw=red!70!black, fill=red!70!black!8, line width=1.2pt, minimum width=1.18cm, minimum height=0.68cm, font=\small\ttfamily\bfseries, text=red!70!black, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Outer Container Frame (width 15.8cm, zero scaling)
+    \draw[card] (0.0, -5.45) rectangle (15.8, 5.60);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 5.32)
+        {KMP Prefix Function ($\pi$) \& Non-Backtracking Fallback: Pattern $P = \text{``ABABC''}$};
+
+    % --- Top Panel: Pattern P and Pi Array ---
+    \node[anchor=west, font=\small\bfseries, text=primaryblue] at (0.3, 3.70) {Pattern $P$:};
+    \foreach \idx/\ch/\pival in {0/A/0, 1/B/0, 2/A/1, 3/B/2, 4/C/0} {
+        \pgfmathsetmacro{\cx}{3.1 + \idx * 1.45}
+        \ifnum\pival>0
+            \node[matchcell] (P\idx) at (\cx, 3.70) {\ch};
+        \else
+            \node[cell] (P\idx) at (\cx, 3.70) {\ch};
+        \fi
+        \node[above=1.5pt of P\idx, font=\tiny\ttfamily, text=codegray] {idx \idx};
+        \node[below=2pt of P\idx, font=\scriptsize\bfseries, text=primaryblue] {$\pi[\idx]=\pival$};
+    }
+
+    \node[anchor=west, font=\scriptsize, align=left, text width=5.2cm] at (10.15, 3.60) {
+        \textbf{Definition:} $\pi[i] =$ longest proper prefix of $P[0 \dots i]$ that is also its suffix.
+    };
+
+    % --- Middle Panel: Border Breakdown ---
+    \draw[draw=codeframe!70] (0.3, 2.45) -- (15.5, 2.45);
+    \node[anchor=west, font=\small\bfseries, text=primaryblue] at (0.3, 2.10)
+        {Border Breakdown for $P = \text{``ABABC''}$:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=15.0cm] at (0.3, 1.85) {
+        $\bullet$ $i = 2$ (\texttt{"ABA"}): Prefix \texttt{"A"} matches suffix \texttt{"A"} $\implies \mathbf{\pi[2] = 1}$.\\[1.5pt]
+        $\bullet$ $i = 3$ (\texttt{"ABAB"}): Prefix \texttt{"AB"} matches suffix \texttt{"AB"} $\implies \mathbf{\pi[3] = 2}$.\\[1.5pt]
+        $\bullet$ $i = 4$ (\texttt{"ABABC"}): Ends in \texttt{'C'}, no matching prefix $\implies \mathbf{\pi[4] = 0}$.
+    };
+
+    % --- Bottom Panel: Live Search & Corrected Aligned Shift ---
+    \draw[draw=codeframe!70] (0.3, 0.25) -- (15.5, 0.25);
+    \node[anchor=west, font=\small\bfseries, text=primaryblue] at (0.3, -0.10)
+        {Live Search Trace: $T = \text{``ABABABC''}$ vs.\ $P = \text{``ABABC''}$ (Zero Text Rewind)};
+
+    % Text T cells (indices 0..6, step 1.40 starting at x=3.1)
+    \node[anchor=west, font=\scriptsize\bfseries, text=codegray] at (0.3, -1.05) {Text $T$ ($i$):};
+    \foreach \idx/\ch in {0/A, 1/B, 2/A, 3/B, 4/A, 5/B, 6/C} {
+        \pgfmathsetmacro{\cx}{3.1 + \idx * 1.40}
+        \ifnum\idx=4
+            \node[cell, draw=primaryblue, fill=primaryblue!8, line width=1.3pt] (T\idx) at (\cx, -1.05) {\textbf{\ch}};
+        \else
+            \node[cell] (T\idx) at (\cx, -1.05) {\ch};
+        \fi
+        \node[above=1.5pt of T\idx, font=\tiny\ttfamily, text=codegray] {i=\idx};
+    }
+
+    % Pattern P before mismatch (aligned at T[0..4])
+    \node[anchor=west, font=\scriptsize\bfseries, text=codegray] at (0.3, -2.10) {Before ($j=4$):};
+    \foreach \idx/\ch in {0/A, 1/B, 2/A, 3/B, 4/C} {
+        \pgfmathsetmacro{\cx}{3.1 + \idx * 1.40}
+        \ifnum\idx=4
+            \node[failcell] (Pj\idx) at (\cx, -2.10) {\ch};
+        \else
+            \node[matchcell] (Pj\idx) at (\cx, -2.10) {\ch};
+        \fi
+    }
+    \node[anchor=west, font=\scriptsize\bfseries, text=red!70!black, align=left, text width=5.6cm] at (9.65, -2.10) {
+        $\times$ Mismatch at $i=4, j=4$\\
+        ($T[4]=\text{'A'} \neq P[4]=\text{'C'}$)
+    };
+
+    % Fallback arrow showing shift of P[0..1] onto T[2..3] and P[2] under T[4]
+    \draw[-{Stealth[length=5pt]}, line width=1.4pt, red!70!black] (8.70, -2.52) to[out=-145, in=65] (5.90, -3.18);
+    \node[anchor=west, font=\scriptsize\bfseries, text=red!70!black] at (9.65, -2.90)
+        {Fallback: $j \leftarrow \pi[3] = \mathbf{2}$ (keep \texttt{"AB"})};
+
+    % Aligned Pattern after fallback j=2: P[0..4] sits under T[2..6]!
+    \node[anchor=west, font=\scriptsize\bfseries, text=codegreen] at (0.3, -3.65) {After ($j=2$):};
+    \foreach \pidx/\tidx/\ch/\st in {0/2/A/matchcell, 1/3/B/matchcell, 2/4/A/lmactive, 3/5/B/cell, 4/6/C/cell} {
+        \pgfmathsetmacro{\cx}{3.1 + \tidx * 1.40}
+        \node[\st, minimum width=1.18cm, minimum height=0.68cm, font=\small\ttfamily\bfseries] (Pa\pidx) at (\cx, -3.65) {\ch};
+        \node[below=1.5pt of Pa\pidx, font=\tiny\ttfamily, text=codegray] {P[\pidx]};
+    }
+
+    \node[anchor=north west, font=\scriptsize\bfseries, text=codegreen, align=left, text width=15.0cm] at (0.3, -4.45) {
+        $\checkmark$ Text pointer stays at $i = 4$! Shifting $P$ by $j - \pi[j-1] = 2$ aligns $P[0..1]=\text{``AB''}$ with $T[2..3]$ and tests $P[2]=\text{'A'}$ directly against $T[4]=\text{'A'}$---matching $T[2..6]$ in $O(N+M)$ total time.
+    };
+\end{tikzpicture}
+\caption{KMP prefix table ($\pi$) and mismatch fallback on $T = \text{``ABABABC''}$. At mismatch $j = 4$, setting $j \leftarrow \pi[3] = 2$ aligns $P[2] = \text{'A'}$ directly under $T[4] = \text{'A'}$ without rewinding $i$.}
+\label{fig:kmp_fallback}
+\end{figure}
+
+\invariantbeat{KMP} Before comparing $T[i]$ against $P[j]$, $j$ is always the length of the longest prefix of $P$ that matches a suffix of $T[0 \dots i - 1]$.
+
+\begin{tryitbox}{Trace}{KMP Table on a Tricky Fallback String}{ex3}
+Compute the full $\pi$-array by hand for $S = \text{``AABAAAB''}$ (length $7$), noting where the \texttt{while} loop falls back to a \emph{non-zero} value. Then use $p = N - \pi[N - 1]$ to determine whether \texttt{"ABABAB"} and \texttt{"ABABA"} are exact repetitions of a smaller substring.
+\end{tryitbox}
+
+\subsection{The Z-Algorithm ($Z$-Array vs.\ $\pi$-Array)}
+
+\painbeat KMP tells you the longest border \emph{ending} at index $i$. What if a problem instead asks, for every suffix starting at index $i$, how many characters it shares with the start of the string?
+
+\ahabeat Maintain the rightmost substring window $[L, R]$ discovered so far that matches the prefix $S[0 \dots R - L]$ (called the \textbf{Z-box}). When computing $Z[i]$:
+\begin{enumerate}
+    \item If $i \le R$, index $i$ lies inside a known copy of the prefix! Mirror $i$ back to $k = i - L$. You immediately get $Z[i] \ge \min(R - i + 1, Z[k])$ characters for \emph{free} without comparing a single character.
+    \item Extend $Z[i]$ greedily while $S[Z[i]] == S[i + Z[i]]$. Whenever $i + Z[i] - 1 > R$, update $[L, R] \leftarrow [i, i + Z[i] - 1]$.
 \end{enumerate}
 
-\subsection{Tries (Prefix Trees)}
-A Trie is a tree data structure that stores strings character by character. Every path down the tree represents a prefix. This allows searching for a word of length $L$ among a dictionary of $W$ words in just $O(L)$ time, entirely independent of $W$.
+Because every successful character comparison strictly increases $R$ (and $R < N$), the total work across all $N$ indices is strictly $O(N)$!
 
-\noindent \textbf{Worked Example: Inserting "car" into a Trie}
+\examplebeat For $S = \text{``aabxaab''}$ ($Z[0] = 0$ by matching convention): $Z = [0, 1, 0, 0, 3, 1, 0]$. At $i = 4$, we match \texttt{"aab"} and set $[L, R] = [4, 6]$. At $i = 5 \le 6$, mirroring to $k = 5 - 4 = 1$ gives $Z[5] = \min(6 - 5 + 1, Z[1]) = \min(2, 1) = 1$ in $O(1)$.
+
+\begin{formulabox}[Z-Function Definition \& Pattern Matching Trick]
+\[
+    Z[i] = \text{length of the longest common prefix of } S \text{ and } S[i \dots N - 1]
+    \qquad (i \ge 1;\; Z[0] = 0 \text{ or } N)
+\]
+\textbf{Read this as:} To find all occurrences of $P$ in $T$, compute $Z$ on $P + \text{`\#'} + T$ (where \texttt{'\#'} appears in neither string). Every index $i$ with $Z[i] = |P|$ marks a match at text index $i - |P| - 1$.
+\end{formulabox}
+
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.0cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Dimension}} & \textcolor{primaryblue}{\textbf{KMP Prefix Function ($\pi[i]$)}} & \textcolor{primaryblue}{\textbf{Z-Algorithm ($Z[i]$)}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Anchor point & Longest prefix match \textbf{ending} at $i$ & Longest prefix match \textbf{starting} at $i$ \\
+Pattern matching & Online streaming over $T$ ($O(M)$ extra memory) & Offline on $P + \text{`\#'} + T$ ($O(N + M)$ memory) \\
+Best suited for & String periodicity, automaton transitions, streaming & Suffix-vs-prefix LCP scores, quick coding \\
+Time complexity & $O(N + M)$ worst-case deterministic & $O(N + M)$ worst-case deterministic \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
+
+\begin{tryitbox}{Trace}{Z-Box Hand Trace on ``abacaba''}{ex4}
+Compute the Z-array for $S = \text{``abacaba''}$ ($Z[0] = 0$), recording the $[L, R]$ Z-box whenever it updates and noting which indices reuse mirrored values $Z[i - L]$.
+\end{tryitbox}
+
+\subsection{Tries (Prefix Trees) and the Bitwise Trie Bonus}
+
+\painbeat Suppose you store $W = 10^5$ words in a dictionary and receive $10^5$ queries asking ``does \emph{any} word start with prefix \texttt{"ca"}?'' Scanning the list takes $O(W \cdot L)$ per query, and a hash table can only answer \emph{exact} whole-word lookups unless you hash every prefix of every word.
+
+\ahabeat Merge words that share common prefixes into a single rooted tree where every edge carries one character! Walking down the edges \texttt{'c'} $\to$ \texttt{'a'} checks prefix existence in $O(L)$ steps---completely independent of whether the dictionary has $10$ words or $10{,}000{,}000$ words.
+
+\textbf{Flat Vector Pool vs.\ Pointer Trees:} Avoid heap-allocating individual nodes with \texttt{new TrieNode*}. Storing all nodes inside a single \texttt{std::vector<TrieNode>} and referencing children by integer indices (\texttt{-1} for missing) keeps nodes packed contiguously in CPU cache and frees everything automatically when the vector goes out of scope (Figure~\ref{fig:trie_vector_pool}).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    troot/.style={circle, draw=primaryblue, fill=primaryblue!14, line width=1.3pt, minimum size=0.82cm, inner sep=0pt, font=\small\bfseries, text=primaryblue, align=center},
+    tnode/.style={circle, draw=codeframe, fill=white, thick, minimum size=0.78cm, inner sep=0pt, font=\small, align=center},
+    tend/.style={circle, draw=codegreen, fill=codegreen!18, line width=1.3pt, double, double distance=1.1pt, minimum size=0.78cm, inner sep=0pt, font=\small\bfseries, text=codegreen, align=center},
+    edgeLbl/.style={font=\scriptsize\bfseries\ttfamily, text=primaryblue, fill=codebg, inner sep=1.5pt, rounded corners=2pt},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Outer Container Frame (width 15.8cm, zero scaling)
+    \draw[card] (0.0, -4.30) rectangle (15.8, 5.05);
+    \node[anchor=north west, font=\bfseries\normalsize, text=primaryblue] at (0.3, 4.78)
+        {Trie Architecture: \{\texttt{"car"}, \texttt{"cat"}, \texttt{"cart"}, \texttt{"dog"}, \texttt{"dot"}\} in a Contiguous Vector Pool};
+
+    % --- Left Panel: Tree Graph (x: 0.25 to 8.35) ---
+    \node[troot] (R) at (4.45, 3.65) {0};
+    \node[right=3pt of R, font=\scriptsize\bfseries, text=primaryblue] {Root};
+
+    % Level 1
+    \node[tnode] (C) at (2.45, 2.30) {1};
+    \node[tnode] (D) at (6.45, 2.30) {5};
+    \draw[-{Stealth[length=4.5pt]}, thick, primaryblue] (R) -- (C) node[midway, edgeLbl] {'c'};
+    \draw[-{Stealth[length=4.5pt]}, thick, primaryblue] (R) -- (D) node[midway, edgeLbl] {'d'};
+
+    % Level 2
+    \node[tnode] (A) at (2.45, 0.90) {2};
+    \node[tnode] (O) at (6.45, 0.90) {6};
+    \draw[-{Stealth[length=4.5pt]}, thick, primaryblue] (C) -- (A) node[midway, edgeLbl] {'a'};
+    \draw[-{Stealth[length=4.5pt]}, thick, primaryblue] (D) -- (O) node[midway, edgeLbl] {'o'};
+
+    % Shared prefix box around node 'a'
+    \draw[draw=accentteal!65, dashed, rounded corners=4pt, line width=0.9pt] (1.35, 0.35) rectangle (3.55, 1.45);
+    \node[anchor=east, font=\tiny\bfseries, text=accentteal, align=right] at (1.28, 0.90) {Shared\\prefix \texttt{"ca"}};
+
+    % Level 3
+    \node[tend] (R3) at (1.55, -0.60) {3};
+    \node[tend] (T4) at (3.45, -0.60) {4};
+    \node[tend] (G7) at (5.45, -0.60) {7};
+    \node[tend] (T8) at (7.45, -0.60) {8};
+
+    \draw[-{Stealth[length=4.5pt]}, thick, primaryblue] (A) -- (R3) node[midway, edgeLbl] {'r'};
+    \draw[-{Stealth[length=4.5pt]}, thick, primaryblue] (A) -- (T4) node[midway, edgeLbl] {'t'};
+    \draw[-{Stealth[length=4.5pt]}, thick, primaryblue] (O) -- (G7) node[midway, edgeLbl] {'g'};
+    \draw[-{Stealth[length=4.5pt]}, thick, primaryblue] (O) -- (T8) node[midway, edgeLbl] {'t'};
+
+    % Word labels: place "car" to LEFT of R3 so downward edge to T9 never slices it!
+    \node[left=3pt of R3, font=\scriptsize\bfseries\ttfamily, text=codegreen] {"car"};
+    \node[below=2pt of T4, font=\scriptsize\bfseries\ttfamily, text=codegreen] {"cat"};
+    \node[below=2pt of G7, font=\scriptsize\bfseries\ttfamily, text=codegreen] {"dog"};
+    \node[below=2pt of T8, font=\scriptsize\bfseries\ttfamily, text=codegreen] {"dot"};
+
+    % Level 4: "cart"
+    \node[tend] (T9) at (1.55, -2.55) {9};
+    \draw[-{Stealth[length=4.5pt]}, thick, primaryblue] (R3) -- (T9) node[midway, edgeLbl] {'t'};
+    \node[below=2pt of T9, font=\scriptsize\bfseries\ttfamily, text=codegreen] {"cart"};
+
+    % --- Right Panel: Memory Model & Complexity (x: 8.65 to 15.50) ---
+    \draw[draw=codeframe!90, fill=white, rounded corners=3pt, thick] (8.65, -3.95) rectangle (15.50, 4.10);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.85, 3.88)
+        {Contiguous Vector Pool Layout:};
+
+    \node[anchor=north west, font=\scriptsize\ttfamily, text=codeink, align=left] at (8.85, 3.40) {
+        \textbf{struct} TrieNode \{\\
+        \hspace*{0.8em}std::array<int, 26> next; // -1 empty\\
+        \hspace*{0.8em}bool is\_end = false;\\
+        \};\\
+        std::vector<TrieNode> nodes;
+    };
+
+    \draw[draw=codeframe!70] (8.85, 1.55) -- (15.30, 1.55);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.25cm] at (8.85, 1.38) {
+        $\bullet$ \textbf{Pointerless Indexing:} Follow child \texttt{nodes[u].next[c - 'a']} directly in one contiguous vector.\\[2pt]
+        $\bullet$ \textbf{Double Green Ring:} Marks \texttt{is\_end = true} (distinguishes \texttt{"car"} from prefix \texttt{"ca"}).\\[2pt]
+        $\bullet$ \textbf{Prefix Reuse:} \texttt{"car"}, \texttt{"cat"}, and \texttt{"cart"} share nodes \texttt{0 $\to$ 1 $\to$ 2}.
+    };
+
+    \draw[draw=codeframe!70] (8.85, -1.45) -- (15.30, -1.45);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.25cm] at (8.85, -1.62) {
+        \textbf{Complexity ($L =$ word length, $\Sigma = 26$):}\\[2pt]
+        $\bullet$ \textbf{Insert / Search / Prefix:} $O(L)$ time, independent of dictionary size $W$.\\[2pt]
+        $\bullet$ \textbf{Space:} $O(\text{total nodes} \times \Sigma)$, compressed heavily by shared prefixes.
+    };
+\end{tikzpicture}
+\caption{Prefix tree (Trie) storing five words inside a flat vector pool. Placing \texttt{"car"} at node~3 with \texttt{is\_end = true} allows \texttt{"cart"} to extend below it while keeping prefix \texttt{"ca"} unmarked.}
+\label{fig:trie_vector_pool}
+\end{figure}
+
+\begin{calloutbox}{Bonus Pattern: The Bitwise Trie (Maximum XOR Pair)}
+Replace the $26$-letter alphabet with a $2$-bit alphabet $\{\texttt{0}, \texttt{1}\}$ and insert the $30$-bit binary representation of each integer from MSB to LSB. To maximize $x \oplus y$ for a query $x$, walk down the Bitwise Trie greedily picking the \textbf{opposite bit} of $x$ whenever that branch exists---solving Maximum XOR Pair in $O(30 \cdot N) = O(N)$ time!
+\end{calloutbox}
+
+\begin{tryitbox}{Edge Cases}{Trie Boundary Checks}{ex5}
+Suppose you insert \texttt{"cat"} and \texttt{"cart"} (and \emph{not} \texttt{"car"}) into an empty lowercase Trie:
 \begin{enumerate}
-    \item Start at the root node.
-    \item Character 'c': No child 'c' exists. Create a new node and move to it.
-    \item Character 'a': No child 'a' exists. Create a new node and move to it.
-    \item Character 'r': No child 'r' exists. Create a new node and move to it.
-    \item Mark the current node as the end of a valid word.
+    \item What do \texttt{search("car")}, \texttt{starts\_with("car")}, \texttt{search("cart")}, and \texttt{starts\_with("")} return?
+    \item How many total nodes exist in \texttt{nodes} (including the root)?
+    \item What happens in an unguarded \texttt{c - 'a'} lookup if an input string contains \texttt{'A'} or \texttt{'-'}?
 \end{enumerate}
+\end{tryitbox}
+
+\subsection{Palindromes: Expand Around Center \& Manacher's Algorithm}
+
+\painbeat Checking whether every substring $S[l \dots r]$ is a palindrome takes $O(N^3)$ time. Expanding outward from every center ($N$ single-character odd centers + $N - 1$ gap even centers) drops this to $O(N^2)$ time and $O(1)$ space---great for $N \le 3{,}000$, but still $O(N^2)$ on \texttt{"aaaa\dots a"} when $N = 10^5$.
+
+\ahabeat \textbf{Manacher's Algorithm} achieves $O(N)$ worst-case time via two ideas:
+\begin{enumerate}
+    \item \textbf{Unify odd and even lengths:} Insert \texttt{'\#'} between every pair of characters and at both ends (e.g., \texttt{"abba"} $\to$ \texttt{"\#a\#b\#b\#a\#"}). Now \emph{every} palindrome has odd length in the transformed string $T$, and its radius $P[i]$ (characters extending right of $i$) equals the \textbf{exact length} of the palindrome in $S$!
+    \item \textbf{Mirror inside the rightmost palindrome:} Track the center $C$ and right edge $R$ of the palindrome reaching farthest right. For any $i < R$, its mirror index is $i' = 2C - i$. Symmetry guarantees $P[i] \ge \min(R - i, P[i'])$ before expanding outward!
+\end{enumerate}
+
+\examplebeat For $S = \text{``abba''}$, $T = \text{``\#a\#b\#b\#a\#''}$ has radii $P = [0, 1, 0, 1, \mathbf{4}, 1, 0, 1, 0]$. At center $i = 4$ (\texttt{'\#'}), radius $P[4] = 4$ matches length $4$ (\texttt{"abba"}) starting at $(i - P[i])/2 = (4 - 4)/2 = 0$.
+
+\begin{formulabox}[Manacher's Mirror Rule \& Index Mapping]
+\[
+    i' = 2C - i, \qquad
+    P[i] \ge \min\bigl(R - i,\; P[i']\bigr) \text{ when } i < R, \qquad
+    \text{start in } S = \frac{i - P[i]}{2},\quad \text{length} = P[i]
+\]
+\textbf{Read this as:} Every extension step beyond $R$ strictly advances $R$, so Manacher runs in strictly $O(N)$ time and $O(N)$ space.
+\end{formulabox}
+
+\begin{tryitbox}{Twist}{Counting Palindromic Substrings \& Mirror Check}{ex6}
+\begin{enumerate}
+    \item Using Expand Around Center, count \emph{all} palindromic substrings (length $\ge 1$) in \texttt{"aaa"} and in \texttt{"ababa"}.
+    \item In $T = \text{``\#a\#b\#a\#b\#a\#''}$, suppose $C = 5$ has right boundary $R = 10$ and $P[3] = 3$. What lower bound does Manacher's mirror formula immediately give at $i = 7$ before any comparisons?
+\end{enumerate}
+\end{tryitbox}
 
 % ============================================================================
 \section{Key Algorithmic Patterns}
 % ============================================================================
 
-\subsection{Dictionary Prefix Search}
-\textbf{Why Naive Fails:} Given a dictionary of $10^5$ words, checking if a string $S$ of length 10 is a prefix of any word by scanning the entire dictionary takes $O(W \times L)$ time. This will time out on large datasets.
+Every string algorithm above exists to eliminate a specific quadratic bottleneck:
 
-\textbf{The Efficient Technique:} Insert all words into a Trie beforehand. This costs time upfront but reduces each subsequent prefix query to exactly $O(L)$ time. We simply walk down the tree following the characters of $S$. If we hit a dead end, it is not a prefix.
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.8cm} >{\raggedright\arraybackslash}p{3.9cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{2.4cm}}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Task}} & \textcolor{primaryblue}{\textbf{Naive Bottleneck}} & \textcolor{primaryblue}{\textbf{Efficient Pattern}} & \textcolor{primaryblue}{\textbf{Speedup}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Find $P$ in $T$ & Slide + compare: $O(NM)$ & KMP $\pi$-array or Z-Algorithm & $O(N + M)$ \\
+Test substring equality & Re-compare slice: $O(L)$ & Prefix Double Hash table & $O(N)$ build, $O(1)$ query \\
+Longest repeated substring & Hash all $O(N^2)$ slices & Binary Search on $L$ + Double Hash & $O(N \log N)$ \\
+Dictionary prefix queries & Scan all $W$ words: $O(WL)$ & Flat vector-pool Trie & $O(L)$ per query \\
+Longest palindrome & Expand all centers: $O(N^2)$ & Manacher's mirror reuse & $O(N)$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
-\textbf{Worked Trace: Prefix check for "ca"}
-Given a Trie containing "cat" and "dog".
-1. Start at root.
-2. Read 'c'. Root has a child 'c'. Move to it.
-3. Read 'a'. Node 'c' has a child 'a'. Move to it.
-4. String ends. We are currently at a valid node, meaning "ca" is a prefix of at least one word in the tree.
+\subsection{Concatenation With a Sentinel (\texttt{P + '\#' + T} and \texttt{S + '\#' + rev(S)})}
 
-\subsection{Sliding Window Substring Search (Rabin-Karp)}
-\textbf{Why Naive Fails:} Finding a pattern of length $M$ in a string of length $N$ by checking every starting position takes $O(N \times M)$ time. If a string is a long sequence of identical characters, this degenerates to quadratic time.
+Many disguised string problems reduce to a single call to KMP or Z-Algorithm by gluing two strings together with a sentinel character \texttt{'\#'} that never appears in the alphabet:
+\begin{itemize}
+    \item \textbf{All matches of $P$ in $T$:} Run Z-Algorithm on $P + \text{`\#'} + T$; matches occur wherever $Z[i] == |P|$.
+    \item \textbf{String rotation test:} Is $B$ a cyclic rotation of $A$ (with $|A| = |B|$)? Simply test whether $B$ occurs inside $A + A$ in $O(N)$!
+    \item \textbf{Longest palindromic prefix (Shortest Palindrome by Prepending):} Run KMP on $S + \text{`\#'} + \operatorname{rev}(S)$. The final entry $\pi[\text{end}]$ equals the length of the longest prefix of $S$ that reads the same backward!
+\end{itemize}
 
-\textbf{The Efficient Technique:} Compute the polynomial hash of the pattern. Then, compute the hash of the first window of length $M$ in the text. As you slide the window one character to the right, you can update the hash in $O(1)$ time by subtracting the contribution of the outgoing character, multiplying by the base, and adding the incoming character.
+\subsection{Binary Search on Length + Double Rolling Hash}
 
-\textbf{Worked Trace: Sliding Hash}
-Window moves from "abc" to "bcd". Base $B$.
-1. Old hash $H = (\text{'a'} \cdot B^2 + \text{'b'} \cdot B + \text{'c'}) \pmod{M}$.
-2. Remove 'a': $H \leftarrow H - (\text{'a'} \cdot B^2)$.
-3. Shift left: $H \leftarrow H \cdot B$.
-4. Add 'd': $H \leftarrow H + \text{'d'}$.
-The new hash perfectly represents "bcd".
+\painbeat Finding the \textbf{longest substring that appears at least twice} in a length-$10^5$ string (or longest common substring of two strings) cannot check all $O(N^2)$ substrings.
+
+\ahabeat Existence is \textbf{monotonic in length $L$}: if a repeated substring of length $L$ exists, then one of length $L - 1$ also exists (just chop off the last character). Binary search $L \in [0, N]$; for each candidate $L$, hash every length-$L$ window in $O(N)$ using \texttt{DoubleHash} and insert the 64-bit combined pair into an \texttt{unordered\_set}. Total time: $O(N \log N)$!
+
+\begin{tryitbox}{Debug}{Missing Sentinel Bug in P + T}{ex7}
+A programmer runs the Z-Algorithm on $P + T$ \emph{without} a separator \texttt{'\#'} and declares a match whenever $Z[i] \ge |P|$ for $i \ge |P|$. Find the smallest counterexample $(P, T)$ where this reports a false match or returns $Z[i] > |P|$ by crossing the boundary, and explain why \texttt{'\#'} fixes it.
+\end{tryitbox}
 
 % ============================================================================
 \section{Worked Examples}
 % ============================================================================
 
+Work through these five complete traces by hand; every step can be reproduced on scratch paper.
+
+\begin{example}[Shortest Repeating Period via KMP]
+Determine whether $S_1 = \text{``ABABAB''}$ and $S_2 = \text{``ABABA''}$ are exact repetitions of a smaller substring.
 \begin{enumerate}
-    \item \textbf{Longest Common Prefix among Array of Strings:}
-    Insert all strings into a Trie. Then start at the root and walk down as long as the current node has exactly one child and is not marked as the end of a word.
-    
-    \item \textbf{Finding the period of a string:}
-    Compute the $\pi$ array using KMP. If a string $S$ of length $N$ is made of repeating blocks, the length of the shortest repeating block is $N - \pi[N-1]$. For example, $S=$ "ABABAB", $N=6$, $\pi[5] = 4$. Period is $6-4 = 2$.
-    
-    \item \textbf{Anagram Search in a String:}
-    Instead of a polynomial hash, use an array of 26 integers to count character frequencies. Slide a window of size $M$ over the text, adding the incoming character count and subtracting the outgoing character count. Compare the count array to the target pattern's counts.
-    
-    \item \textbf{Group Shifted Strings:}
-    To group strings that belong to the same shifting sequence (for example, "abc" and "bcd"), map each string to a relative difference string. "abc" becomes "1,1" (since b-a=1, c-b=1). "bcd" also becomes "1,1". Hash this difference sequence to group them in a hash map.
+    \item \textbf{For $S_1 = \text{``ABABAB''}$ ($N = 6$):} Compute $\pi = [0, 0, 1, 2, 3, 4]$.
+    \item \textbf{Candidate period:} $p = N - \pi[N - 1] = 6 - 4 = 2$.
+    \item \textbf{Divisibility check:} $p < 6$ and $6 \bmod 2 = 0 \implies$ \textbf{Yes!} $S_1$ is \texttt{"AB"} repeated $6 / 2 = 3$ times.
+    \item \textbf{For $S_2 = \text{``ABABA''}$ ($N = 5$):} $\pi = [0, 0, 1, 2, 3]$, so $p = 5 - 3 = 2$. Since $5 \bmod 2 = 1 \neq 0$, $S_2$ is \textbf{not} a whole multiple of a smaller substring (its trailing \texttt{"A"} is incomplete).
 \end{enumerate}
+\end{example}
+
+\begin{example}[Rabin-Karp Rolling Hash Search by Hand]
+Find $P = \text{``bcd''}$ ($L = 3$) inside $T = \text{``abcbcd''}$ using $B = 10$, $M = 97$, and $\text{'a'}=1, \text{'b'}=2, \text{'c'}=3, \text{'d'}=4$.
+\begin{enumerate}
+    \item \textbf{Precompute high power and target hash:} $B^{L - 1} = 10^2 = 100 \equiv 3 \pmod{97}$. Target $H(P) = (2 \cdot 100 + 3 \cdot 10 + 4) \bmod 97 = 234 \bmod 97 = \mathbf{40}$.
+    \item \textbf{Window $0$ (\texttt{"abc"}):} $H_0 = 123 \bmod 97 = 26 \neq 40$.
+    \item \textbf{Slide to Window $1$ (\texttt{"bcb"}, out \texttt{'a'}=1, in \texttt{'b'}=2):} Evict: $(26 - 1 \cdot 3) = 23$; shift: $23 \cdot 10 \bmod 97 = 36$; ingest: $36 + 2 = 38 \neq 40$.
+    \item \textbf{Slide to Window $2$ (\texttt{"cbc"}, out \texttt{'b'}=2, in \texttt{'c'}=3):} Evict: $(38 - 2 \cdot 3) = 32$; shift: $32 \cdot 10 \bmod 97 = 29$; ingest: $29 + 3 = 32 \neq 40$.
+    \item \textbf{Slide to Window $3$ (\texttt{"bcd"}, out \texttt{'c'}=3, in \texttt{'d'}=4):} Evict: $(32 - 3 \cdot 3) = 23$; shift: $23 \cdot 10 \bmod 97 = 36$; ingest: $36 + 4 = \mathbf{40} = H(P)$. Verify \texttt{"bcd"} == \texttt{"bcd"} $\implies$ \textbf{Match at index $3$!}
+\end{enumerate}
+\end{example}
+
+\begin{example}[Z-Algorithm Search for $P = \text{``aba''}$ in $T = \text{``abacaba''}$]
+Form $U = P + \text{`\#'} + T = \text{``aba\#abacaba''}$ (indices $0 \dots 10$, $|P| = 3$).
+\begin{enumerate}
+    \item $i = 0 \dots 3$: $Z[0] = 0$, $Z[1] = 0$, $Z[2] = 1$ ($U[2]=\text{'a'}$, box $[2, 2]$), $Z[3] = 0$.
+    \item $i = 4$: Matches \texttt{"aba"} ($U[4..6] = U[0..2]$) $\implies Z[4] = \mathbf{3}$, box $[4, 6]$. Since $Z[4] = |P|$, \textbf{match at $4 - 4 = 0$}.
+    \item $i = 5, 6$: Inside $[4, 6]$, mirror to $1, 2$: $Z[5] = Z[1] = 0$; $Z[6] = \min(6 - 6 + 1, Z[2]) = 1$ ($U[7]=\text{'c'} \neq \text{'b'}$).
+    \item $i = 7$: $U[7] = \text{'c'} \implies Z[7] = 0$.
+    \item $i = 8$: Matches \texttt{"aba"} ($U[8..10] = U[0..2]$) $\implies Z[8] = \mathbf{3}$, box $[8, 10]$. \textbf{Match at $8 - 4 = 4$}.
+    \item $i = 9, 10$: Inside $[8, 10]$, mirror to $1, 2 \implies Z[9] = 0, Z[10] = 1$. Matches found at indices $\mathbf{0}$ and $\mathbf{4}$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Shortest Palindrome by Prepending Characters]
+What is the fewest characters we can prepend to $S = \text{``aacecaaa''}$ (length $8$) to make it a palindrome?
+\begin{enumerate}
+    \item \textbf{Build sentinel string:} $U = S + \text{`\#'} + \operatorname{rev}(S) = \text{``aacecaaa\#aaacecaa''}$ (length $17$).
+    \item \textbf{Compute $\pi[16]$:} The longest proper prefix of $U$ matching a suffix of $U$ is \texttt{"aacecaa"} (length $\pi[16] = 7$), which is automatically the longest palindromic prefix of $S$!
+    \item \textbf{Prepend the unmatched suffix reversed:} Only the last $8 - 7 = 1$ character (\texttt{"a"}) lies outside the palindromic prefix. Prepending its reverse (\texttt{"a"}) produces \texttt{"aaacecaaa"} in $O(N)$ time.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Manacher's Algorithm on \texttt{"abacaba"}]
+Find the longest palindromic substring of $S = \text{``abacaba''}$ ($N = 7$).
+\begin{enumerate}
+    \item \textbf{Insert sentinels:} $T = \text{``\#a\#b\#a\#c\#a\#b\#a\#''}$ (indices $0 \dots 14$).
+    \item \textbf{Expand up to the middle ($i = 0 \dots 7$):}
+    $P[0..2] = [0, 1, 0]$;
+    at $i = 3$ (\texttt{'b'}), \texttt{"\#a\#b\#a\#"} gives $P[3] = 3$, updating $C = 3, R = 6$;
+    $i = 4, 5, 6$ mirror $2, 1, 0$ giving $P[4..6] = [0, 1, 0]$;
+    at $i = 7$ (\texttt{'c'}), expanding hits both ends of $T$, giving $P[7] = \mathbf{7}$ and $C = 7, R = 14$.
+    \item \textbf{Mirror the entire right half ($i = 8 \dots 14$):} Because $R = 14$ already sits at the end of $T$, every remaining index copies its mirror $P[14 - i]$ with zero extensions: $P[8..14] = [0, 1, 0, 3, 0, 1, 0]$.
+    \item \textbf{Decode answer:} Max radius is $P[7] = 7$, start index $(7 - 7)/2 = 0$, length $7 \implies \text{``abacaba''}$.
+\end{enumerate}
+\end{example}
 
 % ============================================================================
-\section{C++ Implementations}
+\section{C++23 Implementations}
 % ============================================================================
 
-\subsection{Prefix Tree (Trie)}
-This implementation avoids raw pointers by using indices into a vector of nodes. This is extremely cache-friendly and eliminates memory leak risks.
+Every listing below is standalone C++23, avoids \texttt{using namespace std;}, uses \texttt{std::string\_view} for zero-copy input, guards boundary cases, and compiles cleanly with \texttt{-Wall -Wextra}.
 
-\begin{lstlisting}
+\subsection{Prefix Double Rolling Hash \& Rabin-Karp Search}
+
+\texttt{DoubleHash} precomputes two independent prefix hashes in $O(N)$ using $(31, 10^9 + 7)$ and $(37, 10^9 + 9)$, allowing $O(1)$ substring equality queries over any half-open slice $[l, r)$ and $O(N + M)$ collision-safe Rabin-Karp search.
+
+\begin{lstlisting}[caption={Collision-Safe Double Rolling Hash and O(N + M) Rabin-Karp Search}]
+#include <cstdint>
 #include <string_view>
+#include <utility>
 #include <vector>
-#include <array>
 
-struct TrieNode {
-    std::array<int, 26> next{};
-    bool is_end = false;
-    
-    constexpr TrieNode() {
-        next.fill(-1);
-    }
-};
+class DoubleHash {
+private:
+    static constexpr std::int64_t B1 = 31, M1 = 1'000'000'007LL;
+    static constexpr std::int64_t B2 = 37, M2 = 1'000'000'009LL;
 
-class Trie {
-    std::vector<TrieNode> nodes;
+    std::vector<std::int64_t> h1_, h2_, p1_, p2_;
 
 public:
-    Trie() {
-        nodes.emplace_back(); // Root node
+    explicit DoubleHash(std::string_view s) {
+        std::size_t n = s.size();
+        h1_.assign(n + 1, 0);
+        h2_.assign(n + 1, 0);
+        p1_.assign(n + 1, 1);
+        p2_.assign(n + 1, 1);
+
+        for (std::size_t i = 0; i < n; ++i) {
+            // Map characters to positive integers (>= 1) so leading 'a's stay distinct
+            std::int64_t val = static_cast<unsigned char>(s[i]) + 1;
+            h1_[i + 1] = (h1_[i] * B1 + val) % M1;
+            h2_[i + 1] = (h2_[i] * B2 + val) % M2;
+            p1_[i + 1] = (p1_[i] * B1) % M1;
+            p2_[i + 1] = (p2_[i] * B2) % M2;
+        }
     }
 
-    void insert(std::string_view word) {
-        int current = 0;
-        for (char c : word) {
-            int index = c - 'a';
-            if (nodes[current].next[index] == -1) {
-                nodes[current].next[index] = static_cast<int>(nodes.size());
-                nodes.emplace_back();
-            }
-            current = nodes[current].next[index];
-        }
-        nodes[current].is_end = true;
-    }
-
-    [[nodiscard]] bool search(std::string_view word) const {
-        int current = 0;
-        for (char c : word) {
-            int index = c - 'a';
-            if (nodes[current].next[index] == -1) {
-                return false;
-            }
-            current = nodes[current].next[index];
-        }
-        return nodes[current].is_end;
+    // O(1) double hash of half-open slice s[l..r)
+    [[nodiscard]] std::pair<std::int64_t, std::int64_t> query(std::size_t l, std::size_t r) const noexcept {
+        if (l >= r || r >= h1_.size()) return {0, 0};
+        std::size_t len = r - l;
+        std::int64_t x1 = (h1_[r] - (h1_[l] * p1_[len]) % M1 + M1) % M1;
+        std::int64_t x2 = (h2_[r] - (h2_[l] * p2_[len]) % M2 + M2) % M2;
+        return {x1, x2};
     }
 };
+
+[[nodiscard]] std::vector<int> rabinKarpSearch(std::string_view text, std::string_view pattern) {
+    std::vector<int> matches;
+    if (pattern.empty() || pattern.size() > text.size()) return matches;
+
+    DoubleHash th(text);
+    DoubleHash ph(pattern);
+    auto target = ph.query(0, pattern.size());
+
+    for (std::size_t i = 0; i + pattern.size() <= text.size(); ++i) {
+        if (th.query(i, i + pattern.size()) == target) {
+            matches.push_back(static_cast<int>(i));
+        }
+    }
+    return matches;
+}
 \end{lstlisting}
 
-\subsection{KMP Prefix Function and Search}
-The $\pi$ array calculation relies on a two-pointer approach, comparing the current character against the character following the longest matching prefix seen so far.
+\subsection{KMP Prefix Function ($\pi$-Array) and Search}
 
-\begin{lstlisting}
-#include <vector>
+\texttt{computePi} builds the longest-border table in $O(M)$ time. Notice we omit \texttt{noexcept} because allocating a \texttt{std::vector} can throw \texttt{std::bad\_alloc}, and we use \texttt{int} lengths throughout to avoid signed/unsigned comparison warnings.
+
+\begin{lstlisting}[caption={KMP Prefix Function and Zero-Backtracking Pattern Search}]
 #include <string_view>
+#include <vector>
 
-[[nodiscard]] constexpr std::vector<int> computePi(std::string_view pattern) noexcept {
-    int n = static_cast<int>(pattern.length());
-    std::vector<int> pi(n, 0);
-    for (int i = 1, j = 0; i < n; ++i) {
+[[nodiscard]] std::vector<int> computePi(std::string_view pattern) {
+    int m = static_cast<int>(pattern.size());
+    std::vector<int> pi(static_cast<std::size_t>(m), 0);
+
+    for (int i = 1, j = 0; i < m; ++i) {
         while (j > 0 && pattern[i] != pattern[j]) {
-            j = pi[j - 1]; // Fall back to previous longest valid prefix
+            j = pi[j - 1]; // Jump to next longest valid border
         }
         if (pattern[i] == pattern[j]) {
             ++j;
@@ -263,111 +918,491 @@ The $\pi$ array calculation relies on a two-pointer approach, comparing the curr
 }
 
 [[nodiscard]] std::vector<int> kmpSearch(std::string_view text, std::string_view pattern) {
-    if (pattern.empty()) return {};
-    
-    std::vector<int> pi = computePi(pattern);
     std::vector<int> matches;
-    
-    for (int i = 0, j = 0; i < text.length(); ++i) {
+    if (pattern.empty() || pattern.size() > text.size()) return matches;
+
+    std::vector<int> pi = computePi(pattern);
+    int n = static_cast<int>(text.size());
+    int m = static_cast<int>(pattern.size());
+
+    for (int i = 0, j = 0; i < n; ++i) {
         while (j > 0 && text[i] != pattern[j]) {
             j = pi[j - 1];
         }
         if (text[i] == pattern[j]) {
             ++j;
         }
-        if (j == pattern.length()) {
-            matches.push_back(i - j + 1); // Record starting index
-            j = pi[j - 1];
+        if (j == m) {
+            matches.push_back(i - m + 1);
+            j = pi[j - 1]; // Preserve border so overlapping matches are found
         }
     }
     return matches;
 }
 \end{lstlisting}
 
+\subsection{The Z-Algorithm ($Z$-Array and Search)}
+
+\texttt{computeZ} maintains the rightmost prefix-matching Z-box $[l, r]$ to reuse mirrored prefix lengths in $O(1)$ before extending rightward. \texttt{zSearch} glues \texttt{pattern + '\#' + text} (assuming \texttt{'\#'} is absent from both strings; use any unused byte sentinel if needed).
+
+\begin{lstlisting}[caption={Linear-Time Z-Array and Sentinel-Based Pattern Search}]
+#include <algorithm>
+#include <string>
+#include <string_view>
+#include <vector>
+
+[[nodiscard]] std::vector<int> computeZ(std::string_view s) {
+    int n = static_cast<int>(s.size());
+    std::vector<int> z(static_cast<std::size_t>(n), 0);
+
+    for (int i = 1, l = 0, r = 0; i < n; ++i) {
+        if (i <= r) {
+            z[i] = std::min(r - i + 1, z[i - l]);
+        }
+        while (i + z[i] < n && s[z[i]] == s[i + z[i]]) {
+            ++z[i];
+        }
+        if (i + z[i] - 1 > r) {
+            l = i;
+            r = i + z[i] - 1;
+        }
+    }
+    return z;
+}
+
+[[nodiscard]] std::vector<int> zSearch(std::string_view text, std::string_view pattern, char sentinel = '#') {
+    std::vector<int> matches;
+    if (pattern.empty() || pattern.size() > text.size()) return matches;
+
+    std::string combined;
+    combined.reserve(pattern.size() + 1 + text.size());
+    combined.append(pattern);
+    combined.push_back(sentinel);
+    combined.append(text);
+
+    std::vector<int> z = computeZ(combined);
+    int m = static_cast<int>(pattern.size());
+    int total = static_cast<int>(combined.size());
+
+    for (int i = m + 1; i < total; ++i) {
+        if (z[i] == m) {
+            matches.push_back(i - m - 1);
+        }
+    }
+    return matches;
+}
+\end{lstlisting}
+
+\subsection{Cache-Friendly Flat Vector-Pool Trie}
+
+Using integer indices inside a single \texttt{std::vector<TrieNode>} avoids pointer chasing and heap fragmentation. Every lookup checks character bounds (\texttt{'a' <= c <= 'z'}) before indexing to prevent out-of-bounds undefined behavior.
+
+\begin{lstlisting}[caption={Pointerless Vector-Pool Trie with insert, search, and starts\_with}]
+#include <array>
+#include <string_view>
+#include <vector>
+
+class Trie {
+private:
+    struct Node {
+        std::array<int, 26> next{};
+        bool is_end = false;
+
+        constexpr Node() noexcept {
+            next.fill(-1);
+        }
+    };
+
+    std::vector<Node> nodes_;
+
+    [[nodiscard]] int walk(std::string_view prefix) const noexcept {
+        int curr = 0;
+        for (char c : prefix) {
+            if (c < 'a' || c > 'z') return -1;
+            int idx = c - 'a';
+            if (nodes_[curr].next[idx] == -1) return -1;
+            curr = nodes_[curr].next[idx];
+        }
+        return curr;
+    }
+
+public:
+    Trie() {
+        nodes_.emplace_back(); // Node 0 is always the root
+    }
+
+    bool insert(std::string_view word) {
+        for (char c : word) {
+            if (c < 'a' || c > 'z') return false;
+        }
+        int curr = 0;
+        for (char c : word) {
+            int idx = c - 'a';
+            if (nodes_[curr].next[idx] == -1) {
+                nodes_[curr].next[idx] = static_cast<int>(nodes_.size());
+                nodes_.emplace_back();
+            }
+            curr = nodes_[curr].next[idx];
+        }
+        nodes_[curr].is_end = true;
+        return true;
+    }
+
+    [[nodiscard]] bool search(std::string_view word) const noexcept {
+        int node = walk(word);
+        return node != -1 && nodes_[node].is_end;
+    }
+
+    [[nodiscard]] bool starts_with(std::string_view prefix) const noexcept {
+        return walk(prefix) != -1;
+    }
+};
+\end{lstlisting}
+
+\subsection{Manacher's Algorithm ($O(N)$ Longest Palindromic Substring)}
+
+Transforming \texttt{s} with \texttt{'\#'} separators turns both odd and even palindromes into odd-centered palindromes. The returned \texttt{std::string\_view} slices directly into the caller's input \texttt{s} in $O(1)$ without copying.
+
+\begin{lstlisting}[caption={O(N) Longest Palindromic Substring via Manacher's Algorithm}]
+#include <algorithm>
+#include <string>
+#include <string_view>
+#include <vector>
+
+[[nodiscard]] std::string_view longestPalindromeManacher(std::string_view s) {
+    if (s.empty()) return {};
+
+    // Build sentinel-interleaved string: "abba" -> "#a#b#b#a#"
+    std::string t;
+    t.reserve(2 * s.size() + 1);
+    t.push_back('#');
+    for (char c : s) {
+        t.push_back(c);
+        t.push_back('#');
+    }
+
+    int n = static_cast<int>(t.size());
+    std::vector<int> p(static_cast<std::size_t>(n), 0);
+    int center = 0, right = 0;
+    int best_center = 0, best_len = 0;
+
+    for (int i = 0; i < n; ++i) {
+        if (i < right) {
+            int mirror = 2 * center - i;
+            p[i] = std::min(right - i, p[mirror]);
+        }
+        while (i - p[i] - 1 >= 0 && i + p[i] + 1 < n &&
+               t[i - p[i] - 1] == t[i + p[i] + 1]) {
+            ++p[i];
+        }
+        if (i + p[i] > right) {
+            center = i;
+            right = i + p[i];
+        }
+        if (p[i] > best_len) {
+            best_len = p[i];
+            best_center = i;
+        }
+    }
+
+    std::size_t start = static_cast<std::size_t>((best_center - best_len) / 2);
+    return s.substr(start, static_cast<std::size_t>(best_len));
+}
+\end{lstlisting}
+
+\begin{tryitbox}{Debug}{Subtle Bug in Z-Algorithm Window Update}{ex8}
+Spot the subtle performance/logic bug in this Z-box loop:
+\begin{lstlisting}[numbers=none, xleftmargin=4pt, framexleftmargin=4pt]
+for (int i = 1, l = 0, r = 0; i < n; ++i) {
+    if (i <= r) z[i] = z[i - l]; // <-- Bug!
+    while (i + z[i] < n && s[z[i]] == s[i + z[i]]) ++z[i];
+    if (i + z[i] - 1 > r) { l = i; r = i + z[i] - 1; }
+}
+\end{lstlisting}
+Construct a short string (length $\le 6$) where omitting \texttt{std::min(r - i + 1, ...)} outputs a completely \textbf{wrong} value of \texttt{z[i]} (not just slower!).
+\end{tryitbox}
+
 % ============================================================================
 \section{Problem Pattern Recognition}
 % ============================================================================
 
-\textbf{Step 1: Identify the Goal} \\
-Does the problem ask you to find matches within a large text, group strings by similarity, or search for prefixes?
+\begin{calloutbox}{Three-Step String Triage}
+\begin{enumerate}
+    \item \textbf{Contiguous or Not?} If characters can be skipped (subsequence), jump to Dynamic Programming (Module~06). If slices must be contiguous (substring / prefix / suffix), stay here.
+    \item \textbf{Check the Constraints:} $N \le 2{,}000 \to$ Expand Around Center or $O(N^2)$ DP is fine. $N \ge 10^5 \to$ you need $O(N)$ (KMP, Z, Manacher, Trie) or $O(N \log N)$ (Binary Search + Double Hash).
+    \item \textbf{Match the Query Shape:} Single-pattern search / periods $\to$ KMP or Z; fast arbitrary slice equality $\to$ Double Hash; multi-word prefix dictionary $\to$ Trie; palindromes $\to$ Manacher.
+\end{enumerate}
+\end{calloutbox}
 
-\textbf{Step 2: Check the Constraints} \\
-If total string length is $10^5$, $O(N^2)$ approaches are invalid. You must use linear time $O(N)$ approaches like KMP or Trie insertion.
+\subsection*{Keyword-to-Tool Lookup Table}
 
-\textbf{Step 3: Choose the Tool} \\
-Match the problem signature to the appropriate algorithm.
-
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``find all occurrences of word $P$ in text $T$'' & Exact string matching in linear time. & KMP or Rabin-Karp \\ \hline
-``check if string is prefix of any dictionary word'' & Search incrementally along the length of the string. & Trie (Prefix Tree) \\ \hline
-``longest common substring between two strings'' & Find matching sequences without order disruptions. & Binary search on hash length, or Rolling Hash \\ \hline
-``minimum characters to add to make a palindrome'' & Find the longest palindromic prefix/suffix. & KMP $\pi$ array on $S + \text{'\#'} + \text{reverse}(S)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash}p{4.5cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+\endfirsthead
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+\endhead
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\endfoot
+``find all occurrences of $P$ in $T$'' & Exact linear-time substring search & KMP or Z-Algorithm \\
+``is $S$ built by repeating a substring?'' & Shortest exact period of a string & KMP: $N \bmod (N - \pi[N-1]) = 0$ \\
+``is $B$ a cyclic rotation of $A$?'' & Circular wrap-around substring test & Search $B$ inside $A + A$ \\
+``longest prefix that is also a suffix'' & Border length at end of string & KMP $\pi[N-1]$ (or Z-array) \\
+``sum of LCP scores of all suffixes'' & Longest common prefix for every suffix $i$ & Z-Algorithm ($\sum Z[i] + N$) \\
+``compare many substrings in $O(1)$'' & Arbitrary interval equality checks & Prefix Double Rolling Hash \\
+``longest repeated / common substring'' & Monotonic length existence query & Binary Search + Double Hash \\
+``prefix lookup / autocomplete dictionary'' & Match word prefixes across $W$ words & Flat Vector-Pool Trie \\
+``maximum XOR of two numbers'' & Greedily match opposite bits MSB$\to$LSB & Bitwise Trie (alphabet $\{0,1\}$) \\
+``longest palindromic substring'' ($N \le 3000$) & Mirror symmetry around every center & Expand Around Center ($O(N^2)$) \\
+``longest palindromic substring'' ($N \le 10^5$) & Linear-time palindrome radii & Manacher's Algorithm ($O(N)$) \\
+``shortest palindrome by prepending'' & Longest palindromic prefix of $S$ & KMP on $S + \text{`\#'} + \operatorname{rev}(S)$ \\
+\end{xltabular}\endgroup
 
 % ============================================================================
 \section{Summary and Complexity Reference}
 % ============================================================================
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{3.4cm}|p{2.6cm}|p{2.2cm}|X|}
-\hline
-\textbf{Task} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
-Trie Insertion & $O(L)$ & $O(L \times \Sigma)$ & Building a dictionary where $\Sigma$ is alphabet size. \\ \hline
-Trie Search & $O(L)$ & $O(1)$ & Querying exact words or prefixes. \\ \hline
-KMP $\pi$ Array & $O(M)$ & $O(M)$ & Finding internal string periods and fallback points. \\ \hline
-KMP Search & $O(N+M)$ & $O(M)$ & Finding all occurrences of pattern in text. \\ \hline
-Rabin-Karp Search & $O(N+M)$ avg & $O(1)$ & Matching strings, or multi-pattern search with sets. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-% ============================================================================
-\section{Glossary of Terms and Symbols}
-% ============================================================================
-
-\subsection{Core Concepts}
+\begin{calloutbox}{Quick Tool Selection Cheat Sheet}
 \begin{itemize}
-    \item \textbf{Trie}: A tree data structure optimized for fast prefix-based string retrieval.
-    \item \textbf{Rolling Hash}: A hash function designed to be quickly updated when a window slides forward by one position.
-    \item \textbf{Hash Collision}: When two different strings map to the exact same hash value.
-    \item \textbf{Alphabet Size ($\Sigma$)}: The number of distinct characters possible in the strings, often 26 for lowercase English letters.
+    \item \textbf{Need deterministic $O(N + M)$ search with zero collision risk?} Use \textbf{KMP} or \textbf{Z-Algorithm}.
+    \item \textbf{Need $O(1)$ equality queries on arbitrary slices $[l_1, r_1)$ vs.\ $[l_2, r_2)$?} Use \textbf{Prefix Double Hash}.
+    \item \textbf{Have a whole dictionary of words and prefix queries?} Use a \textbf{Flat Vector-Pool Trie}.
+    \item \textbf{Need all palindrome lengths in $O(N)$?} Use \textbf{Manacher's Algorithm} with \texttt{'\#'} sentinels.
+\end{itemize}
+\end{calloutbox}
+
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.5cm} >{\centering\arraybackslash}p{1.9cm} >{\centering\arraybackslash}p{1.8cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Task / Operation}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Space}} & \textcolor{primaryblue}{\textbf{Use When}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Prefix Double Hash build / query & $O(N)$ / $O(1)$ & $O(N)$ & Many substring comparisons or binary search on length \\
+Rabin-Karp Search (Double Hash) & $O(N + M)$ & $O(N + M)$ & Multi-pattern search or rolling window matching \\
+KMP Prefix Function ($\pi$-array) & $O(M)$ & $O(M)$ & Borders, periodicity, shortest palindrome prefix \\
+KMP Pattern Search & $O(N + M)$ & $O(M)$ & Streaming single-pattern search without rewinding \\
+Z-Algorithm ($Z$-array / search) & $O(N + M)$ & $O(N + M)$ & Suffix-vs-prefix LCP scores or quick pattern search \\
+Trie Insert / Search / \texttt{starts\_with} & $O(L)$ & $O(\text{nodes} \cdot \Sigma)$ & Dictionary lookup, autocomplete, bitwise XOR queries \\
+Expand Around Center (Palindromes) & $O(N^2)$ & $O(1)$ & Simple palindrome search/count for $N \le 3{,}000$ \\
+Manacher's Algorithm & $O(N)$ & $O(N)$ & Linear-time longest palindrome or all palindrome radii \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
+
+% ============================================================================
+\section{Glossary}
+% ============================================================================
+
+\subsection*{Core Concepts}
+\begin{itemize}
+    \item \textbf{Alphabet Size ($\Sigma$):} Number of distinct characters allowed (e.g., $\Sigma = 26$ for lowercase English letters, $\Sigma = 2$ for a bitwise Trie).
+    \item \textbf{Birthday Paradox:} The statistical effect where collisions among $N$ random values modulo $M$ become likely around $N \approx \sqrt{M}$, forcing double hashing when $N = 10^5$ and $M \approx 10^9$.
+    \item \textbf{Border:} A non-full prefix of a string that is also a suffix of that string.
+    \item \textbf{Double Hashing:} Computing two independent polynomial hashes with different bases and prime moduli to reduce collision risk to negligible levels.
+    \item \textbf{KMP (Knuth-Morris-Pratt):} Deterministic $O(N + M)$ pattern matching algorithm using the $\pi$ border table so the text pointer never rewinds.
+    \item \textbf{Manacher's Algorithm:} Linear-time $O(N)$ algorithm that computes the longest palindrome centered at every character and gap using sentinel interleaving and mirror symmetry.
+    \item \textbf{Rolling Hash:} Polynomial hash function whose value can be updated in $O(1)$ when sliding a window or querying a prefix difference.
+    \item \textbf{Sentinel Character:} A special character (such as \texttt{'\#'}) absent from the input alphabet used to prevent false matches across concatenated strings or to unify odd/even palindromes.
+    \item \textbf{Substring vs.\ Subsequence:} A substring is contiguous; a subsequence may skip characters while keeping relative order.
+    \item \textbf{Trie (Prefix Tree):} A rooted tree where each edge is labeled with a character, enabling $O(L)$ dictionary insertion, search, and prefix queries.
+    \item \textbf{Z-Box ($[L, R]$):} The rightmost known substring $S[L \dots R]$ equal to prefix $S[0 \dots R - L]$, enabling $O(1)$ mirrored initialization in the Z-Algorithm.
 \end{itemize}
 
-\subsection{Mathematical Symbols}
+\subsection*{Mathematical Symbols}
 \begin{itemize}
-    \item $\pi[i]$: The prefix function value at index $i$, representing the longest proper prefix that is also a suffix.
-    \item $O(N+M)$: Linear time proportional to the combined lengths of the text and the pattern.
-    \item $M$: Often denotes the length of the pattern string.
-    \item $N$: Often denotes the length of the text string.
+    \item $S[l \dots r)$: Half-open substring slice containing indices $l, l + 1, \dots, r - 1$ (length $r - l$).
+    \item $|S|,\; N,\; M,\; L$: Lengths of string $S$, text $T$, pattern $P$, and query word/window.
+    \item $\Sigma$: Alphabet size (branching factor of a Trie).
+    \item $B,\; M_1,\; M_2$: Base and prime moduli of a polynomial rolling hash.
+    \item $\pi[i]$: KMP prefix function---length of the longest border of $S[0 \dots i]$.
+    \item $Z[i]$: Z-function---length of the longest common prefix of $S$ and suffix $S[i \dots N - 1]$.
+    \item $P[i]$: Manacher palindrome radius around center $i$ in the sentinel-interleaved string $T$.
+    \item $\operatorname{rev}(S)$: The string $S$ written backward.
 \end{itemize}
 
 % ============================================================================
 \section{Further Reading}
 % ============================================================================
 
+\subsection*{Free Online Resources (Start Here)}
 \begin{itemize}
-    \item CP-Algorithms (cp-algorithms.com) --- Excellent reference for KMP, Z-function, and string hashing.
-    \item USACO Guide (usaco.guide) --- Contains thorough training modules on Trie and String Hashing applications.
-    \item \textit{The Algorithm Design Manual} by Steven Skiena --- Read the section on string matching for a deep dive into finite state machines and pattern recognition.
-    \item \textit{Introduction to Algorithms} (CLRS) --- Provides rigorous mathematical proofs for the correctness of KMP and Rabin-Karp bounds.
+    \item \textbf{CP-Algorithms} (\texttt{cp-algorithms.com}) --- Thorough, code-first guides on String Hashing, Prefix Function (KMP), Z-Function, and Manacher's Algorithm.
+    \item \textbf{Art of Problem Solving Wiki} (\texttt{artofproblemsolving.com/wiki}) --- Clear background on modular arithmetic, birthday-paradox collision bounds, and combinatorics on words.
+    \item \textbf{Brilliant.org} (\texttt{brilliant.org}) --- Visual interactive exercises on hashing, tries, and finite-state pattern matching.
 \end{itemize}
+
+\subsection*{Books (When You Are Ready to Go Deeper)}
+\begin{itemize}
+    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- Practical chapter on KMP, string hashing, tries, and suffix structures. (Intermediate)
+    \item S.\ Skiena, \emph{The Algorithm Design Manual} --- Intuitive overview of string matching, tries, and practical engineering trade-offs. (Intermediate)
+    \item T.\ H.\ Cormen, C.\ E.\ Leiserson, R.\ L.\ Rivest, C.\ Stein, \emph{Introduction to Algorithms} (CLRS) --- Chapter 32 presents formal correctness proofs for Rabin-Karp, finite automata, and KMP. (Advanced)
+    \item D.\ Gusfield, \emph{Algorithms on Strings, Trees, and Sequences} --- Comprehensive reference on Z-algorithm, suffix trees, and biological sequence matching. (Advanced)
+\end{itemize}
+
+% ============================================================================
+\section*{Practice Sheet: Mixed Pen-and-Paper Drills}
+\addcontentsline{toc}{section}{Practice Sheet: Mixed Pen-and-Paper Drills}
+\markboth{Practice Sheet: Mixed Pen-and-Paper Drills}{}
+% ============================================================================
+
+\noindent
+Work through these six mixed cold-start drills on scratch paper \emph{without} flipping back to the chapter. No hints are given about which subsection applies.
+
+\begin{tryitbox}{Triage}{Cold-Start String Tool Selection}{ex9}
+Pick the optimal technique and target complexity for each disguised problem (assume $N = 10^5$):
+\begin{enumerate}
+    \item \textbf{Circular Log Check:} Given two length-$N$ strings $A$ and $B$, test whether $B$ is a cyclic rotation of $A$.
+    \item \textbf{Command Autocomplete:} Store $50{,}000$ CLI commands and answer $10^5$ queries asking if any command begins with prefix $q$.
+    \item \textbf{Longest Duplicate Fragment:} Find the longest substring that appears at least twice inside a single length-$N$ DNA string.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Debug}{Missing Overlapping Matches in KMP}{ex10}
+A developer writes this match-handling block inside \texttt{kmpSearch}:
+\begin{lstlisting}[numbers=none, xleftmargin=4pt, framexleftmargin=4pt]
+if (j == m) {
+    matches.push_back(i - m + 1);
+    j = 0; // <-- Subtle bug!
+}
+\end{lstlisting}
+Trace $T = \text{``ababa''}$ with $P = \text{``aba''}$ to see which match is missed, and write the 1-line fix.
+\end{tryitbox}
+
+\begin{tryitbox}{Twist}{Shortest Palindrome by Appending to the End}{ex11}
+Section~4 showed that running KMP on $S + \text{`\#'} + \operatorname{rev}(S)$ finds the fewest characters to \textbf{prepend} to $S$ to form a palindrome.
+\begin{enumerate}
+    \item How do you modify the sentinel string to find the fewest characters to \textbf{append to the end} of $S$ instead?
+    \item Apply your modified string to $S = \text{``abcb''}$ and compute the shortest resulting palindrome.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Trace}{Hand-Slide a Rolling Hash Window}{ex12}
+Using $B = 10$, $M = 97$, and $\text{'a'}=1, \text{'b'}=2, \text{'c'}=3, \text{'d'}=4$, slide a window of length $L = 2$ across $T = \text{``abcd''}$. Compute $H(\text{``ab''})$, then update to $H(\text{``bc''})$ and $H(\text{``cd''})$ step by step using the 3-stage evict/shift/ingest formula.
+\end{tryitbox}
+
+\begin{tryitbox}{Edge Cases}{All-Identical and Empty-Pattern Killers}{ex13}
+Evaluate each algorithm on these boundary inputs:
+\begin{enumerate}
+    \item For $S = \text{``aaaaa''}$ ($N = 5$), write the full $\pi$-array, the full $Z$-array ($Z[0]=0$), and the maximum Manacher radius.
+    \item In \texttt{Trie} containing only \texttt{"cat"}, what do \texttt{search("ca")} and \texttt{starts\_with("ca")} return?
+    \item Why must \texttt{kmpSearch} and \texttt{rabinKarpSearch} explicitly guard \texttt{pattern.empty()}?
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Derive}{Amortized Proof That KMP Is $O(N)$}{ex14}
+In \texttt{computePi}, a \texttt{while (j > 0 \&\& ...)} loop sits inside a \texttt{for (int i = 1; i < n; ++i)} loop.
+\begin{enumerate}
+    \item By how much can \texttt{j} increase in a single \texttt{for} iteration? What is the maximum total increase of \texttt{j} across the entire loop?
+    \item Because \texttt{j = pi[j - 1]} strictly decreases \texttt{j} by at least $1$ and \texttt{j} never drops below $0$, derive a tight upper bound on total \texttt{while} iterations across all $N$ steps.
+\end{enumerate}
+\end{tryitbox}
+
+% ============================================================================
+\section*{Solutions to Pen-and-Paper Exercises}
+\addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
+\markboth{Solutions to Pen-and-Paper Exercises}{}
+% ============================================================================
+
+\begin{enumerate}
+    \item \label{sol:ex1}\textbf{Exercise 1 (Triage) --- Substring, Subsequence, or Border?}
+    \textbf{(1)} \texttt{"aca"} is \textbf{both} a substring ($S[3..5]$) and a subsequence; \texttt{"aaaa"} is a \textbf{subsequence only} (not contiguous).
+    \textbf{(2)} Borders of \texttt{"abracadabra"}: \texttt{"a"} (length $1$) and \texttt{"abra"} (length $4$).
+    \textbf{(3)} \texttt{std::string::substr} copies $O(N)$ characters per call ($O(N^2)$ total), whereas \texttt{std::string\_view::substr} only adjusts a pointer and length in $O(1)$.
+    \trapnote{Listing the entire string \texttt{"abracadabra"} as a border---borders must be \emph{proper} prefixes (strictly shorter than $N$).}
+
+    \item \label{sol:ex2}\textbf{Exercise 2 (Debug) --- Two Rolling Hash Bugs:}
+    \textbf{Bug 1:} Mapping \texttt{s[i] - 'a'} gives \texttt{'a' = 0}, so \texttt{"a"} and \texttt{"aa"} both hash to $0$ (immediate false collision!). Fix: use \texttt{s[i] - 'a' + 1}.
+    \textbf{Bug 2:} In C++, \texttt{\%} preserves the sign of a negative dividend; when \texttt{H[r] < (H[l] * powB[r - l]) \% M}, the subtraction goes negative. Fix: \texttt{(H[r] - (H[l] * powB[r - l]) \% M + M) \% M}.
+    \trapnote{Thinking \texttt{H[r]} is always larger than \texttt{H[l] * powB[len]}---both were reduced modulo $M$, so \texttt{H[r]} can be smaller even though $r > l$.}
+
+    \item \label{sol:ex3}\textbf{Exercise 3 (Trace) --- KMP Table on \texttt{"AABAAAB"}:}
+    $\pi = \mathbf{[0, 1, 0, 1, 2, 2, 3]}$. The non-zero fallback occurs at $i = 5$ (\texttt{'A'}): $j = 2$ mismatches ($P[2] = \text{'B'} \neq \text{'A'}$), falls back to $j = \pi[1] = 1$, matches $P[1] = \text{'A'}$, and increments to $2$.
+    Period check: \texttt{"ABABAB"} has $p = 6 - 4 = 2$ and $6 \bmod 2 = 0$ (\textbf{yes}); \texttt{"ABABA"} has $p = 5 - 3 = 2$ and $5 \bmod 2 \neq 0$ (\textbf{no}).
+    \trapnote{Setting $\pi[5] = 0$ on mismatch at $j = 2$ instead of falling back to $\pi[1] = 1$ (losing the border \texttt{"AA"}).}
+
+    \item \label{sol:ex4}\textbf{Exercise 4 (Trace) --- Z-Box Trace on \texttt{"abacaba"}:}
+    $Z = \mathbf{[0, 0, 1, 0, 3, 0, 1]}$. Z-box updates: $[2, 2]$ at $i = 2$, then $[4, 6]$ at $i = 4$. Indices $i = 5$ (mirrors $1 \to Z[1] = 0$) and $i = 6$ (mirrors $2 \to \min(1, Z[2]) = 1$) reuse mirrored values in $O(1)$.
+    \trapnote{Forgetting to cap the mirrored value at $R - i + 1$ when $Z[i - L]$ extends past the current Z-box.}
+
+    \item \label{sol:ex5}\textbf{Exercise 5 (Edge Cases) --- Trie Boundary Checks:}
+    \textbf{(1)} \texttt{search("car") = false}, \texttt{starts\_with("car") = true}, \texttt{search("cart") = true}, \texttt{starts\_with("") = true} (empty string is a prefix of everything, landing on root $0$).
+    \textbf{(2)} $6$ nodes total: root (\texttt{0}), \texttt{'c'}, \texttt{'a'}, \texttt{'t'} (under \texttt{'a'}), \texttt{'r'}, \texttt{'t'} (under \texttt{'r'}).
+    \textbf{(3)} \texttt{'A' - 'a' = -32} and \texttt{'-' - 'a' = -52}, causing negative out-of-bounds array indexing (undefined behavior!).
+    \trapnote{Counting $1 + 3 + 4 = 8$ nodes instead of $6$---forgetting that \texttt{"cat"} and \texttt{"cart"} share the \texttt{"ca"} path.}
+
+    \item \label{sol:ex6}\textbf{Exercise 6 (Twist) --- Counting Palindromes \& Mirror Check:}
+    \textbf{(1)} \texttt{"aaa"} has $6$ palindromic substrings (\texttt{"a"} $\times 3$, \texttt{"aa"} $\times 2$, \texttt{"aaa"} $\times 1$). \texttt{"ababa"} has $9$ ($5$ single chars + \texttt{"aba"} $\times 2$ + \texttt{"bab"} $\times 1$ + \texttt{"ababa"} $\times 1$).
+    \textbf{(2)} Mirror of $i = 7$ across $C = 5$ is $i' = 2(5) - 7 = 3$. Lower bound $= \min(R - i, P[3]) = \min(10 - 7, 3) = \mathbf{3}$.
+    \trapnote{Forgetting even-length centers (\texttt{i, i+1}) when counting palindromes in \texttt{"aaa"} (yielding $4$ instead of $6$).}
+
+    \item \label{sol:ex7}\textbf{Exercise 7 (Debug) --- Missing Sentinel in \texttt{P + T}:}
+    Let $P = \text{``aa''}$ and $T = \text{``aa''}$. Without \texttt{'\#'}, $P + T = \text{``aaaa''}$, so $Z[1] = 3 \ge |P|$ and $Z[2] = 2$. Worse, for $P = \text{``aba''}, T = \text{``ba''}$, $P + T = \text{``ababa''}$ gives $Z[2] = 3$ (a fake match crossing from $P$ into $T$!). Adding \texttt{'\#'} caps every $Z[i]$ ($i > |P|$) at $|P|$ and blocks cross-boundary leaks.
+    \trapnote{Assuming checking $i \ge |P|$ alone prevents cross-boundary matches---$Z[i]$ can still read past $P$ into $T$ unless a sentinel stops the match.}
+
+    \item \label{sol:ex8}\textbf{Exercise 8 (Debug) --- Unclamped Z-Box Mirror:}
+    Take $S = \text{``aaab''}$ (length $4$): at $i = 1$, $Z[1] = 2$, setting $[L, R] = [1, 2]$. At $i = 2 \le 2$, mirroring gives $z[2] = z[2 - 1] = z[1] = 2$, even though $S[2..3] = \text{``ab''}$ only shares \textbf{1} character with $S[0..1] = \text{``aa''}$! The true value is $Z[2] = 1$, not $2$. Clamping with \texttt{std::min(r - i + 1, z[i - l])} fixes it.
+    \trapnote{Thinking omitting \texttt{std::min} only affects runtime---it actually overestimates $Z[i]$ past the verified boundary $R$ and returns wrong answers!}
+
+    \item \label{sol:ex9}\textbf{Exercise 9 (Triage) --- Cold-Start String Tool Selection:}
+    \textbf{(1)} Circular Log Check $\to$ \textbf{KMP or Z-Algorithm} searching $B$ in $A + A$, $O(N)$.
+    \textbf{(2)} Command Autocomplete $\to$ \textbf{Flat Vector-Pool Trie}, $O(L)$ per query.
+    \textbf{(3)} Longest Duplicate Fragment $\to$ \textbf{Binary Search on Length + Double Rolling Hash}, $O(N \log N)$.
+    \trapnote{Trying KMP on (3)---KMP only checks prefixes against suffixes, not arbitrary interior repeated substrings.}
+
+    \item \label{sol:ex10}\textbf{Exercise 10 (Debug) --- Missing Overlapping Matches in KMP:}
+    On $T = \text{``ababa''}$ and $P = \text{``aba''}$, after matching $T[0..2]$ at $i = 2$, resetting \texttt{j = 0} throws away the trailing \texttt{'a'} ($T[2]$). At $i = 3$ (\texttt{'b'}), \texttt{'b' != 'a'}, so the overlapping match at index $2$ ($T[2..4]$) is completely missed!
+    \textbf{1-line fix:} Replace \texttt{j = 0;} with \texttt{j = pi[j - 1];}.
+    \trapnote{Assuming a full match means the prefix memory is empty---a matched pattern like \texttt{"aba"} can share a border with the next overlapping occurrence.}
+
+    \item \label{sol:ex11}\textbf{Exercise 11 (Twist) --- Shortest Palindrome by Appending:}
+    \textbf{(1)} Flip the order to $\operatorname{rev}(S) + \text{`\#'} + S$: now $\pi[\text{end}]$ equals the length of the longest \textbf{palindromic suffix} of $S$.
+    \textbf{(2)} For $S = \text{``abcb''}$, $U = \text{``bcba\#abcb''}$ has $\pi[8] = 3$ (\texttt{"bcb"}). Reverse the unmatched prefix \texttt{"a"} and append it $\implies \text{``abcba''}$.
+    \trapnote{Using $S + \text{`\#'} + \operatorname{rev}(S)$ and trying to append instead of prepend---that gives the longest palindromic \emph{prefix}, not suffix.}
+
+    \item \label{sol:ex12}\textbf{Exercise 12 (Trace) --- Rolling Hash Slide on \texttt{"abcd"} ($L = 2$):}
+    $B^{L - 1} = 10^1 = 10$.
+    $H(\text{``ab''}) = (1 \cdot 10 + 2) = \mathbf{12}$.
+    Slide to \texttt{"bc"} (out \texttt{'a'}=1, in \texttt{'c'}=3): $(12 - 1 \cdot 10) = 2 \to 2 \cdot 10 = 20 \to 20 + 3 = \mathbf{23}$.
+    Slide to \texttt{"cd"} (out \texttt{'b'}=2, in \texttt{'d'}=4): $(23 - 2 \cdot 10) = 3 \to 3 \cdot 10 = 30 \to 30 + 4 = \mathbf{34}$.
+    \trapnote{Multiplying the evicted character by $B^L = 100$ instead of $B^{L - 1} = 10$.}
+
+    \item \label{sol:ex13}\textbf{Exercise 13 (Edge Cases) --- Killer Boundary Inputs:}
+    \textbf{(1)} On \texttt{"aaaaa"}: $\pi = [0, 1, 2, 3, 4]$;\; $Z = [0, 4, 3, 2, 1]$;\; Manacher max radius $= 5$ (entire string).
+    \textbf{(2)} \texttt{search("ca") = false}, \texttt{starts\_with("ca") = true}.
+    \textbf{(3)} If \texttt{pattern.empty()}, \texttt{j == m} triggers immediately and accesses \texttt{pi[j - 1] = pi[-1]} (out-of-bounds crash!) or produces $N + 1$ empty matches.
+    \trapnote{Writing $\pi(\text{"aaaaa"}) = [1, 2, 3, 4, 5]$---$\pi[0]$ is always $0$ because a border must be strictly shorter than the prefix.}
+
+    \item \label{sol:ex14}\textbf{Exercise 14 (Derive) --- Amortized KMP Bound:}
+    \textbf{(1)} Each \texttt{for} iteration increments \texttt{j} by at most $+1$ (at most $N - 1$ total increments across $i = 1 \dots N - 1$).
+    \textbf{(2)} Each \texttt{while} step strictly lowers \texttt{j} by $\ge 1$, and \texttt{j} starts at $0$ and never becomes negative. Therefore the \texttt{while} loop executes at most $N - 1$ times \emph{total} across the entire run, yielding $\le 2N - 2 = O(N)$ character comparisons.
+    \trapnote{Multiplying worst single-step fallbacks ($O(N)$) by $N$ outer iterations to mistakenly conclude $O(N^2)$.}
+\end{enumerate}
 
 % ============================================================================
 \section*{Version History}
 \addcontentsline{toc}{section}{Version History}
+\markboth{Version History}{}
 % ============================================================================
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{3cm}|X|}
-\hline
-\textbf{Date} & \textbf{Change} \\ \hline
-2026-10-03 & Document created. \\ \hline
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\bfseries}l >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Date}} & \textcolor{primaryblue}{\textbf{Change}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+2026-10-03 & Document created. \\
+2026-11-25 & Expanded stub to full print-first monograph; added Double Hashing (with birthday-paradox analysis), Z-Algorithm, Manacher's Algorithm, Bitwise Trie bonus, 5 worked examples, 5 C++23 templates (fixing computePi and adding Trie::starts\_with + bounds checks), embedded fixed Diagrams 29--31, and added 8 inline drills + 6-drill Practice Sheet with solutions and trap notes. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
+\endgroup
+\end{center}
 
 \end{document}
