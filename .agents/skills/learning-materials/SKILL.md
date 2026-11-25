@@ -230,8 +230,9 @@ headers/footers).
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[scaled=0.95]{helvet}
-\usepackage{courier}
 \renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\ttdefault}{txtt}
+\usepackage{upquote}
 \usepackage[margin=0.85in, headheight=15pt]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[helvet]{sfmath}
@@ -260,9 +261,13 @@ headers/footers).
 \definecolor{accentamber}{RGB}{180, 83, 9}
 \definecolor{accentred}{RGB}{185, 28, 28}
 \definecolor{codebg}{RGB}{246, 248, 250}
-\definecolor{codeframe}{RGB}{208, 215, 222}
-\definecolor{codegreen}{RGB}{34, 120, 58}
-\definecolor{codeblue}{RGB}{20, 90, 180}
+\definecolor{codeframe}{RGB}{204, 212, 220}
+\definecolor{codeink}{RGB}{24, 30, 38}
+\definecolor{codekw}{RGB}{126, 34, 206}
+\definecolor{codetype}{RGB}{0, 118, 138}
+\definecolor{codegreen}{RGB}{22, 138, 66}
+\definecolor{codeblue}{RGB}{15, 92, 212}
+\definecolor{codestr}{RGB}{194, 65, 12}
 \definecolor{codegray}{RGB}{105, 115, 125}
 
 % --- Global Typography & Spacing ---
@@ -442,21 +447,26 @@ headers/footers).
     title={Exercise \theexercise\hspace{0.5em}{\colorbox{codegreen!85!black}{\color{white}\scriptsize\bfseries\;#1\;}}\hspace{0.5em}#2 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#3}}}
 }
 
-% --- Modern C++ Code Listing Setup (Clean Line-Number Clearance Inside Frame) ---
+% --- Modern C++23 Code Listing Setup (Vivid Colors + Digit-Separator Safe) ---
 \lstset{
     language=C++,
-    basicstyle=\footnotesize\ttfamily,
-    keywordstyle=\color{codeblue}\bfseries,
+    basicstyle=\small\ttfamily\color{codeink},
+    keywordstyle=\color{codekw}\bfseries,
+    morekeywords={constexpr,noexcept,nullptr,static_assert,auto,override,final,decltype,concept,requires},
+    keywordstyle=[2]\color{codetype}\bfseries,
+    morekeywords=[2]{std,vector,span,deque,string,string_view,size_t,int64_t,uint32_t,uint64_t,optional,pair,tuple,array,priority_queue,unordered_map,unordered_set,map,set,ranges,views,nodiscard},
+    moredelim=[l][\color{codeblue}\bfseries]{\#},
+    deletestring=[b]',
     commentstyle=\color{codegreen}\itshape,
-    stringstyle=\color{accentamber},
+    stringstyle=\color{codestr},
     numberstyle=\tiny\color{codegray},
     numbers=left,
     numbersep=8pt,
     xleftmargin=24pt,
     framexleftmargin=22pt,
     framexrightmargin=4pt,
-    framextopmargin=3pt,
-    framexbottommargin=3pt,
+    framextopmargin=4pt,
+    framexbottommargin=4pt,
     backgroundcolor=\color{codebg},
     frame=single,
     rulecolor=\color{codeframe},
@@ -484,7 +494,7 @@ headers/footers).
     {\footnotesize\bfseries\color{accentteal}MODULE XX \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
     {\Huge\bfseries\color{primaryblue}<Document Title>}\\[5pt]
     {\large\color{codegray}<Document Subtitle>}\\[6pt]
-    {\footnotesize\color{codegray}Updated \today\quad$\cdot$\quad Designed for both screen reading and printed pen-and-paper practice}
+    {\footnotesize\color{codegray}Updated \today}
 \end{tcolorbox}
 
 \begin{overviewbox}[What You'll Learn]
