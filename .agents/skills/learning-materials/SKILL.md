@@ -69,9 +69,16 @@ Every `.tex` and `.pdf` file in `learning_materials/` must carry a two-digit num
   - `04.sequences_and_series.tex` / `.pdf`
   - `05.recursion_and_backtracking.tex` / `.pdf`
   - `06.dynamic_programming.tex` / `.pdf`
-  - `07.graph_algorithms.tex` / `.pdf` (planned)
-  - `08.binary_search.tex` / `.pdf` (planned)
-  - `09.string_algorithms.tex` / `.pdf` (planned)
+  - `07.graph_algorithms.tex` / `.pdf`
+  - `08.binary_search.tex` / `.pdf`
+  - `09.string_algorithms.tex` / `.pdf`
+  - `10.greedy_algorithms.tex` / `.pdf`
+  - `11.monotonic_stacks_and_queues.tex` / `.pdf`
+  - `12.bit_manipulation_and_bitmasks.tex` / `.pdf`
+  - `13.two_pointers_and_sliding_window.tex` / `.pdf` (planned)
+  - `14.heaps_and_priority_queues.tex` / `.pdf` (planned)
+  - `15.trees_and_bsts.tex` / `.pdf` (planned)
+  - `16.fenwick_and_segment_trees.tex` / `.pdf` (planned)
 - **Rules**:
   - Source `.tex` and compiled `.pdf` files must always share the exact same prefix and basename.
   - When creating a new module, its number prefix is assigned according to the next available sequential slot in the Module Registry of `00.problem_solving_guide.tex`.
@@ -97,6 +104,26 @@ Every document is written for a reader who:
 
 ---
 
+## Pedagogical Writing Style ("Zero Unanswered 'But Why?'", Anti-Wall-of-Text)
+
+Every monograph must actively build intuition rather than presenting formulas or algorithms out of thin air, while remaining crisp and scannable:
+
+1. **The 4-Beat "Origin Story" (For Every Major Algorithm / Technique, ~12–15 lines total)**:
+   - **The Pain Point** (1–2 sentences): What breaks or scales poorly with the obvious brute-force idea?
+   - **The "Aha!" Observation** (1–2 sentences): What structural property, symmetry, or invariant enables the shortcut? Explain *where the idea came from*.
+   - **Concrete Mini-Example First, Formula Second**: Walk through a tiny 3-to-5-element numerical case *before* writing the general recurrence, sum, or identity so every symbol already maps to concrete numbers.
+   - **When It Breaks** (1–2 sentences): Provide one sharp counterexample proving why a precondition matters (e.g., negative edges break Dijkstra; `{1, 3, 4}` breaks greedy coin change).
+2. **Local Symbol Mini-Tables (`notationbox`)**:
+   - Keep the complete Glossary in Section 9, **and** place a compact 3-column `\begin{notationbox}` right at the start of any subsection that uses 2+ domain symbols so readers never have to flip to the back of the PDF to decode notation.
+3. **Pen-and-Paper "Try It Yourself" Drills (`tryitbox`) + Answer Key**:
+   - Include **2–4 short (2–3 minute) pen-and-paper checkpoints** per monograph after key subsections, using small concrete inputs (4–6 elements).
+   - Rotate across three high-retention formats: **Hand-Trace Drill**, **Break-It Challenge** (construct a small counterexample), and **Predict-Before-Reading**.
+   - **Zero inline spoilers**: Place brief, step-by-step solutions in an unnumbered **Solutions to Pen-and-Paper Exercises** section right before Version History, cross-linked with `\hyperlink` / `\hypertarget`.
+4. **Anti-Wall-of-Text Discipline**:
+   - **Paragraph cap**: Keep prose paragraphs to **4–5 lines (~60–80 words)** maximum. Break longer explanations into numbered steps, one-line **Loop Invariant** callouts, compact `Naive vs. Insight` mini-tables, or diagrams.
+
+---
+
 ## Mandatory Document Structure
 
 Ten sections, strictly in this order:
@@ -107,7 +134,9 @@ Ten sections, strictly in this order:
    increasing complexity. Every concept has a concrete real-world or programming
    analogy.
 3. **Main Topic Sections** — Sub-topics in logical order. Every subsection
-   contains at least one fully worked step-by-step example with concrete numbers.
+   opens with a local `notationbox` when introducing 2+ symbols, uses the 4-beat
+   Origin Story, and contains at least one fully worked step-by-step example
+   with concrete numbers.
 4. **Key Algorithmic Patterns** — Why naive/brute-force fails → what the
    efficient technique is (plain English first) → at least one fully worked
    trace on a small input.
@@ -129,12 +158,21 @@ Ten sections, strictly in this order:
     `projecteuler.net`, `artofproblemsolving.com/wiki`, `brilliant.org`), then
     annotated book recommendations with difficulty levels.
 
+### Solutions to Pen-and-Paper Exercises (Required When `tryitbox` Is Used)
+
+When a monograph contains `\begin{tryitbox}` checkpoints, include an unnumbered
+`\section*{Solutions to Pen-and-Paper Exercises}` (added to the table of
+contents) placed immediately **after Further Reading** and **before Version
+History**. Each solution uses `\hypertarget{sol:<id>}{...}` matching its
+exercise's `\hyperlink{sol:<id>}{[Check Answer]}` and gives a concise,
+verifiable step-by-step check. It is not counted among the ten sections above.
+
 ### Version History (Required Final Section)
 
 Every document ends with a **Version History** section, placed after Further
-Reading and before `\end{document}`. It is an unnumbered section that still
-appears in the table of contents. It is not counted among the ten sections
-above.
+Reading (and after Solutions to Pen-and-Paper Exercises, if present) and before
+`\end{document}`. It is an unnumbered section that still appears in the table
+of contents. It is not counted among the ten sections above.
 
 - It is a two-column table: **Date** and **Change**.
 - Dates use the ISO format `YYYY-MM-DD`.
@@ -163,17 +201,20 @@ material document.
 
 % --- Core LaTeX Packages ---
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{hyperref}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{graphicx}
 
-% --- Optional Diagram Packages (include when needed) ---
+% --- Optional Diagram Packages (uncomment when document contains diagrams) ---
 % \usepackage{forest}
 % \usepackage{tikz}
+% \usetikzlibrary{arrows.meta,positioning,decorations.pathreplacing}
 
 % --- Unified Color Palette ---
 \definecolor{primaryblue}{RGB}{24, 75, 140}
@@ -182,6 +223,17 @@ material document.
 \definecolor{codegreen}{RGB}{40, 130, 60}
 \definecolor{codeblue}{RGB}{20, 90, 180}
 \definecolor{codegray}{RGB}{120, 120, 120}
+
+% --- Canonical Shared TikZ Styles (uncomment alongside \usepackage{tikz}) ---
+% \tikzset{
+%     lmbox/.style={draw=codeframe, fill=codebg, thick, rounded corners=2pt, inner sep=4pt, font=\small},
+%     lmactive/.style={draw=primaryblue, fill=primaryblue!8, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=primaryblue},
+%     lmaccepted/.style={draw=codegreen, fill=codegreen!10, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=codegreen},
+%     lmpruned/.style={draw=red!70!black, fill=red!70!black!6, thick, dashed, rounded corners=2pt, inner sep=4pt, font=\small, text=red!70!black},
+%     lmarrow/.style={-{Stealth[length=5pt]}, thick, primaryblue},
+%     lmmuted/.style={-{Stealth[length=5pt]}, thick, codegray},
+%     lmprunedarrow/.style={-{Stealth[length=5pt]}, thick, dashed, red!70!black}
+% }
 
 % --- Hyperref Setup ---
 \hypersetup{
@@ -212,6 +264,32 @@ material document.
     \\ \hline
     \end{tabular}
     \vspace{0.3cm}\par
+}
+
+% --- Local Symbol Mini-Table Environment ---
+\newenvironment{notationbox}[1][Symbols Used Here]{
+    \par\vspace{0.2cm}
+    \noindent\textbf{\small\color{primaryblue}#1}\par\vspace{0.1cm}
+    \noindent\footnotesize\begin{tabularx}{\textwidth}{|l|X|p{3.6cm}|}
+    \hline
+    \textbf{Symbol} & \textbf{Plain-English Meaning} & \textbf{Example / Type} \\ \hline
+}{
+    \end{tabularx}\normalsize
+    \vspace{0.25cm}\par
+}
+
+% --- Pen-and-Paper Try-It-Yourself Exercise Environment ---
+\newenvironment{tryitbox}[2]{
+    \par\vspace{0.25cm}
+    \noindent\begin{tabular}{|p{0.96\textwidth}|}
+    \hline
+    \vspace{0.05cm}
+    \textbf{\color{codegreen}Pen \& Paper --- Try It Yourself (#1)}\hfill{\footnotesize\hyperlink{sol:#2}{[Check Answer]}}\par\vspace{0.1cm}
+}{
+    \vspace{0.05cm}
+    \\ \hline
+    \end{tabular}
+    \vspace{0.25cm}\par
 }
 
 % --- Modern C++ Code Listing Setup ---
@@ -253,6 +331,13 @@ material document.
 \newpage
 
 % Document sections follow here...
+
+% --- Solutions to Pen-and-Paper Exercises (include whenever tryitbox is used) ---
+% \section*{Solutions to Pen-and-Paper Exercises}
+% \addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
+% \begin{enumerate}
+%     \item \hypertarget{sol:ex1}{\textbf{<Exercise Title>:}} <Concise verifiable solution.>
+% \end{enumerate}
 
 % --- Version History (always the last section of the document) ---
 \section*{Version History}
@@ -327,18 +412,19 @@ diagram. Diagrams are strongly recommended for:
    console output traces where a graphical layout provides no extra value.
 
 ### Diagram Rules & Visual Styling
-- **Page-Wide Layout**: Diagrams must be designed page-wide, utilizing the available `\textwidth` (or well-proportioned horizontal spans) rather than appearing as cramped, narrow, or squished boxes floating in a sea of white space. Leverage horizontal width for process flows, step-by-step states, multi-column comparisons, timelines, and balanced tree expansions. Avoid diagrams that are either artificially over-shrunk with aggressive scaling or overflowing page margins.
-- **Unified, Restrained Color Palette (Code-Block-Harmonized)**: Diagrams must adhere strictly to a clean, restrained color palette consistent with code listings and callout boxes:
+- **Page-Wide Layout (No Double-Scaling)**: Diagrams must be designed naturally within the A4 `1in`-margin `\textwidth` ($\approx 15.9\text{ cm}$), using explicit `text width` on multi-line nodes so text wraps cleanly inside borders. **Never stack `\resizebox{\textwidth}{!}` on top of `scale=`** — fix overflowing coordinates or node widths at the source so fonts stay consistent and readable.
+- **Unified, Restrained Color Palette (Code-Block-Harmonized)**: Prefer the canonical `\tikzset` styles (`lmbox`, `lmactive`, `lmaccepted`, `lmpruned`, `lmarrow`, `lmmuted`, `lmprunedarrow`) defined in the preamble:
   - Base backgrounds: `codebg` (`RGB{248, 249, 250}`) or crisp white.
   - Borders and structural outlines: `codeframe` (`RGB{210, 215, 222}`) or `primaryblue` (`RGB{24, 75, 140}`).
   - Primary highlights, active elements, headers: `primaryblue` (`RGB{24, 75, 140}`) or `codeblue` (`RGB{20, 90, 180}`).
   - Success, accepted states, matched elements: `codegreen` (`RGB{40, 130, 60}`).
   - Annotations, indices, secondary text: `codegray` (`RGB{120, 120, 120}`).
-  - Pruned, aborted, or rolled-back paths: Muted dark red (e.g., `red!70!black`) or `codegray` with dashed lines.
+  - Pruned, aborted, conflict, or rolled-back paths: Muted dark red (`red!70!black`) or `codegray` with dashed lines. **Reserve muted red strictly for pruned/error/conflict states** — never use ad-hoc red shades (`red!15`, `red!80!black`) for neutral partitions, valid nodes, or symmetry axes.
   - Strictly avoid: Random saturated colors, neon fills, bright yellow, or uncoordinated multi-color rainbows. Visual styling must feel calm, cohesive, and professional across the entire monograph.
+- **Avoid Display Math (`$$...$$`) Inside TikZ Nodes**: Use inline math (`$...$`) or compact `array`/`aligned` environments inside nodes with explicit `text width` to prevent vertical overflow across panel dividers.
 - **Iterative Compilation Expected**: LaTeX graphical packages can be syntactically fragile (e.g., missing a semicolon or brace). **Do not avoid `TikZ` or `forest` out of fear of compilation errors.** If your code fails to build, read the `pdflatex` error log and fix it iteratively until it compiles. The document will not be manually maintained by a human, so agent-led iterative fixing is expected.
-- Every diagram must have a caption or explanatory text directly adjacent to it.
-- In backtracking trees, always visualize **pruning**: show where invalid paths are aborted (e.g., marked with `✗` or dashed branches) so the reader sees how the search space is trimmed.
+- Every diagram must have a caption or explanatory text directly adjacent to it (and a `\label{fig:...}` so automated tooling can locate diagram pages for Pass 4 visual inspection).
+- In backtracking trees, always visualize **pruning**: show where invalid paths are aborted (e.g., marked with `$\times$` or dashed `lmprunedarrow` branches) so the reader sees how the search space is trimmed.
 - Compile immediately after adding TikZ/forest diagrams to verify syntax.
 
 ---
@@ -365,21 +451,20 @@ Problem-Solving & Decision Guide** (`learning_materials/00.problem_solving_guide
 
 ---
 
-## LaTeX Build & Visual Inspection Process
+## LaTeX Build, Automated Verification & Visual Inspection Process
 
-- Use the standard `pdflatex` engine from system `PATH`.
-- Always compile **twice** with `-interaction=nonstopmode` inside
-  `learning_materials/` to resolve cross-references and table of contents:
+- **Automated Verification Helper (`scripts/verify_learning_materials.py`)**:
+  Run the repository verification script (located outside `learning_materials/`) to perform zero-token hygiene checks (Clean Directory Policy, UTF-8 BOMs, raw Markdown, non-ASCII characters, platform-agnostic rule, `using namespace std`), standalone C++23 compile checks, `pdflatex` double-compilation, automatic auxiliary cleanup, and selective diagram-page rendering:
+  ```bash
+  python3 scripts/verify_learning_materials.py learning_materials/XX.<file>.tex --cpp --pdf --render-diagrams <scratch_dir>
+  ```
+- **Manual `pdflatex` fallback** (always compile **twice** with `-interaction=nonstopmode` inside `learning_materials/`):
   ```bash
   pdflatex -interaction=nonstopmode XX.<file>.tex
   pdflatex -interaction=nonstopmode XX.<file>.tex
   ```
-- **Visual Image Inspection Flow (`pdftoppm`)**:
-  Render the compiled PDF pages to PNG images in an external temporary scratch directory:
-  ```bash
-  pdftoppm -png -r 150 XX.<file>.pdf <scratch_dir>/page
-  ```
-  Inspect the generated images to audit for layout quality, label readability, margin compliance, and color harmony.
+- **Selective Visual Image Inspection Flow (`pdftoppm`)**:
+  To avoid wasting vision tokens on plain-text pages, prefer rendering **only pages containing diagrams, `notationbox`/`tryitbox` blocks, or complex tables** (using `--render-diagrams <scratch_dir>` or `pdftoppm -png -r 150 -f <page> -l <page> XX.<file>.pdf <scratch_dir>/page`). Inspect those PNGs to audit layout quality, label readability, margin compliance, and color harmony.
 - **Mandatory cleanup**: Immediately after building and inspecting (whether successful or failed), delete all rendered temporary PNG images, any scratch directories, and all auxiliary build files (`.aux`, `.log`, `.out`, `.toc`, `.synctex.gz`, etc.). Only `XX.<file>.tex` and `XX.<file>.pdf` may remain.
 - When generating large files (over ~300 lines), use scripts located outside
   `learning_materials/` (such as the agent's external scratch directory) or
@@ -390,21 +475,21 @@ Problem-Solving & Decision Guide** (`learning_materials/00.problem_solving_guide
 
 ## Agent Workflow
 
-When creating a new learning material:
+When creating or revising a learning material:
 
-1. Read this skill file (`SKILL.md`). It is the single, self-contained source of truth.
+1. Read this skill file (`SKILL.md`). If executing the library overhaul, also check `.agents/plans/learning_materials_overhaul.md` for open checkpoints.
 2. Use the **Canonical LaTeX Styling and Preamble** defined directly above in
    this skill (do not look up or depend on other `.tex` files).
 3. Check `learning_materials/00.problem_solving_guide.tex` for existing coverage
    and planned scope. Assign the next sequential two-digit prefix `XX.`.
-4. Author the `XX.<topic>.tex` file adhering to all 10 mandatory sections, platform-agnostic
-   rules, and diagram guidelines (page-wide layout, code-block-harmonized palette).
-5. Add the **Version History** section at the end of the document with the
-   creation entry (see "Version History" above).
-6. Compile twice using `pdflatex`, verify clean exit (code 0, warnings acceptable, zero errors).
+4. Author or revise the `XX.<topic>.tex` file adhering to all 10 mandatory sections,
+   the Pedagogical Writing Style (4-beat Origin Stories, local `notationbox` tables,
+   2–4 `tryitbox` pen-and-paper drills + Solutions appendix, 5-line paragraph cap),
+   platform-agnostic rules, and diagram guidelines.
+5. Add or append the **Version History** entry at the end of the document.
+6. Run `python3 scripts/verify_learning_materials.py learning_materials/XX.<file>.tex --cpp --pdf --render-diagrams <scratch_dir>` (or run `pdflatex` twice + `g++ -std=c++23` + `pdftoppm` manually), verifying zero hygiene errors, zero C++ warnings/errors, and clean exit code 0.
 7. **Mandatory Multi-Pass Review & Visual Inspection**:
-   - Render PDF pages to PNG using `pdftoppm -png -r 150`.
-   - Visually inspect the rendered images to evaluate spatial collisions, arrow routing, label clarity, page-wide proportions, and color harmony.
+   - Inspect rendered diagram/box PNG pages to evaluate spatial collisions, arrow routing, label clarity, page-wide proportions, and color harmony.
    - Execute mathematical accuracy and C++ code audits.
    - Iteratively patch any defects in `.tex`, recompile, re-render, and re-inspect until visually and pedagogically excellent.
 8. Remove all auxiliary build files and temporary rendered images. Verify that the
@@ -422,16 +507,18 @@ When creating a new learning material:
 
 After creating or significantly revising a learning material document, make a multi-pass review for content, code examples, and visual representations (diagrams) in order to detect and eliminate errors.
 
-- **Pass 1 (Content and Mathematical Accuracy)**: Verify all definitions, mathematical formulas, theorems, step-by-step calculations in worked examples, complexity claims, and table values. Check that all numbers actually match calculations without skipped or erroneous steps.
-- **Pass 2 (C++ Code Examples)**: Thoroughly review every code listing for algorithmic logic, off-by-one errors, bounds safety, integer overflow, sentinel values (such as `INF` without overflow upon addition), container usage (`std::vector`, `std::ranges`), `[[nodiscard]]`, and C++23 idiomatic correctness.
-- **Pass 3 (Visual Representations and Diagrams Logic)**: Double-check all visual representations (ASCII/verbatim text diagrams, recursion trees, decision trees, state tables, grid layouts, call stacks, TikZ/forest figures). Ensure that every node label, cell value, coordinate, and transition matches the accompanying mathematical text and code indexing. For backtracking trees, ensure pruned branches are explicitly marked (`✗` or `PRUNED`). Verify that all tables and diagrams have adjacent explanatory captions or text.
+- **Pass 1 (Content and Mathematical Accuracy)**: Verify all definitions, mathematical formulas, theorems, step-by-step calculations in worked examples, pen-and-paper exercise solutions, complexity claims, and table values. Check that all numbers actually match calculations without skipped or erroneous steps.
+- **Pass 2 (C++ Code Examples & Automated Hygiene)**:
+  - Run `python3 scripts/verify_learning_materials.py learning_materials/XX.<file>.tex --cpp` to verify zero UTF-8 BOMs, zero raw Markdown (`**`/`\``), zero raw non-ASCII punctuation, zero platform names, and clean compilation of every standalone listing under `g++ -std=c++23 -fsyntax-only -Wall -Wextra`.
+  - Manually review every code listing for algorithmic logic, off-by-one errors, bounds safety (e.g., `n == 0`, `k == 0`, negative values), integer overflow, safe sentinel values (`INF = max() / 2`), container usage (`std::vector`, `std::span`, `std::ranges`), `[[nodiscard]]`, and C++23 idiomatic correctness.
+- **Pass 3 (Visual Representations and Diagrams Logic)**: Double-check all visual representations (TikZ/`forest` figures, recursion trees, decision trees, state tables, grid layouts, call stacks). Ensure that every node label, cell value, coordinate, and transition matches the accompanying mathematical text and code indexing. For backtracking trees, ensure pruned branches are explicitly marked (`$\times$` or `PRUNED`). Verify that all tables and diagrams have adjacent explanatory captions and `\label{fig:...}` tags.
 - **Pass 4 (Visual & Pedagogical Image Inspection Pass via `pdftoppm`)**:
-  - Render generated PDF pages to PNG using `pdftoppm -png -r 150 <pdf> <scratch_prefix>`.
+  - Render PDF pages containing diagrams or newly added visual boxes to PNG (`--render-diagrams <scratch_dir>` or `pdftoppm -png -r 150 -f <p> -l <p> <pdf> <scratch_prefix>`).
   - Read and inspect rendered images using image-inspection tools to verify aesthetics and pedagogy directly:
     1. **Spatial collisions & overlapping labels**: Ensure labels never collide, text stays strictly within node borders, and mathematical subscripts are crisp.
     2. **Arrow routing and edge readability**: Ensure arrows do not awkwardly cross each other or pass directly through labels without clear clearance.
-    3. **Page-wide proportions**: Ensure diagrams span `\textwidth` naturally, avoiding cramped narrow structures or aggressive artificial downscaling. Verify no elements clip into page margins.
-    4. **Restrained color harmony**: Ensure all diagrams use the code-block-harmonized color palette (`primaryblue`, `codebg`, `codeframe`, `codegreen`, `codeblue`, `codegray`), avoiding distracting or garish colors.
+    3. **Page-wide proportions**: Ensure diagrams span `\textwidth` naturally without double-scaling or clipping into page margins.
+    4. **Restrained color harmony**: Ensure all diagrams use the code-block-harmonized color palette (`primaryblue`, `codebg`, `codeframe`, `codegreen`, `codeblue`, `codegray`, and `red!70!black` strictly for pruned/error/conflict states).
     5. **Pedagogical impact**: Ensure the diagram conveys the core algorithmic intuition instantly to a visual learner at 100% view scale.
   - Fix any layout or visual bugs in the `.tex` source, recompile, re-render, and re-verify until pristine. Clean up all PNGs before finishing.
 
