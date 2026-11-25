@@ -21,6 +21,8 @@ To keep token usage predictable and reviews manageable, execute this plan in sho
   - Completed `learning_materials/09.string_algorithms.tex` full stub expansion and overhaul across all applicable phases (Phase 2.1 rewrite & expansion + Phase 3 fixed & embedded Diagrams 29--31 + Phase 4.11 canonical print-first layout, 4-beat Origin Stories, local `notationbox` table, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics) and synced Module 09 into `learning_materials/00.problem_solving_guide.tex`.
 - **Session 5 (Done — `2026-11-25`):**
   - Completed `learning_materials/04.sequences_and_series.tex` across all applicable phases (Phase 1.6 bug fixes + Phase 3 embedded & visually verified Gauss Pairing diagram and fixed Diagrams 8, 9, and 32 + Phase 4.6 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
+- **Session 6 (Done — `2026-11-25`):**
+  - Completed `learning_materials/02.modular_arithmetic.tex` across all applicable phases (Phase 1.4 bug fixes & standalone C++23 `mod_pow`/`ext_gcd`/`solve_crt` implementations + Phase 3 fixed & visually verified Diagrams 5, 38, and new CRT periodic clocks alignment diagram + Phase 4.4 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
 - **Ongoing Sessions (1 Module per Fresh Session):**
   - Follow the exact same single-module vertical slice (Phases 1/2 + 3 + 4 + verification + Progress Matrix update + commit) for whichever module the user selects next.
   - Suggested order: `11` → `12` → `00.problem_solving_guide.tex` → `10` → `09` → `06` → `07` → (`08`, `05`, `04`, `03`, `02`, `01`, `00.cpp_reference.tex` on demand) → delete `learning_materials/diagrams_review.tex` once all diagrams are migrated → Phase 5 (`13`–`16`) just-in-time.
@@ -117,12 +119,12 @@ Fix every confirmed factual error, C++23 compile/UB defect, formatting glitch, a
   - [x] Fix compile error on L561: remove `constexpr` from `printAllPermutations` (calls `std::cout`) and switch to `std::ranges::sort`/`std::ranges::next_permutation`.
   - [x] Replace `double` literals `1e9 + 7` (L579, L625, L724) with `1'000'000'007LL`; fix signed/unsigned compare (`current.size() == k`, L670); replace C-style cast `(char)` and `int` factorial overflow in `getPermutation` (L695–699); add bounds guards and `[[nodiscard]]`.
   - [x] Fix bracelet formula domain ($n \ge 3$, L207), Stirling base case $S(0, k) = 0$ ($k > 0$, L359), missing Glossary symbols, straight quotes, and `$k^{\text{th}}$` typography.
-- [ ] **1.4 `learning_materials/02.modular_arithmetic.tex`:**
-  - [ ] Strip UTF-8 BOM; replace raw UTF-8 `—` (L126) and `é` (L196) with `---` and `\'{e}`.
-  - [ ] Fix wrong overflow inequality on L120 (separate addition $2M < 2^{31}$ from multiplication $M^2 \approx 10^{18} < 2^{63}$).
-  - [ ] Add mandatory $\gcd(a, n) = 1$ condition to Euler's theorem exponent reduction (L256) and complete back-substitution steps in Extended Euclid example (L354–363).
-  - [ ] Remove leaked meta-prompt sentences (L393, L405).
-  - [ ] Fix `Modular::operator*=` overflow caveat (`static_assert` or `__int128`, L476), `safe_mod` edge cases (L400), `smallestRepunitDivByK` 32-bit overflow & unused `<iostream>` (L511), and add standalone C++23 implementations for Binary Exponentiation, Extended Euclid, and CRT.
+- [x] **1.4 `learning_materials/02.modular_arithmetic.tex`:** *(Completed 2026-11-25)*
+  - [x] Strip UTF-8 BOM; replace raw UTF-8 `—` (L126) and `é` (L196) with `---` and `\'{e}`.
+  - [x] Fix wrong overflow inequality on L120 (separate addition $2M < 2^{31}$ from multiplication $M^2 \approx 10^{18} < 2^{63}$).
+  - [x] Add mandatory $\gcd(a, n) = 1$ condition to Euler's theorem exponent reduction (L256) and complete back-substitution steps in Extended Euclid example (L354–363).
+  - [x] Remove leaked meta-prompt sentences (L393, L405).
+  - [x] Fix `Modular::operator*=` overflow caveat (`static_assert(Mod <= 4'294'967'295LL)` + `__int128` note, removed `#pragma once`), `safe_mod` edge cases (single division + `m <= 0` guard), `smallestRepunitDivByK` 32-bit overflow & unused `<iostream>`, and add standalone C++23 implementations for Binary Exponentiation (`mod_pow`), Extended Euclid (`ext_gcd`/`mod_inverse`), and CRT (`solve_crt`).
 - [ ] **1.5 `learning_materials/03.number_theory.tex`:**
   - [ ] Strip UTF-8 BOM; replace raw Unicode `×` (L281) with `$\times$`; wrap `$\phi(n)$` in `\texorpdfstring` (L304).
   - [ ] Fix **infinite loop** in `primeFactorize(0)` (add `if (n <= 1) return factors;`, L565–596).
@@ -216,7 +218,7 @@ All 41 diagrams currently sit unintegrated in `learning_materials/diagrams_revie
 - [x] **D31 (L2335–2381, Rabin-Karp):** Separate window length `L` from prime modulus `M`; fix precomputation time to $O(L)$; fix birthday collision probability for $N = 10^5, M = 10^9+7$ (`~99.3%`, or state `~5%` for $N = 10^4$). *(Fixed & embedded into Module 09 on 2026-11-25.)*
 - [ ] **D1 (L157–172 vs L202–203, Memory Layout):** Make stack addresses *decrease* in the "Stack Grows Down" direction and fix invalid C++ `int* ptr = 0x55aa10;`.
 - [ ] **D18 (L1416, DSU):** Clarify that $O(\alpha(N))$ requires **both** path compression and union by rank/size.
-- [ ] **D38 (L3050 vs L3054):** Reconcile squaring count (`3` vs `4`) in binary exponentiation badge.
+- [x] **D38 (L3050 vs L3054):** Reconcile squaring count (`3` vs `4`) in binary exponentiation badge. *(Fixed & embedded into Module 02 on 2026-11-25 by stopping before unused final squaring at `b = 0`.)*
 
 ### 3.2 Fix Layout Collisions & Styling Across Existing Gallery Diagrams
 Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standardize red semantics (muted `red!70!black` strictly for pruned/error/conflict states), and eliminate every collision:
@@ -234,7 +236,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 - [ ] Embed D1, D2 → `00.cpp_reference.tex` (and visually inspect rendered PNGs).
 - [ ] Embed D3 → `00.problem_solving_guide.tex` (replaces empty L113–119).
 - [x] Embed D4, D40 → `01.combinatorics_permutations.tex` *(fixed D4 slot-label clearance, D40 platform/UTF-8/double-scaling/border collisions, and added Catalan Reflection Principle diagram; visually verified 2026-11-25)*.
-- [ ] Embed D5, D38 → `02.modular_arithmetic.tex` (replaces missing L110 figure).
+- [x] Embed D5, D38 → `02.modular_arithmetic.tex` *(replaces missing L110 figure; fixed D5 arc label collisions, fixed D38 double-scaling, `$$...$$` node overflow, and 3-vs-4 squaring count, and added CRT periodic clocks alignment diagram; visually verified 2026-11-25)*.
 - [ ] Embed D6, D7, D39 → `03.number_theory.tex` (replaces empty L390–394).
 - [x] Embed D8, D9, D32 → `04.sequences_and_series.tex` *(added Gauss Pairing diagram; fixed D8 arrow label routing, D9 title clearance, and D32 double-scaling, panel padding, and `c_2+1`/`r_2+1` prefix boundary labels; resolves orphaned `"region D"`; visually verified 2026-11-25)*.
 - [ ] Embed D10, D11, D12 + Subsets/N-Queens `forest` trees → `05.recursion_and_backtracking.tex`.
@@ -259,10 +261,10 @@ Apply the **Pedagogical Blueprint** (4-Beat Origin Stories, local `notationbox` 
   - *Origin Stories:* Why we divide by $k!$ in $\binom{n}{k}$; where Stars & Bars bijection comes from; why Catalan counts *every* valid split (reflection principle intuition); where Inclusion-Exclusion alternating signs come from.
   - *Local `notationbox`:* Permutations ($P(n,k)$, $n!$), Combinations ($\binom{n}{k}$), Derangements/Catalan/Stirling ($D_n, C_n, S(n,k)$).
   - *Pen & Paper Drills (8 inline + 6 Practice Sheet):* Stars & Bars with lower bounds ($x_i \ge 1$ and mixed bounds), hand-compute $C_3$/$C_4$ via valid splits, 3-set PIE on divisibility up to 30, plus 6-mode inline & Practice Sheet coverage with trap diagnostics.
-- [ ] **4.4 `02.modular_arithmetic.tex`:**
+- [x] **4.4 `02.modular_arithmetic.tex`:** *(Completed 2026-11-25)*
   - *Origin Stories:* Why modular addition/multiplication preserve remainders *but division fails*; why Binary Exponentiation decomposes exponents in binary; where Fermat's Little Theorem & Extended Euclid come from; CRT intuition ("aligning periodic clocks").
   - *Local `notationbox`:* Congruence ($\equiv, \pmod{m}$), Modular Inverse ($a^{-1}$), Totient ($\phi(m)$).
-  - *Pen & Paper Drills (3):* Hand-trace $3^{13} \bmod 7$, invert $5 \bmod 11$ via Extended Euclid back-substitution, solve a 2-congruence CRT puzzle.
+  - *Pen & Paper Drills (8 inline + 6 Practice Sheet):* Hand-trace $3^{13} \bmod 7$, invert $5 \bmod 11$ via Extended Euclid back-substitution + Fermat, solve a 2-congruence CRT puzzle, plus full 6-mode inline & Practice Sheet coverage with trap diagnostics.
 - [ ] **4.5 `03.number_theory.tex`:**
   - *Origin Stories:* Why divisors pair around $\sqrt{N}$; why Eratosthenes starts marking at $p^2$; why $\gcd(a,b) = \gcd(b, a \bmod b)$ (rectangle tiling); why $O(N \log\log N)$ is nearly linear; why Segmented Sieve works without $O(R)$ RAM.
   - *Local `notationbox`:* Divisibility ($a \mid b$), $\gcd/\operatorname{lcm}$, Prime Factorization ($\prod p_i^{a_i}$), $\phi(n)$.
@@ -325,7 +327,7 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `00.cpp_reference.tex` | `[ ]` | N/A | `[ ]` (D1, D2) | `[ ]` | `[ ]` | `[ ]` |
 | `00.problem_solving_guide.tex` | `[ ]` | N/A | `[ ]` (D3) | `[ ]` | N/A | `[ ]` |
 | `01.combinatorics_permutations.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
-| `02.modular_arithmetic.tex` | `[ ]` | N/A | `[ ]` (D5, D38) | `[ ]` | `[ ]` | `[ ]` |
+| `02.modular_arithmetic.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `03.number_theory.tex` | `[ ]` | N/A | `[ ]` (D6, D7, D39) | `[ ]` | `[ ]` | `[ ]` |
 | `04.sequences_and_series.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `05.recursion_and_backtracking.tex` | `[ ]` | N/A | `[ ]` (D10–12 + 2 `forest`) | `[ ]` | `[ ]` | `[ ]` |
