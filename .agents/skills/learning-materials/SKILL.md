@@ -220,6 +220,7 @@ high-contrast banners + per-section page breaks, `tcolorbox` semantic cards,
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[scaled=0.95]{helvet}
+\usepackage{courier}
 \renewcommand{\familydefault}{\sfdefault}
 \usepackage[margin=0.85in, headheight=15pt]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
