@@ -77,7 +77,7 @@ Every `.tex` and `.pdf` file in `learning_materials/` must carry a two-digit num
   - `12.bit_manipulation_and_bitmasks.tex` / `.pdf`
   - `13.two_pointers_and_sliding_window.tex` / `.pdf`
   - `14.heaps_and_priority_queues.tex` / `.pdf`
-  - `15.trees_and_bsts.tex` / `.pdf` (planned)
+  - `15.trees_and_bsts.tex` / `.pdf`
   - `16.fenwick_and_segment_trees.tex` / `.pdf` (planned)
 - **Rules**:
   - Source `.tex` and compiled `.pdf` files must always share the exact same prefix and basename.

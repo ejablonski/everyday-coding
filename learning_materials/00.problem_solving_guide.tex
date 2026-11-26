@@ -177,7 +177,7 @@
 \end{tcolorbox}
 
 \begin{overviewbox}[What You'll Learn]
-This is the single document you open when facing an unfamiliar algorithmic problem. Instead of teaching one technique deeply, it teaches you how to \emph{diagnose}: classify the output goal via a 5-branch triage tree, read input-size constraints backward to rule out slow complexities, match problem keywords across all 14 finished modules in one unified index, and practice cold-start triage on paper.
+This is the single document you open when facing an unfamiliar algorithmic problem. Instead of teaching one technique deeply, it teaches you how to \emph{diagnose}: classify the output goal via a 5-branch triage tree, read input-size constraints backward to rule out slow complexities, match problem keywords across all 15 finished modules in one unified index, and practice cold-start triage on paper.
 \end{overviewbox}
 
 \vspace{-5pt}
@@ -519,12 +519,27 @@ Scan the grouped tables below by the phrasing or symptom in your problem, then o
 \arrayrulecolor{primaryblue}\bottomrule[1.1pt]
 \end{tabularx}\endgroup
 
+\subsection{Hierarchies, Subtrees, LCA, and Ordered Keys (Module 15: Trees \& BSTs)}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``is $u$ an ancestor of $v$?'', ``subtree sum / count'' & Flatten each subtree to a slice $[\text{tin}[v], \text{tout}[v]]$. & Euler Tour + Prefix Sums \\
+``longest path in a tree'', ``tree diameter'' ($w \ge 0$) & Two passes from arbitrary start $s \to u \to v$. & Two-BFS / Two-DFS ($O(N)$) \\
+``max path sum'' (negative weights or node values) & Combine top two non-negative child legs at every peak $v$. & Bottom-Up Tree DP ($O(N)$) \\
+``lowest common ancestor'', ``$k$-th ancestor'', ``tree dist'' & Jump upward in powers of $2$ via \texttt{up[k][v]}. & Binary Lifting LCA ($O(\log N)$) \\
+``validate BST'', ``dynamic sorted set'', ``predecessor'' & Enforce global $(\text{lo}, \text{hi})$ bounds or balanced Red-Black tree. & Range DFS / \texttt{std::set} \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
+
 % ============================================================================
 \section{Module Registry}
 \label{sec:registry}
 % ============================================================================
 
-All 14 core topic modules and both \texttt{00.*} meta guides are complete and print-ready.
+All 15 core topic modules and both \texttt{00.*} meta guides are complete and print-ready.
 
 \begingroup\footnotesize\rowcolors{2}{codebg}{white}
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.2cm} >{\centering\arraybackslash}p{1.9cm} >{\raggedright\arraybackslash}X}
@@ -547,18 +562,19 @@ All 14 core topic modules and both \texttt{00.*} meta guides are complete and pr
 12. Bit Manipulation & \color{codegreen}$\checkmark$ Available & Two's complement, $x \mathbin{\&} (-x)$, Kernighan, \texttt{<bit>}, Prefix XOR, Column Ledger, $O(3^N)$ submasks, Gosper, TSP. \\
 13. Two Pointers \& Window & \color{codegreen}$\checkmark$ Available & Converging pairs/3-Sum/water, fast/slow dedup \& Floyd's cycle entry, fixed/variable/exact-$K$ windows. \\
 14. Heaps \& Priority Queues & \color{codegreen}$\checkmark$ Available & Array binary heap ($2i{+}1, 2i{+}2$), $O(N)$ Floyd heapify, Top-$K$, $K$-way merge, Two-Heap median, lazy deletion. \\
+15. Trees \& BSTs & \color{codegreen}$\checkmark$ Available & Tree invariants ($E=V{-}1$), Euler Tour flattening, Two-BFS/Tree DP diameter, Binary Lifting LCA, BSTs. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}\endgroup
 
-\begin{calloutbox}{Upcoming Planned Modules (Phase 5: Modules 15--16)}
-\textbf{Status:} Planned. \textbf{Expected scope:} 15.\ Trees \& BSTs; 16.\ Fenwick \& Segment Trees.
+\begin{calloutbox}{Upcoming Planned Module (Phase 5: Module 16)}
+\textbf{Status:} Planned. \textbf{Expected scope:} 16.\ Fenwick \& Segment Trees.
 \end{calloutbox}
 
 % ============================================================================
 \section{Master Summary and Complexity Reference}
 % ============================================================================
 
-This multi-page table summarizes the time and space complexity of every core technique across Modules~01--14.
+This multi-page table summarizes the time and space complexity of every core technique across Modules~01--15.
 
 \begingroup\footnotesize\rowcolors{2}{codebg}{white}
 \begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.8cm} >{\centering\arraybackslash}p{2.6cm} >{\centering\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}X}
@@ -609,6 +625,9 @@ Sliding Window / Exact-$K$ (13) & $O(N)$ & $O(1)$ / $O(\Sigma)$ & Fixed/variable
 Floyd Heapify / Push / Pop (14) & $O(N)$ / $O(\log N)$ & $O(1)$ & In-place heap construction and dynamic extrema. \\
 Top-$K$ / $K$-Way Merge (14) & $O(N \log K)$ & $O(K)$ & Streaming top-$K$ or merging $K$ sorted lists. \\
 Two-Heap / Lazy Median (14) & $O(N \log N)$ & $O(N)$ & Running stream median or sliding window median. \\
+Euler Tour / Subtree Sum (15) & $O(N)$ / $O(1)$ & $O(N)$ & Static ancestor tests or subtree range flattening. \\
+Tree Diameter (2-BFS / DP) (15) & $O(N)$ & $O(N)$ & Longest tree path ($w \ge 0$ via 2-BFS; any $w$ via Tree DP). \\
+Binary Lifting LCA / BST (15) & $O(N \log N)$ / $O(\log N)$ & $O(N \log N)$ / $O(N)$ & Pairwise LCA, tree path distances, or \texttt{std::set} order. \\
 \end{xltabular}\endgroup
 {\footnotesize\color{codegray}$^*$In-place sorting uses $O(\log N)$ auxiliary stack space.}
 
@@ -628,6 +647,7 @@ Two-Heap / Lazy Median (14) & $O(N \log N)$ & $O(N)$ & Running stream median or 
     \item \textbf{Bitmask / Two's Complement / Self-Inverse}: Subset integer encoding, negative-MSB signed arithmetic, and $x \oplus x = 0$.
     \item \textbf{Two Pointers / Sliding Window / Floyd's Cycle}: Monotonic linear scans ($O(N)$), $\text{atMost}(K) - \text{atMost}(K{-}1)$ counting, and $O(1)$-space cycle entry.
     \item \textbf{Binary Heap / Floyd Heapify / Lazy Deletion}: Complete-tree flat array ($2i{+}1, 2i{+}2$), $O(N)$ bottom-up build, Two-Heap median, and tombstone pruning.
+    \item \textbf{Euler Tour / Tree Diameter / Binary Lifting / BST}: Subtree-to-range flattening ($[\text{tin}, \text{tout}]$), longest tree path, $2^k$-ancestor LCA, and global ordered search trees.
 \end{itemize}
 
 \subsection*{Mathematical Symbols}
@@ -638,6 +658,7 @@ Two-Heap / Lazy Median (14) & $O(N \log N)$ & $O(N)$ & Running stream median or 
     \item $N!,\; \binom{n}{k},\; D_n,\; C_n,\; S(n,k)$: Factorial, binomial coefficient, derangements, Catalan numbers, and Stirling numbers of the second kind.
     \item $\bmod,\; \gcd,\; \operatorname{lcm},\; \phi(N)$: Remainder, greatest common divisor, least common multiple, and Euler's totient.
     \item $\oplus,\; \mathbin{\&},\; \pi[i],\; Z[i],\; \Sigma,\; \mu,\; \lambda$: Bitwise XOR/AND, KMP $\pi$-array, Z-array, alphabet size, and Floyd's tail/cycle lengths.
+    \item $\text{tin}[v],\; \text{tout}[v],\; \operatorname{lca}(u, v)$: Euler Tour DFS timestamps and Lowest Common Ancestor in a rooted tree.
 \end{itemize}
 
 % ============================================================================
@@ -746,6 +767,7 @@ For each disguised problem below, identify on paper: (a) \textbf{Output Category
 2026-11-26 & Adjusted Master Complexity column widths and Exercise 2 solution header to eliminate overfull horizontal lines. \\
 2026-11-26 & Promoted 13. Two Pointers and Sliding Window to Available registry and synced its pattern recognition rows, complexity entries, and glossary definitions. \\
 2026-11-26 & Promoted 14. Heaps and Priority Queues to Available registry and synced its pattern recognition rows, complexity entries, and glossary definitions. \\
+2026-11-26 & Promoted 15. Trees and Binary Search Trees to Available registry and synced its pattern recognition rows, complexity entries, and glossary definitions. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup
