@@ -35,6 +35,8 @@ To keep token usage predictable and reviews manageable, execute this plan in sho
   - Completed `learning_materials/08.binary_search.tex` across all applicable phases (Phase 1.10 bug fixes: stripped UTF-8 BOM, fixed non-canonical headers, math-mode words, and orphaned citation; reconciled lower/upper bound prose with half-open `[L, R)` invariant; upgraded all C++23 listings to `std::midpoint`, `std::ranges::fold_left`, `k <= 0` guard, `std::optional` peak return, and `std::invocable` continuous search with accurate IEEE 754 comment; restored all 6 worked traces, fixed Example 4, and added 2D row-sorted matrix search coverage + Phase 3 fixed & visually verified Diagrams 19, 20, 37 plus new Lower/Upper Bound duplicates diagram + Phase 4.10 canonical print-first layout, 4-beat Origin Stories, local `notationbox` table, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
 - **Session 12 (Done — `2026-11-26`):**
   - Completed `learning_materials/10.greedy_algorithms.tex` full stub expansion and overhaul across all applicable phases (Phase 2.2 rewrite & expansion: added Exchange Argument and Greedy Stays Ahead proof recipes, Greedy-vs-DP counterexamples for `{1, 3, 4}` coins and 0/1 Knapsack, full subsections for Interval Scheduling/Partitioning, NaN-safe Fractional Knapsack, Huffman/Rope Merging, Two-Pointer Matching, and Furthest-Reach Jump Game, 5 complete worked traces, and 6 standalone C++23 listings using `&Event::end` projections, `INT_MIN` sentinel, NaN-safe partitioning, 64-bit min-heap, and `std::optional` jump returns + Phase 3 fixed & visually verified Diagram 21 plus 3 new TikZ diagrams for Exchange Argument swap, `{1, 3, 4}` Greedy failure, and Fractional Knapsack density bar + Phase 4.12 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes including "Break Two Plausible Interval Rules" + Solutions with 1-line **Common trap** diagnostics).
+- **Session 13 (Done — `2026-11-26`):**
+  - Completed `learning_materials/12.bit_manipulation_and_bitmasks.tex` across all applicable phases (Phase 1.12 bug fixes: replaced all 15 raw Markdown `**bold**`, backticks, and UTF-8 dashes; fixed Table 1 $2^{31} = |\texttt{INT32\_MIN}|$ vs. Signed Max $2^{31}-1$ and "Involution" terminology; fixed Gosper's Hack `k == 0 || k > n` / `n == 64` / `>> std::countr_zero(set)`, constrained `lowest_set_bit` to `std::unsigned_integral`, switched `for_each_submask` to `std::invocable`, guarded `TravellingSalesperson::solve` `n <= 1` and `INF` overflow; added plain-English pre-listing notes, expanded `<bit>` coverage, replaced hallucinated Project Euler IDs with verified Problem 59, and trimmed Version History L977 + Phase 3 fixed & visually verified Diagrams 25--28 and 41 with zero double-scaling, zero right/bit-label/math overflow, and canonical palette + Phase 4.14 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
 - **Ongoing Sessions (1 Module per Fresh Session):**
   - Follow the exact same single-module vertical slice (Phases 1/2 + 3 + 4 + verification + Progress Matrix update + commit) for whichever module the user selects next.
   - Suggested order: `11` → `12` → `00.problem_solving_guide.tex` → `10` → `09` → `06` → `07` → (`08`, `05`, `04`, `03`, `02`, `01`, `00.cpp_reference.tex` on demand) → delete `learning_materials/diagrams_review.tex` once all diagrams are migrated → Phase 5 (`13`–`16`) just-in-time.
@@ -175,16 +177,16 @@ Fix every confirmed factual error, C++23 compile/UB defect, formatting glitch, a
   - [x] **Fix Stock Span row in Pattern Recognition table (L812):** Stock Span = Previous Greater Element = Decreasing Monotonic Stack.
   - [x] Fix typo `-1 \le -1 is false` → `3 \le -1 is false` (L510).
   - [x] Add brief worked example + C++23 implementation for **"Remove K Digits" (Lexicographical Monotonic Stack with removal budget)** already listed in Pattern Recognition (L816).
-- [ ] **1.12 `learning_materials/12.bit_manipulation_and_bitmasks.tex`:**
-  - [ ] Replace all **15 raw Markdown `**bold**`** instances (L411, 415, 425, 447–453, 494, 606–621) with `\textbf{...}`, raw backticks `` `AND` ``/`` `OR` `` (L431) with `\texttt{...}`, and raw UTF-8 `—` (L293, 512) with `---`.
-  - [ ] Fix Table 1 (L155: $2^{31}$ is `|INT32_MIN|`, Signed Max is $2^{31}-1 = 2{,}147{,}483{,}647$) and L372 ("Self-Inverse / Involution", remove wrong word "Nilpotence").
-  - [ ] Fix C++23 bugs:
+- [x] **1.12 `learning_materials/12.bit_manipulation_and_bitmasks.tex`:** *(Completed 2026-11-26)*
+  - [x] Replace all **15 raw Markdown `**bold**`** instances (L411, 415, 425, 447–453, 494, 606–621) with `\textbf{...}`, raw backticks `` `AND` ``/`` `OR` `` (L431) with `\texttt{...}`, and raw UTF-8 `—` (L293, 512) with `---`.
+  - [x] Fix Table 1 (L155: $2^{31}$ is `|INT32_MIN|`, Signed Max is $2^{31}-1 = 2{,}147{,}483{,}647$) and L372 ("Self-Inverse / Involution", remove wrong word "Nilpotence").
+  - [x] Fix C++23 bugs:
     - Gosper's Hack (L496–505): guard `k == 0 || k > n` and `n == 64`; replace `/ c` with `>> std::countr_zero(set)`.
     - `bit_utils::lowest_set_bit` (L734–737): constrain to `std::unsigned_integral` to avoid `INT_MIN` signed overflow UB.
     - `for_each_submask` (L795–802): replace `std::function` with `std::invocable<uint32_t> auto&&`; remove unused `<vector>`.
-    - `TravellingSalesperson::solve` (L817–854): guard `n == 0` / `n == 1`; check `dp[full_mask][u] == INF` before adding `cost[u][0]`; guard `cost[u][v] == INF`; remove unused `<limits>`.
-  - [ ] Add plain-English conceptual explanations before every C++ listing in Section 6; expand `<bit>` coverage (`countl_zero`, `countr_zero`, `bit_width`, `bit_floor`, `bit_ceil`).
-  - [ ] Replace hallucinated Project Euler problem numbers `684, 757, 808` (L957) with real bit/binary problems (or verified open resources); trim Version History L977 to one line.
+    - `TravellingSalesperson::solve` (L817–854): guard `n == 0` / `n == 1`; check `dp[full_mask][u] == INF` before adding `cost[u][0]`; guard `cost[u][v] == INF`; use `<limits>` for `INF = max() / 2`.
+  - [x] Add plain-English conceptual explanations before every C++ listing in Section 5; expand `<bit>` coverage (`countl_zero`, `countr_zero`, `bit_width`, `bit_floor`, `bit_ceil`).
+  - [x] Replace hallucinated Project Euler problem numbers `684, 757, 808` (L957) with verified Problem 59 (XOR Decryption) and open resources; trim Version History L977 to one line.
 
 ---
 
@@ -258,7 +260,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 - [x] Embed D29, D30, D31 → `09.string_algorithms.tex` *(fixed D29 `"car"` edge collision, D30 KMP fallback shift alignment & title clearance, D31 window `L` vs modulus `M`, birthday paradox `99.3%`, & double-scaling; visually verified 2026-11-25)*.
 - [x] Embed D21 + Fractional Knapsack / Counterexample / Exchange Argument → `10.greedy_algorithms.tex` *(removed D21 `scale=0.93`, standardized canonical palette with vertical finish-time guide lines, added Exchange Argument timeline swap, `{1, 3, 4}` Greedy failure comparison, and Fractional Knapsack density bar; visually verified 2026-11-26)*.
 - [x] Embed D22, D23, D24 → `11.monotonic_stacks_and_queues.tex` (replaces 3 text stubs; fixed D24 blue frame collision and D22 label/card spacing). *(Completed 2026-11-24)*
-- [ ] Embed D25, D26, D27, D28, D41 → `12.bit_manipulation_and_bitmasks.tex` (replaces 4 text stubs).
+- [x] Embed D25, D26, D27, D28, D41 → `12.bit_manipulation_and_bitmasks.tex` *(replaces 4 text stubs; removed double-scaling across all 5 diagrams, fixed D25 MSB/LSB overhang & sign arrow target, fixed D26 right-margin carry overflow, fixed D41 bit-label collisions, `$$...$$` overflow, and ad-hoc red shades, and added step visit tags `#1`--`#8` to D28; visually verified 2026-11-26)*.
 - [ ] **Delete `learning_materials/diagrams_review.tex`** once every diagram is embedded and verified, restoring the Clean Directory Policy.
 
 ---
@@ -307,10 +309,10 @@ Apply the **Pedagogical Blueprint** (4-Beat Origin Stories, local `notationbox` 
   - *Origin Stories:* Why dominated elements can *never* be the answer again (skyline shadow proof); why `while` inside `for` is still $O(N)$ (each element pays 1 push + at most 1 pop); why strict/non-strict tie-breaking partitions duplicate subarrays cleanly.
   - *Local `notationbox`:* `NGE`/`PGE`/`NSE`/`PSE`, `PLE`/`NLE`, Histogram bounds $L, R$, Window $[i-K+1, i]$.
   - *Pen & Paper Drills (3):* Trace Next Greater Element on `[2, 5, 3, 7, 1]`; compute histogram bar widths for `[3, 1, 4, 2]`; trace Sliding Window Max ($K = 3$) on `[4, 1, 3, 5, 2]`.
-- [ ] **4.14 `12.bit_manipulation_and_bitmasks.tex`:**
+- [x] **4.14 `12.bit_manipulation_and_bitmasks.tex`:** *(Completed 2026-11-26)*
   - *Origin Stories:* Why two's complement uses negative MSB weight (one adder circuit for signed + unsigned); why `x & (-x)` isolates LSB (carry ripple proof shown concretely first); why XOR cancels pairs (addition mod 2 without carry); why `(sub - 1) & mask` visits only valid submasks in $O(3^N)$ total.
   - *Local `notationbox`:* LSB/MSB, `\&`, `|`, `\oplus`, `\sim`, `\ll`/`\gg`, `mask`, `popcount`.
-  - *Pen & Paper Drills (3):* Convert `-13` to 8-bit two's complement and verify `x & (-x)`; find the two unique numbers in `[4, 2, 4, 6, 2, 3]` via XOR partitioning; hand-trace all submasks of `0b1101` (13).
+  - *Pen & Paper Drills (8 inline + 6 Practice Sheet):* Convert `-13` to 8-bit two's complement and verify `x & (-x)`; find the two unique numbers in `[4, 2, 4, 6, 2, 3]` via XOR partitioning; hand-trace all submasks of `0b1101` (13); plus full 6-mode inline & Practice Sheet coverage with trap diagnostics.
 
 ---
 
@@ -349,7 +351,7 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `09.string_algorithms.tex` | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `10.greedy_algorithms.tex` | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
 | `11.monotonic_stacks_and_queues.tex` | DONE (2026-11-24) | N/A | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) |
-| `12.bit_manipulation_and_bitmasks.tex` | `[ ]` | N/A | `[ ]` (D25–28, D41) | `[ ]` | `[ ]` | `[ ]` |
+| `12.bit_manipulation_and_bitmasks.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
 | Retire `diagrams_review.tex` | N/A | N/A | `[ ]` | N/A | N/A | N/A |
 | `13.two_pointers_and_sliding_window.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
 | `14.heaps_and_priority_queues.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
