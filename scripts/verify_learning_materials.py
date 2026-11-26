@@ -182,13 +182,19 @@ def check_tex_hygiene(tex_path: Path, fix_bom: bool) -> tuple[list[str], list[st
         if intro_pos != -1 and toc_pos < intro_pos:
             errors.append("[Structure] '\\tableofcontents' appears before overview/abstract.")
 
-    # 8. T1 fontenc hazard for < or > inside \texttt
+    # 8. T1 fontenc hazard for < or > inside \texttt, and T1 monospace ligatures (<<, >>, --)
     has_t1 = r"\usepackage[T1]{fontenc}" in text
     if not has_t1 and re.search(r"\\texttt\{[^}]*[<>][^}]*\}", text):
         warnings.append(
             "[LaTeX] Raw '<' or '>' inside \\texttt{} without \\usepackage[T1]{fontenc} "
             "(renders as inverted punctuation under OT1)."
         )
+    if has_t1 and r"\DisableLigatures" not in text:
+        if re.search(r"\\texttt\{[^}]*(<<|>>|--)[^}]*\}", text):
+            warnings.append(
+                "[LaTeX] '<<', '>>', or '--' inside \\texttt{} under T1 without "
+                "\\DisableLigatures{encoding = *, family = tt*} (renders as guillemets/en-dash)."
+            )
 
     # 9. tryitbox solution reference consistency (\label{sol:...} or legacy \hypertarget{sol:...})
     prose_text = "\n".join(line for _, line in prose_lines)

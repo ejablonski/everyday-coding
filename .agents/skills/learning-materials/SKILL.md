@@ -218,7 +218,7 @@ It is an unnumbered section that still appears in the table of contents.
 
 Do not copy from or rely on any individual `.tex` file in the repository. Use
 the exact self-contained modern print+screen preamble defined below for every
-learning material document (clean sans-serif Helvetica + `sfmath` + `courier`,
+learning material document (clean sans-serif Helvetica + `sfmath` + `txtt`,
 `titlesec` high-contrast banners + per-section page breaks, `tcolorbox` semantic
 cards, `booktabs` borderless-vertical tables, and `fancyhdr` running
 headers/footers).
@@ -237,6 +237,7 @@ headers/footers).
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[helvet]{sfmath}
 \usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
 \usepackage{parskip}
 \usepackage[table]{xcolor}
 \usepackage{booktabs}

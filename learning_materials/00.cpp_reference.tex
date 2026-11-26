@@ -243,7 +243,7 @@ This quick reference collects the exact modern C++17/20/23 containers, algorithm
 \subsection{Sequence Containers and \texttt{std::vector} Reallocation}
 
 \begingroup\small\rowcolors{2}{codebg}{white}
-\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\ttfamily}p{3.0cm} >{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}p{3.5cm}}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\ttfamily}p{3.3cm} >{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}p{3.5cm}}
 \arrayrulecolor{primaryblue}\toprule[1.1pt]
 \rowcolor{primaryblue!10}
 \textcolor{primaryblue}{\normalfont\bfseries Container} & \textcolor{primaryblue}{\textbf{Description}} & \textcolor{primaryblue}{\textbf{Access}} & \textcolor{primaryblue}{\textbf{Insert / Erase}} \\
@@ -557,7 +557,7 @@ int sum_first_five_even_squares() {
 }
 \end{lstlisting}
 
-To materialize a lazy view into an owning container in C++23, pipe into \texttt{std::ranges::to<std::vector<int>>()} (or construct from iterators under C++20).
+In C++23, materialize a lazy view into an owning container via \texttt{std::ranges::to<std::vector<int>>()} (or construct from iterators under C++20).
 
 % ============================================================================
 \section{Strings, \texttt{std::string\_view}, and Formatting}
@@ -856,6 +856,7 @@ Answer these three rapid-fire standard-library checks:
 \arrayrulecolor{codeframe}\midrule[0.6pt]
 2026-10-03 & Document created covering modern C++17/20/23 containers, algorithms, ranges, views, formatting, and smart pointers. \\
 2026-11-26 & Overhauled to canonical print-first guide: fixed headers/subspan/complexity notes, added Modules 09--12 idioms, embedded fixed Diagrams 1--2, and added 3 quick checks with solutions. \\
+2026-11-26 & Fixed overfull horizontal lines in the Sequence Containers table and C++23 ranges materialization note. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup

@@ -11,6 +11,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[helvet]{sfmath}
 \usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
 \usepackage{parskip}
 \usepackage[table]{xcolor}
 \usepackage{booktabs}
@@ -1098,7 +1099,7 @@ Before multiplying factors like $n(n + 1)$ or $n(n + 1)(2n + 1)$, divide out the
 
 \subsection{1D Prefix Sum Data Structure}
 
-The constructor accepts a lightweight \texttt{std::span<const int>} (compatible with \texttt{std::vector}, \texttt{std::array}, or C-arrays with zero copies) and builds the $(N + 1)$-element running total in $O(N)$ time. Every inclusive query $[L, R]$ validates bounds safely and returns in $O(1)$.
+The constructor takes a \texttt{std::span<const int>} (compatible with \texttt{std::vector}, \texttt{std::array}, or C-arrays, zero copies) and builds the $(N + 1)$-element running total in $O(N)$ time. Every inclusive query $[L, R]$ validates bounds safely and returns in $O(1)$.
 
 \begin{lstlisting}[caption={1D Prefix Sum Data Structure with Safe Bounds Checking}]
 #include <cstddef>
@@ -1305,7 +1306,7 @@ Difference Array reconstruct & $O(N)$ & $O(N)$ & Single prefix scan to recover f
 % ============================================================================
 
 \subsection*{Core Concepts}
-\begin{itemize}
+\begin{itemize}[itemsep=0pt, topsep=1pt, parsep=0pt]
     \item \textbf{Arithmetic Progression (AP):} A sequence where the difference $d$ between every adjacent pair of terms is constant (e.g., $5, 8, 11, 14$).
     \item \textbf{Closed-Form Formula:} A direct mathematical expression that computes an answer in $O(1)$ (or $O(\log n)$) operations without looping through every term.
     \item \textbf{Common Difference ($d$):} The fixed number added at each step of an arithmetic progression.
@@ -1321,7 +1322,7 @@ Difference Array reconstruct & $O(N)$ & $O(N)$ & Single prefix scan to recover f
 \end{itemize}
 
 \subsection*{Mathematical Symbols}
-\begin{itemize}
+\begin{itemize}[itemsep=0pt, topsep=1pt, parsep=0pt]
     \item $a$ or $a_1$: First term of a sequence ($a_0$ when 0-indexed, as in geometric series).
     \item $a_n$: The $n$-th term of a sequence.
     \item $d$: Common difference in an arithmetic progression ($a_{i+1} - a_i$).
@@ -1528,6 +1529,7 @@ Find a closed-form formula for $E(n) = 2^2 + 4^2 + 6^2 + \dots + (2n)^2$ by fact
 2026-10-03 & Audited and refactored against skill guidelines; added intuition diagrams, worked steps, C++23 ranges, and corrected table layouts. \\
 2026-10-03 & Fixed empty grid segfault in 2D Prefix Sum query method. \\
 2026-11-25 & Overhauled to canonical print-first layout; fixed BOM, overview/TOC order, enumerate jump, line breaks, and C++23 bugs (functional header, binary-exp geometric sum, wrap-safe 2D bounds); embedded Gauss Pairing and fixed Diagrams 8, 9, 32; added 4-beat Origin Stories, local notation boxes, 8 inline drills, 6-drill Practice Sheet, and solutions with trap notes. \\
+2026-11-26 & Disabled T1 monospace ligatures, fixed overfull line in 1D Prefix Sum intro, and tightened Glossary list spacing to eliminate a 3-item widow page. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup

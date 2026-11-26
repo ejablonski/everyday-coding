@@ -11,6 +11,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[helvet]{sfmath}
 \usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
 \usepackage{parskip}
 \usepackage[table]{xcolor}
 \usepackage{booktabs}
@@ -259,21 +260,27 @@
     colback=primaryblue!6, colframe=primaryblue!20,
     borderline west={5pt}{0pt}{primaryblue},
     arc=4pt, boxrule=0.6pt,
-    left=14pt, right=14pt, top=12pt, bottom=12pt,
-    before skip=0pt, after skip=10pt
+    left=14pt, right=14pt, top=7pt, bottom=7pt,
+    before skip=0pt, after skip=5pt
 ]
-    {\footnotesize\bfseries\color{accentteal}MODULE 03 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
-    {\Huge\bfseries\color{primaryblue}Number Theory}\\[5pt]
-    {\large\color{codegray}Primes, Divisors, Factorization, GCD, Sieves, and Euler's Totient Function}\\[6pt]
+    {\footnotesize\bfseries\color{accentteal}MODULE 03 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[3pt]
+    {\Huge\bfseries\color{primaryblue}Number Theory}\\[3pt]
+    {\large\color{codegray}Primes, Divisors, Factorization, GCD, Sieves, and Euler's Totient Function}\\[4pt]
     {\footnotesize\color{codegray}Updated \today}
 \end{tcolorbox}
 
 \begin{overviewbox}[What You'll Learn]
-Number theory studies how whole numbers divide, factor, and share structure. Built around prime numbers---the indivisible ``atoms'' of multiplication---this guide takes you from basic divisibility to the $\sqrt{n}$ pairing shortcut, divisor counting and summing ($\tau, \sigma$), the Euclidean Algorithm for GCD and LCM, Euler's Totient $\phi(n)$, and high-speed sieves (Eratosthenes, Smallest Prime Factor, and Segmented Sieve). Every formula is derived from a small concrete example first and paired with overflow-safe C++23 code and pen-and-paper drills.
+{\small Number theory studies how whole numbers divide, factor, and share structure. Built around prime numbers---the indivisible ``atoms'' of multiplication---this guide takes you from basic divisibility to the $\sqrt{n}$ pairing shortcut, divisor counting and summing ($\tau, \sigma$), the Euclidean Algorithm for GCD and LCM, Euler's Totient $\phi(n)$, and high-speed sieves (Eratosthenes, Smallest Prime Factor, and Segmented Sieve). Every formula is derived from a small concrete example first and paired with overflow-safe C++23 code and pen-and-paper drills.}
 \end{overviewbox}
 
-\vspace{2pt}
-{\setlength{\parskip}{1pt}\small\tableofcontents}
+\vspace{-6pt}
+{\setlength{\parskip}{0pt}\footnotesize
+\titlespacing*{\section}{0pt}{2pt}{6pt}%
+\makeatletter
+\let\lm@orig@addvspace\addvspace
+\renewcommand{\addvspace}[1]{\lm@orig@addvspace{0.18em plus 1pt}}
+\makeatother
+\tableofcontents}
 
 % Every major section starts cleanly on a new page
 \renewcommand{\sectionbreak}{\clearpage}
@@ -1310,7 +1317,7 @@ Segmented Sieve & $O\big((R{-}L{+}1)\log\log R + \sqrt{R}\log\log R\big)$ & $O(R
 % ============================================================================
 
 \subsection*{Core Concepts}
-\begin{itemize}
+\begin{itemize}[itemsep=1.5pt, topsep=2pt]
     \item \textbf{Composite Number:} An integer $n > 1$ divisible by at least one integer strictly between $1$ and $n$.
     \item \textbf{Coprime (Relatively Prime):} Two integers sharing no positive common divisor other than $1$ ($\gcd(a, b) = 1$).
     \item \textbf{Divisor / Factor:} An integer $b > 0$ that divides $a$ with zero remainder ($a = q \cdot b$).
@@ -1331,7 +1338,7 @@ Segmented Sieve & $O\big((R{-}L{+}1)\log\log R + \sqrt{R}\log\log R\big)$ & $O(R
 \end{itemize}
 
 \subsection*{Mathematical Symbols}
-\begin{itemize}
+\begin{itemize}[itemsep=1.5pt, topsep=2pt]
     \item $b \mid a$ / $b \nmid a$: ``$b$ divides $a$ evenly'' / ``$b$ does not divide $a$''.
     \item $\gcd(a, b)$ / $\operatorname{lcm}(a, b)$: Greatest common divisor / Least common multiple.
     \item $\tau(n)$ (also $d(n)$): Total count of positive divisors of $n$.
@@ -1452,8 +1459,8 @@ Every integer $n \ge 5$ has remainder $0, 1, 2, 3, 4,$ or $5$ modulo $6$ (i.e., 
     Explicit coprimes in $[1, 36]$: $\{1, 5, 7, 11, 13, 17, 19, 23, 25, 29, 31, 35\}$ (count $= 12$).
     \trapnote{Repeating a prime factor according to its exponent, e.g., multiplying by $(1 - \tfrac{1}{2})^2$ instead of using each \emph{distinct} prime once.}
 
-    \item \label{sol:ex6}\textbf{Exercise 6 (Debug) --- Sieve Loop Overflow and Start Index:}
-    \textbf{(1)} At $p = 46{,}341$, $p^2 = 2{,}147{,}488{,}281 > 2^{31} - 1$ (signed 32-bit UB). Fix by writing \texttt{p <= max\_n / p} and promoting \texttt{m} to \texttt{std::int64\_t}.
+    \item \label{sol:ex6}\textbf{Exercise 6 (Debug) --- Sieve Overflow and Start Index:}
+    \textbf{(1)} At $p = 46{,}341$, $p^2 = 2{,}147{,}488{,}281 > 2^{31} - 1$ (signed 32-bit UB). Fix: use \texttt{p <= max\_n / p} and 64-bit \texttt{m} (\texttt{std::int64\_t}).
     \textbf{(2)} Starting at \texttt{m = p} marks the prime $p$ itself as composite, erasing every prime in the table!
     \trapnote{Using \texttt{int} for \texttt{p * p} on large $N$ or accidentally crossing out \texttt{is\_prime[p]} itself inside the marking loop.}
 
@@ -1469,7 +1476,7 @@ Every integer $n \ge 5$ has remainder $0, 1, 2, 3, 4,$ or $5$ modulo $6$ (i.e., 
     If $n \le 1$, return \texttt{false}. Initialize \texttt{std::int64\_t sum = 1;} (accounts for divisor $1$ while excluding $n$). Loop \texttt{for (std::int64\_t i = 2; i <= n / i; ++i)}: if \texttt{n \% i == 0}, add \texttt{i} and (if \texttt{i != n / i}) add \texttt{n / i}. Return \texttt{sum == n}.
     \trapnote{Starting the loop at \texttt{i = 1} and adding \texttt{n / 1 = n} into \texttt{sum}, which computes $\sigma(n)$ instead of the proper-divisor sum $\sigma(n) - n$.}
 
-    \item \label{sol:ex9}\textbf{Exercise 9 (Triage) --- Cold-Start Number Theory Diagnosis:}
+    \item \label{sol:ex9}\textbf{Exercise 9 (Triage) --- Number Theory Diagnosis:}
     \textbf{(1)} Iterated \textbf{LCM}: $\operatorname{lcm}(\operatorname{lcm}(18, 24), 30) = \operatorname{lcm}(72, 30) = \mathbf{360}$ s in $O(k \log M)$.
     \textbf{(2)} \textbf{SPF Sieve} build in $O(N \log\log N)$ + $O(\log x)$ factorization per query to evaluate $\prod(a_i + 1)$.
     \textbf{(3)} \textbf{Segmented Sieve} with base primes $\le 10^6$ in $O((R-L+1)\log\log R + \sqrt{R}\log\log R)$ time and $O(R-L+\sqrt{R})$ space.
@@ -1522,6 +1529,7 @@ Every integer $n \ge 5$ has remainder $0, 1, 2, 3, 4,$ or $5$ modulo $6$ (i.e., 
 2026-10-03 & Refactored against the learning materials skill: canonical preamble, worked examples added to GCD, LCM, divisor-count and divisor-sum subsections, traces merged into Key Algorithmic Patterns, intuition callouts and text diagrams added, banned phrases and platform names removed. \\
 2026-10-03 & Fixed integer overflow bugs in Sieve of Eratosthenes and FastFactorizer loops. \\
 2026-11-25 & Overhauled to canonical print-first layout; stripped BOM and non-ASCII chars; fixed primeFactorize(0) infinite loop, i*i overflow, INT64\_MIN GCD/LCM UB, SPF Sieve naming/narrowing, and Segmented Sieve code/complexity; deduplicated worked examples; embedded fixed Diagrams 6, 7, and 39; added 4-beat Origin Stories, local notation boxes, 8 inline drills, 6-drill Practice Sheet, and solutions with trap notes. \\
+2026-11-26 & Disabled T1 monospace ligatures, tightened cover/TOC and Glossary spacing to eliminate a 1-item widow page, and fixed overfull solution lines. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup

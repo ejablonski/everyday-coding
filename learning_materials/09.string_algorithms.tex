@@ -11,6 +11,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[helvet]{sfmath}
 \usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
 \usepackage{parskip}
 \usepackage[table]{xcolor}
 \usepackage{booktabs}
@@ -259,12 +260,12 @@
     colback=primaryblue!6, colframe=primaryblue!20,
     borderline west={5pt}{0pt}{primaryblue},
     arc=4pt, boxrule=0.6pt,
-    left=14pt, right=14pt, top=12pt, bottom=12pt,
-    before skip=0pt, after skip=10pt
+    left=14pt, right=14pt, top=7pt, bottom=7pt,
+    before skip=0pt, after skip=5pt
 ]
-    {\footnotesize\bfseries\color{accentteal}MODULE 09 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
-    {\Huge\bfseries\color{primaryblue}String Algorithms}\\[5pt]
-    {\large\color{codegray}Rolling Hashing, KMP, Z-Algorithm, Tries, and Linear-Time Palindromes}\\[6pt]
+    {\footnotesize\bfseries\color{accentteal}MODULE 09 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[3pt]
+    {\Huge\bfseries\color{primaryblue}String Algorithms}\\[3pt]
+    {\large\color{codegray}Rolling Hashing, KMP, Z-Algorithm, Tries, and Linear-Time Palindromes}\\[4pt]
     {\footnotesize\color{codegray}Updated \today}
 \end{tcolorbox}
 
@@ -272,8 +273,8 @@
 Naive string comparisons re-read the same characters over and over, turning innocent loops into $O(N \cdot M)$ timeouts on $10^5$-character inputs. This guide builds linear-time string intuition from scratch: how strings map to polynomial integers in \textbf{Rabin-Karp Double Hashing}, how \textbf{KMP} and the \textbf{Z-Algorithm} recycle prior matches so pointers never rewind, how \textbf{Tries} compress dictionaries for $O(L)$ prefix lookup, and how \textbf{Manacher's Algorithm} finds every palindrome in $O(N)$. Every technique is backed by diagrams, paper-reproducible traces, C++23 templates, eight inline drills, and a mixed practice sheet.
 \end{overviewbox}
 
-\vspace{2pt}
-{\setlength{\parskip}{1pt}\small\tableofcontents}
+\vspace{-5pt}
+{\setlength{\parskip}{0pt}\footnotesize\tableofcontents}
 
 % Every major section starts cleanly on a new page
 \renewcommand{\sectionbreak}{\clearpage}
@@ -1329,9 +1330,10 @@ In \texttt{computePi}, a \texttt{while (j > 0 \&\& ...)} loop sits inside a \tex
     $Z = \mathbf{[0, 0, 1, 0, 3, 0, 1]}$. Z-box updates: $[2, 2]$ at $i = 2$, then $[4, 6]$ at $i = 4$. Indices $i = 5$ (mirrors $1 \to Z[1] = 0$) and $i = 6$ (mirrors $2 \to \min(1, Z[2]) = 1$) reuse mirrored values in $O(1)$.
     \trapnote{Forgetting to cap the mirrored value at $R - i + 1$ when $Z[i - L]$ extends past the current Z-box.}
 
-    \item \label{sol:ex5}\textbf{Exercise 5 (Edge Cases) --- Trie Boundary Checks:}
-    \textbf{(1)} \texttt{search("car") = false}, \texttt{starts\_with("car") = true}, \texttt{search("cart") = true}, \texttt{starts\_with("") = true} (empty string is a prefix of everything, landing on root $0$).
-    \textbf{(2)} $6$ nodes total: root (\texttt{0}), \texttt{'c'}, \texttt{'a'}, \texttt{'t'} (under \texttt{'a'}), \texttt{'r'}, \texttt{'t'} (under \texttt{'r'}).
+    \item \label{sol:ex5}\textbf{Exercise 5 (Edge Cases) --- Trie Boundary Checks:}\\
+    \textbf{(1)} \texttt{search("car")} = \texttt{false}, \texttt{starts\_with("car")} = \texttt{true},\\
+    \texttt{search("cart")} = \texttt{true}, and \texttt{starts\_with("")} = \texttt{true} (empty string matches at root $0$).\\
+    \textbf{(2)} $6$ nodes total: root (\texttt{0}), \texttt{'c'}, \texttt{'a'}, \texttt{'t'} (under \texttt{'a'}), \texttt{'r'}, \texttt{'t'} (under \texttt{'r'}).\\
     \textbf{(3)} \texttt{'A' - 'a' = -32} and \texttt{'-' - 'a' = -52}, causing negative out-of-bounds array indexing (undefined behavior!).
     \trapnote{Counting $1 + 3 + 4 = 8$ nodes instead of $6$---forgetting that \texttt{"cat"} and \texttt{"cart"} share the \texttt{"ca"} path.}
 
@@ -1371,8 +1373,8 @@ In \texttt{computePi}, a \texttt{while (j > 0 \&\& ...)} loop sits inside a \tex
     Slide to \texttt{"cd"} (out \texttt{'b'}=2, in \texttt{'d'}=4): $(23 - 2 \cdot 10) = 3 \to 3 \cdot 10 = 30 \to 30 + 4 = \mathbf{34}$.
     \trapnote{Multiplying the evicted character by $B^L = 100$ instead of $B^{L - 1} = 10$.}
 
-    \item \label{sol:ex13}\textbf{Exercise 13 (Edge Cases) --- Killer Boundary Inputs:}
-    \textbf{(1)} On \texttt{"aaaaa"}: $\pi = [0, 1, 2, 3, 4]$;\; $Z = [0, 4, 3, 2, 1]$;\; Manacher max radius $= 5$ (entire string).
+    \item \label{sol:ex13}\textbf{Exercise 13 (Edge Cases) --- Killer Boundary Inputs:}\\
+    \textbf{(1)} On \texttt{"aaaaa"}: $\pi = [0,1,2,3,4]$, $Z = [0,4,3,2,1]$, and Manacher max radius $= 5$ (full string).\\
     \textbf{(2)} \texttt{search("ca") = false}, \texttt{starts\_with("ca") = true}.
     \textbf{(3)} If \texttt{pattern.empty()}, \texttt{j == m} triggers immediately and accesses \texttt{pi[j - 1] = pi[-1]} (out-of-bounds crash!) or produces $N + 1$ empty matches.
     \trapnote{Writing $\pi(\text{"aaaaa"}) = [1, 2, 3, 4, 5]$---$\pi[0]$ is always $0$ because a border must be strictly shorter than the prefix.}
@@ -1400,6 +1402,7 @@ In \texttt{computePi}, a \texttt{while (j > 0 \&\& ...)} loop sits inside a \tex
 \arrayrulecolor{codeframe}\midrule[0.6pt]
 2026-10-03 & Document created. \\
 2026-11-25 & Expanded stub to full print-first monograph; added Double Hashing (with birthday-paradox analysis), Z-Algorithm, Manacher's Algorithm, Bitwise Trie bonus, 5 worked examples, 5 C++23 templates (fixing computePi and adding Trie::starts\_with + bounds checks), embedded fixed Diagrams 29--31, and added 8 inline drills + 6-drill Practice Sheet with solutions and trap notes. \\
+2026-11-26 & Disabled T1 monospace ligatures (fixing \texttt{'a'--'z'} rendering), fit TOC cleanly onto Page 1, and fixed overfull lines in Solutions. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup

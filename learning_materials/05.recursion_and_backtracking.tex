@@ -11,6 +11,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[helvet]{sfmath}
 \usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
 \usepackage{parskip}
 \usepackage[table]{xcolor}
 \usepackage{booktabs}
@@ -260,12 +261,12 @@
     colback=primaryblue!6, colframe=primaryblue!20,
     borderline west={5pt}{0pt}{primaryblue},
     arc=4pt, boxrule=0.6pt,
-    left=14pt, right=14pt, top=12pt, bottom=12pt,
-    before skip=0pt, after skip=10pt
+    left=14pt, right=14pt, top=7pt, bottom=7pt,
+    before skip=0pt, after skip=5pt
 ]
-    {\footnotesize\bfseries\color{accentteal}MODULE 05 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
-    {\Huge\bfseries\color{primaryblue}Recursion and Backtracking}\\[5pt]
-    {\large\color{codegray}Call Stacks, Decision Trees, Early Pruning, Duplicate Elimination, and C++23 Templates}\\[6pt]
+    {\footnotesize\bfseries\color{accentteal}MODULE 05 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[3pt]
+    {\Huge\bfseries\color{primaryblue}Recursion and Backtracking}\\[3pt]
+    {\large\color{codegray}Call Stacks, Decision Trees, Early Pruning, Duplicate Elimination, and C++23 Templates}\\[4pt]
     {\footnotesize\color{codegray}Updated \today}
 \end{tcolorbox}
 
@@ -273,8 +274,8 @@
 Recursion solves a big problem by delegating a smaller copy of itself to the computer's implicit call stack; backtracking turns that mechanism into a systematic depth-first search over choices, undoing each step as soon as a branch hits a dead end. This guide starts from stack frames and recursion trees, builds the universal \emph{Choose $\to$ Explore $\to$ Undo} template, visualizes early pruning and duplicate elimination across Subsets, Permutations, Combinations, and N-Queens, and equips you with bounds-safe modern C++23 code and pen-and-paper drills.
 \end{overviewbox}
 
-\vspace{2pt}
-{\setlength{\parskip}{1pt}\small\tableofcontents}
+\vspace{-5pt}
+{\setlength{\parskip}{0pt}\footnotesize\tableofcontents}
 
 % Every major section starts cleanly on a new page
 \renewcommand{\sectionbreak}{\clearpage}
@@ -1214,7 +1215,7 @@ For $n = 3$ (\texttt{[1, 2, 3]}), list all $2^3 = 8$ subsets and sum their lengt
 
 \begin{enumerate}
     \item \label{sol:ex1}\textbf{Exercise 1 (Trace) --- Unwinding \texttt{power(2, 4)}:}
-    Pushes: \texttt{power(2,4)} $\to$ \texttt{power(2,3)} $\to$ \texttt{power(2,2)} $\to$ \texttt{power(2,1)} $\to$ \texttt{power(2,0)} (peak stack depth $= \mathbf{5}$ frames).
+    Calls: \texttt{power(2,4)} $\to$ \texttt{power(2,3)} $\to$ \texttt{power(2,2)} $\to$ \texttt{power(2,1)} $\to$ \texttt{power(2,0)} (peak $= \mathbf{5}$ frames).
     Pops/returns: $1 \to 2 \to 4 \to 8 \to \mathbf{16}$.
     \trapnote{Reporting peak depth as $4$ instead of $5$---the base-case frame \texttt{e = 0} still occupies a stack slot before returning.}
 
@@ -1274,7 +1275,7 @@ For $n = 3$ (\texttt{[1, 2, 3]}), list all $2^3 = 8$ subsets and sum their lengt
 
     \item \label{sol:ex14}\textbf{Exercise 14 (Derive) --- Why Subsets Takes $O(n \cdot 2^n)$ Time:}
     For $n = 3$, lengths are $0, 1, 1, 1, 2, 2, 2, 3$ (sum $= 12 = 3 \cdot 2^2$). Pairing every subset $S$ with its complement $U \setminus S$ creates $2^{n-1}$ pairs, each of combined size $|S| + |U \setminus S| = n$. Total elements copied into \texttt{result} $= \mathbf{n \cdot 2^{n-1}} = \Theta(n \cdot 2^n)$.
-    \trapnote{Counting only the $2^n$ recursive calls and forgetting the $O(|S|)$ vector copy performed by \texttt{result.push\_back(current)}.}
+    \trapnote{Counting only the $2^n$ calls and forgetting the $O(|S|)$ vector copy in \texttt{result.push\_back(current)} at each leaf.}
 \end{enumerate}
 
 % ============================================================================
@@ -1295,6 +1296,7 @@ For $n = 3$ (\texttt{[1, 2, 3]}), list all $2^3 = 8$ subsets and sum their lengt
 2026-10-03 & Document created. \\
 2026-10-03 & Expanded backtracking traces, diagram trees, code standards, duplicate logic, and pattern rules. \\
 2026-11-25 & Overhauled to canonical print-first layout; stripped BOM; restored generic backtracking template; fixed solveNQueens(0) crash, C-style casts, factorial domain guard, combination tail pruning, and terminology errors; added Subsets II and Permutations II C++23 code; embedded fixed Diagrams 10--12 plus new forest trees for Subsets and 4-Queens; added 4-beat Origin Stories, local notation boxes, 8 inline drills, 6-drill Practice Sheet, and solutions with trap notes. \\
+2026-11-26 & Disabled T1 monospace ligatures, fit TOC cleanly onto Page 1, and fixed overfull lines in Solutions. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup

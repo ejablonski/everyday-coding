@@ -11,6 +11,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[helvet]{sfmath}
 \usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
 \usepackage{parskip}
 \usepackage[table]{xcolor}
 \usepackage{booktabs}
@@ -259,12 +260,12 @@
     colback=primaryblue!6, colframe=primaryblue!20,
     borderline west={5pt}{0pt}{primaryblue},
     arc=4pt, boxrule=0.6pt,
-    left=14pt, right=14pt, top=12pt, bottom=12pt,
-    before skip=0pt, after skip=10pt
+    left=14pt, right=14pt, top=7pt, bottom=7pt,
+    before skip=0pt, after skip=5pt
 ]
-    {\footnotesize\bfseries\color{accentteal}MODULE 08 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
-    {\Huge\bfseries\color{primaryblue}Binary Search}\\[5pt]
-    {\large\color{codegray}Interval Halving, Predicate Monotonicity, and Searching on the Answer Space}\\[6pt]
+    {\footnotesize\bfseries\color{accentteal}MODULE 08 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[3pt]
+    {\Huge\bfseries\color{primaryblue}Binary Search}\\[3pt]
+    {\large\color{codegray}Interval Halving, Predicate Monotonicity, and Searching on the Answer Space}\\[4pt]
     {\footnotesize\color{codegray}Updated \today}
 \end{tcolorbox}
 
@@ -272,8 +273,8 @@
 Binary search is the discipline of eliminating half of your remaining candidates with every single test. Beyond looking up a number in a sorted array, this guide builds the half-open $[L, R)$ invariant that permanently prevents off-by-one infinite loops, explains how to turn hard min-max optimization problems into simple \texttt{FFFTTT} yes/no feasibility checks, and covers Lower/Upper Bounds, Rotated Arrays, Peak Elements, 2D Row-Sorted Matrices, and Floating-Point Bisection in modern C++23 with \texttt{std::midpoint} and \texttt{std::ranges}.
 \end{overviewbox}
 
-\vspace{2pt}
-{\setlength{\parskip}{1pt}\small\tableofcontents}
+\vspace{-5pt}
+{\setlength{\parskip}{0pt}\footnotesize\tableofcontents}
 
 % Every major section starts cleanly on a new page
 \renewcommand{\sectionbreak}{\clearpage}
@@ -723,7 +724,7 @@ An engineer searches for $\sqrt{10^9} \approx 31{,}622.77$ on $[0, 10^9]$ using 
 \section{Key Algorithmic Patterns}
 % ============================================================================
 
-Every Binary Search on the Answer problem follows the same four-step template: (1) prove predicate monotonicity, (2) bracket tight bounds $[L, R]$, (3) write an $O(N)$ greedy/simulation check \texttt{is\_feasible(mid)}, and (4) converge via half-open $[L, R)$ or closed $[L, R]$.
+Every Binary Search on the Answer problem follows four steps: (1) prove predicate monotonicity, (2) bracket tight bounds $[L, R]$, (3) write an $O(N)$ greedy/simulation check \texttt{is\_feasible(mid)}, and (4) converge via $[L, R)$ or $[L, R]$.
 
 \subsection{Worked Trace: Minimal Feasible Processing Rate}
 
@@ -777,8 +778,8 @@ Partition boards $[12, 34, 67, 90]$ among $K = 2$ contiguous painters to minimiz
 Terminates at $L = R = \mathbf{113}$.
 \end{example}
 
-\begin{example}[Search in a Rotated Array with Unique Elements]
-Locate target $X = 3$ in $A = [6, 7, 1, 2, 3, 4, 5]$ ($L = 0, R = 6$).
+\begin{example}[Rotated Array Search (Unique Elements)]
+Locate target $X = 3$ in $A = [6,7,1,2,3,4,5]$ with $L = 0, R = 6$.
 \begin{enumerate}
     \item $\text{mid} = 3$ ($A[3] = 2 \neq 3$): $A[0] = 6 > A[3] = 2 \implies$ right half $[2,3,4,5]$ is sorted. Since $2 < 3 \le 5$, set $L = 4$.
     \item $[4, 6],\; \text{mid} = 5$ ($A[5] = 4 \neq 3$): $A[4] = 3 \le A[5] = 4 \implies$ left half $[3, 4]$ is sorted. Since $3 \le 3 < 4$, set $R = 4$.
@@ -813,7 +814,7 @@ Terminates ($L = 4 > R = 3$): maximum minimum gap $= \mathbf{3}$.
 \section{C++ Implementations}
 % ============================================================================
 
-Every listing below is standalone C++23 (\texttt{-std=c++23 -Wall -Wextra} clean), using C++20 \texttt{std::midpoint}, C++23 \texttt{std::ranges::fold\_left}, \texttt{std::optional}, and \texttt{std::invocable} concepts.
+Every listing below compiles cleanly as standalone C++23 (\texttt{-std=c++23 -Wall -Wextra}). Implementations use \texttt{std::ranges::fold\_left}, \texttt{std::midpoint}, \texttt{std::optional}, and \texttt{std::invocable}.
 
 \subsection{Classic Binary Search (\texorpdfstring{\texttt{std::midpoint}}{std::midpoint})}
 Returns the index if found or \texttt{std::nullopt} otherwise, guarding empty input and unsigned underflow.
@@ -892,7 +893,7 @@ Both functions maintain the exact half-open invariant $[0, N)$ with \texttt{righ
 \end{lstlisting}
 
 \subsection{Binary Search on the Answer (Painter's Partition)}
-Guards empty input and \texttt{k <= 0} via \texttt{std::optional}, computes the upper bound with C++23 \texttt{std::ranges::fold\_left}, and applies \texttt{std::midpoint} over 64-bit \texttt{std::int64\_t}.
+Uses \texttt{std::optional} to guard empty input or \texttt{k <= 0}, \texttt{std::ranges::fold\_left} for the upper bound, and \texttt{std::midpoint} over \texttt{std::int64\_t}.
 
 \begin{lstlisting}[caption={Minimizing maximum partition sum using C++23 ranges and std::midpoint}]
 #include <algorithm>
@@ -1095,7 +1096,7 @@ Explain the exact failure caused by each mistake below:
 % ============================================================================
 
 \begingroup\small\rowcolors{2}{codebg}{white}
-\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.3cm} >{\centering\arraybackslash}p{2.3cm} >{\centering\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}X}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.0cm} >{\centering\arraybackslash}p{2.6cm} >{\centering\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}X}
 \arrayrulecolor{primaryblue}\toprule[1.2pt]
 \rowcolor{primaryblue!10}
 \textcolor{primaryblue}{\textbf{Task / Operation}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Space}} & \textcolor{primaryblue}{\textbf{Use When}} \\
@@ -1120,7 +1121,7 @@ Continuous Bisection & $O(\text{iters} \cdot C)$ & $O(1)$ & Real root / continuo
     \item \textbf{Binary Search:} Halving a candidate domain repeatedly using a monotonic condition.
     \item \textbf{Feasibility Predicate ($P(x)$):} Boolean check testing whether candidate answer $x$ satisfies all constraints.
     \item \textbf{Half-Open Interval ($[L, R)$):} Range with $L$ inclusive and $R$ exclusive; guarantees termination without \texttt{mid - 1} underflow.
-    \item \textbf{Integer Overflow:} Arithmetic wrap-around when $L + R$ exceeds type max; prevented by \texttt{std::midpoint}.
+    \item \textbf{Integer Overflow:} Wrap-around when $L + R$ exceeds type max; prevented by \texttt{std::midpoint}.
     \item \textbf{Loop Invariant:} Condition preserved before and after every iteration (e.g., all $< L$ are false, all $\ge R$ are true).
     \item \textbf{Lower Bound:} First index $i \in [0, N]$ where $A[i] \ge \text{target}$.
     \item \textbf{Monotonicity:} Order-preserving property ensuring a predicate switches value at most once (\texttt{FFFTTT} or \texttt{TTTFFF}).
@@ -1145,7 +1146,7 @@ Continuous Bisection & $O(\text{iters} \cdot C)$ & $O(1)$ & Real root / continuo
 \subsection*{Free Online Resources (Start Here)}
 \begin{itemize}
     \item \textbf{CP-Algorithms: Binary Search} (\url{https://cp-algorithms.com}) --- Clean derivations of discrete binary search, continuous bisection, and ternary search.
-    \item \textbf{cppreference.com: \texttt{<algorithm>} \& \texttt{<numeric>}} (\url{https://en.cppreference.com}) --- Official C++23 specifications for \texttt{std::ranges::lower\_bound}, \texttt{std::ranges::upper\_bound}, and \texttt{std::midpoint}.
+    \item \textbf{cppreference.com: \texttt{<algorithm>} \& \texttt{<numeric>}} (\url{https://en.cppreference.com}) --- C++23 references for \texttt{std::ranges::lower\_bound}, \texttt{upper\_bound}, and \texttt{std::midpoint}.
     \item \textbf{Project Euler} (\url{https://projecteuler.net}) --- Problems 71 (Ordered Fractions) and 73 (Counting Fractions in a Range).
     \item \textbf{Art of Problem Solving (AoPS) Wiki} (\url{https://artofproblemsolving.com/wiki}) --- Intermediate Value Theorem and mathematical bisection foundations.
     \item \textbf{Brilliant.org} (\url{https://brilliant.org}) --- Interactive visual walkthroughs of binary search invariants.
@@ -1264,7 +1265,7 @@ Count the maximum number of \texttt{while (L < R)} loop iterations executed by \
     \textbf{(2)} $a + b - 1 = 3 \times 10^9$ overflows 32-bit signed \texttt{int}. Safe fix: promote to \texttt{std::int64\_t} and compute \texttt{1 + (a - 1) / b} (for $a \ge 1$).
     \trapnote{Calling \texttt{std::ceil} on 64-bit integers and silently losing the low-order bits.}
 
-    \item \label{sol:ex12}\textbf{Exercise 12 (Twist) --- Count \& Last Index via \texttt{lower\_bound} Only:}
+    \item \label{sol:ex12}\textbf{Exercise 12 (Twist) --- Count \& Last Index via \texttt{lower\_bound}:}
     For integers, $\texttt{upper\_bound}(A, x) = \texttt{lower\_bound}(A, x + 1)$. Thus $\text{count}(x) = \texttt{lb}(x + 1) - \texttt{lb}(x)$, and if $\text{count}(x) > 0$, the last index is $\texttt{lb}(x + 1) - 1$. Watch out for $x = \texttt{INT\_MAX}$ ($x + 1$ overflows signed \texttt{int}---use \texttt{nums.size()} as the upper bound instead!).
     \trapnote{Writing \texttt{x + 1} without checking \texttt{x == std::numeric\_limits<int>::max()}.}
 
@@ -1297,6 +1298,7 @@ Count the maximum number of \texttt{while (L < R)} loop iterations executed by \
 2026-10-03 & Fixed integer underflow in \texttt{findPeakElement} on empty array. \\
 2026-10-03 & Removed banned word and competitive programming platform names. \\
 2026-11-26 & Overhauled to canonical print-first layout; stripped BOM, fixed non-canonical headers, math-mode typography, and orphaned citation; reconciled lower/upper bound prose with half-open [L, R) invariant; upgraded all C++23 listings to std::midpoint, std::ranges::fold\_left, k<=0 guard, std::optional peak return, and std::invocable continuous search; restored all 6 worked traces, fixed Example 4, and added 2D matrix search coverage; embedded fixed Diagrams 19, 20, 37 plus new Lower/Upper Bound duplicates diagram; added 4-beat Origin Stories, local notation box, 8 inline drills, 6-drill Practice Sheet, and solutions with trap notes. \\
+2026-11-26 & Disabled T1 monospace ligatures, fit TOC cleanly onto Page 1, and fixed all overfull horizontal lines across prose, Complexity table, and Solutions. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup

@@ -11,6 +11,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[helvet]{sfmath}
 \usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
 \usepackage{parskip}
 \usepackage[table]{xcolor}
 \usepackage{booktabs}
@@ -1377,6 +1378,7 @@ A single server must execute $N$ jobs with durations $t_1, \dots, t_N$ back-to-b
 2026-10-10 & Extended review: improved diagram clarity, added edge-case comment in Fractional Knapsack, and enforced inline LaTeX formatting. \\
 2026-10-12 & Moved embedded TikZ diagram to central review document (Diagram 21 in diagrams\_review.pdf) and preserved figure placeholder. \\
 2026-11-26 & Expanded stub into canonical print-first monograph with proof recipes, 5 greedy patterns, 4 embedded TikZ diagrams, 6 C++23 listings, 14 drills, and solutions. \\
+2026-11-26 & Disabled T1 monospace ligatures in preamble for clean \texttt{<<}/\texttt{>>}/\texttt{--} rendering. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup

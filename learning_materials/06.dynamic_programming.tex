@@ -11,6 +11,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[helvet]{sfmath}
 \usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
 \usepackage{parskip}
 \usepackage[table]{xcolor}
 \usepackage{booktabs}
@@ -259,21 +260,27 @@
     colback=primaryblue!6, colframe=primaryblue!20,
     borderline west={5pt}{0pt}{primaryblue},
     arc=4pt, boxrule=0.6pt,
-    left=14pt, right=14pt, top=12pt, bottom=12pt,
-    before skip=0pt, after skip=10pt
+    left=14pt, right=14pt, top=7pt, bottom=7pt,
+    before skip=0pt, after skip=5pt
 ]
-    {\footnotesize\bfseries\color{accentteal}MODULE 06 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
-    {\Huge\bfseries\color{primaryblue}Dynamic Programming}\\[5pt]
-    {\large\color{codegray}States, Transitions, Memoization, Tabulation, and Classic Table-Filling Patterns}\\[6pt]
+    {\footnotesize\bfseries\color{accentteal}MODULE 06 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[3pt]
+    {\Huge\bfseries\color{primaryblue}Dynamic Programming}\\[3pt]
+    {\large\color{codegray}States, Transitions, Memoization, Tabulation, and Classic Table-Filling Patterns}\\[4pt]
     {\footnotesize\color{codegray}Updated \today}
 \end{tcolorbox}
 
 \begin{overviewbox}[What You'll Learn]
-Dynamic Programming (DP) turns exponential brute-force recursion into fast, predictable polynomial-time algorithms by storing and reusing answers to recurring subproblems. This guide takes you from discovering your very first DP state all the way through 1D sequences, 2D grids, two-string alignments, Knapsack loop-direction invariants, Interval DP, Bitmask DP, and solution reconstruction. Written for programmers comfortable with C++ loops and basic recursion, it emphasizes concrete visual traces, why every loop direction works, and pen-and-paper drills you can practice without a computer.
+{\small Dynamic Programming (DP) turns exponential brute-force recursion into fast, predictable polynomial-time algorithms by storing and reusing answers to recurring subproblems. This guide takes you from discovering your very first DP state all the way through 1D sequences, 2D grids, two-string alignments, Knapsack loop-direction invariants, Interval DP, Bitmask DP, and solution reconstruction. Written for programmers comfortable with C++ loops and basic recursion, it emphasizes concrete visual traces, why every loop direction works, and pen-and-paper drills you can practice without a computer.}
 \end{overviewbox}
 
-\vspace{2pt}
-{\setlength{\parskip}{1pt}\small\tableofcontents}
+\vspace{-6pt}
+{\setlength{\parskip}{0pt}\footnotesize
+\titlespacing*{\section}{0pt}{2pt}{6pt}%
+\makeatletter
+\let\lm@orig@addvspace\addvspace
+\renewcommand{\addvspace}[1]{\lm@orig@addvspace{0.20em plus 1pt}}
+\makeatother
+\tableofcontents}
 
 % Every major section starts cleanly on a new page
 \renewcommand{\sectionbreak}{\clearpage}
@@ -1956,7 +1963,7 @@ Count the number of states $(\texttt{mask}, \texttt{last})$ and inner transition
 \markboth{Solutions to Pen-and-Paper Exercises}{}
 % ============================================================================
 
-\begin{enumerate}[itemsep=2pt]
+\begin{enumerate}[itemsep=1pt, topsep=1pt]
     \item \label{sol:ex1}\textbf{Exercise 1 (Derive) --- Discovering the Frog-Jump State:}
     State: \texttt{dp[i]} = min energy to reach stone $i$. Base: $\texttt{dp[0]} = 0$, $\texttt{dp[1]} = |h_1 - h_0|$. Transition: $\texttt{dp[i]} = \min(\texttt{dp[i-1]} + |h_i - h_{i-1}|,\; \texttt{dp[i-2]} + |h_i - h_{i-2}|)$.
     For \texttt{[10, 30, 40, 20]}: $\texttt{dp[0]} = 0$, $\texttt{dp[1]} = 20$, $\texttt{dp[2]} = \min(20 + 10,\; 0 + 30) = 30$, $\texttt{dp[3]} = \min(30 + 20,\; 20 + 10) = \mathbf{30}$.
@@ -2045,6 +2052,7 @@ Count the number of states $(\texttt{mask}, \texttt{last})$ and inner transition
 \arrayrulecolor{codeframe}\midrule[0.6pt]
 2026-10-03 & Document created. \\
 2026-11-26 & Overhauled to canonical print-first layout; stripped BOM and single backticks; rewrote broken Edit Distance example and restored all trace tables in example environments; fixed C++23 INF/limits, shortestTour n<=1 and unsigned shifts, empty-grid/negative guards, and std::ranges::reverse; fixed Bitmask DP complexity and duplicate House Robber row; embedded fixed Diagrams 13, 14, 33, 34 plus new Coin Change loop-order and Edit Distance diagrams; added 4-beat Origin Stories, local notation boxes, 8 inline drills, 6-drill Practice Sheet, and solutions with trap notes. \\
+2026-11-26 & Disabled T1 monospace ligatures (fixing \texttt{<<} rendering), tightened cover/TOC layout, and eliminated a 1-line Solutions widow page. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup

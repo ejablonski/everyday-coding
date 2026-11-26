@@ -11,6 +11,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[helvet]{sfmath}
 \usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
 \usepackage{parskip}
 \usepackage[table]{xcolor}
 \usepackage{booktabs}
@@ -259,21 +260,27 @@
     colback=primaryblue!6, colframe=primaryblue!20,
     borderline west={5pt}{0pt}{primaryblue},
     arc=4pt, boxrule=0.6pt,
-    left=14pt, right=14pt, top=12pt, bottom=12pt,
-    before skip=0pt, after skip=10pt
+    left=14pt, right=14pt, top=7pt, bottom=7pt,
+    before skip=0pt, after skip=5pt
 ]
-    {\footnotesize\bfseries\color{accentteal}MODULE 01 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
-    {\Huge\bfseries\color{primaryblue}Combinatorics and Permutations}\\[5pt]
-    {\large\color{codegray}Counting Principles, Binomial Coefficients, Advanced Sequences, and C++23 Templates}\\[6pt]
+    {\footnotesize\bfseries\color{accentteal}MODULE 01 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[3pt]
+    {\Huge\bfseries\color{primaryblue}Combinatorics and Permutations}\\[3pt]
+    {\large\color{codegray}Counting Principles, Binomial Coefficients, Advanced Sequences, and C++23 Templates}\\[4pt]
     {\footnotesize\color{codegray}Updated \today}
 \end{tcolorbox}
 
 \begin{overviewbox}[What You'll Learn]
-Combinatorics is the art of counting arrangements, teams, paths, and partitions \emph{without} looping through every single possibility. Written for programmers building intuition from the ground up, this guide connects every formula back to concrete small examples and visual models so nothing feels memorized by magic. You will master foundational counting rules, permutations, factoradic indexing, binomial coefficients, Stars and Bars, Inclusion-Exclusion, Catalan and Stirling numbers, combinatorial dynamic programming, and overflow-safe C++23 implementations---backed by eight inline micro-drills and a mixed end-of-chapter practice sheet.
+{\small Combinatorics is the art of counting arrangements, teams, paths, and partitions \emph{without} looping through every single possibility. Written for programmers building intuition from the ground up, this guide connects every formula back to concrete small examples and visual models so nothing feels memorized by magic. You will master foundational counting rules, permutations, factoradic indexing, binomial coefficients, Stars and Bars, Inclusion-Exclusion, Catalan and Stirling numbers, combinatorial dynamic programming, and overflow-safe C++23 implementations---backed by eight inline micro-drills and a mixed end-of-chapter practice sheet.}
 \end{overviewbox}
 
-\vspace{2pt}
-{\setlength{\parskip}{1pt}\small\tableofcontents}
+\vspace{-6pt}
+{\setlength{\parskip}{0pt}\footnotesize
+\titlespacing*{\section}{0pt}{2pt}{6pt}%
+\makeatletter
+\let\lm@orig@addvspace\addvspace
+\renewcommand{\addvspace}[1]{\lm@orig@addvspace{0.20em plus 1pt}}
+\makeatother
+\tableofcontents}
 
 % Every major section starts cleanly on a new page
 \renewcommand{\sectionbreak}{\clearpage}
@@ -435,11 +442,10 @@ A \textbf{derangement} is a permutation where \emph{no element lands in its orig
 When seating $n$ people around a round table, rotating everyone one chair clockwise produces the exact same circular neighborhood. Since each circular layout corresponds to $n$ identical linear rotations, we fix one person as the ``north anchor'' and arrange the remaining $n - 1$ people in $(n - 1)!$ ways.
 
 \begin{formulabox}[Circular Tables vs.\ Flippable Bracelets]
-\[
-    \text{Round table (rotations identical): } (n - 1)!
-    \qquad\qquad
-    \text{Bracelet (rotations + flips identical): } \frac{(n - 1)!}{2} \text{ for } n \ge 3
-\]
+\begin{align*}
+    \text{Round table (rotations identical):}\quad & (n - 1)! \\
+    \text{Bracelet (rotations + flips identical):}\quad & \frac{(n - 1)!}{2} \quad \text{for } n \ge 3
+\end{align*}
 \textbf{Read this as:} Fixing one anchor removes the $n$ rotations; dividing by $2$ removes mirror-image flips once the ring has at least $3$ beads.
 \end{formulabox}
 
@@ -1411,7 +1417,7 @@ Inclusion-Exclusion over $m$ sets & $O(2^m)$ & $O(1)$ & Small number of constrai
     \item \textbf{Dynamic Programming (DP):} Storing answers to overlapping subproblems in a table to count astronomical structures without brute-force enumeration.
     \item \textbf{Factoradic (Factorial Number System):} A mixed-radix number system with place values $0!, 1!, 2!, \dots$ that maps ranks directly to lexicographical permutations.
     \item \textbf{Modular Multiplicative Inverse:} A number $x$ such that $a \cdot x \equiv 1 \pmod M$, allowing division under a prime modulus via multiplication.
-    \item \textbf{Multiset:} A collection that allows repeated copies of identical items (such as the letters of \texttt{"MISSISSIPPI"}).
+    \item \textbf{Multiset:} A collection allowing repeated copies of identical items (e.g., \texttt{"MISSISSIPPI"}).
     \item \textbf{Permutation:} An ordered arrangement of objects where changing order creates a distinct result.
     \item \textbf{Recurrence Relation:} A rule computing term $n$ from earlier terms (such as Pascal's Identity or $D_n$).
     \item \textbf{Surjection (Onto Function):} A mapping from $n$ distinct items to $k$ distinct bins such that every bin receives at least one item ($k! \cdot S(n, k)$ ways).
@@ -1618,6 +1624,7 @@ Compute the partial sums $T(n) = \sum_{i=2}^{n} \binom{i}{2}$ by hand for $n = 2
 2026-10-03 & Refactored structure to match learning materials skill, removed banned words, added ASCII diagrams, and rewrote examples to be numbered. \\
 2026-10-03 & Fixed 2x2 grid dimensions error in Example 4.6 and C++ unsigned integer underflow bug in backtracking. \\
 2026-11-25 & Overhauled to canonical print-first layout; fixed BOM, bracelet domain, Stirling base cases, and C++23 bugs (constexpr, double MOD, sign-compare, factoradic overflow); embedded fixed Diagrams 4, 40, and Catalan Reflection diagram; added 4-beat Origin Stories, local notation boxes, 8 inline drills, 6-drill Practice Sheet, and solutions with trap notes. \\
+2026-11-26 & Disabled T1 monospace ligatures, tightened cover/TOC layout, and fixed overfull lines in Circular/Bracelet formula and Glossary. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup

@@ -529,7 +529,7 @@ All 12 core topic modules and both \texttt{00.*} meta guides are complete and pr
 This multi-page table summarizes the time and space complexity of every core technique across Modules~01--12.
 
 \begingroup\footnotesize\rowcolors{2}{codebg}{white}
-\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.0cm} >{\centering\arraybackslash}p{2.3cm} >{\centering\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}X}
+\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.8cm} >{\centering\arraybackslash}p{2.6cm} >{\centering\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}X}
 \arrayrulecolor{primaryblue}\toprule[1.2pt]
 \rowcolor{primaryblue!10}
 \textcolor{primaryblue}{\textbf{Task / Technique}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Space}} & \textcolor{primaryblue}{\textbf{Use When}} \\
@@ -663,7 +663,7 @@ For each disguised problem below, identify on paper: (a) \textbf{Output Category
     \emph{P3}: Counting; $O((R{-}L)\log\log R)$; \textbf{Segmented Sieve} (Module~03).
     \trapnote{Trying a standard Sieve of Eratosthenes on $R = 10^{11}$ requires $100\text{ GB}$ of RAM---always check window width $R - L$ when $R \ge 10^9$.}
 
-    \item \label{sol:ex2}\textbf{Exercise 2 (Triage) --- Greedy vs.\ DP vs.\ Binary Search:}
+    \item \label{sol:ex2}\textbf{Exercise 2 (Triage) --- Greedy, DP, or Binary Search:}
     \emph{P4}: Optimization / Decision; $O(N \log(\sum w_i))$; \textbf{Binary Search on the Answer} + greedy day-packing check (Module~08).
     \emph{P5}: Optimization; $O(N \log N)$; \textbf{Interval Scheduling Greedy} sorted by finish time $f_i$ (Module~10).
     \emph{P6}: Optimization; $O(N \log N)$; \textbf{Weighted Interval DP} (sort by $f_i$ + binary search predecessor; Module~06 + Module~08).
@@ -703,6 +703,7 @@ For each disguised problem below, identify on paper: (a) \textbf{Output Category
 2026-11-24 & Fixed Stock Span row in Module 11 pattern table (Decreasing Monotonic Stack / Previous Greater Element) and added dedicated row for Previous/Next Smaller Element. \\
 2026-11-25 & Promoted 09. String Algorithms to Available registry and synced its pattern recognition rows, complexity entries, and glossary definitions. \\
 2026-11-26 & Overhauled to canonical print-first guide: embedded fixed Diagram 3, deduplicated House Robber, switched Complexity Table to \texttt{xltabular} with fixes/syncs for Modules 03--12, synced Glossary symbols, and added 3 Triage Practice drills with solutions. \\
+2026-11-26 & Adjusted Master Complexity column widths and Exercise 2 solution header to eliminate overfull horizontal lines. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup

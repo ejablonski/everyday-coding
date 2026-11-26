@@ -11,6 +11,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[helvet]{sfmath}
 \usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
 \usepackage{parskip}
 \usepackage[table]{xcolor}
 \usepackage{booktabs}
@@ -261,21 +262,27 @@
     colback=primaryblue!6, colframe=primaryblue!20,
     borderline west={5pt}{0pt}{primaryblue},
     arc=4pt, boxrule=0.6pt,
-    left=14pt, right=14pt, top=12pt, bottom=12pt,
-    before skip=0pt, after skip=10pt
+    left=14pt, right=14pt, top=7pt, bottom=7pt,
+    before skip=0pt, after skip=5pt
 ]
-    {\footnotesize\bfseries\color{accentteal}MODULE 11 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
-    {\Huge\bfseries\color{primaryblue}Monotonic Stacks and Queues}\\[5pt]
-    {\large\color{codegray}Linear-Time Nearest Neighbors, Range Spans, and Sliding Windows}\\[6pt]
+    {\footnotesize\bfseries\color{accentteal}MODULE 11 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[3pt]
+    {\Huge\bfseries\color{primaryblue}Monotonic Stacks and Queues}\\[3pt]
+    {\large\color{codegray}Linear-Time Nearest Neighbors, Range Spans, and Sliding Windows}\\[4pt]
     {\footnotesize\color{codegray}Updated \today}
 \end{tcolorbox}
 
 \begin{overviewbox}[What You'll Learn]
-This guide explains \textbf{monotonic stacks} and \textbf{monotonic deques}---simple sorted buffers that turn slow nested array scans into fast single-pass $O(N)$ solutions. Instead of starting with abstract proofs, we build every technique from concrete numbers and visual traces so you always see \emph{why} throwing away dominated elements is safe. You will master the four nearest-neighbor queries, index-based spans, duplicate tie-breaking, largest rectangle in a histogram, removing $K$ digits, and sliding-window maximums, backed by C++23 templates, eight inline drills, and an end-of-chapter mixed practice sheet.
+{\small This guide explains \textbf{monotonic stacks} and \textbf{monotonic deques}---simple sorted buffers that turn slow nested array scans into fast single-pass $O(N)$ solutions. Instead of starting with abstract proofs, we build every technique from concrete numbers and visual traces so you always see \emph{why} throwing away dominated elements is safe. You will master the four nearest-neighbor queries, index-based spans, duplicate tie-breaking, largest rectangle in a histogram, removing $K$ digits, and sliding-window maximums, backed by C++23 templates, eight inline drills, and an end-of-chapter mixed practice sheet.}
 \end{overviewbox}
 
-\vspace{2pt}
-{\setlength{\parskip}{1pt}\small\tableofcontents}
+\vspace{-6pt}
+{\setlength{\parskip}{0pt}\footnotesize
+\titlespacing*{\section}{0pt}{2pt}{6pt}%
+\makeatletter
+\let\lm@orig@addvspace\addvspace
+\renewcommand{\addvspace}[1]{\lm@orig@addvspace{0.10em plus 1pt}}
+\makeatother
+\tableofcontents}
 
 % Start every subsequent major section cleanly on a new page
 \renewcommand{\sectionbreak}{\clearpage}
@@ -1562,6 +1569,7 @@ You want the longest contiguous subarray whose $\max - \min \le L$ (test on $A =
 2026-10-12 & Moved embedded TikZ diagrams to central review document (Diagrams 22--24 in diagrams\_review.pdf) and preserved figure placeholders. \\
 2026-11-24 & Fixed duplicate symmetry-breaking explanation, Stock Span pattern row, and Example 4 typo; embedded Diagrams 22--24; added Remove K Digits example and C++23 code, 4-beat Origin Stories, local notation boxes, and 3 pen-and-paper drills with solutions. \\
 2026-11-25 & Redesigned layout for screen and print (sans-serif Helvetica + sfmath + txtt, Overview card, per-section page breaks, high-contrast headers/callouts/formula cards, booktabs tables); upgraded C++23 syntax highlighting (vivid palette, line-number frame clearance, digit-separator fix); upgraded pen-and-paper suite to 6 thinking modes (8 inline drills + 6-drill end-of-chapter Practice Sheet + 1-line Common trap diagnostics). \\
+2026-11-26 & Disabled T1 monospace ligatures and tightened cover/TOC layout for compact front-page fit. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup

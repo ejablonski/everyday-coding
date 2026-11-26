@@ -11,6 +11,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[helvet]{sfmath}
 \usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
 \usepackage{parskip}
 \usepackage[table]{xcolor}
 \usepackage{booktabs}
@@ -259,12 +260,12 @@
     colback=primaryblue!6, colframe=primaryblue!20,
     borderline west={5pt}{0pt}{primaryblue},
     arc=4pt, boxrule=0.6pt,
-    left=14pt, right=14pt, top=12pt, bottom=12pt,
-    before skip=0pt, after skip=10pt
+    left=14pt, right=14pt, top=7pt, bottom=7pt,
+    before skip=0pt, after skip=5pt
 ]
-    {\footnotesize\bfseries\color{accentteal}MODULE 07 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
-    {\Huge\bfseries\color{primaryblue}Graph Algorithms}\\[5pt]
-    {\large\color{codegray}Representations, Traversals, Shortest Paths, Topological Sorting, and Minimum Spanning Trees}\\[6pt]
+    {\footnotesize\bfseries\color{accentteal}MODULE 07 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[3pt]
+    {\Huge\bfseries\color{primaryblue}Graph Algorithms}\\[3pt]
+    {\large\color{codegray}Representations, Traversals, Shortest Paths, Topological Sorting, and Minimum Spanning Trees}\\[4pt]
     {\footnotesize\color{codegray}Updated \today}
 \end{tcolorbox}
 
@@ -272,8 +273,8 @@
 Graphs model every network of pairwise relationships---road maps, social ties, build dependencies, and 2D puzzle grids. This guide builds from choosing the right memory layout (Adjacency List, Matrix, or Edge List) through BFS wavefronts, 3-color DFS cycle detection, Kahn's topological sort, Dijkstra, Bellman-Ford, Floyd-Warshall, Bipartite 2-coloring, and Kruskal's Minimum Spanning Tree with Disjoint Set Union (DSU). Written for C++ programmers, every algorithm pairs plain-English intuition, exact visual traces, overflow-safe C++23 code, and pen-and-paper drills.
 \end{overviewbox}
 
-\vspace{2pt}
-{\setlength{\parskip}{1pt}\small\tableofcontents}
+\vspace{-5pt}
+{\setlength{\parskip}{0pt}\linespread{0.95}\footnotesize\tableofcontents}
 
 % Every major section starts cleanly on a new page
 \renewcommand{\sectionbreak}{\clearpage}
@@ -1118,9 +1119,10 @@ Four servers ($1 \dots 4$) have directed latencies $(2 \to 1,\; 1),\; (2 \to 3,\
 \end{enumerate}
 \end{example}
 
+\vspace{-4pt}
 \begin{example}[Finding the Redundant Connection via DSU]
 A 4-node graph starts as a tree and receives edges in order: $(0,1),\; (1,2),\; (2,3),\; (3,1)$. Which edge closes the cycle?
-\begin{enumerate}
+\begin{enumerate}[itemsep=0.5pt, topsep=1pt, parsep=0pt]
     \item Process $(0,1)$: $\text{find}(0) \neq \text{find}(1) \implies$ unite $\{0, 1\}$.
     \item Process $(1,2)$: $\text{find}(1) \neq \text{find}(2) \implies$ unite $\{0, 1, 2\}$.
     \item Process $(2,3)$: $\text{find}(2) \neq \text{find}(3) \implies$ unite $\{0, 1, 2, 3\}$.
@@ -1128,9 +1130,10 @@ A 4-node graph starts as a tree and receives edges in order: $(0,1),\; (1,2),\; 
 \end{enumerate}
 \end{example}
 
+\vspace{-4pt}
 \begin{example}[Splitting Four People into Two Conflict-Free Teams (2-Coloring)]
 Dislike edges on $\{0, 1, 2, 3\}$: $(0,1), (0,3), (1,2), (2,3)$.
-\begin{enumerate}
+\begin{enumerate}[itemsep=0.5pt, topsep=1pt, parsep=0pt]
     \item Initialize \texttt{color = [-1, -1, -1, -1]}. Set $\texttt{color[0]} = 0$.
     \item Neighbors of $0$ ($1$ and $3$) receive color $1$.
     \item Neighbor $2$ of $1$ receives color $1 - 1 = 0$.
@@ -1890,6 +1893,7 @@ State the exact bug that occurs when each guard below is omitted:
 2026-10-03 & Document created. \\
 2026-10-03 & Added MST Cut Property theorem and Kruskal correctness explanation. \\
 2026-11-26 & Overhauled to canonical print-first layout; stripped BOM, removed empty bullet, unified degree notation, and fixed non-canonical table headers; fixed Dijkstra 64-bit INF overflow UB, negative-edge counterexample, missing <functional>/<cstddef>, and bounds guards; restored all 8 worked traces and added C++23 implementations for Kruskal, Bipartite 2-coloring, 3-color DFS cycle detection, Bellman-Ford, and Floyd-Warshall; embedded fixed Diagrams 15--18, 35, 36 (with Edge List panel and rank+compression note) plus new 3-color DFS diagram; added 4-beat Origin Stories, local notation boxes, 8 inline drills, 6-drill Practice Sheet, and solutions with trap notes. \\
+2026-11-26 & Disabled T1 monospace ligatures (fixing \texttt{>>} rendering), fit TOC onto Page 1, and tightened Worked Examples 7--8 to eliminate a 2-line widow page. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup

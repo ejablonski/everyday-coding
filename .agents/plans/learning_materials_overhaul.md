@@ -336,29 +336,64 @@ High-value topics directly aligned with problems actively practiced in this repo
 
 ---
 
+## Phase 6: Merciless Math-Only Review (Zero C++ Audit)
+
+> **Can be run immediately (before or alongside Phase 5).**
+>
+> **Strict Scope Rule — ZERO C++ Review:** Do **not** read, audit, or spend tokens reviewing `\begin{lstlisting}...\end{lstlisting}` blocks or C++23 implementation details (the author verifies code directly). Strip or skip all code listings during review and dedicate 100% of effort to **mathematical correctness, rigor, numerical verification, and exercise answer keys**.
+
+### Adversarial Math Audit Checklist (Apply to Every Audited Module)
+1. **Formulas, Identities & Domain Preconditions:** Test every closed form, recurrence, inequality, and theorem against boundary cases ($n = 0, 1, 2$, negative numbers, $0$ denominators, non-coprime moduli, empty sets/graphs, duplicate keys, disconnected graphs, strict vs. non-strict inequalities). Flag any missing precondition (e.g., $\gcd(a, m) = 1$, $n \ge 3$, non-negative weights, monotonicity).
+2. **Proofs, Derivations & Invariants:** Interrogate every informal proof, "Aha!" insight, bijection, reflection argument, exchange argument, induction step, and loop invariant for hidden assumptions, hand-waving, circular reasoning, or false generalizations.
+3. **Independent Numerical Recomputation:** Re-compute every single number in worked examples, DP tables, modular arithmetic steps, sieve markings, combinatorics counts, recurrence unrollings, and TikZ diagram annotations from scratch — using quick Python scripts in an external scratch dir to brute-force verify counts/tables/congruences wherever possible.
+4. **Complexity Bounds & Recurrences:** Verify every Big-$O$, $\Theta$, $\Omega$, amortized, and space bound (including hidden factors like $\log$, alphabet size $\Sigma$, bit-width, or $|V|$ vs. $|E|$) matches the mathematical derivation and `00.problem_solving_guide.tex`.
+5. **Pen-and-Paper Exercises, Solutions & Trap Notes:** Independently solve every mathematical inline and Practice Sheet `tryitbox` drill *before* reading the printed solution; verify every intermediate step, final value, edge case, and `\trapnote{...}` claim.
+6. **Notation & Indexing Precision:** Catch overloaded symbols, $0$-based vs. $1$-based off-by-one mismatches, missing base cases, imprecise quantifiers, and any discrepancy between `notationbox`, prose formulas, diagrams, and the Glossary.
+
+### Recommended Execution Batches (Highest Math Density First)
+- [ ] **6.1 Batch 6A — Discrete Math & Number Theory (Highest Priority):**
+  - [ ] `01.combinatorics_permutations.tex` (bijections, Stars & Bars bounds, Catalan reflection, derangements, Stirling numbers, PIE signs & numerical drills)
+  - [ ] `02.modular_arithmetic.tex` (congruence properties, overflow inequalities, Fermat/Euler $\gcd(a,m)=1$ preconditions, Extended Euclid back-substitution, CRT existence/uniqueness & moduli coprimality)
+  - [ ] `03.number_theory.tex` (divisibility, $\gcd/\operatorname{lcm}$ identities, divisor count/sum $\tau/\sigma$, sieve start $p^2$ & $O(N \log\log N)$ / segmented bounds, totient $\phi(n)$ multiplicativity)
+  - [ ] `04.sequences_and_series.tex` (arithmetic/geometric/telescoping derivations, $r = 1$ domain guard, harmonic/power sums, 1D/2D prefix & difference inclusion-exclusion corner indices)
+- [ ] **6.2 Batch 6B — Recurrences, DP, Strings & Bitwise Math:**
+  - [ ] `06.dynamic_programming.tex` (optimal substructure & DAG ordering, state transitions & base cases, Knapsack iteration direction proof, Edit Distance/LCS tables, Interval & Bitmask DP bounds)
+  - [ ] `09.string_algorithms.tex` (polynomial rolling hash algebra, birthday-paradox collision probabilities for single vs. double hashing, KMP $\pi$-border & amortized $O(N)$ proof, Z-box invariant, Manacher symmetry)
+  - [ ] `12.bit_manipulation_and_bitmasks.tex` (two's complement modular ring $-2^{w-1}$, carry-ripple proof of $x \mathbin{\&} (-x)$, XOR abelian group properties, Gosper's Hack bit algebra, $\sum_{k=0}^{n}\binom{n}{k}2^k = 3^n$ submask proof)
+- [ ] **6.3 Batch 6C — Recursion, Graphs, Search, Greedy & Monotonic Invariants:**
+  - [ ] `05.recursion_and_backtracking.tex` (recurrence trees, $O(b^d)$ branching/depth bounds, pruning soundness, duplicate-skipping invariant)
+  - [ ] `07.graph_algorithms.tex` (graph degree/edge identities, BFS shortest-path induction, Dijkstra non-negative invariant & negative-edge counterexample, Bellman-Ford $V-1$ relaxation bound, MST cut property, DSU $\alpha(V)$ statement)
+  - [ ] `08.binary_search.tex` (half-open $[L, R)$ termination & loop invariant proofs, monotonic predicate $P(x)$ convexity/unimodality conditions, rotated-array invariant, continuous precision iteration count $\lceil \log_2((R-L)/\varepsilon) \rceil$)
+  - [ ] `10.greedy_algorithms.tex` (Exchange Argument & Greedy Stays Ahead proofs, matroid/optimal-substructure intuitions, counterexamples `{1, 3, 4}` & 0/1 Knapsack, Huffman/rope merging optimality)
+  - [ ] `11.monotonic_stacks_and_queues.tex` (dominance/skyline shadow proof, $2N$ amortized bound, strict vs. non-strict tie-breaking partition bijection for subarray contributions, histogram boundary formulas)
+- [ ] **6.4 Batch 6D — Cross-Module Mathematical Consistency:**
+  - [ ] `00.problem_solving_guide.tex` (audit every complexity bound, constraint-to-complexity threshold, and Mathematical Glossary definition against `01`–`12`; skip `00.cpp_reference.tex` as code-only).
+
+---
+
 ## Progress Matrix (Live Agent Tracker)
 
 Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verification Gate** in the Agent Handoff Protocol.
 
-| Module | Ph 1: Bug Fixes | Ph 2: Stub Expansion | Ph 3: Diagrams Embedded | Ph 4: "But Why?" + Notation + Drills | C++23 Check | PDF Visual Pass |
-|---|---|---|---|---|---|---|
-| `SKILL.md` & `verify_learning_materials.py` (Phase 0) | DONE (2026-11-24) | N/A | N/A | DONE (2026-11-24) | N/A | N/A |
-| `00.cpp_reference.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
-| `00.problem_solving_guide.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | N/A | DONE (2026-11-26) |
-| `01.combinatorics_permutations.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
-| `02.modular_arithmetic.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
-| `03.number_theory.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
-| `04.sequences_and_series.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
-| `05.recursion_and_backtracking.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
-| `06.dynamic_programming.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
-| `07.graph_algorithms.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
-| `08.binary_search.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
-| `09.string_algorithms.tex` | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
-| `10.greedy_algorithms.tex` | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
-| `11.monotonic_stacks_and_queues.tex` | DONE (2026-11-24) | N/A | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) |
-| `12.bit_manipulation_and_bitmasks.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
-| Retire `diagrams_review.tex` | N/A | N/A | DONE (2026-11-26) | N/A | N/A | N/A |
-| `13.two_pointers_and_sliding_window.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
-| `14.heaps_and_priority_queues.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
-| `15.trees_and_bsts.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
-| `16.fenwick_and_segment_trees.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
+| Module | Ph 1: Bug Fixes | Ph 2: Stub Expansion | Ph 3: Diagrams Embedded | Ph 4: "But Why?" + Notation + Drills | C++23 Check | PDF Visual Pass | Ph 6: Math Audit |
+|---|---|---|---|---|---|---|---|
+| `SKILL.md` & `verify_learning_materials.py` (Phase 0) | DONE (2026-11-24) | N/A | N/A | DONE (2026-11-24) | N/A | N/A | N/A |
+| `00.cpp_reference.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | N/A (code-only) |
+| `00.problem_solving_guide.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | N/A | DONE (2026-11-26) | `[ ]` |
+| `01.combinatorics_permutations.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | `[ ]` |
+| `02.modular_arithmetic.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | `[ ]` |
+| `03.number_theory.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | `[ ]` |
+| `04.sequences_and_series.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | `[ ]` |
+| `05.recursion_and_backtracking.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | `[ ]` |
+| `06.dynamic_programming.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | `[ ]` |
+| `07.graph_algorithms.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | `[ ]` |
+| `08.binary_search.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | `[ ]` |
+| `09.string_algorithms.tex` | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | `[ ]` |
+| `10.greedy_algorithms.tex` | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | `[ ]` |
+| `11.monotonic_stacks_and_queues.tex` | DONE (2026-11-24) | N/A | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) | `[ ]` |
+| `12.bit_manipulation_and_bitmasks.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | `[ ]` |
+| Retire `diagrams_review.tex` | N/A | N/A | DONE (2026-11-26) | N/A | N/A | N/A | N/A |
+| `13.two_pointers_and_sliding_window.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
+| `14.heaps_and_priority_queues.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
+| `15.trees_and_bsts.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
+| `16.fenwick_and_segment_trees.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |

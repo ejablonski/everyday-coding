@@ -11,6 +11,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[helvet]{sfmath}
 \usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
 \usepackage{parskip}
 \usepackage[table]{xcolor}
 \usepackage{booktabs}
@@ -802,9 +803,10 @@ We seek $x$ such that $17x \equiv 1 \pmod{43}$ (equivalently $17x + 43y = 1$).
 \end{enumerate}
 \end{example}
 
-\begin{example}[Chinese Remainder Theorem: Solve $x \equiv 2 \pmod 3,\; x \equiv 3 \pmod 5,\; x \equiv 2 \pmod 7$]
+\begin{example}[Chinese Remainder Theorem (Three Congruences)]
+Solve $x \equiv 2 \pmod 3,\; x \equiv 3 \pmod 5,\; x \equiv 2 \pmod 7$.
 \begin{enumerate}
-    \item Check pairwise coprimality: $\gcd(3, 5) = \gcd(3, 7) = \gcd(5, 7) = 1$, with $N = 3 \times 5 \times 7 = 105$.
+    \item Pairwise coprime check: $\gcd(3, 5) = \gcd(3, 7) = \gcd(5, 7) = 1$; product $N = 3 \times 5 \times 7 = 105$.
     \item Compute partial products $M_i = N / n_i$ and their inverses $M_i^{-1} \bmod n_i$:
     \begin{itemize}
         \item $M_1 = 35 \equiv 2 \pmod 3 \implies 35^{-1} \equiv 2 \pmod 3$ ($35 \times 2 = 70 \equiv 1$).
@@ -875,7 +877,7 @@ Rather than writing \texttt{((a \% m) + m) \% m} (which runs two divisions and c
 
 \subsection{Standalone Extended Euclidean Algorithm and Chinese Remainder Theorem}
 
-Because a modular inverse does not exist when $\gcd(a, m) > 1$, \texttt{mod\_inverse} returns \texttt{std::optional<std::int64\_t>} (\texttt{std::nullopt} on failure). Our \texttt{solve\_crt} merges congruences pairwise in $O(k \log N)$ time, checking pairwise coprimality cleanly without exceptions.
+\texttt{mod\_inverse} returns \texttt{std::optional<std::int64\_t>} (empty when $\gcd(a, m) > 1$). \texttt{solve\_crt} merges congruences pairwise in $O(k \log N)$ time without exceptions.
 
 \begin{lstlisting}[caption={Standalone Extended Euclid, Modular Inverse, and Pairwise CRT Solver}]
 #include <cstdint>
@@ -1131,7 +1133,7 @@ Run through these three checks before picking a modular algorithm.
 % ============================================================================
 
 \begingroup\small\rowcolors{2}{codebg}{white}
-\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.7cm} >{\centering\arraybackslash}p{1.9cm} >{\centering\arraybackslash}p{1.4cm} >{\raggedright\arraybackslash}X}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.3cm} >{\centering\arraybackslash}p{2.4cm} >{\centering\arraybackslash}p{1.4cm} >{\raggedright\arraybackslash}X}
 \arrayrulecolor{primaryblue}\toprule[1.2pt]
 \rowcolor{primaryblue!10}
 \textcolor{primaryblue}{\textbf{Task / Operation}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Space}} & \textcolor{primaryblue}{\textbf{Use When}} \\
@@ -1361,6 +1363,7 @@ Compute $2^k \bmod 7$ by hand for $k = 1, 2, 3, 4, 5, 6$.
 2026-08-24 & Document created. \\
 2026-10-03 & Refactored section order, removed banned words, added Key Algorithmic Patterns, and formalized diagram/table layouts. \\
 2026-11-25 & Overhauled to canonical print-first layout; stripped BOM and non-ASCII chars; fixed overflow inequality, Euler coprimality condition, Extended Euclid back-substitution, leaked meta-text, and C++23 bugs; added standalone mod\_pow, ext\_gcd, and CRT implementations; embedded fixed Diagrams 5, 38, and CRT clock alignment diagram; added 4-beat Origin Stories, local notation boxes, 8 inline drills, 6-drill Practice Sheet, and solutions with trap notes. \\
+2026-11-26 & Disabled T1 monospace ligatures and fixed overfull lines in CRT example, C++23 intro, and Complexity Reference table. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup
