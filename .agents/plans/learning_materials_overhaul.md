@@ -327,8 +327,8 @@ High-value topics directly aligned with problems actively practiced in this repo
 
 - [x] **5.1 `learning_materials/13.two_pointers_and_sliding_window.tex`:** *(Completed 2026-11-26 — 33-page canonical print-first monograph)*
   - Opposite-direction pointers (sorted pair sum, 3-sum, container with most water), fast/slow pointers (cycle detection, in-place deduplication, Dutch National Flag), fixed & variable sliding windows (monotonic expand/shrink invariant, negative-number breakdown counterexamples, "at most K" → "exactly K" trick), 4 native visually verified TikZ diagrams, 5 standalone C++23 listings, 8 inline + 6 Practice Sheet pen-and-paper drills + Solutions with trap diagnostics, and synced to `00.problem_solving_guide.tex` and `SKILL.md`.
-- [ ] **5.2 `learning_materials/14.heaps_and_priority_queues.tex`:**
-  - Binary heap array layout ($2i+1, 2i+2$), heapify $O(N)$ proof intuition, Top-K pattern, K-way merge, Two-Heap Running Median, Lazy Deletion heap, `std::priority_queue` custom comparators & `std::ranges::make_heap`, TikZ heap diagrams, pen-and-paper drills, and sync to `00.problem_solving_guide.tex`.
+- [x] **5.2 `learning_materials/14.heaps_and_priority_queues.tex`:** *(Completed 2026-11-26 --- 34-page canonical print-first monograph)*
+  - Binary heap array layout ($2i+1, 2i+2$), $O(N)$ Floyd bottom-up heapify proof ($\sum h/2^h = 2$ and exact $N - \operatorname{popcount}(N)$ identity), Top-$K$ inverted heap pattern, $K$-way merge frontier, Two-Heap Running Median (zero-branching 3-step insert), Lazy Deletion heap (Sliding Window Median with logical vs. physical counts), `std::priority_queue` comparator polarity & Strict Weak Ordering, `std::ranges::make_heap` / `push_heap` / `pop_heap` / `sort_heap`, 4 native visually verified TikZ diagrams, 6 standalone C++23 listings, 8 inline + 6 Practice Sheet pen-and-paper drills + Solutions with trap diagnostics, and synced to `00.problem_solving_guide.tex` and `SKILL.md`.
 - [ ] **5.3 `learning_materials/15.trees_and_bsts.tex`:**
   - Tree properties ($E = V - 1$, unique path), DFS traversals (pre/in/post/Euler tour), Tree Diameter (2-BFS & Tree DP), Lowest Common Ancestor (Binary Lifting), BST invariants & validation, `forest` tree diagrams, pen-and-paper drills, and sync to `00.problem_solving_guide.tex`.
 - [ ] **5.4 `learning_materials/16.fenwick_and_segment_trees.tex`:**
@@ -394,6 +394,6 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `12.bit_manipulation_and_bitmasks.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | `[ ]` |
 | Retire `diagrams_review.tex` | N/A | N/A | DONE (2026-11-26) | N/A | N/A | N/A | N/A |
 | `13.two_pointers_and_sliding_window.tex` | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | `[ ]` |
-| `14.heaps_and_priority_queues.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
+| `14.heaps_and_priority_queues.tex` | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | `[ ]` |
 | `15.trees_and_bsts.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
 | `16.fenwick_and_segment_trees.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |

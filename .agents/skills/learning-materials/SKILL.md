@@ -76,7 +76,7 @@ Every `.tex` and `.pdf` file in `learning_materials/` must carry a two-digit num
   - `11.monotonic_stacks_and_queues.tex` / `.pdf`
   - `12.bit_manipulation_and_bitmasks.tex` / `.pdf`
   - `13.two_pointers_and_sliding_window.tex` / `.pdf`
-  - `14.heaps_and_priority_queues.tex` / `.pdf` (planned)
+  - `14.heaps_and_priority_queues.tex` / `.pdf`
   - `15.trees_and_bsts.tex` / `.pdf` (planned)
   - `16.fenwick_and_segment_trees.tex` / `.pdf` (planned)
 - **Rules**:
