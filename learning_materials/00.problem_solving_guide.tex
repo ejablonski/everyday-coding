@@ -177,7 +177,7 @@
 \end{tcolorbox}
 
 \begin{overviewbox}[What You'll Learn]
-This is the single document you open when facing an unfamiliar algorithmic problem. Instead of teaching one technique deeply, it teaches you how to \emph{diagnose}: classify the output goal via a 5-branch triage tree, read input-size constraints backward to rule out slow complexities, match problem keywords across all 15 finished modules in one unified index, and practice cold-start triage on paper.
+This is the single document you open when facing an unfamiliar algorithmic problem. Instead of teaching one technique deeply, it teaches you how to \emph{diagnose}: classify the output goal via a 5-branch triage tree, read input-size constraints backward to rule out slow complexities, match problem keywords across all 16 finished modules in one unified index, and practice cold-start triage on paper.
 \end{overviewbox}
 
 \vspace{-5pt}
@@ -534,12 +534,27 @@ Scan the grouped tables below by the phrasing or symptom in your problem, then o
 \arrayrulecolor{primaryblue}\bottomrule[1.1pt]
 \end{tabularx}\endgroup
 
+\subsection{Dynamic Range Queries and Lazy Updates (Module 16: Fenwick \& Segment Trees)}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``point update + range sum / XOR'', ``inversions'' & Invertible dynamic range queries or rank frequency counts. & Fenwick Tree (BIT) \\
+``range add + point / range sum'' & Dynamic difference array ($1$ BIT or Two-BIT identity). & Difference / Two-BIT \\
+``$K$-th smallest in dynamic multiset'', ``prefix $\ge K$'' & Walk descending powers of $2$ on non-negative frequency BIT. & BIT Binary Lifting ($O(\log N)$) \\
+``point update + range min / max / gcd / max subarray'' & Arbitrary associative monoid (non-invertible or non-commut.). & Iterative $2N$ Segment Tree \\
+``range add / assign + range min / sum'', ``subtree add'' & Interleaved range edits and range queries (or Euler Tour). & Lazy Segment Tree ($4N$) \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
+
 % ============================================================================
 \section{Module Registry}
 \label{sec:registry}
 % ============================================================================
 
-All 15 core topic modules and both \texttt{00.*} meta guides are complete and print-ready.
+All 16 core topic modules and both \texttt{00.*} meta guides are complete and print-ready.
 
 \begingroup\footnotesize\rowcolors{2}{codebg}{white}
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.2cm} >{\centering\arraybackslash}p{1.9cm} >{\raggedright\arraybackslash}X}
@@ -563,18 +578,15 @@ All 15 core topic modules and both \texttt{00.*} meta guides are complete and pr
 13. Two Pointers \& Window & \color{codegreen}$\checkmark$ Available & Converging pairs/3-Sum/water, fast/slow dedup \& Floyd's cycle entry, fixed/variable/exact-$K$ windows. \\
 14. Heaps \& Priority Queues & \color{codegreen}$\checkmark$ Available & Array binary heap ($2i{+}1, 2i{+}2$), $O(N)$ Floyd heapify, Top-$K$, $K$-way merge, Two-Heap median, lazy deletion. \\
 15. Trees \& BSTs & \color{codegreen}$\checkmark$ Available & Tree invariants ($E=V{-}1$), Euler Tour flattening, Two-BFS/Tree DP diameter, Binary Lifting LCA, BSTs. \\
+16. Fenwick \& Segment Trees & \color{codegreen}$\checkmark$ Available & $1$-based BIT (\texttt{i \& -i}), Two-BIT, BIT binary lifting, $2N$/$4N$ Segment Trees, custom monoids, Lazy Propagation. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}\endgroup
-
-\begin{calloutbox}{Upcoming Planned Module (Phase 5: Module 16)}
-\textbf{Status:} Planned. \textbf{Expected scope:} 16.\ Fenwick \& Segment Trees.
-\end{calloutbox}
 
 % ============================================================================
 \section{Master Summary and Complexity Reference}
 % ============================================================================
 
-This multi-page table summarizes the time and space complexity of every core technique across Modules~01--15.
+This multi-page table summarizes the time and space complexity of every core technique across Modules~01--16.
 
 \begingroup\footnotesize\rowcolors{2}{codebg}{white}
 \begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.8cm} >{\centering\arraybackslash}p{2.6cm} >{\centering\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}X}
@@ -628,6 +640,9 @@ Two-Heap / Lazy Median (14) & $O(N \log N)$ & $O(N)$ & Running stream median or 
 Euler Tour / Subtree Sum (15) & $O(N)$ / $O(1)$ & $O(N)$ & Static ancestor tests or subtree range flattening. \\
 Tree Diameter (2-BFS / DP) (15) & $O(N)$ & $O(N)$ & Longest tree path ($w \ge 0$ via 2-BFS; any $w$ via Tree DP). \\
 Binary Lifting LCA / BST (15) & $O(N \log N)$ / $O(\log N)$ & $O(N \log N)$ / $O(N)$ & Pairwise LCA, tree path distances, or \texttt{std::set} order. \\
+Fenwick Tree / Two-BIT (16) & $O(N)$ / $O(\log N)$ & $O(N)$ & Dynamic sums/XORs, inversions, or range-add + sum. \\
+BIT Binary Lifting (16) & $O(\log N)$ & $O(N)$ & $K$-th order statistic on non-negative frequency BIT. \\
+Segment Tree ($2N$/$4N$/Lazy) (16) & $O(N)$ / $O(\log N)$ & $O(N)$ & Any associative monoid or interleaved range updates/queries. \\
 \end{xltabular}\endgroup
 {\footnotesize\color{codegray}$^*$In-place sorting uses $O(\log N)$ auxiliary stack space.}
 
@@ -648,6 +663,7 @@ Binary Lifting LCA / BST (15) & $O(N \log N)$ / $O(\log N)$ & $O(N \log N)$ / $O
     \item \textbf{Two Pointers / Sliding Window / Floyd's Cycle}: Monotonic linear scans ($O(N)$), $\text{atMost}(K) - \text{atMost}(K{-}1)$ counting, and $O(1)$-space cycle entry.
     \item \textbf{Binary Heap / Floyd Heapify / Lazy Deletion}: Complete-tree flat array ($2i{+}1, 2i{+}2$), $O(N)$ bottom-up build, Two-Heap median, and tombstone pruning.
     \item \textbf{Euler Tour / Tree Diameter / Binary Lifting / BST}: Subtree-to-range flattening ($[\text{tin}, \text{tout}]$), longest tree path, $2^k$-ancestor LCA, and global ordered search trees.
+    \item \textbf{Fenwick Tree (BIT) / Segment Tree / Lazy Propagation}: $1$-based lowbit prefix buckets ($i \mathbin{\&} -i$), $2N$/$4N$ monoid range trees, and deferred range-update tags (\texttt{apply}/\texttt{push}/\texttt{pull}).
 \end{itemize}
 
 \subsection*{Mathematical Symbols}
@@ -659,6 +675,7 @@ Binary Lifting LCA / BST (15) & $O(N \log N)$ / $O(\log N)$ & $O(N \log N)$ / $O
     \item $\bmod,\; \gcd,\; \operatorname{lcm},\; \phi(N)$: Remainder, greatest common divisor, least common multiple, and Euler's totient.
     \item $\oplus,\; \mathbin{\&},\; \pi[i],\; Z[i],\; \Sigma,\; \mu,\; \lambda$: Bitwise XOR/AND, KMP $\pi$-array, Z-array, alphabet size, and Floyd's tail/cycle lengths.
     \item $\text{tin}[v],\; \text{tout}[v],\; \operatorname{lca}(u, v)$: Euler Tour DFS timestamps and Lowest Common Ancestor in a rooted tree.
+    \item $\operatorname{lowbit}(i),\; \text{bit}[i],\; (S, \oplus, e),\; \text{lazy}[v]$: Lowest set bit $i \mathbin{\&} (-i)$, Fenwick bucket, associative monoid with identity $e$, and deferred Segment Tree tag.
 \end{itemize}
 
 % ============================================================================
@@ -768,6 +785,7 @@ For each disguised problem below, identify on paper: (a) \textbf{Output Category
 2026-11-26 & Promoted 13. Two Pointers and Sliding Window to Available registry and synced its pattern recognition rows, complexity entries, and glossary definitions. \\
 2026-11-26 & Promoted 14. Heaps and Priority Queues to Available registry and synced its pattern recognition rows, complexity entries, and glossary definitions. \\
 2026-11-26 & Promoted 15. Trees and Binary Search Trees to Available registry and synced its pattern recognition rows, complexity entries, and glossary definitions. \\
+2026-11-26 & Promoted 16. Fenwick and Segment Trees to Available registry (completing all 16 core modules) and synced its pattern recognition rows, complexity entries, and glossary definitions. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup
