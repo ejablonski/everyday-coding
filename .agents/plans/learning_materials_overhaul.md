@@ -376,6 +376,30 @@ High-value topics directly aligned with problems actively practiced in this repo
 
 ---
 
+## Phase 7: `00.cpp_reference.tex` Algorithmic Idioms & Safety Upgrade (Sync with Modules `13`–`16`)
+
+Keep `learning_materials/00.cpp_reference.tex` focused as a crisp, high-signal modern C++23 algorithmic companion to all 16 modules (`01`–`16`), closing the idiom and UB gaps introduced by Modules `13`–`16` without turning it into an exhaustive STL manual.
+
+- [ ] **7.1 Sync Scope & Polish Hygiene:**
+  - [ ] Update overview & section headings from *"Modules 01--12"* / *"Modules 09--12"* to cover all 16 modules (`01`–`16`).
+  - [ ] Bump `headheight=15pt` $\to$ `headheight=22pt` in `geometry` (eliminates `fancyhdr` warnings on every page), add `ranges::sort_heap` alongside heap operations, and add `bit_floor` / `concepts` keywords to `\lstset`.
+- [ ] **7.2 Signed/Unsigned Traps & `std::ssize` (C++20):**
+  - [ ] Document `v.size() - 1` unsigned wrap-around UB when `v.empty()`, safe backward loops (`for (std::size_t i = n; i-- > 0;)`), C++20 `std::ssize(v)` (`<iterator>`), and unsigned lowbit `i & (~i + 1)` (Module 16).
+- [ ] **7.3 Strict Weak Ordering, Comparator Polarity & `std::set`/`std::multiset` Traps:**
+  - [ ] Explain Strict Weak Ordering (`comp(x, x)` must be `false`; why `<=`/`>=` or `NaN` comparators cause UB/crashes) and `std::sort` vs. `std::priority_queue` comparator polarity inversion (Modules 10, 14).
+  - [ ] Document `std::multiset::erase(val)` (deletes *all* copies) vs. `ms.erase(ms.find(val))` (deletes *one* copy) and `std::set` predecessor/successor queries via `lower_bound` / `upper_bound` / `std::prev` (Module 15).
+- [ ] **7.4 Coordinate Compression & Modern Erase-Remove Idiom:**
+  - [ ] Add the canonical 4-line C++20/23 coordinate-compression recipe (`std::ranges::sort` + `std::ranges::unique` + `erase` + `std::ranges::lower_bound`) and C++20 `std::erase` / `std::erase_if` (Modules 08, 16).
+- [ ] **7.5 Sentinel-Free `std::optional` & RAII Tree Nodes (`std::unique_ptr`):**
+  - [ ] Add compact examples showing `std::optional<T>` replacing magic sentinels (`-1`, `0`, `INT_MIN`/`INT_MAX` in BST validation and Lazy Range-Assign) and `std::unique_ptr<Node>` RAII tree ownership (Modules 15, 16).
+- [ ] **7.6 Minimal `<concepts>` Reference for Algorithmic Templates:**
+  - [ ] Add a concise 4-concept table + tiny snippet covering `std::integral`, `std::unsigned_integral`, `std::invocable`, and `std::predicate` (used in Modules 08, 12, 16).
+- [ ] **7.7 Practical Container Gotchas & Quick Checks:**
+  - [ ] Document `std::vector<std::uint8_t>` vs. bit-packed `std::vector<bool>`, plus `std::unordered_map::reserve(n)` / `max_load_factor(0.7f)` to prevent rehashing spikes.
+  - [ ] Add 1–2 fresh pen-and-paper UB/idiom drills (covering `v.size() - 1`, `multiset::erase`, and Strict Weak Ordering) + Solutions, verify with `--strict-dir --cpp --pdf`, inspect rendered pages, and append Version History.
+
+---
+
 ## Progress Matrix (Live Agent Tracker)
 
 Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verification Gate** in the Agent Handoff Protocol.
@@ -402,3 +426,4 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `14.heaps_and_priority_queues.tex` | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | `[ ]` |
 | `15.trees_and_bsts.tex` | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | `[ ]` |
 | `16.fenwick_and_segment_trees.tex` | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | `[ ]` |
+| `00.cpp_reference.tex` (Phase 7 Upgrade) | N/A | `[ ]` (Ph 7) | N/A | `[ ]` (Ph 7) | `[ ]` | `[ ]` | N/A (code-only) |
