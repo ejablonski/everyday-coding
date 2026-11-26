@@ -1,22 +1,114 @@
-﻿\documentclass[11pt,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 
 % --- Core LaTeX Packages ---
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\ttdefault}{txtt}
+\usepackage{upquote}
+\usepackage[margin=0.85in, headheight=15pt]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{xcolor}
+\usepackage[helvet]{sfmath}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[explicit]{titlesec}
+\usepackage[skins,breakable]{tcolorbox}
 \usepackage{listings}
 \usepackage{hyperref}
-\usepackage{tabularx}
 \usepackage{graphicx}
 
-% --- Unified Color Palette ---
+% --- Diagram Packages ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,decorations.pathreplacing}
+
+% --- Unified Print-Safe Color Palette ---
 \definecolor{primaryblue}{RGB}{24, 75, 140}
-\definecolor{codebg}{RGB}{248, 249, 250}
-\definecolor{codeframe}{RGB}{210, 215, 222}
-\definecolor{codegreen}{RGB}{40, 130, 60}
-\definecolor{codeblue}{RGB}{20, 90, 180}
-\definecolor{codegray}{RGB}{120, 120, 120}
+\definecolor{accentteal}{RGB}{15, 118, 110}
+\definecolor{accentamber}{RGB}{180, 83, 9}
+\definecolor{accentred}{RGB}{185, 28, 28}
+\definecolor{codebg}{RGB}{246, 248, 250}
+\definecolor{codeframe}{RGB}{204, 212, 220}
+\definecolor{codeink}{RGB}{24, 30, 38}
+\definecolor{codekw}{RGB}{126, 34, 206}
+\definecolor{codetype}{RGB}{0, 118, 138}
+\definecolor{codegreen}{RGB}{22, 138, 66}
+\definecolor{codeblue}{RGB}{15, 92, 212}
+\definecolor{codestr}{RGB}{194, 65, 12}
+\definecolor{codegray}{RGB}{105, 115, 125}
+
+% --- Global Typography & Spacing ---
+\linespread{1.08}
+\renewcommand{\arraystretch}{1.35}
+\setlength{\tabcolsep}{7pt}
+\setlist[itemize]{itemsep=3pt, topsep=4pt, leftmargin=1.5em}
+\setlist[enumerate]{itemsep=4pt, topsep=4pt, leftmargin=1.6em}
+
+% --- Running Header & Footer (Screen + Print Navigation) ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{codegray}\textbf{Binary Search}}
+\fancyhead[R]{\footnotesize\color{codegray}\nouppercase{\leftmark}}
+\fancyfoot[C]{\footnotesize\color{codegray}Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{codeframe}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{}}
+
+% --- Section & Subsection Styling (High-Contrast + Per-Section Page Breaks) ---
+\newcommand{\sectionbreak}{}
+
+\titleformat{\section}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {\colorbox{primaryblue}{\color{white}\bfseries\Large\;\thesection\;}\hspace{0.55em}#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+\titlespacing*{\section}{0pt}{4pt}{14pt}
+
+\titleformat{name=\section,numberless}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{primaryblue!90!black}}
+  {}
+  {0pt}
+  {\begin{tcolorbox}[
+      enhanced, colback=primaryblue!6, colframe=primaryblue!6,
+      borderline west={3.5pt}{0pt}{primaryblue},
+      sharp corners=west, arc=2pt,
+      left=8pt, right=8pt, top=5pt, bottom=5pt,
+      boxsep=0pt, before skip=0pt, after skip=0pt
+  ]\large\bfseries\color{primaryblue!90!black}\thesubsection\hspace{0.55em}#1\end{tcolorbox}}
+\titlespacing*{\subsection}{0pt}{18pt}{8pt}
+
+\titleformat{name=\subsection,numberless}[block]
+  {\normalsize\bfseries\color{accentteal}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{2pt}{\color{accentteal!40}\titlerule[0.7pt]}]
+\titlespacing*{\subsection}{0pt}{14pt}{6pt}
+
+% --- Canonical Shared TikZ Styles ---
+\tikzset{
+    lmbox/.style={draw=codeframe, fill=codebg, thick, rounded corners=2pt, inner sep=4pt, font=\small},
+    lmactive/.style={draw=primaryblue, fill=primaryblue!8, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=primaryblue},
+    lmaccepted/.style={draw=codegreen, fill=codegreen!10, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=codegreen},
+    lmpruned/.style={draw=red!70!black, fill=red!70!black!6, thick, dashed, rounded corners=2pt, inner sep=4pt, font=\small, text=red!70!black},
+    lmarrow/.style={-{Stealth[length=5pt]}, thick, primaryblue},
+    lmmuted/.style={-{Stealth[length=5pt]}, thick, codegray},
+    lmprunedarrow/.style={-{Stealth[length=5pt]}, thick, dashed, red!70!black}
+}
 
 % --- Hyperref Setup ---
 \hypersetup{
@@ -28,40 +120,129 @@
     pdfauthor={Antigravity Engineering}
 }
 
-% --- Theorem & Definition Environments ---
+% --- Example Environment ---
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{example}{Example}[section]
 
-% --- Callout Box Environment ---
-\newenvironment{calloutbox}[1]{
-    \par\vspace{0.3cm}
-    \noindent\begin{tabular}{|p{0.96\textwidth}|}
-    \hline
-    \vspace{0.1cm}
-    \textbf{#1}\par\vspace{0.1cm}
-}{
-    \vspace{0.1cm}
-    \\ \hline
-    \end{tabular}
-    \vspace{0.3cm}\par
+% --- Semantic Narrative Beat Labels & Solution Trap Diagnostic ---
+\newcommand{\painbeat}{\textbf{\color{accentamber}The Problem:} }
+\newcommand{\ahabeat}{\textbf{\color{accentteal}The ``Aha!'' Insight:} }
+\newcommand{\examplebeat}{\textbf{\color{primaryblue}Mini-Example First:} }
+\newcommand{\breaksbeat}{\textbf{\color{accentred}When It Breaks:} }
+\newcommand{\invariantbeat}[1]{\par\noindent\textbf{\color{accentteal}Loop Invariant (#1):} }
+\newcommand{\trapnote}[1]{\par\smallskip\noindent{\footnotesize\textbf{\color{accentamber}Common trap:} #1}}
+
+% --- Modern Overview Card ---
+\newtcolorbox{overviewbox}[1][What You'll Learn]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
 }
 
-% --- Modern C++ Code Listing Setup ---
+% --- Key Takeaway / Core Rule Box ---
+\newtcolorbox{calloutbox}[1]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Plain-English Formula Card ---
+\newtcolorbox{formulabox}[1][Formula in Plain English]{
+    enhanced,
+    colback=primaryblue!4, colframe=primaryblue!22,
+    borderline west={3.5pt}{0pt}{primaryblue},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=6pt, bottom=6pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\small\bfseries\color{primaryblue},
+    title={#1},
+    attach title to upper={\par\vspace{2pt}}
+}
+
+% --- Watch-Out / Edge-Case Warning Box ---
+\newtcolorbox{watchoutbox}[1][Watch Out --- When It Breaks]{
+    enhanced,
+    colback=accentamber!6, colframe=accentamber!30,
+    borderline west={3.5pt}{0pt}{accentamber},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentamber},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Local Symbol Mini-Table Environment ---
+\newenvironment{notationbox}[1][Symbols Used Here]{
+    \par\vspace{0.15cm}
+    \noindent\textbf{\small\color{primaryblue}#1}\par\vspace{0.1cm}
+    \begingroup
+    \footnotesize
+    \rowcolors{2}{codebg}{white}
+    \noindent\tabularx{\textwidth}{>{\raggedright\arraybackslash\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.8cm}}
+    \arrayrulecolor{primaryblue}\toprule[1.1pt]
+    \rowcolor{primaryblue!10}
+    \textcolor{primaryblue}{\textbf{Symbol}} & \textcolor{primaryblue}{\textbf{Plain-English Meaning}} & \textcolor{primaryblue}{\textbf{Example / Type}} \\
+    \arrayrulecolor{codeframe}\midrule[0.6pt]
+}{
+    \arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+    \endtabularx
+    \endgroup
+    \vspace{0.2cm}\par
+}
+
+% --- Print-First Pen-and-Paper Exercise Environment ---
+\newcounter{exercise}
+\newtcolorbox{tryitbox}[3]{
+    enhanced,
+    step=exercise,
+    colback=codegreen!3, colframe=codegreen!45,
+    colbacktitle=codegreen!14, coltitle=codegreen!85!black,
+    borderline west={3.5pt}{0pt}{codegreen},
+    arc=3pt, boxrule=0.6pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    toptitle=4pt, bottomtitle=4pt,
+    before skip=9pt, after skip=9pt,
+    fonttitle=\bfseries,
+    title={Exercise \theexercise\hspace{0.5em}{\colorbox{codegreen!85!black}{\color{white}\scriptsize\bfseries\;#1\;}}\hspace{0.5em}#2 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#3}}}
+}
+
+% --- Modern C++23 Code Listing Setup ---
 \lstset{
     language=C++,
-    basicstyle=\footnotesize\ttfamily,
-    keywordstyle=\color{codeblue}\bfseries,
+    basicstyle=\small\ttfamily\color{codeink},
+    keywordstyle=\color{codekw}\bfseries,
+    morekeywords={constexpr,noexcept,nullptr,static_assert,auto,override,final,decltype,concept,requires},
+    keywordstyle=[2]\color{codetype}\bfseries,
+    morekeywords=[2]{std,vector,span,string,string_view,size_t,int64_t,uint32_t,uint64_t,optional,nullopt,pair,tuple,array,ranges,views,nodiscard,invocable,convertible_to,invoke_result_t,plus,greater},
+    moredelim=[l][\color{codeblue}\bfseries]{\#},
+    deletestring=[b]',
     commentstyle=\color{codegreen}\itshape,
-    stringstyle=\color{orange!80!black},
+    stringstyle=\color{codestr},
     numberstyle=\tiny\color{codegray},
     numbers=left,
     numbersep=8pt,
+    xleftmargin=24pt,
+    framexleftmargin=22pt,
+    framexrightmargin=4pt,
+    framextopmargin=4pt,
+    framexbottommargin=4pt,
     backgroundcolor=\color{codebg},
     frame=single,
     rulecolor=\color{codeframe},
+    aboveskip=8pt,
+    belowskip=10pt,
     breaklines=true,
     breakatwhitespace=true,
     tabsize=4,
@@ -69,105 +250,85 @@
     captionpos=b
 }
 
-% --- Title Block ---
-\title{\vspace{-1.5cm}\textbf{\Huge Binary Search}\\[0.3cm]
-\Large Interval Halving, Predicate Monotonicity, and Searching on the Answer Space}
-\author{Technical Monograph}
-\date{\today}
-
 \begin{document}
 
-\maketitle
+% --- Modern Title Banner ---
+\thispagestyle{plain}
+\begin{tcolorbox}[
+    enhanced,
+    colback=primaryblue!6, colframe=primaryblue!20,
+    borderline west={5pt}{0pt}{primaryblue},
+    arc=4pt, boxrule=0.6pt,
+    left=14pt, right=14pt, top=12pt, bottom=12pt,
+    before skip=0pt, after skip=10pt
+]
+    {\footnotesize\bfseries\color{accentteal}MODULE 08 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
+    {\Huge\bfseries\color{primaryblue}Binary Search}\\[5pt]
+    {\large\color{codegray}Interval Halving, Predicate Monotonicity, and Searching on the Answer Space}\\[6pt]
+    {\footnotesize\color{codegray}Updated \today}
+\end{tcolorbox}
 
-\begin{abstract}
-\noindent
-Binary search is the algorithm of systematic interval halving. Whenever a candidate space exhibits monotonicity---meaning a condition holds for all values past a certain transition point---a single test eliminates half of the remaining possibilities. This monograph guides you from the elementary high-low guessing game to boundary lookups, rotated array searches, and binary search on abstract answer spaces. You will learn the exact invariant rules that eliminate off-by-one errors and infinite loops, how to design monotonic feasibility predicates, and how to recognize when optimization problems can be reframed as decision problems.
-\end{abstract}
+\begin{overviewbox}[What You'll Learn]
+Binary search is the discipline of eliminating half of your remaining candidates with every single test. Beyond looking up a number in a sorted array, this guide builds the half-open $[L, R)$ invariant that permanently prevents off-by-one infinite loops, explains how to turn hard min-max optimization problems into simple \texttt{FFFTTT} yes/no feasibility checks, and covers Lower/Upper Bounds, Rotated Arrays, Peak Elements, 2D Row-Sorted Matrices, and Floating-Point Bisection in modern C++23 with \texttt{std::midpoint} and \texttt{std::ranges}.
+\end{overviewbox}
 
-\tableofcontents
-\newpage
+\vspace{2pt}
+{\setlength{\parskip}{1pt}\small\tableofcontents}
+
+% Every major section starts cleanly on a new page
+\renewcommand{\sectionbreak}{\clearpage}
 
 % ============================================================================
 \section{Foundations and Intuition}
 % ============================================================================
 
-\subsection{The High-Low Guessing Game}
+Every binary search works like a high-low guessing game: pick the midpoint of your remaining candidate range, test one question, and throw away half the search space immediately.
 
-Imagine playing a parlor game where someone picks a secret integer between $1$ and $100$. With each guess you make, you are told only whether the secret number is higher, lower, or equal to your guess.
+\begin{notationbox}[Symbols Used in Binary Search]
+$[L, R)$ & Half-open search interval: $L$ inclusive, $R$ exclusive (one past last valid index) & $[0, N)$ \\
+$[L, R]$ & Closed search interval: both endpoints $L$ and $R$ are active candidates & $[0, N-1]$ \\
+$P(x) \in \{F, T\}$ & Monotonic boolean feasibility predicate returning \texttt{false} then \texttt{true} & $P(x) = (A[x] \ge X)$ \\
+$x^*$ & Exact monotonic transition boundary (first \texttt{true} or last \texttt{false}) & $x^* = 5$ \\
+\end{notationbox}
 
-If you guess linearly ($1, 2, 3, 4, \dots$), you might need up to $100$ questions. But if you begin by guessing the exact midpoint, $50$:
-\begin{itemize}
-    \item If the answer is ``higher'', the secret number must be in the range $[51, 100]$. You have eliminated $50$ numbers in a single question.
-    \item If the answer is ``lower'', the secret number must be in the range $[1, 49]$. Again, $51$ numbers are eliminated immediately.
-\end{itemize}
+\subsection{Logarithmic Growth: Why \texorpdfstring{$O(\log N)$}{O(log N)} Changes Everything}
 
-By repeatedly testing the midpoint of whatever range remains, the size of the search interval decreases by half with every question:
-\begin{equation*}
-    100 \longrightarrow 50 \longrightarrow 25 \longrightarrow 12 \longrightarrow 6 \longrightarrow 3 \longrightarrow 1
-\end{equation*}
-You will always find the secret number in at most $\lceil \log_2(100) \rceil = 7$ guesses. This principle of systematic elimination is the engine of binary search.
+Halving a search space of $100$ items takes just $7$ steps ($100 \to 50 \to 25 \to 12 \to 6 \to 3 \to 1$). Even at astronomical scales, binary search finishes in microseconds:
 
-\subsection{Logarithmic Growth: The Power of \texorpdfstring{$O(\log N)$}{O(log N)}}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.6cm} >{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Search Space ($N$)}} & \textcolor{primaryblue}{\textbf{Linear Scan ($O(N)$)}} & \textcolor{primaryblue}{\textbf{Binary Search ($\lceil \log_2 N \rceil$)}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+$10^3$ (Thousand) & $1{,}000$ checks & $\approx 10$ checks \\
+$10^6$ (Million) & $1{,}000{,}000$ checks & $\approx 20$ checks \\
+$10^9$ (Billion) & $10^9$ ops (Times out!) & $\approx 30$ checks (Instant) \\
+$10^{18}$ (Quintillion) & Centuries of compute & $\approx 60$ checks (Microseconds) \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
-To appreciate the efficiency of logarithmic time, consider how the operation count scales as the input size expands to planetary proportions:
+\subsection{Overflow-Safe Midpoints and Half-Open Invariants}
 
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|l|X|}
-\hline
-\textbf{Search Space ($N$)} & \textbf{Linear Scan ($O(N)$)} & \textbf{Binary Search ($\lceil \log_2 N \rceil$)} \\ \hline
-$10^3$ (One thousand) & $1{,}000$ operations & $\approx 10$ operations \\ \hline
-$10^6$ (One million) & $1{,}000{,}000$ operations & $\approx 20$ operations \\ \hline
-$10^9$ (One billion) & $1{,}000{,}000{,}000$ ops (Times out!) & $\approx 30$ operations (Instantaneous) \\ \hline
-$10^{18}$ (Quintillion) & Millions of years of compute & $\approx 60$ operations (Microseconds) \\ \hline
-\end{tabularx}
-\vspace{0.2cm}
-
-A linear scan across a billion items exceeds the standard one-second execution budget ($\approx 10^8$ operations per second). In contrast, binary search resolves the answer across a quintillion candidates in just 60 comparisons.
-
-\subsection{The Arithmetic Midpoint and Integer Overflow}
-
-The mathematical midpoint between two integers $L$ and $R$ is $\frac{L + R}{2}$. In software, writing this directly as \texttt{(L + R) / 2} contains a notorious defect that lay unnoticed in standard libraries for decades.
-
-When $L$ and $R$ are positive 32-bit signed integers, their sum $L + R$ can exceed the maximum representable 32-bit integer:
-\begin{equation*}
-    2^{31} - 1 = 2{,}147{,}483{,}647
-\end{equation*}
-If $L = 1{,}500{,}000{,}000$ and $R = 1{,}800{,}000{,}000$, their mathematical sum is $3{,}300{,}000{,}000$. In signed 32-bit arithmetic, this wraps around to a negative value ($-994{,}967{,}296$), producing an illegal negative array index.
-
-\begin{calloutbox}{Safe Midpoint Computation}
-To compute the midpoint without any danger of integer overflow, use the algebraically equivalent difference formula:
-\begin{equation*}
-    \text{mid} = L + \frac{R - L}{2}
-\end{equation*}
-Because $R \ge L$, the difference $R - L$ is always non-negative and fits safely within the integer type. In modern C++20 and later, the standard library provides \texttt{std::midpoint(L, R)}, which handles signed, unsigned, and pointer types safely.
-\end{calloutbox}
-
-\subsection{Search Invariants: Closed vs. Half-Open Intervals}
-
-Every binary search implementation maintains a \textbf{loop invariant}---a logical condition regarding where the target value is guaranteed to lie if it exists. There are two standard conventions:
-
+\painbeat Writing binary search looks trivial, yet two classic bugs break even veteran code:
 \begin{enumerate}
-    \item \textbf{The Closed Interval $[L, R]$}:
-    \begin{itemize}
-        \item Both endpoints $L$ and $R$ are valid candidate indices.
-        \item Loop condition: \texttt{while (L <= R)}.
-        \item When target is strictly smaller than midpoint: $R = \text{mid} - 1$.
-        \item When target is strictly larger than midpoint: $L = \text{mid} + 1$.
-        \item Loop terminates when the interval is empty ($L > R$).
-    \end{itemize}
-    
-    \item \textbf{The Half-Open Interval $[L, R)$}:
-    \begin{itemize}
-        \item $L$ is inclusive; $R$ is exclusive (one past the last valid candidate).
-        \item Loop condition: \texttt{while (L < R)}.
-        \item When condition requires narrowing the right side: $R = \text{mid}$.
-        \item When condition requires narrowing the left side: $L = \text{mid} + 1$.
-        \item Loop terminates when $L == R$. This style aligns naturally with C++ standard iterators (\texttt{begin()}, \texttt{end()}).
-    \end{itemize}
+    \item \textbf{Midpoint Overflow:} Writing \texttt{(L + R) / 2} on 32-bit \texttt{int} overflows when $L + R > 2^{31} - 1 = 2{,}147{,}483{,}647$ (e.g., $L = 1.5 \times 10^9,\; R = 1.8 \times 10^9$ wraps to $-994{,}967{,}296$!).
+    \item \textbf{Off-by-One Infinite Loops:} Mixing closed-interval updates with \texttt{while (L < R)} freezes when $R = L + 1$ and $\text{mid} = L$ sets $L = \text{mid}$ forever!
 \end{enumerate}
 
-Choosing one convention and adhering to its pointer adjustments prevents the two most common implementation bugs: infinite loops (where $L$ and $R$ stop moving) and off-by-one boundary misses.
+\ahabeat Pair C++20's \texttt{std::midpoint(L, R)} (equivalent to $L + (R - L)/2$, never overflows!) with the \textbf{Half-Open Interval $[L, R)$} convention:
+
+\begin{formulabox}[The Half-Open $[L, R)$ First-True Invariant]
+$$\text{Init: } [L, R) = [0, N), \quad \text{Loop: } \texttt{while (L < R)}, \quad \text{mid} = \texttt{std::midpoint(L, R)}$$
+$$\text{If } P(\text{mid}) \text{ is true: } R = \text{mid}; \qquad \text{else: } L = \text{mid} + 1; \qquad \text{Return } L.$$
+\textbf{Read this as:} Since $\text{mid} = \lfloor (L + R) / 2 \rfloor$ always satisfies $L \le \text{mid} < R$ whenever $L < R$, \emph{both} branches strictly shrink $R - L$: setting $R = \text{mid}$ drops $R$, and setting $L = \text{mid} + 1$ raises $L$. Infinite loops and unsigned \texttt{mid - 1} underflow are \textbf{mathematically impossible}!
+\end{formulabox}
+
+\invariantbeat{Half-Open First-True} Every index $< L$ is guaranteed \texttt{false}; every index $\ge R$ is guaranteed \texttt{true}. When $L == R$, $L$ is the exact first \texttt{true} index (or $N$ if none exists).
+
+\begin{tryitbox}{Debug}{Spotting an Infinite Loop in Binary Search}{ex1}
+A programmer tries to find the \textbf{last true} index using \texttt{while (L < R) \{ mid = L + (R - L) / 2; if (P(mid)) L = mid; else R = mid - 1; \}}. Trace what happens when $L = 4,\; R = 5$ and $P(4) = \text{true}$, and explain the exact one-line fix.
+\end{tryitbox}
 
 % ============================================================================
 \section{Main Topics and Techniques}
@@ -175,574 +336,630 @@ Choosing one convention and adhering to its pointer adjustments prevents the two
 
 \subsection{Classic Value Search in Sorted Arrays}
 
-The simplest formulation of binary search tests whether a specific target value exists in a strictly sorted array of distinct elements.
+When looking up an exact target $T$ in a sorted array of distinct elements, a closed interval $[L, R]$ compares $A[\text{mid}]$ against $T$ and eliminates half the remaining elements on each step (Figure~\ref{fig:bs-interval-halving}).
 
-\noindent \textbf{Worked Step-by-Step Example}:
-Consider the sorted array of $N = 10$ integers:
-\begin{equation*}
-    A = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91], \quad \text{Target } = 23
-\end{equation*}
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    cell/.style={draw=codeframe, fill=white, thick, rounded corners=2pt, minimum width=1.10cm, minimum height=0.70cm, font=\small, align=center},
+    elim/.style={draw=codeframe!60, fill=codebg, thick, rounded corners=2pt, minimum width=1.10cm, minimum height=0.70cm, font=\small, text=codegray, align=center},
+    midcell/.style={draw=primaryblue, fill=primaryblue!16, line width=1.3pt, rounded corners=2pt, minimum width=1.10cm, minimum height=0.70cm, font=\small\bfseries, text=primaryblue, align=center},
+    foundcell/.style={draw=codegreen, fill=codegreen!18, line width=1.4pt, rounded corners=2pt, minimum width=1.10cm, minimum height=0.70cm, font=\small\bfseries, text=codegreen, align=center}
+]
+    \node[anchor=west, font=\bfseries\small, text=primaryblue] at (0.0, 6.25) {Target Value: $T = 23$ \quad (Sorted Array of Length $N = 10$)};
 
-Total comparisons required: $3$. A linear scan from the beginning would have required $6$ comparisons.
+    % --- Iteration 1 ---
+    \node[anchor=east, font=\scriptsize\bfseries, align=right] at (2.45, 5.00) {Iter 1:\\$L=0, R=9$\\$\text{mid}=4$};
+    \foreach \i/\val in {0/2, 1/5, 2/8, 3/12, 4/16, 5/23, 6/38, 7/56, 8/72, 9/91} {
+        \pgfmathsetmacro{\cx}{3.20 + \i * 1.24}
+        \ifnum\i=4
+            \node[midcell] (I1_\i) at (\cx, 5.00) {\val};
+            \node[above=1pt, font=\tiny\bfseries, text=primaryblue] at (I1_\i.north) {mid};
+        \else
+            \node[cell] (I1_\i) at (\cx, 5.00) {\val};
+        \fi
+        \node[below=1pt, font=\tiny\ttfamily, text=codegray] at (I1_\i.south) {[\i]};
+    }
+    \node[anchor=west, font=\scriptsize, text=primaryblue] at (2.65, 4.02) {
+        $A[\text{mid}] = 16 < 23 \implies$ search right: $L = \text{mid} + 1 = 5$ (discard $0 \dots 4$)
+    };
+
+    % --- Iteration 2 ---
+    \node[anchor=east, font=\scriptsize\bfseries, align=right] at (2.45, 2.70) {Iter 2:\\$L=5, R=9$\\$\text{mid}=7$};
+    \foreach \i/\val in {0/2, 1/5, 2/8, 3/12, 4/16} {
+        \pgfmathsetmacro{\cx}{3.20 + \i * 1.24}
+        \node[elim] (I2_\i) at (\cx, 2.70) {\val};
+        \node[below=1pt, font=\tiny\ttfamily, text=codegray!60] at (I2_\i.south) {[\i]};
+    }
+    \foreach \i/\val in {5/23, 6/38, 7/56, 8/72, 9/91} {
+        \pgfmathsetmacro{\cx}{3.20 + \i * 1.24}
+        \ifnum\i=7
+            \node[midcell] (I2_\i) at (\cx, 2.70) {\val};
+            \node[above=1pt, font=\tiny\bfseries, text=primaryblue] at (I2_\i.north) {mid};
+        \else
+            \node[cell] (I2_\i) at (\cx, 2.70) {\val};
+        \fi
+        \node[below=1pt, font=\tiny\ttfamily, text=codegray] at (I2_\i.south) {[\i]};
+    }
+    \node[anchor=west, font=\scriptsize, text=primaryblue] at (2.65, 1.72) {
+        $A[\text{mid}] = 56 > 23 \implies$ search left: $R = \text{mid} - 1 = 6$ (discard $7 \dots 9$)
+    };
+
+    % --- Iteration 3 ---
+    \node[anchor=east, font=\scriptsize\bfseries, align=right] at (2.45, 0.40) {Iter 3:\\$L=5, R=6$\\$\text{mid}=5$};
+    \foreach \i/\val in {0/2, 1/5, 2/8, 3/12, 4/16, 7/56, 8/72, 9/91} {
+        \pgfmathsetmacro{\cx}{3.20 + \i * 1.24}
+        \node[elim] (I3_\i) at (\cx, 0.40) {\val};
+        \node[below=1pt, font=\tiny\ttfamily, text=codegray!60] at (I3_\i.south) {[\i]};
+    }
+    \node[foundcell] (I3_5) at (3.20 + 5 * 1.24, 0.40) {23};
+    \node[above=1pt, font=\tiny\bfseries, text=codegreen] at (I3_5.north) {Found!};
+    \node[below=1pt, font=\tiny\ttfamily, text=codegreen] at (I3_5.south) {[5]};
+
+    \node[cell] (I3_6) at (3.20 + 6 * 1.24, 0.40) {38};
+    \node[below=1pt, font=\tiny\ttfamily, text=codegray] at (I3_6.south) {[6]};
+
+    \node[anchor=west, font=\scriptsize\bfseries, text=codegreen] at (2.65, -0.58) {
+        $A[\text{mid}] = 23 == 23 \implies$ Found at index $5$ in $3$ comparisons ($O(\log N)$)!
+    };
+\end{tikzpicture}
+\caption{Systematic interval halving for target $T = 23$ across $N = 10$ sorted elements ($10 \to 5 \to 2 \to 1$).}
+\label{fig:bs-interval-halving}
+\end{figure}
 
 \subsection{Boundary Lookups: Lower Bound and Upper Bound}
 
-Real-world datasets frequently contain duplicate values. When an array has repeated elements, asking ``find the target'' is ambiguous. We instead formulate two precise boundary queries:
+\painbeat When a sorted array contains duplicate values like $[1, 2, 4, 4, 4, 6, 7]$, plain equality search might land on \emph{any} of the three $4$s---and scanning left/right to count them degrades back to $O(N)$!
 
-\begin{definition}[Lower Bound]
-The \textbf{lower bound} of a value $X$ in a sorted range is the first index $i$ such that $A[i] \ge X$. If all elements are strictly smaller than $X$, it returns the range length $N$.
-\end{definition}
-
-\begin{definition}[Upper Bound]
-The \textbf{upper bound} of a value $X$ in a sorted range is the first index $i$ such that $A[i] > X$. If no element is strictly greater than $X$, it returns $N$.
-\end{definition}
-
-\noindent \textbf{Worked Step-by-Step Example}:
-Let $A = [1, 2, 4, 4, 4, 6, 7]$ with target $X = 4$.
-
-\begin{calloutbox}{The Frequency Counting Identity}
-Using lower and upper bounds, you can count the exact number of occurrences of any target value in a sorted array in $O(\log N)$ time without traversing elements:
-\begin{equation*}
-    \text{count}(X) = \text{upper\_bound}(X) - \text{lower\_bound}(X)
-\end{equation*}
-For $X = 4$ in the example above: $\text{count}(4) = 5 - 2 = 3$.
-\end{calloutbox}
-
-\subsection{Predicate Monotonicity: The True Foundation}
-
-The most transformative insight regarding binary search is that \textbf{an array does not need to be sorted}. Binary search requires only one mathematical property: \textbf{predicate monotonicity}.
-
-\begin{definition}[Monotonic Predicate]
-A boolean function $P(x) \to \{\text{false}, \text{true}\}$ defined on a domain is monotonic if whenever $P(x_1) = \text{true}$ for some $x_1$, then $P(x_2) = \text{true}$ for all $x_2 > x_1$.
-\end{definition}
-
-Such a domain partitions neatly into two contiguous segments:
-\begin{equation*}
-    [\text{false}, \text{false}, \text{false}, \dots, \text{false}, \mathbf{\text{true}}, \text{true}, \dots, \text{true}]
-\end{equation*}
-
-The goal of binary search is to find the exact boundary: the first $x$ for which $P(x)$ evaluates to $\text{true}$ (or the last $x$ for which $P(x)$ evaluates to $\text{false}$).
-
-Whenever you can devise a verification function $P(x)$ that is monotonic and runs in $O(C)$ time, you can locate the transition point in $O(C \cdot \log(\text{domain size}))$ time.
-
-\subsection{Binary Search on the Answer Space}
-
-Many optimization problems ask:
-\begin{quote}
-``What is the \textbf{minimum} capacity such that a workload can be completed in $K$ days?''\\
-``What is the \textbf{maximum} speed that allows a vehicle to reach its destination safely?''
-\end{quote}
-
-A naive algorithm attempts to test every answer $x = 1, 2, 3, \dots$ until it succeeds. But notice the monotonic property:
+\ahabeat Replace equality with two half-open $[0, N)$ \textbf{First-True} predicates:
 \begin{itemize}
-    \item If a ship of capacity $C = 15$ can transport all cargo within $K$ days, then any ship of capacity $C \ge 15$ can also succeed.
-    \item If capacity $C = 10$ fails, then any capacity $C \le 10$ is guaranteed to fail.
+    \item \textbf{Lower Bound:} First index $i$ where $A[i] \ge X$ (returns $N$ if all elements $< X$).
+    \item \textbf{Upper Bound:} First index $i$ where $A[i] > X$ (returns $N$ if no element $> X$).
 \end{itemize}
 
-This transforms an optimization problem into a series of decision queries:
-\begin{equation*}
-    \text{Optimize}(x) \iff \text{Find the boundary of } P(x)
-\end{equation*}
+\begin{formulabox}[Frequency Count in $O(\log N)$]
+$$\text{count}(X) = \texttt{upper\_bound}(A, X) - \texttt{lower\_bound}(A, X)$$
+\textbf{Read this as:} The half-open index span $[\texttt{lower\_bound},\; \texttt{upper\_bound})$ contains every occurrence of $X$ and nothing else (Figure~\ref{fig:bs-lower-upper-bound}).
+\end{formulabox}
 
-\noindent \textbf{Worked Step-by-Step Example (Capacity Allocation)}:
-Suppose $N = 5$ packages have weights $[1, 2, 3, 4, 5]$ and must be shipped across $D = 3$ days. Packages must be shipped in the given order. What is the minimum ship capacity required?
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    cell/.style={draw=codeframe, fill=white, thick, rounded corners=2pt, minimum width=1.18cm, minimum height=0.68cm, font=\small\bfseries, align=center},
+    dupcell/.style={draw=codegreen, fill=codegreen!14, line width=1.2pt, rounded corners=2pt, minimum width=1.18cm, minimum height=0.68cm, font=\small\bfseries, text=codegreen, align=center},
+    endcell/.style={draw=codeframe, fill=codebg, dashed, thick, rounded corners=2pt, minimum width=1.18cm, minimum height=0.68cm, font=\scriptsize\ttfamily, text=codegray, align=center},
+    fbit/.style={draw=codeframe, fill=codebg, minimum width=1.18cm, minimum height=0.46cm, font=\scriptsize\bfseries, text=codegray, align=center},
+    tbit/.style={draw=primaryblue!50, fill=primaryblue!10, minimum width=1.18cm, minimum height=0.46cm, font=\scriptsize\bfseries, text=primaryblue, align=center},
+    tbit2/.style={draw=accentteal!60, fill=accentteal!12, minimum width=1.18cm, minimum height=0.46cm, font=\scriptsize\bfseries, text=accentteal, align=center}
+]
+    \draw[draw=codeframe, fill=codebg, rounded corners=4pt, thick] (0.0, -2.55) rectangle (15.4, 4.25);
+    \node[anchor=north west, font=\bfseries\small, text=primaryblue] at (0.30, 4.02) {Lower Bound vs.\ Upper Bound on Duplicates: $A = [1, 2, 4, 4, 4, 6, 7]$, Target $X = 4$};
 
+    % Array cells (indices 0..6 + sentinel 7)
+    \node[anchor=east, font=\scriptsize\bfseries, text=codeink] at (3.25, 1.55) {Array $A[i]$:};
+    \foreach \i/\val/\isdup in {0/1/0, 1/2/0, 2/4/1, 3/4/1, 4/4/1, 5/6/0, 6/7/0} {
+        \pgfmathsetmacro{\cx}{4.00 + \i * 1.40}
+        \ifnum\isdup=1
+            \node[dupcell] (A\i) at (\cx, 1.55) {\val};
+        \else
+            \node[cell] (A\i) at (\cx, 1.55) {\val};
+        \fi
+        \node[below=1pt, font=\tiny\ttfamily, text=codegray] at (A\i.south) {[\i]};
+    }
+    \node[endcell] (A7) at (4.00 + 7 * 1.40, 1.55) {end()};
+    \node[below=1pt, font=\tiny\ttfamily, text=codegray] at (A7.south) {[7]};
+
+    % Pointers from above
+    \draw[-{Stealth[length=5pt]}, line width=1.5pt, primaryblue] (6.80, 2.58) -- (A2.north);
+    \node[above=1pt, font=\scriptsize\bfseries, text=primaryblue] at (6.80, 2.58) {\texttt{lower\_bound(4) = 2} ($A[i] \ge 4$)};
+
+    \draw[-{Stealth[length=5pt]}, line width=1.5pt, accentteal] (11.00, 2.58) -- (A5.north);
+    \node[above=1pt, font=\scriptsize\bfseries, text=accentteal] at (11.00, 2.58) {\texttt{upper\_bound(4) = 5} ($A[i] > 4$)};
+
+    % Brace for count
+    \draw[decorate, decoration={brace, amplitude=5pt, mirror}, line width=1.2pt, codegreen]
+        (6.22, 0.80) -- (10.18, 0.80)
+        node[midway, below=5pt, font=\scriptsize\bfseries, text=codegreen] {$\text{count}(4) = 5 - 2 = \mathbf{3}$ elements (indices $2, 3, 4$)};
+
+    % Predicate strips below
+    \node[anchor=east, font=\scriptsize\bfseries, text=primaryblue] at (3.25, -0.85) {$P_1(i): A[i] \ge 4$};
+    \foreach \i in {0,1} { \node[fbit] at (4.00 + \i*1.40, -0.85) {F}; }
+    \foreach \i in {2,3,4,5,6} { \node[tbit] at (4.00 + \i*1.40, -0.85) {T}; }
+
+    \node[anchor=east, font=\scriptsize\bfseries, text=accentteal] at (3.25, -1.55) {$P_2(i): A[i] > 4$};
+    \foreach \i in {0,1,2,3,4} { \node[fbit] at (4.00 + \i*1.40, -1.55) {F}; }
+    \foreach \i in {5,6} { \node[tbit2] at (4.00 + \i*1.40, -1.55) {T}; }
+
+    \node[anchor=center, font=\scriptsize, text=codegray] at (7.70, -2.20) {
+        Both queries run the \textbf{exact same} half-open $[0, N)$ First-True loop --- only the predicate changes ($\ge$ vs.\ $>$)!
+    };
+\end{tikzpicture}
+\caption{Lower Bound vs.\ Upper Bound on a sorted array with duplicates. Both locate the exact \texttt{F}$\to$\texttt{T} boundary of a monotonic predicate over $[0, N)$, giving $O(\log N)$ frequency counting.}
+\label{fig:bs-lower-upper-bound}
+\end{figure}
+
+\examplebeat \textbf{Half-Open $[0, 7)$ Trace for $A = [1, 2, 4, 4, 4, 6, 7],\; X = 4$:}
+\begin{itemize}
+    \item \texttt{lower\_bound(4)} ($A[\text{mid}] \ge 4$): $[0, 7) \xrightarrow{\text{mid}=3,\; 4 \ge 4} [0, 3) \xrightarrow{\text{mid}=1,\; 2 < 4} [2, 3) \xrightarrow{\text{mid}=2,\; 4 \ge 4} [2, 2) \implies \mathbf{2}$.
+    \item \texttt{upper\_bound(4)} ($A[\text{mid}] > 4$): $[0, 7) \xrightarrow{\text{mid}=3,\; 4 \ngtr 4} [4, 7) \xrightarrow{\text{mid}=5,\; 6 > 4} [4, 5) \xrightarrow{\text{mid}=4,\; 4 \ngtr 4} [5, 5) \implies \mathbf{5}$.
+\end{itemize}
+
+\begin{tryitbox}{Trace}{Lower Bound vs.\ Upper Bound on 2, 4, 4, 4, 7}{ex2}
+Using the half-open $[0, 5)$ template on $A = [2, 4, 4, 4, 7]$, trace every $(L, R, \text{mid})$ step for both \texttt{lower\_bound(4)} and \texttt{upper\_bound(4)}, compute $\text{count}(4)$, and state \texttt{lower\_bound(5)} and \texttt{lower\_bound(9)}.
+\end{tryitbox}
+
+\begin{tryitbox}{Edge Cases}{Unsigned Size Underflow in Closed Binary Search}{ex3}
+Suppose a closed-interval binary search uses unsigned \texttt{std::size\_t} for \texttt{left}, \texttt{right}, and \texttt{mid}, and executes \texttt{right = mid - 1;} without checking \texttt{mid == 0}. Trace what happens on \texttt{nums = [10, 20, 30]} with \texttt{target = 5}, and explain why half-open $[L, R)$ never suffers from this bug.
+\end{tryitbox}
+
+\subsection{Predicate Monotonicity and Binary Search on the Answer}
+
+\painbeat Optimization problems often ask: \emph{``What is the \textbf{minimum} ship capacity to deliver all cargo in $D$ days?''} Testing capacities $C = 1, 2, 3, \dots$ linearly takes $O(N \cdot R)$ time---instant timeout when $R = 10^9$!
+
+\ahabeat \textbf{You do not need a sorted array---only a monotonic yes/no predicate $P(x)$!} If capacity $C$ works, every larger capacity $C' > C$ also works, partitioning the abstract answer domain into $[\text{F}, \text{F}, \dots, \text{F} \mid \text{T}, \text{T}, \dots, \text{T}]$ (Figure~\ref{fig:bs-predicate-monotonicity}). Binary search isolates the exact transition $x^*$ in $O(\text{check} \cdot \log(\text{Range}))$ time!
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    fcell/.style={draw=codeframe, fill=codebg, thick, rounded corners=2pt, minimum width=1.28cm, minimum height=0.82cm, font=\bfseries\small, text=codegray, align=center},
+    tcell/.style={draw=codegreen, fill=codegreen!14, line width=1.2pt, rounded corners=2pt, minimum width=1.28cm, minimum height=0.82cm, font=\bfseries\small, text=codegreen, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    \node[anchor=west, font=\bfseries\small, text=primaryblue] at (0.0, 5.45) {Monotonic Feasibility Space: $P(x)$ partitions into $[\text{False} \dots \text{False} \mid \text{True} \dots \text{True}]$};
+
+    \foreach \x in {1, 2, 3, 4} {
+        \pgfmathsetmacro{\cx}{0.88 + (\x - 1) * 1.50}
+        \node[fcell] (C\x) at (\cx, 3.00) {F};
+        \node[below=2pt, font=\scriptsize, text=codegray] at (C\x.south) {$x=\x$};
+    }
+    \foreach \x in {5, 6, 7, 8, 9, 10} {
+        \pgfmathsetmacro{\cx}{0.88 + (\x - 1) * 1.50}
+        \node[tcell] (C\x) at (\cx, 3.00) {T};
+        \node[below=2pt, font=\scriptsize, text=codegreen] at (C\x.south) {$x=\x$};
+    }
+
+    \draw[line width=1.8pt, primaryblue, dashed] (6.13, 1.85) -- (6.13, 4.05);
+    \node[anchor=south, font=\tiny\bfseries, text=primaryblue] at (6.13, 4.08) {Boundary};
+
+    \draw[-{Stealth[length=5pt]}, line width=1.6pt, codegreen] (7.65, 4.68) to[out=-145, in=90] (C5.north);
+    \node[anchor=west, font=\scriptsize\bfseries, text=codegreen] at (7.75, 4.68) {Optimal Minimal Feasible Answer ($x^* = 5$)};
+
+    \draw[card] (0.0, -0.40) rectangle (15.4, 1.60);
+    \node[anchor=north west, font=\bfseries\small, text=primaryblue] at (0.30, 1.38) {Half-Open Feasibility Decision Rules:};
+    \node[anchor=north west, font=\scriptsize, align=left, text width=14.8cm] at (0.30, 0.88) {
+        $\bullet$ \textbf{If $P(\text{mid}) == \text{True}$:} Candidate works $\implies R = \text{mid}$ (keep \texttt{mid}, search left for an even smaller answer).\\
+        $\bullet$ \textbf{If $P(\text{mid}) == \text{False}$:} Too small $\implies L = \text{mid} + 1$ (discard \texttt{mid} and everything to its left).\\
+        $\bullet$ \textbf{Convergence:} Invariant preserves $P(L-1) = \text{False}$ and $P(R) = \text{True}$; finishes at $L = R = x^*$ in $O(\log(\text{Range}))$ checks.
+    };
+\end{tikzpicture}
+\caption{Predicate monotonicity over an abstract answer space. Binary search locates the exact \texttt{False}$\to$\texttt{True} boundary $x^* = 5$ without ever materializing an array of candidates.}
+\label{fig:bs-predicate-monotonicity}
+\end{figure}
+
+\examplebeat \textbf{Shipping Packages in $D = 3$ Days:} Weights $[1, 2, 3, 4, 5]$ in order. Bounds: $L = \max = 5$, $R = \sum = 15$.
 \begin{enumerate}
-    \item \textbf{Identify Search Bounds}:
-    \begin{itemize}
-        \item The minimum conceivable capacity is the weight of the heaviest single package: $L = \max(A) = 5$ (otherwise that package could never be loaded).
-        \item The maximum conceivable capacity is the sum of all packages: $R = \sum A = 1 + 2 + 3 + 4 + 5 = 15$ (everything shipped in 1 day).
-    \end{itemize}
-    
-    \item \textbf{Formulate Feasibility Predicate $P(C)$}:
-    Given capacity $C$, greedily pack as many consecutive packages into the current day as possible without exceeding $C$. If the total days needed $\le 3$, return \texttt{true}; otherwise \texttt{false}.
-    
-    \item \textbf{Binary Search Trace on Range $[5, 15]$}:
-    \begin{itemize}
-        \item Step 1: $L = 5, R = 15 \implies \text{mid} = 10$.
-        Pack with capacity 10: Day 1: $[1, 2, 3, 4]$ (sum 10); Day 2: $[5]$ (sum 5). Total days = 2 $\le 3$. Success! $P(10) = \text{true}$. Record candidate 10, search left: $R = 9$.
-        
-        \item Step 2: $L = 5, R = 9 \implies \text{mid} = 7$.
-        Pack with capacity 7: Day 1: $[1, 2, 3]$ (sum 6); Day 2: $[4]$ (sum 4); Day 3: $[5]$ (sum 5). Total days = 3 $\le 3$. Success! $P(7) = \text{true}$. Record candidate 7, search left: $R = 6$.
-        
-        \item Step 3: $L = 5, R = 6 \implies \text{mid} = 5$.
-        Pack with capacity 5: Day 1: $[1, 2]$ (sum 3); Day 2: $[3]$ (sum 3); Day 3: $[4]$ (sum 4); Day 4: $[5]$ (sum 5). Total days = 4 $> 3$. Failure! $P(5) = \text{false}$. Search right: $L = 6$.
-        
-        \item Step 4: $L = 6, R = 6 \implies \text{mid} = 6$.
-        Pack with capacity 6: Day 1: $[1, 2, 3]$ (sum 6); Day 2: $[4]$ (sum 4); Day 3: $[5]$ (sum 5). Total days = 3 $\le 3$. Success! $P(6) = \text{true}$. Record candidate 6, search left: $R = 5$.
-    \end{itemize}
-    \item Loop terminates ($L = 6 > R = 5$). The minimum capacity is $\mathbf{6}$.
+    \item $[5, 15)$, $\text{mid} = 10$: Day 1 $[1,2,3,4]$, Day 2 $[5]$ ($2 \le 3$ days, \texttt{T}) $\implies R = 10$.
+    \item $[5, 10)$, $\text{mid} = 7$: $[1,2,3],\; [4],\; [5]$ ($3 \le 3$ days, \texttt{T}) $\implies R = 7$.
+    \item $[5, 7)$, $\text{mid} = 6$: $[1,2,3],\; [4],\; [5]$ ($3 \le 3$ days, \texttt{T}) $\implies R = 6$.
+    \item $[5, 6)$, $\text{mid} = 5$: $[1,2],\; [3],\; [4],\; [5]$ ($4 > 3$ days, \texttt{F}) $\implies L = 6$.
 \end{enumerate}
+Loop ends at $L = R = \mathbf{6}$.
+
+\begin{tryitbox}{Derive}{Designing the Package-Shipping Feasibility Predicate}{ex4}
+You must ship packages with positive weights \texttt{w} in order within $D$ days using a ship of capacity $C$.
+\begin{enumerate}
+    \item Explain why $P(C)$ is monotonic (\texttt{FFFTTT}) and state the tightest initial search bounds $[L, R]$.
+    \item Write the 5-line greedy simulation for $P(C)$, then evaluate $P(6)$ and $P(5)$ on \texttt{w = [3, 2, 2, 4, 1, 4]} for $D = 3$ days.
+\end{enumerate}
+\end{tryitbox}
 
 \subsection{Search in Rotated Sorted Arrays}
 
-A sorted array can be cyclically shifted by an offset. For instance, rotating the sorted sequence $[0, 1, 2, 4, 5, 6, 7]$ by $4$ positions produces $[4, 5, 6, 7, 0, 1, 2]$.
+\painbeat Rotating a sorted array $[0, 1, 2, 4, 5, 6, 7]$ into $[4, 5, 6, 7, 0, 1, 2]$ destroys global sortedness---comparing $A[\text{mid}]$ against the target alone no longer tells you which half to discard!
 
-Although the complete array is no longer sorted, it retains a powerful invariant:
-\begin{calloutbox}{The Rotated Sorted Invariant}
-For any chosen midpoint, dividing the array into two halves ($[L, \text{mid}]$ and $[\text{mid}, R]$) guarantees that \textbf{at least one of the two halves is strictly sorted}.
-\end{calloutbox}
+\ahabeat Because a cyclic rotation introduces at most \textbf{one} downward cliff, splitting at \emph{any} midpoint guarantees that \textbf{at least one of the two halves $[L, \text{mid}]$ or $[\text{mid}, R]$ is strictly sorted}! Check whether the target lies inside the sorted half's endpoints; if yes, search there---otherwise, search the other half (Figure~\ref{fig:bs-rotated-array}).
 
-We test which half is sorted by comparing $A[L]$ with $A[\text{mid}]$:
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    cell/.style={draw=codeframe, fill=white, thick, minimum width=0.86cm, minimum height=0.56cm, font=\scriptsize\ttfamily, align=center},
+    midCell/.style={draw=accentamber, fill=accentamber!16, line width=1.2pt, minimum width=0.86cm, minimum height=0.56cm, font=\scriptsize\bfseries\ttfamily, text=accentamber, align=center},
+    sortedCell/.style={draw=primaryblue, fill=primaryblue!14, line width=1.1pt, minimum width=0.86cm, minimum height=0.56cm, font=\scriptsize\bfseries\ttfamily, text=primaryblue, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    \draw[card] (0.0, -4.55) rectangle (15.4, 4.55);
+    \node[anchor=north west, font=\bfseries\small, text=primaryblue] at (0.28, 4.32) {Rotated Sorted Array: Monotonic Ramps \& Sorted-Half Bifurcation};
+
+    % --- Left Panel: Elevation Profile & Array Grid (x: 0.25 to 7.75) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (0.25, -4.28) rectangle (7.75, 3.68);
+    \node[anchor=north west, font=\footnotesize\bfseries, text=primaryblue] at (0.48, 3.48) {Profile: $A = [4, 5, 6, 7,\; 0, 1, 2]$};
+
+    % Ramp 1: (1.05, 0.95) to (3.45, 2.35)
+    \draw[line width=2.0pt, primaryblue] (1.05, 0.95) -- (3.45, 2.35);
+    \fill[primaryblue] (1.05, 0.95) circle (2.6pt) node[below=2pt, font=\tiny\bfseries] {4};
+    \fill[primaryblue] (1.85, 1.42) circle (2.6pt) node[below=2pt, font=\tiny\bfseries] {5};
+    \fill[primaryblue] (2.65, 1.88) circle (2.6pt) node[below=2pt, font=\tiny\bfseries] {6};
+    \fill[accentamber] (3.45, 2.35) circle (3.0pt) node[above=2pt, font=\tiny\bfseries, text=accentamber] {$A[3]=7$ (Max)};
+    \node[font=\tiny\bfseries, text=primaryblue] at (1.55, 2.55) {Ramp 1 (Sorted)};
+
+    % Discontinuity drop (red!70!black strictly for discontinuity)
+    \draw[dashed, line width=1.4pt, red!70!black] (3.45, 2.35) -- (4.45, 0.25);
+    \node[font=\tiny\bfseries, text=red!70!black, align=center] at (4.95, 1.85) {Pivot\\Drop};
+
+    % Ramp 2: (4.45, 0.25) to (6.95, 1.05)
+    \draw[line width=2.0pt, codegreen] (4.45, 0.25) -- (6.95, 1.05);
+    \fill[codegreen] (4.45, 0.25) circle (2.6pt) node[below=2pt, font=\tiny\bfseries] {$A[4]=0$ (Min)};
+    \fill[codegreen] (5.70, 0.65) circle (2.6pt) node[below=2pt, font=\tiny\bfseries] {1};
+    \fill[codegreen] (6.95, 1.05) circle (2.6pt) node[above=2pt, font=\tiny\bfseries] {$A[6]=2$};
+    \node[font=\tiny\bfseries, text=codegreen] at (6.20, 0.08) {Ramp 2 (Sorted)};
+
+    % Array cells below
+    \draw[draw=codeframe!60] (0.48, -0.45) -- (7.52, -0.45);
+    \node[anchor=north west, font=\scriptsize\bfseries, text=primaryblue] at (0.48, -0.60) {Array Layout (Left $= 0$, Mid $= 3$, Right $= 6$):};
+
+    \foreach \i/\v in {0/4, 1/5, 2/6} {
+        \node[sortedCell] at (1.02 + \i*0.99, -1.70) {\v};
+        \node[font=\tiny\ttfamily, text=codegray] at (1.02 + \i*0.99, -2.18) {[\i]};
+    }
+    \node[midCell] at (3.99, -1.70) {7};
+    \node[font=\tiny\ttfamily\bfseries, text=accentamber] at (3.99, -2.18) {[3]};
+    \foreach \i/\v in {4/0, 5/1, 6/2} {
+        \node[cell] at (1.02 + \i*0.99, -1.70) {\v};
+        \node[font=\tiny\ttfamily, text=codegray] at (1.02 + \i*0.99, -2.18) {[\i]};
+    }
+
+    \node[font=\tiny\bfseries, text=primaryblue] at (1.02, -1.24) {Left};
+    \node[font=\tiny\bfseries, text=accentamber] at (3.99, -1.24) {Mid};
+    \node[font=\tiny\bfseries, text=codegreen] at (6.96, -1.24) {Right};
+
+    \draw[draw=codeframe!60] (0.48, -2.52) -- (7.52, -2.52);
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.95cm] at (0.48, -2.68) {
+        $\bullet$ Splitting at \textbf{any} \texttt{mid} yields at least one sorted half.\\
+        $\bullet$ Here $A[0] = 4 \le A[3] = 7 \implies$ left $[0 \dots 3]$ is sorted!
+    };
+
+    % --- Right Panel: Branch Rules (x: 8.00 to 15.15) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (8.00, -4.28) rectangle (15.15, 3.68);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.22, 3.48) {Sorted-Half Branching Rules:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.65cm] at (8.22, 2.95) {
+        \textbf{Case 1: Left Half Sorted} ($A[L] \le A[\text{mid}]$):\\[2pt]
+        $\bullet$ If $A[L] \le T < A[\text{mid}]$ $\implies R = \text{mid} - 1$.\\
+        $\bullet$ Else $\implies L = \text{mid} + 1$.
+    };
+
+    \draw[draw=codeframe!60] (8.22, 1.32) -- (14.92, 1.32);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.65cm] at (8.22, 1.14) {
+        \textbf{Case 2: Right Half Sorted} ($A[L] > A[\text{mid}]$):\\[2pt]
+        $\bullet$ If $A[\text{mid}] < T \le A[R]$ $\implies L = \text{mid} + 1$.\\
+        $\bullet$ Else $\implies R = \text{mid} - 1$.
+    };
+
+    \draw[draw=codeframe!60] (8.22, -0.50) -- (14.92, -0.50);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.65cm] at (8.22, -0.68) {
+        \textbf{Watch Out --- Duplicates} ($A[L] = A[\text{mid}] = A[R]$):\\[2pt]
+        Cannot tell which side holds the pivot (e.g., $[1, 0, 1, 1, 1]$). Shrink linearly (\texttt{++L; {-}{-}R;}); worst case degrades to $O(N)$.
+    };
+
+    \draw[draw=codeframe!60] (8.22, -2.80) -- (14.92, -2.80);
+    \node[anchor=north west, font=\scriptsize\bfseries, text=primaryblue, align=left, text width=6.65cm] at (8.22, -2.96) {
+        Unique elements: strictly $O(\log N)$ time, $O(1)$ space.
+    };
+\end{tikzpicture}
+\caption{Search in a rotated sorted array. Left: two monotonic ramps separated by one pivot cliff ensure at least one half is strictly sorted. Right: range-membership tests preserve $O(\log N)$ convergence.}
+\label{fig:bs-rotated-array}
+\end{figure}
+
+\examplebeat \textbf{Trace for $T = 0$ in $A = [4, 5, 6, 7, 0, 1, 2]$:}
+\begin{enumerate}
+    \item $L = 0, R = 6, \text{mid} = 3$ ($A[3] = 7$): $A[0] = 4 \le 7$ (left $[4..7]$ sorted); $0 \notin [4, 7) \implies L = 4$.
+    \item $L = 4, R = 6, \text{mid} = 5$ ($A[5] = 1$): $A[4] = 0 \le 1$ (left $[0, 1]$ sorted); $0 \in [0, 1) \implies R = 4$.
+    \item $L = 4, R = 4, \text{mid} = 4$ ($A[4] = 0 == 0$) $\implies$ Found at index $\mathbf{4}$.
+\end{enumerate}
+
+\begin{tryitbox}{Trace}{Rotated Array Search on 6, 7, 1, 2, 3, 4, 5}{ex5}
+Trace rotated binary search on $A = [6, 7, 1, 2, 3, 4, 5]$ for \textbf{(a)} target $T = 2$ and \textbf{(b)} target $T = 7$. At every step, record $(L, R, \text{mid})$, identify which half is sorted, and show the pointer update.
+\end{tryitbox}
+
+\subsection{Peak Elements via Slope Analysis}
+
+Given an array where adjacent elements never tie ($A[i] \neq A[i+1]$) and virtual endpoints are $-\infty$, compare $A[\text{mid}]$ with $A[\text{mid} + 1]$:
 \begin{itemize}
-    \item If $A[L] \le A[\text{mid}]$, the left half is cleanly sorted. We can determine if the target lies within the left half simply by checking $A[L] \le \text{target} < A[\text{mid}]$.
-    \item Otherwise, the right half is cleanly sorted. We check if the target lies within the right half: $A[\text{mid}] < \text{target} \le A[R]$.
-\end{itemize}
-In either case, one half is preserved and the other discarded, maintaining $O(\log N)$ time.
-
-\noindent \textbf{Worked Step-by-Step Example}:
-Search for Target $0$ in $A = [4, 5, 6, 7, 0, 1, 2]$.
-
-\subsection{Finding Peak Elements via Slope Analysis}
-
-An array element is a \textbf{peak element} if it is strictly greater than its immediate neighbors. Given an array where adjacent elements are never equal, we can locate a peak in $O(\log N)$ time without inspecting all elements.
-
-The decision is governed by local slope:
-\begin{itemize}
-    \item If $A[\text{mid}] < A[\text{mid} + 1]$, the sequence is rising to the right. A peak is guaranteed to exist somewhere to the right of $\text{mid}$ (at least at the maximum of that ascending sequence). Move right: $L = \text{mid} + 1$.
-    \item If $A[\text{mid}] > A[\text{mid} + 1]$, the sequence is falling. A peak exists at $\text{mid}$ or to its left. Move left: $R = \text{mid}$.
+    \item If $A[\text{mid}] < A[\text{mid} + 1]$ (rising slope), walking uphill guarantees a peak to the \textbf{right}: $L = \text{mid} + 1$.
+    \item Otherwise (falling slope), $\text{mid}$ itself or an element to its \textbf{left} is a peak: $R = \text{mid}$.
 \end{itemize}
 
-\noindent \textbf{Worked Step-by-Step Example}:
-Find a peak in $A = [1, 2, 1, 3, 5, 6, 4]$.
+\examplebeat \textbf{Trace on $A = [1, 2, 1, 3, 5, 6, 4]$ ($L = 0, R = 6$):}
+\begin{enumerate}
+    \item $[0, 6],\; \text{mid} = 3$: $A[3] = 3 < A[4] = 5$ (rising) $\implies L = 4$.
+    \item $[4, 6],\; \text{mid} = 5$: $A[5] = 6 > A[6] = 4$ (falling) $\implies R = 5$.
+    \item $[4, 5],\; \text{mid} = 4$: $A[4] = 5 < A[5] = 6$ (rising) $\implies L = 5$.
+\end{enumerate}
+Terminates at $L = R = \mathbf{5}$ ($A[5] = 6$, strictly greater than neighbors $5$ and $4$).
+
+\begin{tryitbox}{Twist}{Finding the Minimum Element in a Rotated Array}{ex6}
+How can you use half-open style \texttt{while (L < R)} comparing $A[\text{mid}]$ with $A[R]$ to find the \textbf{minimum element} in a rotated sorted array of unique values? Trace your rule on $[4, 5, 6, 7, 0, 1, 2]$.
+\end{tryitbox}
 
 \subsection{Continuous (Floating-Point) Binary Search}
 
-Binary search applies equally to continuous mathematical functions. When finding a root $x$ such that $f(x) = 0$ for a strictly increasing continuous function, the search space is an interval of real numbers $[L, R]$.
+\painbeat Running \texttt{while (left < right)} or an overly tiny \texttt{while (right - left > 1e-18)} on IEEE 754 \texttt{double} values loops forever once \texttt{right - left} shrinks to one unit in the last place (ULP) and \texttt{(left + right) / 2} rounds back to an endpoint!
 
-Instead of integer increments, two termination strategies are used:
-\begin{enumerate}
-    \item \textbf{Epsilon Threshold}: Loop while $R - L > \epsilon$ (for example, $\epsilon = 10^{-7}$).
-    \item \textbf{Fixed Iteration Count}: Execute a fixed loop of $60$ to $100$ iterations. Because $\frac{R - L}{2^{100}} \approx 0$, 100 iterations achieves precision far surpassing standard 64-bit IEEE 754 double precision, eliminating floating-point rounding loop stalls entirely.
-\end{enumerate}
+\ahabeat Run a \textbf{fixed iteration count} of $60$ to $80$ loops. After $80$ halvings, the interval width shrinks by a factor of $2^{80} \approx 1.2 \times 10^{24}$---far exceeding IEEE 754 \texttt{double}'s 53-bit significand precision ($\approx 2.2 \times 10^{-16}$)---with zero risk of floating-point stall!
 
-\noindent \textbf{Worked Step-by-Step Example}:
-Compute $\sqrt{2}$ by finding the positive root of $f(x) = x^2 - 2 = 0$ on $[1.0, 2.0]$.
+\examplebeat \textbf{Computing $\sqrt{2}$ via $f(x) = x^2 - 2 = 0$ on $[1.0, 2.0]$:}
+\begin{center}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\centering\arraybackslash\bfseries}p{1.1cm} >{\centering\arraybackslash}p{2.6cm} >{\centering\arraybackslash}p{2.0cm} >{\centering\arraybackslash}p{2.4cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Iter}} & \textcolor{primaryblue}{\textbf{$[L, R]$}} & \textcolor{primaryblue}{\textbf{$\text{mid}$}} & \textcolor{primaryblue}{\textbf{$f(\text{mid}) = \text{mid}^2 - 2$}} & \textcolor{primaryblue}{\textbf{Update}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+1 & $[1.0000, 2.0000]$ & $1.50000$ & $+0.2500$ & $R = 1.50000$ \\
+2 & $[1.0000, 1.5000]$ & $1.25000$ & $-0.4375$ & $L = 1.25000$ \\
+3 & $[1.2500, 1.5000]$ & $1.37500$ & $-0.1094$ & $L = 1.37500$ \\
+4 & $[1.3750, 1.5000]$ & $1.43750$ & $+0.0664$ & $R = 1.43750$ \\
+5 & $[1.3750, 1.4375]$ & $1.40625$ & $-0.0225$ & $L = 1.40625$ \\
+6 & $[1.40625, 1.4375]$ & $1.42188$ & $+0.0217$ & $R = 1.42188 \to \dots \to \mathbf{1.41421356}$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
+\end{center}
+
+\subsection{2D Row-Sorted Matrix Search}
+
+Two common matrix variants leverage binary search:
+\begin{itemize}
+    \item \textbf{Globally sorted $M \times N$ matrix} (every row's first element exceeds the previous row's last): map virtual 1D index $\text{mid} \in [0, M \cdot N)$ to $(\text{mid} / N,\; \text{mid} \bmod N)$ for $O(\log(M \cdot N))$ lookup.
+    \item \textbf{$k$-th smallest in row-sorted matrix:} Binary search the \emph{value range} $[\text{min}, \text{max}]$; for candidate \texttt{mid}, sum \texttt{upper\_bound(row, mid)} across all $M$ rows in $O(M \log N)$ per check ($O(M \log N \log(\text{Range}))$ total).
+\end{itemize}
+
+\begin{tryitbox}{Debug}{Why Epsilon Loops Hang on Large Doubles}{ex7}
+An engineer searches for $\sqrt{10^9} \approx 31{,}622.77$ on $[0, 10^9]$ using \texttt{while (right - left > 1e-12)}. Using IEEE 754 \texttt{double}'s 53-bit significand precision, explain why this loop can hang forever and write the safe replacement loop header.
+\end{tryitbox}
 
 % ============================================================================
 \section{Key Algorithmic Patterns}
 % ============================================================================
 
-\subsection{Why Naive Approaches Fail}
+Every Binary Search on the Answer problem follows the same four-step template: (1) prove predicate monotonicity, (2) bracket tight bounds $[L, R]$, (3) write an $O(N)$ greedy/simulation check \texttt{is\_feasible(mid)}, and (4) converge via half-open $[L, R)$ or closed $[L, R]$.
 
-In algorithmic problem solving, binary search is the primary antidote to linear scan timeouts. Beginners often stumble into performance bottlenecks by overlooking the underlying monotonicity:
+\subsection{Worked Trace: Minimal Feasible Processing Rate}
 
-\begin{enumerate}
-    \item \textbf{Linear Answer Incrementing}:
-    When asked to find the minimum capacity, speed, or divisor, a naive program tests $x = 1, 2, 3, \dots$ sequentially. If the answer space reaches $10^9$ and verification takes $O(N)$ with $N = 10^5$, linear scanning requires $10^9 \times 10^5 = 10^{14}$ operations, causing an immediate Time Limit Exceeded (TLE) error. Binary search evaluates at most $\lceil \log_2(10^9) \rceil \approx 30$ candidates, executing only $30 \times 10^5 = 3 \times 10^6$ operations (under 5 milliseconds).
-    
-    \item \textbf{Brute-Force Pair Search}:
-    To find if two elements sum to a target in a sorted array, checking all pairs takes $O(N^2)$ time. For each element $A[i]$, binary searching for $\text{target} - A[i]$ reduces the complexity to $O(N \log N)$.
-    
-    \item \textbf{Floating-Point Rounding Loops}:
-    When performing continuous binary search, terminating with \texttt{while (left < right)} on floating-point numbers causes infinite loops because finite-precision IEEE 754 arithmetic cannot distinguish between numbers that differ by less than machine epsilon.
-\end{enumerate}
+A machine processes $N = 4$ batches $[3, 6, 7, 11]$ within $H = 8$ hours; speed $K$ processes batch $S$ in $\lceil S / K \rceil = (S + K - 1) / K$ hours. Search bounds: $[L, R) = [1, 11]$ (rate $11$ takes $4 \le 8$ hours).
 
-\subsection{The Core Efficient Pattern}
+\begin{center}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\centering\arraybackslash\bfseries}p{1.0cm} >{\centering\arraybackslash}p{1.8cm} >{\centering\arraybackslash}p{1.2cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Step}} & \textcolor{primaryblue}{\textbf{$[L, R]$}} & \textcolor{primaryblue}{\textbf{$K$}} & \textcolor{primaryblue}{\textbf{Hours $\sum \lceil S_i / K \rceil$}} & \textcolor{primaryblue}{\textbf{Update}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+1 & $[1, 11]$ & $6$ & $1 + 1 + 2 + 2 = 6 \le 8$ (\texttt{T}) & $R = 6$ \\
+2 & $[1, 6]$ & $3$ & $1 + 2 + 3 + 4 = 10 > 8$ (\texttt{F}) & $L = 4$ \\
+3 & $[4, 6]$ & $5$ & $1 + 2 + 2 + 3 = 8 \le 8$ (\texttt{T}) & $R = 5$ \\
+4 & $[4, 5]$ & $4$ & $1 + 2 + 2 + 3 = 8 \le 8$ (\texttt{T}) & $R = 4$ (Stop: $L = R = \mathbf{4}$) \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
+\end{center}
 
-Every binary search on the answer follows a universal four-step structural pattern:
-
-\begin{enumerate}
-    \item \textbf{Identify Monotonicity}: Prove that if candidate $x$ is feasible, then all $x' > x$ (or all $x' < x$) are also feasible.
-    \item \textbf{Bracket the Search Domain $[L, R]$}: Establish a guaranteed lower bound $L$ (a value known to be too small, or the theoretical minimum) and an upper bound $R$ (a value known to be sufficient, or the theoretical maximum).
-    \item \textbf{Implement the Feasibility Predicate \texttt{isFeasible(mid)}}: Design a greedy or simulation check that verifies whether candidate $\text{mid}$ satisfies the problem constraints, usually running in $O(N)$ time.
-    \item \textbf{Narrow the Interval}: If $\text{mid}$ is feasible, record it as a potential solution and shrink the interval toward tighter candidates; otherwise, discard the infeasible half.
-\end{enumerate}
-
-\subsection{Worked Trace: Locating the Minimal Feasible Rate}
-
-\noindent \textbf{Problem}: A machine processes $N = 4$ batches of data with sizes $[3, 6, 7, 11]$. Total processing time must not exceed $H = 8$ hours. A processing speed of $K$ units per hour processes a batch of size $S$ in $\lceil S / K \rceil$ hours. Find the minimum integer speed $K$.
-
-\begin{calloutbox}{Ceiling Division Without Floating-Point Types}
-When computing $\lceil A / B \rceil$ for positive integers $A$ and $B$, never use \texttt{std::ceil(static\_cast<double>(A) / B)}. Floating-point conversion introduces precision loss for large 64-bit integers. Instead, use the exact integer identity:
-\begin{equation*}
-    \left\lceil \frac{A}{B} \right\rceil = \frac{A + B - 1}{B}
-\end{equation*}
+\begin{calloutbox}{Exact Integer Ceiling Division Without Floating-Point Precision Loss}
+Never write \texttt{std::ceil(static\_cast<double>(A) / B)} for 64-bit integers---\texttt{double} loses exact integer precision past $2^{53} \approx 9 \times 10^{15}$! Use exact integer arithmetic: $\lceil A / B \rceil = (A + B - 1) / B$ (or $1 + (A - 1) / B$ for $A \ge 1$ to prevent $A + B$ overflow).
 \end{calloutbox}
 
 % ============================================================================
 \section{Worked Examples}
 % ============================================================================
 
-\begin{example}[Counting Target Frequencies in a Range with Duplicates]
-\textbf{Problem Statement}: Given a sorted array $A = [1, 3, 5, 7, 7, 7, 9, 11]$ of length $8$, determine how many times target $X = 7$ appears using $O(\log N)$ boundary searches.
-
+\begin{example}[Counting Target Frequencies with Half-Open Bounds]
+Find how many times $X = 7$ occurs in sorted $A = [1, 3, 5, 7, 7, 7, 9, 11]$ ($N = 8$) using half-open $[0, 8)$.
 \begin{enumerate}
-    \item \textbf{Strategy}: Find the first index where $A[i] \ge 7$ (\texttt{lower\_bound}) and the first index where $A[i] > 7$ (\texttt{upper\_bound}). The difference between these two indices equals the count.
-    
-    \item \textbf{Compute Lower Bound for 7}:
-    \begin{itemize}
-        \item $L = 0, R = 7 \implies \text{mid} = 3$. $A[3] = 7 \ge 7$. Set $R = 2$, candidate $= 3$.
-        \item $L = 0, R = 2 \implies \text{mid} = 1$. $A[1] = 3 < 7$. Set $L = 2$.
-        \item $L = 2, R = 2 \implies \text{mid} = 2$. $A[2] = 5 < 7$. Set $L = 3$.
-        \item $L = 3 > R = 2$. Loop ends. First index with value $\ge 7$ is $\mathbf{3}$.
-    \end{itemize}
-    
-    \item \textbf{Compute Upper Bound for 7}:
-    \begin{itemize}
-        \item $L = 0, R = 7 \implies \text{mid} = 3$. $A[3] = 7 \ngtr 7$. Set $L = 4$.
-        \item $L = 4, R = 7 \implies \text{mid} = 5$. $A[5] = 7 \ngtr 7$. Set $L = 6$.
-        \item $L = 6, R = 7 \implies \text{mid} = 6$. $A[6] = 9 > 7$. Set $R = 5$, candidate $= 6$.
-        \item $L = 6 > R = 5$. Loop ends. First index with value $> 7$ is $\mathbf{6}$.
-    \end{itemize}
-    
-    \item \textbf{Calculate Frequency}:
-    \begin{equation*}
-        \text{Frequency} = \text{upper\_bound} - \text{lower\_bound} = 6 - 3 = \mathbf{3}
-    \end{equation*}
-    Element $7$ appears exactly $3$ times.
+    \item \textbf{Lower Bound ($A[\text{mid}] \ge 7$):}
+    $[0, 8) \xrightarrow{\text{mid}=4,\; 7 \ge 7} [0, 4) \xrightarrow{\text{mid}=2,\; 5 < 7} [3, 4) \xrightarrow{\text{mid}=3,\; 7 \ge 7} [3, 3) \implies \mathbf{3}$.
+    \item \textbf{Upper Bound ($A[\text{mid}] > 7$):}
+    $[0, 8) \xrightarrow{\text{mid}=4,\; 7 \ngtr 7} [5, 8) \xrightarrow{\text{mid}=6,\; 9 > 7} [5, 6) \xrightarrow{\text{mid}=5,\; 7 \ngtr 7} [6, 6) \implies \mathbf{6}$.
+    \item \textbf{Count:} $6 - 3 = \mathbf{3}$ occurrences (indices $3, 4, 5$).
 \end{enumerate}
 \end{example}
 
 \begin{example}[Minimizing the Maximum Workload (Painter's Partition)]
-\textbf{Problem Statement}: We have $N = 4$ boards of lengths $[12, 34, 67, 90]$. We must paint all boards using $K = 2$ painters. A painter can only paint contiguous boards, and painting takes $1$ unit of time per unit of board length. Find the minimum possible maximum workload assigned to any single painter.
-
+Partition boards $[12, 34, 67, 90]$ among $K = 2$ contiguous painters to minimize the heaviest workload. Bounds: $L = \max = 90$, $R = \sum = 203$.
 \begin{enumerate}
-    \item \textbf{Establish Answer Bounds}:
-    \begin{itemize}
-        \item Minimum possible maximum: $L = \max([12, 34, 67, 90]) = 90$.
-        \item Maximum possible maximum: $R = \sum [12, 34, 67, 90] = 203$.
-    \end{itemize}
-    
-    \item \textbf{Feasibility Predicate $P(W)$}:
-    Can we partition the array into at most $K = 2$ contiguous subarrays such that each subarray sum is $\le W$?
-    
-    \item \textbf{Trace on Search Domain $[90, 203]$}:
-    \begin{itemize}
-        \item Step 1: $L = 90, R = 203 \implies \text{mid} = 146$.
-        Greedy simulation with limit 146:
-        Painter 1: $12 + 34 + 67 = 113$ (adding 90 would give $203 > 146$).
-        Painter 2: $90$.
-        Total painters needed = 2 $\le 2$. Feasible! Set $R = 145$, record 146.
-        
-        \item Step 2: $L = 90, R = 145 \implies \text{mid} = 117$.
-        Greedy simulation with limit 117:
-        Painter 1: $12 + 34 + 67 = 113 \le 117$.
-        Painter 2: $90 \le 117$.
-        Total painters needed = 2 $\le 2$. Feasible! Set $R = 116$, record 117.
-        
-        \item Step 3: $L = 90, R = 116 \implies \text{mid} = 103$.
-        Greedy simulation with limit 103:
-        Painter 1: $12 + 34 = 46$ (adding 67 gives $113 > 103$).
-        Painter 2: $67$ (adding 90 gives $157 > 103$).
-        Painter 3: $90$.
-        Total painters needed = 3 $> 2$. Infeasible! Set $L = 104$.
-        
-        \item Step 4: $L = 104, R = 116 \implies \text{mid} = 110$.
-        Painter 1: $12 + 34 = 46$. Painter 2: $67$. Painter 3: $90$. Needs 3 painters $> 2$. Infeasible! Set $L = 111$.
-        
-        \item Step 5: $L = 111, R = 116 \implies \text{mid} = 113$.
-        Painter 1: $12 + 34 + 67 = 113 \le 113$. Painter 2: $90 \le 113$. Needs 2 painters $\le 2$. Feasible! Set $R = 112$, record 113.
-        
-        \item Step 6: $L = 111, R = 112 \implies \text{mid} = 111$.
-        Painter 1: $12 + 34 = 46$. Painter 2: $67$. Painter 3: $90$. Needs 3 painters $> 2$. Infeasible! Set $L = 112$.
-        
-        \item Step 7: $L = 112, R = 112 \implies \text{mid} = 112$.
-        Needs 3 painters. Infeasible! Set $L = 113$.
-    \end{itemize}
-    \item Search terminates with $L = 113 > R = 112$. The optimal maximum workload is $\mathbf{113}$.
+    \item $[90, 203],\; \text{mid} = 146$: $[12,34,67]=113,\; [90]=90$ ($2 \le 2$, \texttt{T}) $\implies R = 146$.
+    \item $[90, 146],\; \text{mid} = 118$: $113 \le 118,\; 90 \le 118$ ($2 \le 2$, \texttt{T}) $\implies R = 118$.
+    \item $[90, 118],\; \text{mid} = 104$: $[12,34]=46,\; [67],\; [90]$ ($3 > 2$, \texttt{F}) $\implies L = 105$.
+    \item $[105, 118],\; \text{mid} = 111$: needs $3$ painters (\texttt{F}) $\implies L = 112$.
+    \item $[112, 118],\; \text{mid} = 115$: needs $2$ painters (\texttt{T}) $\implies R = 115$.
+    \item $[112, 115],\; \text{mid} = 113$: $[12,34,67]=113,\; [90]$ ($2 \le 2$, \texttt{T}) $\implies R = 113$.
+    \item $[112, 113],\; \text{mid} = 112$: needs $3$ painters (\texttt{F}) $\implies L = 113$.
 \end{enumerate}
+Terminates at $L = R = \mathbf{113}$.
 \end{example}
 
 \begin{example}[Search in a Rotated Array with Unique Elements]
-\textbf{Problem Statement}: Search for target $X = 3$ in the cyclically rotated array $A = [6, 7, 1, 2, 3, 4, 5]$ of length $7$.
-
+Locate target $X = 3$ in $A = [6, 7, 1, 2, 3, 4, 5]$ ($L = 0, R = 6$).
 \begin{enumerate}
-    \item \textbf{Initialize}: $L = 0, R = 6$.
-    
-    \item \textbf{Step 1}:
-    $\text{mid} = 0 + (6 - 0) / 2 = 3$. $A[3] = 2$.
-    Does $A[3] == 3$? No.
-    Determine which half is sorted:
-    $A[L] = A[0] = 6$ and $A[\text{mid}] = A[3] = 2$.
-    Because $A[L] > A[\text{mid}]$, the left half is broken by the rotation pivot.
-    Therefore, the \textbf{right half} $[2, 3, 4, 5]$ is strictly sorted.
-    Does target $3$ lie within the right sorted range $(A[\text{mid}], A[R]] = (2, 5]$?
-    Yes, $2 < 3 \le 5$.
-    Discard the left half: $L = \text{mid} + 1 = 4$.
-    
-    \item \textbf{Step 2}:
-    $L = 4, R = 6 \implies \text{mid} = 5$. $A[5] = 4$.
-    Does $A[5] == 3$? No.
-    Check sorted half: $A[L] = A[4] = 3 \le A[5] = 4$. Left half $[3, 4]$ is sorted.
-    Does target $3$ lie in $[A[L], A[\text{mid}]) = [3, 4)$?
-    Yes, $3 \le 3 < 4$.
-    Discard the right half: $R = \text{mid} - 1 = 4$.
-    
-    \item \textbf{Step 3}:
-    $L = 4, R = 4 \implies \text{mid} = 4$. $A[4] = 3$.
-    Match found! Target $3$ is located at index $\mathbf{4}$.
+    \item $\text{mid} = 3$ ($A[3] = 2 \neq 3$): $A[0] = 6 > A[3] = 2 \implies$ right half $[2,3,4,5]$ is sorted. Since $2 < 3 \le 5$, set $L = 4$.
+    \item $[4, 6],\; \text{mid} = 5$ ($A[5] = 4 \neq 3$): $A[4] = 3 \le A[5] = 4 \implies$ left half $[3, 4]$ is sorted. Since $3 \le 3 < 4$, set $R = 4$.
+    \item $[4, 4],\; \text{mid} = 4$ ($A[4] = 3 == 3$) $\implies$ Found at index $\mathbf{4}$.
 \end{enumerate}
 \end{example}
 
-\begin{example}[Integer Square Root Without Floating-Point Functions]
-\textbf{Problem Statement}: Given a positive 32-bit integer $N = 2{,}147{,}395{,}600$, find the largest integer $k$ such that $k^2 \le N$ without calling \texttt{std::sqrt}.
-
+\begin{example}[Integer Square Root Without \texttt{std::sqrt} (Complete Step Trace)]
+Find $\lfloor \sqrt{50} \rfloor$: the largest integer $k \ge 0$ satisfying $k^2 \le 50$. Bounds: $[L, R] = [0, 50]$, \texttt{ans = 0}.
 \begin{enumerate}
-    \item \textbf{Set Interval}: $L = 0, R = N$. Since $N \le 2^{31} - 1$, we can clamp $R = 46{,}340$ because $(46{,}341)^2 > 2^{31} - 1$. Alternatively, use a general bound $R = N$ with 64-bit integer types (\texttt{long long}) to avoid overflow during squaring.
-    
-    \item \textbf{Monotonic Condition}: $P(k) = (k^2 \le N)$.
-    For $k = 0, 1, 2, \dots, \lfloor \sqrt{N} \rfloor$, $P(k)$ is \texttt{true}.
-    For all $k > \lfloor \sqrt{N} \rfloor$, $P(k)$ is \texttt{false}.
-    We seek the \textbf{last true} value.
-    
-    \item \textbf{Search Trace (Representative Steps)}:
-    \begin{itemize}
-        \item $L = 1, R = 46{,}340$.
-        \item Midpoint $\text{mid} = 23{,}170$. Compute $\text{mid}^2 = 536{,}848{,}900 \le N$. Feasible! Record $23{,}170$, test higher: $L = 23{,}171$.
-        \item Halving repeatedly narrows the range to $L = 46{,}339, R = 46{,}340$.
-        \item Testing $46{,}340$: $(46{,}340)^2 = 2{,}147{,}395{,}600 \le N$. Exactly equal!
-    \end{itemize}
-    \item Result: $\lfloor \sqrt{2{,}147{,}395{,}600} \rfloor = \mathbf{46{,}340}$.
+    \item $[0, 50],\; \text{mid} = 25$: $25^2 = 625 > 50 \implies R = 24$.
+    \item $[0, 24],\; \text{mid} = 12$: $12^2 = 144 > 50 \implies R = 11$.
+    \item $[0, 11],\; \text{mid} = 5$: $5^2 = 25 \le 50 \implies \text{ans} = 5,\; L = 6$.
+    \item $[6, 11],\; \text{mid} = 8$: $8^2 = 64 > 50 \implies R = 7$.
+    \item $[6, 7],\; \text{mid} = 6$: $6^2 = 36 \le 50 \implies \text{ans} = 6,\; L = 7$.
+    \item $[7, 7],\; \text{mid} = 7$: $7^2 = 49 \le 50 \implies \text{ans} = 7,\; L = 8$.
 \end{enumerate}
+Loop stops ($L = 8 > R = 7$): $\lfloor \sqrt{50} \rfloor = \mathbf{7}$. \emph{Overflow tip:} For large $N \le 2^{31} - 1$, test \texttt{mid <= N / mid} (or use \texttt{std::int64\_t}) so $\text{mid}^2$ never overflows!
 \end{example}
 
-\begin{example}[Aggressive Element Placement: Maximizing the Minimum Gap]
-\textbf{Problem Statement}: We have $N = 5$ stall locations along a line at coordinates $X = [1, 2, 4, 8, 9]$. We must place $C = 3$ items into distinct stalls such that the minimum distance between any two assigned items is as large as possible.
-
+\begin{example}[Maximizing the Minimum Gap (Aggressive Placement)]
+Place $C = 3$ items in stalls $X = [1, 2, 4, 8, 9]$ to maximize the minimum gap $D$. Predicate $P(D)$ is \texttt{TTTFFF}; search $[L, R] = [1, 8]$.
 \begin{enumerate}
-    \item \textbf{Model the Problem}: We want to find the largest distance $D$ such that at least $C = 3$ items can be placed with mutual separation $\ge D$.
-    
-    \item \textbf{Verify Monotonicity}: If we can place $3$ items with distance $\ge D$, we can also place them with any smaller distance $D' < D$. The predicate $P(D)$ is true for small $D$ and false for large $D$:
-    \begin{equation*}
-        [\text{true}, \text{true}, \dots, \text{true}, \mathbf{\text{true}}, \text{false}, \text{false}]
-    \end{equation*}
-    
-    \item \textbf{Search Domain}:
-    $L = 1$ (minimum possible distance between adjacent stalls).
-    $R = X[N-1] - X[0] = 9 - 1 = 8$ (maximum possible distance).
-    
-    \item \textbf{Feasibility Function \texttt{canPlace(D)}}:
-    Greedily place the first item at $X[0]$. For every subsequent stall $X[i]$, if $X[i] - \text{last\_placed} \ge D$, place an item and update $\text{last\_placed} = X[i]$. Return true if total placed $\ge C$.
-    
-    \item \textbf{Binary Search Trace}:
-    \begin{itemize}
-        \item $L = 1, R = 8 \implies \text{mid} = 4$.
-        Place at $1$. Next stall with diff $\ge 4$ is $8$ ($8 - 1 = 7 \ge 4$). Placed 2 items. Next is none. Total placed = $2 < 3$. Infeasible! Set $R = 3$.
-        
-        \item $L = 1, R = 3 \implies \text{mid} = 2$.
-        Place at $1$. Next $\ge 1 + 2 = 3$ is $4$. Placed at $4$. Next $\ge 4 + 2 = 6$ is $8$. Placed at $8$. Total placed = 3. Feasible! Record candidate $2$, search higher: $L = 3$.
-        
-        \item $L = 3, R = 3 \implies \text{mid} = 3$.
-        Place at $1$. Next $\ge 1 + 3 = 4$ is $4$. Next $\ge 4 + 3 = 7$ is $8$. Placed at $1, 4, 8$. Total placed = 3 $\ge 3$. Feasible! Record candidate $3$, search higher: $L = 4$.
-    \end{itemize}
-    \item Loop ends with $L = 4 > R = 3$. The maximum minimum distance is $\mathbf{3}$.
+    \item $[1, 8],\; \text{mid} = 4$: greedy places at $1, 8$ ($2 < 3$, \texttt{F}) $\implies R = 3$.
+    \item $[1, 3],\; \text{mid} = 2$: places at $1, 4, 8$ ($3 \ge 3$, \texttt{T}) $\implies \text{ans} = 2,\; L = 3$.
+    \item $[3, 3],\; \text{mid} = 3$: places at $1, 4, 8$ ($3 \ge 3$, \texttt{T}) $\implies \text{ans} = 3,\; L = 4$.
 \end{enumerate}
+Terminates ($L = 4 > R = 3$): maximum minimum gap $= \mathbf{3}$.
 \end{example}
+
 % ============================================================================
-\section{Practical C++ Implementations}
+\section{C++ Implementations}
 % ============================================================================
 
-This section presents robust, production-grade C++23 implementations of foundational binary search patterns. All functions avoid global state, adhere to modern C++ conventions (\texttt{[[nodiscard]]}, \texttt{noexcept} where appropriate, \texttt{std::ranges}), and document every step with numbered comments.
+Every listing below is standalone C++23 (\texttt{-std=c++23 -Wall -Wextra} clean), using C++20 \texttt{std::midpoint}, C++23 \texttt{std::ranges::fold\_left}, \texttt{std::optional}, and \texttt{std::invocable} concepts.
 
-\subsection{What is the Search Invariant and Midpoint Calculation?}
+\subsection{Classic Binary Search (\texorpdfstring{\texttt{std::midpoint}}{std::midpoint})}
+Returns the index if found or \texttt{std::nullopt} otherwise, guarding empty input and unsigned underflow.
 
-A classic binary search on a sorted contiguous array maintains the invariant that the target, if present, resides within the closed index range $[L, R]$.
-
-To ensure correctness and avoid bugs:
-\begin{enumerate}
-    \item Use \texttt{L <= R} as the loop condition so the single-element case $L == R$ is evaluated.
-    \item Compute the midpoint as $L + (R - L) / 2$ to prevent integer overflow.
-    \item If $A[\text{mid}]$ does not match the target, strictly shrink the boundary to $\text{mid} - 1$ or $\text{mid} + 1$ to guarantee progress and avoid infinite loops.
-\end{enumerate}
-
-\begin{lstlisting}[language=C++, caption={Classic Binary Search in a Sorted Array}]
-#include <vector>
-#include <optional>
+\begin{lstlisting}[caption={Classic binary search using std::midpoint}]
 #include <cstddef>
+#include <numeric>
+#include <optional>
+#include <span>
 
-// Searches for target in a sorted vector.
-// Returns the index of target if found; std::nullopt otherwise.
-[[nodiscard]] std::optional<std::size_t> binarySearch(
-    const std::vector<int>& nums,
+[[nodiscard]] std::optional<std::size_t> binary_search(
+    std::span<const int> nums,
     int target
 ) noexcept {
     if (nums.empty()) return std::nullopt;
-
     std::size_t left = 0;
     std::size_t right = nums.size() - 1;
 
-    // 1. Maintain closed interval [left, right]
     while (left <= right) {
-        // 2. Safe midpoint calculation avoiding integer overflow
-        std::size_t mid = left + (right - left) / 2;
-
-        if (nums[mid] == target) {
-            return mid; // Target found
-        }
-
+        const std::size_t mid = std::midpoint(left, right);
+        if (nums[mid] == target) return mid;
         if (nums[mid] < target) {
-            left = mid + 1; // Discard left half
+            left = mid + 1;
         } else {
-            if (mid == 0) break; // Guard against underflow with unsigned size_t
-            right = mid - 1; // Discard right half
+            if (mid == 0) break;
+            right = mid - 1;
         }
     }
-
-    return std::nullopt; // Target not present
+    return std::nullopt;
 }
 \end{lstlisting}
 
-\subsection{What is the First-True Monotonic Boundary?}
+\subsection{Half-Open \texorpdfstring{$[L, R)$}{[L, R)} Lower Bound and Upper Bound}
+Both functions maintain the exact half-open invariant $[0, N)$ with \texttt{right = mid} and \texttt{left = mid + 1}, matching the prose and requiring zero unsigned underflow guards.
 
-Lower bound and upper bound locate the boundary where a boolean condition changes from false to true:
-\begin{itemize}
-    \item \textbf{Lower Bound}: Predicate is $P(i) = (A[i] \ge \text{target})$.
-    \item \textbf{Upper Bound}: Predicate is $P(i) = (A[i] > \text{target})$.
-\end{itemize}
-
-Whenever $P(\text{mid})$ is true, $\text{mid}$ is a valid candidate for the first occurrence, but an earlier occurrence may exist to the left. We record $\text{mid}$ and search left ($R = \text{mid} - 1$). If $P(\text{mid})$ is false, the answer must lie strictly to the right ($L = \text{mid} + 1$).
-
-\begin{lstlisting}[language=C++, caption={Custom Lower Bound and Upper Bound Implementations}]
-#include <vector>
+\begin{lstlisting}[caption={Half-open lower\_bound and upper\_bound using std::midpoint}]
 #include <cstddef>
+#include <numeric>
+#include <span>
 
-// Finds the first index i such that nums[i] >= target.
-// Returns nums.size() if all elements are strictly less than target.
-[[nodiscard]] std::size_t lowerBound(
-    const std::vector<int>& nums,
+[[nodiscard]] std::size_t lower_bound_index(
+    std::span<const int> nums,
     int target
 ) noexcept {
     std::size_t left = 0;
-    std::size_t right = nums.size(); // Half-open range [0, nums.size())
+    std::size_t right = nums.size(); // Half-open [left, right)
 
     while (left < right) {
-        std::size_t mid = left + (right - left) / 2;
+        const std::size_t mid = std::midpoint(left, right);
         if (nums[mid] >= target) {
-            right = mid; // Candidate found; search left half
+            right = mid;
         } else {
-            left = mid + 1; // Infeasible; search right half
+            left = mid + 1;
         }
     }
     return left;
 }
 
-// Finds the first index i such that nums[i] > target.
-// Returns nums.size() if no element is strictly greater than target.
-[[nodiscard]] std::size_t upperBound(
-    const std::vector<int>& nums,
+[[nodiscard]] std::size_t upper_bound_index(
+    std::span<const int> nums,
     int target
 ) noexcept {
     std::size_t left = 0;
     std::size_t right = nums.size();
 
     while (left < right) {
-        std::size_t mid = left + (right - left) / 2;
+        const std::size_t mid = std::midpoint(left, right);
         if (nums[mid] > target) {
-            right = mid; // Candidate found; search left half
+            right = mid;
         } else {
-            left = mid + 1; // Infeasible; search right half
+            left = mid + 1;
         }
     }
     return left;
 }
 \end{lstlisting}
 
-\subsection{What is Binary Search on the Answer Space?}
+\subsection{Binary Search on the Answer (Painter's Partition)}
+Guards empty input and \texttt{k <= 0} via \texttt{std::optional}, computes the upper bound with C++23 \texttt{std::ranges::fold\_left}, and applies \texttt{std::midpoint} over 64-bit \texttt{std::int64\_t}.
 
-In optimization problems (minimizing the maximum capacity or partition), we do not search through an existing array. Instead, we search over the abstract mathematical range of possible answers $[L, R]$.
-
-A helper function \texttt{isFeasible(mid)} validates each guess:
-\begin{enumerate}
-    \item If \texttt{isFeasible(mid)} is true, capacity \texttt{mid} works. We record \texttt{mid} as our best known answer and try even smaller capacities ($R = \text{mid} - 1$).
-    \item If \texttt{isFeasible(mid)} is false, capacity \texttt{mid} is too small. We must test larger capacities ($L = \text{mid} + 1$).
-\end{enumerate}
-
-\begin{lstlisting}[language=C++, caption={Minimizing Maximum Partition Allocation}]
-#include <vector>
-#include <numeric>
+\begin{lstlisting}[caption={Minimizing maximum partition sum using C++23 ranges and std::midpoint}]
 #include <algorithm>
+#include <cstdint>
+#include <functional>
+#include <numeric>
+#include <optional>
+#include <span>
 
-namespace detail {
-    // Greedy check: Can we partition nums into at most max_partitions subarrays
-    // such that no subarray sum exceeds max_allowed_sum?
-    [[nodiscard]] bool canPartition(
-        const std::vector<int>& nums,
-        int max_partitions,
-        long long max_allowed_sum
-    ) noexcept {
-        int partitions_used = 1;
-        long long current_sum = 0;
+[[nodiscard]] std::optional<std::int64_t> split_array_min_max(
+    std::span<const int> nums,
+    int k
+) noexcept {
+    if (nums.empty() || k <= 0) return std::nullopt;
 
+    auto can_partition = [&](std::int64_t limit) noexcept -> bool {
+        int parts = 1;
+        std::int64_t running = 0;
         for (int x : nums) {
-            if (current_sum + x <= max_allowed_sum) {
-                current_sum += x;
+            if (running + x <= limit) {
+                running += x;
             } else {
-                ++partitions_used;
-                current_sum = x;
-                if (partitions_used > max_partitions) {
-                    return false;
-                }
+                ++parts;
+                running = x;
+                if (parts > k) return false;
             }
         }
         return true;
-    }
-}
+    };
 
-// Minimizes the maximum subarray sum when partitioning into k contiguous parts.
-[[nodiscard]] long long splitArrayMinMax(
-    const std::vector<int>& nums,
-    int k
-) {
-    if (nums.empty()) return 0;
+    std::int64_t left = *std::ranges::max_element(nums);
+    std::int64_t right = std::ranges::fold_left(nums, std::int64_t{0}, std::plus<>{});
 
-    // 1. Lower bound is the maximum single element; upper bound is the sum of all elements
-    long long left = *std::ranges::max_element(nums);
-    long long right = std::accumulate(nums.begin(), nums.end(), 0LL);
-    long long answer = right;
-
-    // 2. Binary search on the answer space
-    while (left <= right) {
-        long long mid = left + (right - left) / 2;
-
-        if (detail::canPartition(nums, k, mid)) {
-            answer = mid; // Feasible; record and search for a smaller maximum
-            right = mid - 1;
+    while (left < right) {
+        const std::int64_t mid = std::midpoint(left, right);
+        if (can_partition(mid)) {
+            right = mid;
         } else {
-            left = mid + 1; // Infeasible; increase allowed capacity
+            left = mid + 1;
         }
     }
-
-    return answer;
+    return left;
 }
 \end{lstlisting}
 
-\subsection{How Does Rotated Array Partitioning Work?}
+\subsection{Search in a Rotated Sorted Array}
+Checks which half is strictly sorted at each midpoint and narrows the closed interval in $O(\log N)$ time.
 
-When an array is cyclically rotated, at least one half of the array relative to the midpoint remains strictly sorted.
-
-We exploit this property to preserve logarithmic complexity:
-\begin{enumerate}
-    \item Determine which half is sorted by evaluating $A[L] \le A[\text{mid}]$.
-    \item If the left half is sorted, check if the target falls within its bounds $[A[L], A[\text{mid}])$. If it does, narrow the search to the left; otherwise, search the right.
-    \item If the right half is sorted, check if the target falls within $(A[\text{mid}], A[R]]$. If it does, search the right; otherwise, search the left.
-\end{enumerate}
-
-\begin{lstlisting}[language=C++, caption={Search in a Rotated Sorted Array}]
-#include <vector>
-#include <optional>
+\begin{lstlisting}[caption={Search in a cyclically rotated sorted array of unique elements}]
 #include <cstddef>
+#include <numeric>
+#include <optional>
+#include <span>
 
-// Searches for target in a cyclically rotated sorted array of unique elements.
-[[nodiscard]] std::optional<std::size_t> searchRotatedArray(
-    const std::vector<int>& nums,
+[[nodiscard]] std::optional<std::size_t> search_rotated_array(
+    std::span<const int> nums,
     int target
 ) noexcept {
     if (nums.empty()) return std::nullopt;
-
     std::size_t left = 0;
     std::size_t right = nums.size() - 1;
 
     while (left <= right) {
-        std::size_t mid = left + (right - left) / 2;
+        const std::size_t mid = std::midpoint(left, right);
+        if (nums[mid] == target) return mid;
 
-        if (nums[mid] == target) {
-            return mid;
-        }
-
-        // 1. Check if the left half [left, mid] is sorted
         if (nums[left] <= nums[mid]) {
-            // 2. Check if target lies within the sorted left half
             if (nums[left] <= target && target < nums[mid]) {
                 if (mid == 0) break;
                 right = mid - 1;
@@ -750,7 +967,6 @@ We exploit this property to preserve logarithmic complexity:
                 left = mid + 1;
             }
         } else {
-            // 3. Right half [mid, right] is sorted
             if (nums[mid] < target && target <= nums[right]) {
                 left = mid + 1;
             } else {
@@ -759,189 +975,167 @@ We exploit this property to preserve logarithmic complexity:
             }
         }
     }
-
     return std::nullopt;
 }
 \end{lstlisting}
 
-\subsection{What is the Discrete Derivative Peak Test?}
+\subsection{Peak Element Search (\texorpdfstring{\texttt{std::optional}}{std::optional})}
+Returns \texttt{std::nullopt} on empty input instead of a spurious index $0$; uses \texttt{std::midpoint} and slope comparison.
 
-To find a peak in an array where adjacent elements are never equal ($A[i] \ne A[i+1]$), we compare $A[\text{mid}]$ with $A[\text{mid} + 1]$:
-\begin{equation*}
-    \Delta A = A[\text{mid} + 1] - A[\text{mid}]
-\end{equation*}
-If $\Delta A > 0$, the sequence is increasing, meaning at least one local maximum exists to the right ($L = \text{mid} + 1$). If $\Delta A < 0$, the sequence is decreasing, meaning a local maximum exists at $\text{mid}$ or to its left ($R = \text{mid}$).
-
-\begin{lstlisting}[language=C++, caption={Finding a Peak Element in Logarithmic Time}]
-#include <vector>
+\begin{lstlisting}[caption={Finding any peak element in O(log N) time}]
 #include <cstddef>
+#include <numeric>
+#include <optional>
+#include <span>
 
-// Returns the index of any peak element in nums (where nums[i] > nums[i+1]).
-// Assumes nums[i] != nums[i+1] for all valid adjacent pairs.
-[[nodiscard]] std::size_t findPeakElement(const std::vector<int>& nums) noexcept {
-    if (nums.empty()) return 0;
-    
+[[nodiscard]] std::optional<std::size_t> find_peak_element(
+    std::span<const int> nums
+) noexcept {
+    if (nums.empty()) return std::nullopt;
     std::size_t left = 0;
     std::size_t right = nums.size() - 1;
 
-    // Use half-open style termination left < right
     while (left < right) {
-        std::size_t mid = left + (right - left) / 2;
-
+        const std::size_t mid = std::midpoint(left, right);
         if (nums[mid] < nums[mid + 1]) {
-            // Upward slope: a peak must exist to the right
             left = mid + 1;
         } else {
-            // Downward slope: mid itself or an element to the left is a peak
             right = mid;
         }
     }
-
-    return left; // left == right points to a peak
+    return left;
 }
 \end{lstlisting}
 
-\subsection{How Does Fixed-Iteration Floating-Point Search Avoid Precision Pitfalls?}
+\subsection{Continuous Floating-Point Bisection (C++20 \texorpdfstring{\texttt{std::invocable}}{std::invocable})}
+Avoids \texttt{std::function} heap/type-erasure overhead via a C++20 concept-constrained callable, and runs 80 fixed iterations to reach full IEEE 754 \texttt{double} precision without epsilon stalls.
 
-When searching for real-valued roots or thresholds, comparing floating-point numbers with \texttt{while (left < right)} or an overly tiny $\epsilon$ can loop indefinitely due to precision limits.
+\begin{lstlisting}[caption={Continuous floating-point binary search with std::invocable}]
+#include <concepts>
+#include <numeric>
+#include <type_traits>
 
-A fixed iteration loop (for instance, $80$ or $100$ iterations) is superior:
-\begin{equation*}
-    \text{Interval Width after } 80 \text{ iterations} = \frac{R_0 - L_0}{2^{80}} \approx \frac{R_0 - L_0}{1.2 \times 10^{24}}
-\end{equation*}
-This guarantees exact convergence without branching hazards.
-
-\begin{lstlisting}[language=C++, caption={Continuous Floating-Point Binary Search}]
-#include <functional>
-
-// Finds the root x of a monotonically increasing continuous function f such that f(x) = 0.
-[[nodiscard]] double continuousBinarySearch(
-    double left,
-    double right,
-    const std::function<double(double)>& f
-) {
-    // 1. Run exactly 80 iterations for sub-nanometer numerical precision
+template <std::invocable<double> Fn>
+requires std::convertible_to<std::invoke_result_t<Fn, double>, double>
+[[nodiscard]] double continuous_binary_search(double left, double right, Fn&& f) {
+    // 80 halvings shrink width by 2^-80 (~8e-25), surpassing IEEE 754 double precision
     for (int iter = 0; iter < 80; ++iter) {
-        double mid = left + (right - left) / 2.0;
-
-        if (f(mid) < 0.0) {
-            left = mid; // Root lies to the right
+        const double mid = std::midpoint(left, right);
+        if (static_cast<double>(f(mid)) < 0.0) {
+            left = mid;
         } else {
-            right = mid; // Root lies to the left
+            right = mid;
         }
     }
-
-    return left + (right - left) / 2.0;
+    return std::midpoint(left, right);
 }
 \end{lstlisting}
+
+\begin{tryitbox}{Debug}{Spot Three Classic Bugs in Binary Search Code}{ex8}
+Explain the exact failure caused by each mistake below:
+\begin{enumerate}
+    \item Writing \texttt{int mid = (left + right) / 2;} when $L = 1.5 \times 10^9$ and $R = 1.8 \times 10^9$.
+    \item Calling \texttt{split\_array\_min\_max(nums, 0)} without guarding \texttt{k <= 0}.
+    \item Having \texttt{find\_peak\_element(\{\})} return \texttt{std::size\_t\{0\}} instead of \texttt{std::nullopt}.
+\end{enumerate}
+\end{tryitbox}
 
 % ============================================================================
 \section{Problem Pattern Recognition}
 % ============================================================================
 
-When reading an algorithmic problem, determining whether binary search applies follows a disciplined three-step decision process.
-
-\subsection*{Step 1: What is the Problem Asking For?}
-
+\subsection*{Step 1: What Does the Problem Ask For?}
 \begin{itemize}
-    \item \textbf{Exact Target Lookup}: Does the problem ask to find a specific element or its index in sorted data? Use \textbf{Classic Binary Search}.
-    \item \textbf{Frequency / Boundary Query}: Does it ask for the first occurrence, last occurrence, or count of a value? Use \textbf{Lower Bound} and \textbf{Upper Bound}.
-    \item \textbf{Minimizing a Maximum / Maximizing a Minimum}: Does the problem ask for the ``minimum capacity to finish in $K$ days'', ``maximum speed to arrive on time'', or ``maximize the minimum distance between items''? Use \textbf{Binary Search on the Answer Space}.
-    \item \textbf{Local Extremum in Unsorted Data}: Does it ask for any peak element or mountain peak? Use \textbf{Slope Analysis Binary Search}.
-    \item \textbf{Search in Cyclically Shifted Data}: Is the input a rotated sorted array? Use \textbf{Rotated Array Binary Search}.
+    \item \textbf{Exact lookup in sorted data} $\implies$ Classic Binary Search ($O(\log N)$).
+    \item \textbf{First/last occurrence or duplicate count} $\implies$ \texttt{lower\_bound} / \texttt{upper\_bound}.
+    \item \textbf{Minimize the maximum / maximize the minimum} $\implies$ Binary Search on the Answer + Greedy check.
+    \item \textbf{Local peak in distinct-neighbor array} $\implies$ Slope Analysis Binary Search.
+    \item \textbf{Target or minimum in cyclically shifted sorted array} $\implies$ Rotated Binary Search.
 \end{itemize}
 
-\subsection*{Step 2: What is the Key Constraint?}
-
+\subsection*{Step 2: What Is the Key Constraint?}
 \begin{itemize}
-    \item \textbf{Is the condition monotonic?} Can you prove that if candidate value $x$ satisfies the requirement, every value $x' > x$ (or $x' < x$) also satisfies it? If yes, binary search is immediately applicable.
-    \item \textbf{Can feasibility be verified efficiently?} A binary search with $60$ steps running an $O(N)$ verification executes in $O(N \log(\text{range}))$, which easily passes within $1$ second for $N \le 10^5$.
-    \item \textbf{Are elements distinct?} In rotated sorted arrays, duplicate values ($[1, 0, 1, 1, 1]$) prevent determining which half is sorted in $O(1)$ time, degrading worst-case time to $O(N)$.
+    \item \textbf{Monotonicity:} Does \texttt{feasible(x)} imply \texttt{feasible(x')} for all $x' > x$ (or all $x' < x$)?
+    \item \textbf{Check cost $C$:} With $60$ steps and an $O(N)$ check ($N \le 10^5$), $60 \times 10^5 = 6 \times 10^6$ ops passes easily.
+    \item \textbf{Duplicates in rotated arrays:} Worst case degrades to $O(N)$ when $A[L] = A[\text{mid}] = A[R]$.
 \end{itemize}
 
-\subsection*{Step 3: How Large is the Input?}
-
+\subsection*{Step 3: Constraint Thresholds}
 \begin{itemize}
-    \item \textbf{Answer Range up to $10^{18}$}: Binary search requires at most $\lceil \log_2(10^{18}) \rceil \approx 60$ iterations. Use 64-bit integers (\texttt{long long}) for $L$, $R$, and $\text{mid}$.
-    \item \textbf{Static Array Queries $Q \le 10^5, N \le 10^5$}: Sorting once takes $O(N \log N)$; each query takes $O(\log N)$. Total time $O((N + Q) \log N)$, which completes in under 50 milliseconds.
-    \item \textbf{Matrix of Size $M \times N$}: If each row and column is sorted, binary search on range takes $O(M \log N)$ or saddleback search in $O(M + N)$.
+    \item Answer domain up to $10^{18}$: $\approx 60$ iterations; always use \texttt{std::int64\_t} + \texttt{std::midpoint}.
+    \item $Q \le 10^5$ queries on $N \le 10^5$ static data: sort once ($O(N \log N)$) + $O(\log N)$ per query.
+    \item Row-sorted $M \times N$ matrix: value-range BS costs $O(M \log N \log(\text{Range}))$.
 \end{itemize}
 
 \subsection*{Quick Reference: Keyword-to-Tool Mapping}
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
-\hline
-\textbf{Keywords in Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
-``find minimum capacity to complete in time'' & Monotonic capacity threshold: larger capacities also succeed & Binary Search on the Answer \\ \hline
-``maximize minimum distance between items'' & Feasibility condition: can we place $K$ items with distance $\ge D$? & Binary Search on the Answer \\ \hline
-``first element $\ge target$ in sorted array'' & Locate the starting boundary of a value & Lower Bound \\ \hline
-``count occurrences of $X$ in sorted array'' & Count identical elements without a linear scan & $\text{upper\_bound} - \text{lower\_bound}$ \\ \hline
-``search target in rotated sorted array'' & Cyclically shifted sorted data & Rotated Binary Search \\ \hline
-``find any peak element ($A[i] > A[i+1]$)'' & Find local extremum in logarithmic time & Slope Analysis Binary Search \\ \hline
-``find integer square root $\lfloor \sqrt{N} \rfloor$'' & Find largest $k$ such that $k^2 \le N$ & Monotonic Predicate Search \\ \hline
-``minimize maximum subarray sum in $K$ splits'' & Painter's partition / allocation & Binary Search on Answer + Greedy \\ \hline
-``smallest divisor giving sum $\le$ threshold'' & Monotonic divisor: larger divisors decrease total sum & Binary Search on the Answer \\ \hline
-``k-th smallest element in sorted matrix'' & Count elements $\le mid$ in each row & Binary Search on Matrix Values \\ \hline
-``find real root with precision $10^{-7}$'' & Continuous bisection on continuous domain & Floating-Point Binary Search \\ \hline
-``median of two sorted arrays'' & Partition both arrays simultaneously & Dual-Array Binary Search \\ \hline
-``first bad version / earliest failure'' & Monotonic failure: once broken, all later revisions are broken & First-True Binary Search \\ \hline
-``minimum days to make $M$ bouquets'' & Days elapsed monotonically increases available flowers & Binary Search on Answer \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.1cm}}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``Minimum capacity / speed to finish in $D$ days'' & Monotonic \texttt{FFFTTT} feasibility threshold & Binary Search on Answer \\
+``Maximize the minimum distance / gap'' & Monotonic \texttt{TTTFFF} placement threshold & Binary Search on Answer \\
+``First element $\ge \text{target}$ in sorted array'' & Start of target block & Lower Bound ($[L, R)$) \\
+``Count occurrences of $X$ in sorted array'' & Exact duplicate count without linear scan & $\texttt{upper\_bound} - \texttt{lower\_bound}$ \\
+``Search in rotated sorted array'' & Two monotonic ramps around one pivot & Rotated Binary Search \\
+``Find any peak element ($A[i] > A[i\pm 1]$)'' & Walk uphill using discrete slope & Slope Analysis BS \\
+``Integer square root $\lfloor \sqrt{N} \rfloor$'' & Largest $k$ with $k^2 \le N$ & Monotonic Predicate BS \\
+``Minimize max subarray sum in $K$ splits'' & Painter's partition allocation & BS on Answer + Greedy \\
+``Smallest divisor with $\sum \lceil A_i / d \rceil \le H$'' & Larger divisor monotonically lowers sum & BS on Answer + Int Ceil \\
+``$k$-th smallest in row-sorted matrix'' & Count elements $\le \text{mid}$ per row & 2D Matrix Value BS \\
+``Real root within precision $10^{-7}$'' & Bisect continuous monotonic $f(x)$ & 80-Iter Floating-Point BS \\
+``First bad version / earliest failure'' & Once broken, all later versions stay broken & First-True BS ($[L, R)$) \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
 % ============================================================================
 \section{Summary and Complexity Reference}
 % ============================================================================
 
-\noindent
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
-\hline
-\textbf{Task / Operation} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
-Classic Binary Search & $O(\log N)$ & $O(1)$ & Finding exact target in sorted contiguous array \\ \hline
-Lower Bound & $O(\log N)$ & $O(1)$ & First index where element $\ge target$ \\ \hline
-Upper Bound & $O(\log N)$ & $O(1)$ & First index where element $> target$ \\ \hline
-Frequency Count & $O(\log N)$ & $O(1)$ & Counting target duplicates in sorted array \\ \hline
-Binary Search on Answer & $O(C \cdot \log R)$ & $O(1)$ & Min-max or max-min problems with monotonic check $C$ \\ \hline
-Rotated Array Search & $O(\log N)$ & $O(1)$ & Cyclically shifted sorted array with unique elements \\ \hline
-Peak Element Search & $O(\log N)$ & $O(1)$ & Finding any local maximum in array with distinct neighbors \\ \hline
-Continuous Binary Search & $O(\text{iters} \cdot C)$ & $O(1)$ & Real-valued root or threshold search on continuous domain \\ \hline
-2D Matrix Binary Search & $O(M \log N)$ & $O(1)$ & Counting elements $\le \text{mid}$ in row-sorted matrix \\ \hline
-\end{tabularx}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.3cm} >{\centering\arraybackslash}p{2.3cm} >{\centering\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Task / Operation}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Space}} & \textcolor{primaryblue}{\textbf{Use When}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Classic Binary Search & $O(\log N)$ & $O(1)$ & Exact lookup in sorted array \\
+Lower / Upper Bound & $O(\log N)$ & $O(1)$ & First index $\ge \text{target}$ or $> \text{target}$ \\
+Frequency Count & $O(\log N)$ & $O(1)$ & Counting duplicates in sorted array \\
+Binary Search on Answer & $O(C \cdot \log R)$ & $O(1)$ & Min-max / max-min with $O(C)$ check \\
+Rotated Array Search & $O(\log N)$ & $O(1)$ & Cyclically shifted unique sorted array \\
+Peak Element Search & $O(\log N)$ & $O(1)$ & Any local peak (adjacent distinct) \\
+Continuous Bisection & $O(\text{iters} \cdot C)$ & $O(1)$ & Real root / continuous threshold \\
+2D Matrix Value Search & $O(M \log N \log R)$ & $O(1)$ & $k$-th smallest in row-sorted matrix \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
 % ============================================================================
 \section{Glossary}
 % ============================================================================
 
 \subsection*{Core Concepts}
-
 \begin{itemize}
-    \item \textbf{Binary Search}: A divide-and-conquer search algorithm that eliminates half of the remaining search space with each comparison.
-    \item \textbf{Feasibility Predicate}: A boolean function $P(x)$ testing whether candidate solution $x$ satisfies all constraints.
-    \item \textbf{Half-Open Interval}: A range $[L, R)$ where lower index $L$ is inclusive and upper index $R$ is exclusive.
-    \item \textbf{Integer Overflow}: An arithmetic error occurring when the sum of two integers exceeds the maximum value representable by their data type.
-    \item \textbf{Invariant}: A condition that remains true throughout the execution of an algorithm (such as ``target is within $[L, R]$'').
-    \item \textbf{Lower Bound}: The first index in a sorted sequence where the element is greater than or equal to a target.
-    \item \textbf{Monotonicity}: The property of a sequence or function that preserves order (either entirely non-decreasing or non-increasing).
-    \item \textbf{Peak Element}: An array element strictly greater than its adjacent neighbors.
-    \item \textbf{Predicate}: A function that evaluates an input and returns a boolean value (\texttt{true} or \texttt{false}).
-    \item \textbf{Rotated Sorted Array}: A sorted array whose elements have been cyclically shifted by an offset.
-    \item \textbf{Search Space}: The range of candidate indices or values within which the desired answer is known to exist.
-    \item \textbf{Upper Bound}: The first index in a sorted sequence where the element is strictly greater than a target.
+    \item \textbf{Binary Search:} Halving a candidate domain repeatedly using a monotonic condition.
+    \item \textbf{Feasibility Predicate ($P(x)$):} Boolean check testing whether candidate answer $x$ satisfies all constraints.
+    \item \textbf{Half-Open Interval ($[L, R)$):} Range with $L$ inclusive and $R$ exclusive; guarantees termination without \texttt{mid - 1} underflow.
+    \item \textbf{Integer Overflow:} Arithmetic wrap-around when $L + R$ exceeds type max; prevented by \texttt{std::midpoint}.
+    \item \textbf{Loop Invariant:} Condition preserved before and after every iteration (e.g., all $< L$ are false, all $\ge R$ are true).
+    \item \textbf{Lower Bound:} First index $i \in [0, N]$ where $A[i] \ge \text{target}$.
+    \item \textbf{Monotonicity:} Order-preserving property ensuring a predicate switches value at most once (\texttt{FFFTTT} or \texttt{TTTFFF}).
+    \item \textbf{Peak Element:} Element strictly greater than its immediate neighbors.
+    \item \textbf{Rotated Sorted Array:} Sorted array cyclically shifted so at most one downward cliff exists.
+    \item \textbf{Upper Bound:} First index $i \in [0, N]$ where $A[i] > \text{target}$.
 \end{itemize}
 
 \subsection*{Mathematical Symbols}
-
 \begin{itemize}
-    \item $\lfloor x \rfloor$: Floor function; the greatest integer less than or equal to $x$.
-    \item $\lceil x \rceil$: Ceiling function; the smallest integer greater than or equal to $x$.
-    \item $\log_2 N$: The base-2 logarithm of $N$; the number of times $N$ can be halved before reaching 1.
-    \item $O(\log N)$: Logarithmic time complexity.
-    \item $[L, R]$: A closed interval where both endpoints $L$ and $R$ are included.
-    \item $[L, R)$: A half-open interval where $L$ is included and $R$ is excluded.
-    \item $\epsilon$: Epsilon; a small positive threshold used to terminate floating-point searches.
-    \item $\le, \ge$: Less than or equal to, and greater than or equal to.
+    \item $[L, R],\; [L, R)$: Closed vs.\ half-open search intervals.
+    \item $P(x) \in \{F, T\},\; x^*$: Monotonic boolean predicate and its exact transition boundary.
+    \item $\lfloor x \rfloor,\; \lceil x \rceil$: Floor and ceiling functions ($\lceil A / B \rceil = (A + B - 1) / B$ for integers).
+    \item $\log_2 N$: Base-2 logarithm; halving steps needed to reduce $N$ to $1$.
+    \item $\epsilon$: Small positive tolerance threshold for floating-point convergence.
 \end{itemize}
 
 % ============================================================================
@@ -949,35 +1143,163 @@ Continuous Binary Search & $O(\text{iters} \cdot C)$ & $O(1)$ & Real-valued root
 % ============================================================================
 
 \subsection*{Free Online Resources (Start Here)}
-
 \begin{itemize}
-    \item \textbf{cp-algorithms.com}: Binary Search and Continuous Bisection section. Provides clear derivations and numerical analysis: \url{https://cp-algorithms.com}.
-    \item \textbf{Community Educational Articles}: ``Binary Search'' --- A classic monograph discussing the First-True monotonic formulation.
-    \item \textbf{Project Euler}: Practice problems. Problem 71 (Ordered fractions), Problem 73 (Counting fractions in a range).
-    \item \textbf{Art of Problem Solving (AoPS) Wiki}: Clear explanations of bisection search and intermediate value theorem applications.
-    \item \textbf{Brilliant.org}: Interactive visualizations of divide-and-conquer search algorithms.
+    \item \textbf{CP-Algorithms: Binary Search} (\url{https://cp-algorithms.com}) --- Clean derivations of discrete binary search, continuous bisection, and ternary search.
+    \item \textbf{cppreference.com: \texttt{<algorithm>} \& \texttt{<numeric>}} (\url{https://en.cppreference.com}) --- Official C++23 specifications for \texttt{std::ranges::lower\_bound}, \texttt{std::ranges::upper\_bound}, and \texttt{std::midpoint}.
+    \item \textbf{Project Euler} (\url{https://projecteuler.net}) --- Problems 71 (Ordered Fractions) and 73 (Counting Fractions in a Range).
+    \item \textbf{Art of Problem Solving (AoPS) Wiki} (\url{https://artofproblemsolving.com/wiki}) --- Intermediate Value Theorem and mathematical bisection foundations.
+    \item \textbf{Brilliant.org} (\url{https://brilliant.org}) --- Interactive visual walkthroughs of binary search invariants.
 \end{itemize}
 
 \subsection*{Books (When You Are Ready to Go Deeper)}
-
 \begin{itemize}
-    \item J.\ Bentley, \emph{Programming Pearls}, 2nd Edition --- Chapter 4 (``Writing Correct Programs'') is the seminal text on binary search loop invariants and verification.
-    \item T.\ H.\ Cormen, C.\ E.\ Leiserson, R.\ L.\ Rivest, C.\ Stein, \emph{Introduction to Algorithms} (CLRS), 4th Edition --- Chapters 2 and 28 cover divide-and-conquer analysis and root-finding algorithms.
-    \item S.\ S.\ Skiena, \emph{The Algorithm Design Manual}, 3rd Edition --- Chapter 4 provides extensive coverage of binary search applications and search-by-bisection patterns.
+    \item J.\ Bentley, \emph{Programming Pearls} (2nd ed.) --- Chapter 4 is the classic masterclass on proving binary search loop invariants bug-free. (Beginner--Intermediate)
+    \item S.\ S.\ Skiena, \emph{The Algorithm Design Manual} (3rd ed.) --- Chapter 4 covers practical binary-search-on-the-answer applications. (Intermediate)
+    \item T.\ H.\ Cormen et al., \emph{Introduction to Algorithms (CLRS)} (4th ed.) --- Formal divide-and-conquer recurrences and invariant proofs. (Advanced)
 \end{itemize}
+
+% ============================================================================
+\section*{Practice Sheet: Mixed Pen-and-Paper Drills}
+\addcontentsline{toc}{section}{Practice Sheet: Mixed Pen-and-Paper Drills}
+\markboth{Practice Sheet: Mixed Pen-and-Paper Drills}{}
+% ============================================================================
+
+\noindent
+Solve these six mixed cold-start drills on scratch paper \emph{without} looking back at the chapter. Each exercise tests a different thinking mode with zero section hints.
+
+\begin{tryitbox}{Triage}{Does Binary Search Apply Here?}{ex9}
+For each problem below, pick the exact binary search variant and time complexity---or explain why binary search is the wrong tool:
+\begin{enumerate}
+    \item Find the earliest broken commit among $10^7$ linear commits (once broken, every later commit stays broken).
+    \item Find the minimum integer $K$ such that $\sum_{i=1}^N \lceil A_i / K \rceil \le H$ ($N \le 10^5,\; A_i \le 10^9$).
+    \item Search for a single target $T$ in an \textbf{unsorted} array of $N = 10^6$ integers queried exactly once.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Trace}{Flattened Binary Search on a 3x4 Matrix}{ex10}
+Map the globally sorted $3 \times 4$ matrix \texttt{[[1, 3, 5, 7], [10, 11, 16, 20], [23, 30, 34, 60]]} onto virtual 1D indices $[0, 11]$ using \texttt{row = mid / 4}, \texttt{col = mid \% 4}. Trace every $(L, R, \text{mid}, \text{row}, \text{col})$ step searching for target $16$.
+\end{tryitbox}
+
+\begin{tryitbox}{Debug}{Ceiling Division Pitfalls}{ex11}
+Explain the exact failure in each ceiling-division snippet below and write the safe integer fix:
+\begin{enumerate}
+    \item \texttt{static\_cast<std::int64\_t>(std::ceil(static\_cast<double>(a) / b))} when $a = 10^{17} + 1,\; b = 1$.
+    \item \texttt{(a + b - 1) / b} on 32-bit \texttt{int} when $a = 2{,}000{,}000{,}000$ and $b = 1{,}000{,}000{,}000$.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Twist}{Frequency Count and Last Index Using Lower Bound Only}{ex12}
+Suppose your library only exposes \texttt{lower\_bound\_index(A, x)} on a sorted \texttt{int} array (no \texttt{upper\_bound}). How can you compute both \texttt{count(x)} and the \textbf{last index} of \texttt{x} using only calls to \texttt{lower\_bound\_index}, and what single edge value of \texttt{x} must you watch out for?
+\end{tryitbox}
+
+\begin{tryitbox}{Edge Cases}{Why Duplicates Break Rotated Binary Search}{ex13}
+Trace standard unique-element rotated binary search on $A = [1, 0, 1, 1, 1]$ searching for target $T = 0$. Show the exact step where it discards the wrong half, and state the fallback rule (plus worst-case complexity) needed when duplicates are allowed.
+\end{tryitbox}
+
+\begin{tryitbox}{Derive}{Exact Worst-Case Iterations of Half-Open Search}{ex14}
+Count the maximum number of \texttt{while (L < R)} loop iterations executed by \texttt{lower\_bound\_index} on arrays of size $N = 1, 2, 3, 4, 8$. Derive the exact closed-form worst-case iteration count in terms of $N$, and evaluate it for $N = 10^9$ and $N = 10^{18}$.
+\end{tryitbox}
+
+% ============================================================================
+\section*{Solutions to Pen-and-Paper Exercises}
+\addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
+\markboth{Solutions to Pen-and-Paper Exercises}{}
+% ============================================================================
+
+\begin{enumerate}[itemsep=2pt]
+    \item \label{sol:ex1}\textbf{Exercise 1 (Debug) --- Infinite Loop in Binary Search:}
+    At $L = 4,\; R = 5$, $\text{mid} = 4 + (5 - 4)/2 = 4$. Since $P(4) = \text{true}$, \texttt{L = mid} sets $L = 4$ again---interval $[4, 5]$ never shrinks! Fix: use upper-biased midpoint \texttt{mid = L + (R - L + 1) / 2} for last-true loops, or rewrite as first-true on \texttt{!P(x)} with \texttt{L = mid + 1, R = mid}.
+    \trapnote{Assigning \texttt{L = mid} alongside a floor-rounded midpoint \texttt{L + (R - L) / 2}---that always freezes on 2-element intervals $[L, L+1]$.}
+
+    \item \label{sol:ex2}\textbf{Exercise 2 (Trace) --- Lower Bound vs.\ Upper Bound on \texttt{[2, 4, 4, 4, 7]}:}
+    \texttt{lower\_bound(4)}: $[0, 5) \xrightarrow{\text{mid}=2} [0, 2) \xrightarrow{\text{mid}=1} [0, 1) \xrightarrow{\text{mid}=0} [1, 1) \implies \mathbf{1}$.
+    \texttt{upper\_bound(4)}: $[0, 5) \xrightarrow{\text{mid}=2} [3, 5) \xrightarrow{\text{mid}=4} [3, 4) \xrightarrow{\text{mid}=3} [4, 4) \implies \mathbf{4}$.
+    $\text{count}(4) = 4 - 1 = \mathbf{3}$; \texttt{lower\_bound(5)} $= \mathbf{4}$ (index of $7$); \texttt{lower\_bound(9)} $= \mathbf{5}$ (\texttt{nums.size()}).
+    \trapnote{Initializing \texttt{right = nums.size() - 1} in a half-open loop---that prevents ever returning \texttt{nums.size()} when all elements are $< X$.}
+
+    \item \label{sol:ex3}\textbf{Exercise 3 (Edge Cases) --- Unsigned Underflow:}
+    At $L = 0,\; R = 0,\; \text{mid} = 0$, $A[0] = 10 > 5$ runs \texttt{right = 0 - 1}, wrapping unsigned \texttt{std::size\_t} to $2^{64} - 1 \approx 1.8 \times 10^{19}$, crashing on the next \texttt{nums[mid]} read! Half-open $[L, R)$ only ever assigns \texttt{right = mid} (never \texttt{mid - 1}), so underflow is impossible.
+    \trapnote{Using \texttt{std::size\_t} with \texttt{right = mid - 1} and forgetting the \texttt{if (mid == 0) break;} guard.}
+
+    \item \label{sol:ex4}\textbf{Exercise 4 (Derive) --- Package-Shipping Predicate $P(C)$:}
+    \textbf{(1)} If capacity $C$ finishes in $\le D$ days, any $C' > C$ packs at least as much per day, also using $\le D$ days (\texttt{FFFTTT}). Tightest bounds: $L = \max(w),\; R = \sum w$.
+    \textbf{(2)} Greedy: \texttt{days = 1, load = 0}; for each \texttt{x}: if \texttt{load + x <= C} add to \texttt{load}, else \texttt{++days; load = x}; return \texttt{days <= D}.
+    \textbf{(3)} On \texttt{[3, 2, 2, 4, 1, 4]}, $D = 3$: $P(6)$ uses $[3,2],\; [2,4],\; [1,4]$ ($3 \le 3$, \textbf{True}); $P(5)$ uses $[3,2],\; [2],\; [4,1],\; [4]$ ($4 > 3$, \textbf{False}). Optimal $C^* = \mathbf{6}$.
+    \trapnote{Setting $L = 0$ instead of $L = \max(w)$---if $C < \max(w)$, a single package cannot fit on any day and breaks the greedy loop!}
+
+    \item \label{sol:ex5}\textbf{Exercise 5 (Trace) --- Rotated Search on \texttt{[6, 7, 1, 2, 3, 4, 5]}:}
+    \textbf{(a) $T = 2$:} $L = 0, R = 6, \text{mid} = 3 \implies A[3] = 2 == 2$, found at index $\mathbf{3}$ in $1$ step.
+    \textbf{(b) $T = 7$:} Step 1: $[0, 6],\; \text{mid} = 3$ ($A[3] = 2$); $A[0] = 6 > 2 \implies$ right $[2..5]$ sorted; $7 \notin (2, 5] \implies R = 2$. Step 2: $[0, 2],\; \text{mid} = 1$ ($A[1] = 7 == 7$) $\implies$ found at index $\mathbf{1}$.
+    \trapnote{Writing strict \texttt{nums[left] < nums[mid]} instead of \texttt{<=}---when $L = \text{mid}$ on a 2-element slice, \texttt{<} misidentifies the left half as unsorted.}
+
+    \item \label{sol:ex6}\textbf{Exercise 6 (Twist) --- Minimum Element in Rotated Array:}
+    Compare $A[\text{mid}]$ with $A[R]$: if $A[\text{mid}] > A[R]$, the drop lies strictly to the right ($L = \text{mid} + 1$); else the minimum is at $\text{mid}$ or left ($R = \text{mid}$).
+    Trace on $[4, 5, 6, 7, 0, 1, 2]$: $[0, 6] \xrightarrow{\text{mid}=3,\; 7 > 2} [4, 6] \xrightarrow{\text{mid}=5,\; 1 \le 2} [4, 5] \xrightarrow{\text{mid}=4,\; 0 \le 1} [4, 4] \implies A[4] = \mathbf{0}$.
+    \trapnote{Comparing $A[\text{mid}]$ against $A[L]$ instead of $A[R]$---that fails when the array is \emph{not} rotated at all (already sorted $[1, 2, 3]$)!}
+
+    \item \label{sol:ex7}\textbf{Exercise 7 (Debug) --- Floating-Point Epsilon Hang:}
+    An IEEE 754 \texttt{double} has $53$ significand bits. Near $31{,}622.77 \approx 2^{15}$, 1 ULP is $2^{15 - 52} \approx 7.3 \times 10^{-12} > 10^{-12}$. Once $R - L$ hits 1 ULP, \texttt{mid} equals $L$ or $R$ and \texttt{while (R - L > 1e-12)} loops forever! Fix: \texttt{for (int iter = 0; iter < 80; ++iter)}.
+    \trapnote{Assuming a fixed absolute $\epsilon = 10^{-12}$ works regardless of the magnitude of the answer.}
+
+    \item \label{sol:ex8}\textbf{Exercise 8 (Debug) --- Three Classic Binary Search Bugs:}
+    \textbf{(1)} $1.5 \times 10^9 + 1.8 \times 10^9 = 3.3 \times 10^9 > 2^{31} - 1$: signed 32-bit overflow UB wraps negative! Use \texttt{std::midpoint}.
+    \textbf{(2)} With $k = 0$, \texttt{can\_partition} immediately returns \texttt{false} for every limit, returning an invalid answer instead of \texttt{std::nullopt}.
+    \textbf{(3)} Returning \texttt{0} on an empty array is indistinguishable from a valid peak at index \texttt{0}; return \texttt{std::optional<std::size\_t>}.
+    \trapnote{Using magic sentinel index \texttt{0} or \texttt{-1} instead of \texttt{std::optional<std::size\_t>}.}
+
+    \item \label{sol:ex9}\textbf{Exercise 9 (Triage) --- Does Binary Search Apply?:}
+    \textbf{(1)} First-True Binary Search in $O(\log N)$ ($\approx 24$ checks for $10^7$).
+    \textbf{(2)} Binary Search on the Answer in $O(N \log(\max A))$.
+    \textbf{(3)} \textbf{No binary search}---use a single $O(N)$ linear scan (sorting first costs $O(N \log N)$, slower than scanning once!).
+    \trapnote{Sorting an array for $O(N \log N)$ just to perform a single $O(\log N)$ lookup.}
+
+    \item \label{sol:ex10}\textbf{Exercise 10 (Trace) --- Flattened 3x4 Matrix Search:}
+    Cols $N = 4$: Step 1: $[0, 11],\; \text{mid} = 5 \to (1, 1) = 11 < 16 \implies L = 6$.
+    Step 2: $[6, 11],\; \text{mid} = 8 \to (2, 0) = 23 > 16 \implies R = 7$.
+    Step 3: $[6, 7],\; \text{mid} = 6 \to (1, 2) = 16 == 16 \implies$ Found at $\mathbf{(1, 2)}$.
+    \trapnote{Dividing and taking modulo by the number of \emph{rows} $M$ instead of the number of \emph{columns} $N$!}
+
+    \item \label{sol:ex11}\textbf{Exercise 11 (Debug) --- Ceiling Division Pitfalls:}
+    \textbf{(1)} \texttt{double} has only $53$ bits of precision ($\approx 9 \times 10^{15}$), so $10^{17} + 1$ rounds down to $10^{17}$ before division!
+    \textbf{(2)} $a + b - 1 = 3 \times 10^9$ overflows 32-bit signed \texttt{int}. Safe fix: promote to \texttt{std::int64\_t} and compute \texttt{1 + (a - 1) / b} (for $a \ge 1$).
+    \trapnote{Calling \texttt{std::ceil} on 64-bit integers and silently losing the low-order bits.}
+
+    \item \label{sol:ex12}\textbf{Exercise 12 (Twist) --- Count \& Last Index via \texttt{lower\_bound} Only:}
+    For integers, $\texttt{upper\_bound}(A, x) = \texttt{lower\_bound}(A, x + 1)$. Thus $\text{count}(x) = \texttt{lb}(x + 1) - \texttt{lb}(x)$, and if $\text{count}(x) > 0$, the last index is $\texttt{lb}(x + 1) - 1$. Watch out for $x = \texttt{INT\_MAX}$ ($x + 1$ overflows signed \texttt{int}---use \texttt{nums.size()} as the upper bound instead!).
+    \trapnote{Writing \texttt{x + 1} without checking \texttt{x == std::numeric\_limits<int>::max()}.}
+
+    \item \label{sol:ex13}\textbf{Exercise 13 (Edge Cases) --- Rotated Array with Duplicates:}
+    At $L = 0, R = 4, \text{mid} = 2$: $A[0] = A[2] = A[4] = 1$. The test $A[L] \le A[\text{mid}]$ falsely treats $[1, 0, 1]$ as sorted, sees $0 \notin [1, 1)$, and jumps to $L = 3$, discarding $0$ forever! Fallback: whenever $A[L] = A[\text{mid}] = A[R]$, shrink linearly (\texttt{++L; {-}{-}R;}), degrading worst-case time to $O(N)$.
+    \trapnote{Assuming rotated binary search stays $O(\log N)$ when arbitrary duplicates are allowed.}
+
+    \item \label{sol:ex14}\textbf{Exercise 14 (Derive) --- Exact Worst-Case Iterations of Half-Open Search:}
+    Max iterations for $[0, N)$: $N = 1 \to 1$, $N = 2 \to 2$, $N = 3 \to 2$, $N = 4 \to 3$, $N = 8 \to 4$. Closed form: $\mathbf{\lfloor \log_2 N \rfloor + 1 = \lceil \log_2(N + 1) \rceil}$.
+    At $N = 10^9$: $\lfloor \log_2(10^9) \rfloor + 1 = \mathbf{30}$; at $N = 10^{18}$: $\lfloor \log_2(10^{18}) \rfloor + 1 = \mathbf{60}$.
+    \trapnote{Assuming $N = 1$ takes $0$ iterations---for \texttt{lower\_bound}, the single element $A[0]$ must still be tested once to decide between returning $0$ or $1$!}
+\end{enumerate}
 
 % ============================================================================
 \section*{Version History}
 \addcontentsline{toc}{section}{Version History}
+\markboth{Version History}{}
 % ============================================================================
 
-\noindent
-\begin{tabularx}{\textwidth}{|p{3cm}|X|}
-\hline
-\textbf{Date} & \textbf{Change Description} \\ \hline
-2026-10-03 & Document created. \\ \hline
-2026-10-03 & Fixed integer underflow in \texttt{findPeakElement} on empty array. \\ \hline
-2026-10-03 & Removed banned word and competitive programming platform names. \\ \hline
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\bfseries}l >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Date}} & \textcolor{primaryblue}{\textbf{Change}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+2026-10-03 & Document created. \\
+2026-10-03 & Fixed integer underflow in \texttt{findPeakElement} on empty array. \\
+2026-10-03 & Removed banned word and competitive programming platform names. \\
+2026-11-26 & Overhauled to canonical print-first layout; stripped BOM, fixed non-canonical headers, math-mode typography, and orphaned citation; reconciled lower/upper bound prose with half-open [L, R) invariant; upgraded all C++23 listings to std::midpoint, std::ranges::fold\_left, k<=0 guard, std::optional peak return, and std::invocable continuous search; restored all 6 worked traces, fixed Example 4, and added 2D matrix search coverage; embedded fixed Diagrams 19, 20, 37 plus new Lower/Upper Bound duplicates diagram; added 4-beat Origin Stories, local notation box, 8 inline drills, 6-drill Practice Sheet, and solutions with trap notes. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
+\endgroup
+\end{center}
 
 \end{document}
