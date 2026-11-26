@@ -23,6 +23,8 @@ To keep token usage predictable and reviews manageable, execute this plan in sho
   - Completed `learning_materials/04.sequences_and_series.tex` across all applicable phases (Phase 1.6 bug fixes + Phase 3 embedded & visually verified Gauss Pairing diagram and fixed Diagrams 8, 9, and 32 + Phase 4.6 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
 - **Session 6 (Done — `2026-11-25`):**
   - Completed `learning_materials/02.modular_arithmetic.tex` across all applicable phases (Phase 1.4 bug fixes & standalone C++23 `mod_pow`/`ext_gcd`/`solve_crt` implementations + Phase 3 fixed & visually verified Diagrams 5, 38, and new CRT periodic clocks alignment diagram + Phase 4.4 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
+- **Session 7 (Done — `2026-11-25`):**
+  - Completed `learning_materials/03.number_theory.tex` across all applicable phases (Phase 1.5 bug fixes, overflow-safe `i <= n / i`, UB-free `gcd`/`lcm`, SPF Sieve rename/narrowing fix, Segmented Sieve C++23 implementation & complexity fix, deduplicated fresh-number worked examples + Phase 3 fixed & visually verified Diagrams 6, 7, and 39 + Phase 4.5 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
 - **Ongoing Sessions (1 Module per Fresh Session):**
   - Follow the exact same single-module vertical slice (Phases 1/2 + 3 + 4 + verification + Progress Matrix update + commit) for whichever module the user selects next.
   - Suggested order: `11` → `12` → `00.problem_solving_guide.tex` → `10` → `09` → `06` → `07` → (`08`, `05`, `04`, `03`, `02`, `01`, `00.cpp_reference.tex` on demand) → delete `learning_materials/diagrams_review.tex` once all diagrams are migrated → Phase 5 (`13`–`16`) just-in-time.
@@ -125,12 +127,12 @@ Fix every confirmed factual error, C++23 compile/UB defect, formatting glitch, a
   - [x] Add mandatory $\gcd(a, n) = 1$ condition to Euler's theorem exponent reduction (L256) and complete back-substitution steps in Extended Euclid example (L354–363).
   - [x] Remove leaked meta-prompt sentences (L393, L405).
   - [x] Fix `Modular::operator*=` overflow caveat (`static_assert(Mod <= 4'294'967'295LL)` + `__int128` note, removed `#pragma once`), `safe_mod` edge cases (single division + `m <= 0` guard), `smallestRepunitDivByK` 32-bit overflow & unused `<iostream>`, and add standalone C++23 implementations for Binary Exponentiation (`mod_pow`), Extended Euclid (`ext_gcd`/`mod_inverse`), and CRT (`solve_crt`).
-- [ ] **1.5 `learning_materials/03.number_theory.tex`:**
-  - [ ] Strip UTF-8 BOM; replace raw Unicode `×` (L281) with `$\times$`; wrap `$\phi(n)$` in `\texorpdfstring` (L304).
-  - [ ] Fix **infinite loop** in `primeFactorize(0)` (add `if (n <= 1) return factors;`, L565–596).
-  - [ ] Replace `i * i <= n` with `i <= n / i` (prevents signed overflow UB, L520/542/545/579/708); fix `INT64_MIN` negation UB in `gcd`/`lcm` (L605/614); qualify `std::int64_t`.
-  - [ ] Rename misleading "Linear Sieve" (`FastFactorizer`, L396/L656) to "Smallest Prime Factor (SPF) Sieve" (or implement true $O(N)$ Euler linear sieve), fix narrowing cast on L674, add Segmented Sieve C++23 code, and fix Segmented Sieve complexity row (L803).
-  - [ ] Deduplicate Example 6.5 (identical to Sec 5.4) and pick fresh numbers for Examples 6.2 & 6.3.
+- [x] **1.5 `learning_materials/03.number_theory.tex`:** *(Completed 2026-11-25)*
+  - [x] Strip UTF-8 BOM; replace raw Unicode `×` (L281) with `$\times$`; wrap `$\phi(n)$` in `\texorpdfstring` (L304).
+  - [x] Fix **infinite loop** in `primeFactorize(0)` (add `if (n <= 1) return factors;`, L565–596).
+  - [x] Replace `i * i <= n` with `i <= n / i` (prevents signed overflow UB, L520/542/545/579/708); fix `INT64_MIN` negation UB in `gcd`/`lcm` (L605/614); qualify `std::int64_t`.
+  - [x] Rename misleading "Linear Sieve" (`FastFactorizer`, L396/L656) to "Smallest Prime Factor (SPF) Sieve" (`SpfFactorizer`), fix narrowing cast on L674, add Segmented Sieve C++23 code, and fix Segmented Sieve complexity row (L803).
+  - [x] Deduplicate Example 6.5 (identical to Sec 5.4) and pick fresh numbers for all 6 worked examples ($100$, $180$, $(198,84)$, $60$, $[50,70]$, $90$).
 - [x] **1.6 `learning_materials/04.sequences_and_series.tex`:** *(Completed 2026-11-25)*
   - [x] Strip UTF-8 BOM; move `\begin{abstract}...\end{abstract}` **before** `\tableofcontents \newpage` (replaced with canonical Title Banner + `overviewbox` before `\tableofcontents`).
   - [x] Fix broken enumerate jump 8 → 10 (L244–250), missing `\\` line breaks (L128–131), `1x1` math formatting (L166), and orphaned `"region D"` text (L370 — resolved alongside D32 in Phase 3).
@@ -237,7 +239,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 - [ ] Embed D3 → `00.problem_solving_guide.tex` (replaces empty L113–119).
 - [x] Embed D4, D40 → `01.combinatorics_permutations.tex` *(fixed D4 slot-label clearance, D40 platform/UTF-8/double-scaling/border collisions, and added Catalan Reflection Principle diagram; visually verified 2026-11-25)*.
 - [x] Embed D5, D38 → `02.modular_arithmetic.tex` *(replaces missing L110 figure; fixed D5 arc label collisions, fixed D38 double-scaling, `$$...$$` node overflow, and 3-vs-4 squaring count, and added CRT periodic clocks alignment diagram; visually verified 2026-11-25)*.
-- [ ] Embed D6, D7, D39 → `03.number_theory.tex` (replaces empty L390–394).
+- [x] Embed D6, D7, D39 → `03.number_theory.tex` *(replaces empty L390–394; redesigned D39 without double-scaling, touching circles, arc collisions, or ad-hoc red axis/pivot; scaled D7 cleanly with exact $252 \times 105$ ratio; visually verified 2026-11-25)*.
 - [x] Embed D8, D9, D32 → `04.sequences_and_series.tex` *(added Gauss Pairing diagram; fixed D8 arrow label routing, D9 title clearance, and D32 double-scaling, panel padding, and `c_2+1`/`r_2+1` prefix boundary labels; resolves orphaned `"region D"`; visually verified 2026-11-25)*.
 - [ ] Embed D10, D11, D12 + Subsets/N-Queens `forest` trees → `05.recursion_and_backtracking.tex`.
 - [ ] Embed D13, D14, D33, D34 + Coin Change & Edit Distance diagrams → `06.dynamic_programming.tex`.
@@ -265,10 +267,10 @@ Apply the **Pedagogical Blueprint** (4-Beat Origin Stories, local `notationbox` 
   - *Origin Stories:* Why modular addition/multiplication preserve remainders *but division fails*; why Binary Exponentiation decomposes exponents in binary; where Fermat's Little Theorem & Extended Euclid come from; CRT intuition ("aligning periodic clocks").
   - *Local `notationbox`:* Congruence ($\equiv, \pmod{m}$), Modular Inverse ($a^{-1}$), Totient ($\phi(m)$).
   - *Pen & Paper Drills (8 inline + 6 Practice Sheet):* Hand-trace $3^{13} \bmod 7$, invert $5 \bmod 11$ via Extended Euclid back-substitution + Fermat, solve a 2-congruence CRT puzzle, plus full 6-mode inline & Practice Sheet coverage with trap diagnostics.
-- [ ] **4.5 `03.number_theory.tex`:**
+- [x] **4.5 `03.number_theory.tex`:** *(Completed 2026-11-25)*
   - *Origin Stories:* Why divisors pair around $\sqrt{N}$; why Eratosthenes starts marking at $p^2$; why $\gcd(a,b) = \gcd(b, a \bmod b)$ (rectangle tiling); why $O(N \log\log N)$ is nearly linear; why Segmented Sieve works without $O(R)$ RAM.
   - *Local `notationbox`:* Divisibility ($a \mid b$), $\gcd/\operatorname{lcm}$, Prime Factorization ($\prod p_i^{a_i}$), $\phi(n)$.
-  - *Pen & Paper Drills (3):* Factorize 360 and count divisors via $\prod(a_i+1)$, trace Sieve on $[20, 35]$, compute $\phi(36)$ via formula and verify by listing coprimes.
+  - *Pen & Paper Drills (8 inline + 6 Practice Sheet):* Factorize 360 and compute $\tau(360)/\sigma(360)$, trace Segmented Sieve on $[20, 35]$, compute $\phi(36)$ via formula and verify by listing coprimes, plus full 6-mode inline & Practice Sheet coverage with trap diagnostics.
 - [x] **4.6 `04.sequences_and_series.tex`:** *(Completed 2026-11-25)*
   - *Origin Stories:* Gauss pairing intuition for arithmetic sums; shift-and-subtract derivation for geometric sums (no magic formula!); why prefix sums trade $O(N)$ build for $O(1)$ queries; why difference arrays are the discrete derivative (inverse of prefix sum).
   - *Local `notationbox`:* Summation ($\sum$), Arithmetic/Geometric params ($a_1, d, r$), Prefix/Diff arrays ($P[i], D[i]$).
@@ -328,7 +330,7 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `00.problem_solving_guide.tex` | `[ ]` | N/A | `[ ]` (D3) | `[ ]` | N/A | `[ ]` |
 | `01.combinatorics_permutations.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `02.modular_arithmetic.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
-| `03.number_theory.tex` | `[ ]` | N/A | `[ ]` (D6, D7, D39) | `[ ]` | `[ ]` | `[ ]` |
+| `03.number_theory.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `04.sequences_and_series.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `05.recursion_and_backtracking.tex` | `[ ]` | N/A | `[ ]` (D10–12 + 2 `forest`) | `[ ]` | `[ ]` | `[ ]` |
 | `06.dynamic_programming.tex` | `[ ]` | N/A | `[ ]` (D13–14, D33–34 + 2) | `[ ]` | `[ ]` | `[ ]` |

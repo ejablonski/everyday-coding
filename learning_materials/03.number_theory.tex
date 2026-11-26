@@ -1,26 +1,114 @@
-﻿\documentclass[11pt,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 
 % --- Core LaTeX Packages ---
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\ttdefault}{txtt}
+\usepackage{upquote}
+\usepackage[margin=0.85in, headheight=15pt]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{xcolor}
+\usepackage[helvet]{sfmath}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[explicit]{titlesec}
+\usepackage[skins,breakable]{tcolorbox}
 \usepackage{listings}
 \usepackage{hyperref}
-\usepackage{tabularx}
 \usepackage{graphicx}
 
-% --- Optional Diagram Packages (include when needed) ---
-% \usepackage{forest}
-% \usepackage{tikz}
+% --- Diagram Packages ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,decorations.pathreplacing}
 
-% --- Unified Color Palette ---
+% --- Unified Print-Safe Color Palette ---
 \definecolor{primaryblue}{RGB}{24, 75, 140}
-\definecolor{codebg}{RGB}{248, 249, 250}
-\definecolor{codeframe}{RGB}{210, 215, 222}
-\definecolor{codegreen}{RGB}{40, 130, 60}
-\definecolor{codeblue}{RGB}{20, 90, 180}
-\definecolor{codegray}{RGB}{120, 120, 120}
+\definecolor{accentteal}{RGB}{15, 118, 110}
+\definecolor{accentamber}{RGB}{180, 83, 9}
+\definecolor{accentred}{RGB}{185, 28, 28}
+\definecolor{codebg}{RGB}{246, 248, 250}
+\definecolor{codeframe}{RGB}{204, 212, 220}
+\definecolor{codeink}{RGB}{24, 30, 38}
+\definecolor{codekw}{RGB}{126, 34, 206}
+\definecolor{codetype}{RGB}{0, 118, 138}
+\definecolor{codegreen}{RGB}{22, 138, 66}
+\definecolor{codeblue}{RGB}{15, 92, 212}
+\definecolor{codestr}{RGB}{194, 65, 12}
+\definecolor{codegray}{RGB}{105, 115, 125}
+
+% --- Global Typography & Spacing ---
+\linespread{1.08}
+\renewcommand{\arraystretch}{1.35}
+\setlength{\tabcolsep}{7pt}
+\setlist[itemize]{itemsep=3pt, topsep=4pt, leftmargin=1.5em}
+\setlist[enumerate]{itemsep=4pt, topsep=4pt, leftmargin=1.6em}
+
+% --- Running Header & Footer (Screen + Print Navigation) ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{codegray}\textbf{Number Theory}}
+\fancyhead[R]{\footnotesize\color{codegray}\nouppercase{\leftmark}}
+\fancyfoot[C]{\footnotesize\color{codegray}Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{codeframe}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{}}
+
+% --- Section & Subsection Styling (High-Contrast + Per-Section Page Breaks) ---
+\newcommand{\sectionbreak}{}
+
+\titleformat{\section}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {\colorbox{primaryblue}{\color{white}\bfseries\Large\;\thesection\;}\hspace{0.55em}#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+\titlespacing*{\section}{0pt}{4pt}{14pt}
+
+\titleformat{name=\section,numberless}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{primaryblue!90!black}}
+  {}
+  {0pt}
+  {\begin{tcolorbox}[
+      enhanced, colback=primaryblue!6, colframe=primaryblue!6,
+      borderline west={3.5pt}{0pt}{primaryblue},
+      sharp corners=west, arc=2pt,
+      left=8pt, right=8pt, top=5pt, bottom=5pt,
+      boxsep=0pt, before skip=0pt, after skip=0pt
+  ]\large\bfseries\color{primaryblue!90!black}\thesubsection\hspace{0.55em}#1\end{tcolorbox}}
+\titlespacing*{\subsection}{0pt}{18pt}{8pt}
+
+\titleformat{name=\subsection,numberless}[block]
+  {\normalsize\bfseries\color{accentteal}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{2pt}{\color{accentteal!40}\titlerule[0.7pt]}]
+\titlespacing*{\subsection}{0pt}{14pt}{6pt}
+
+% --- Canonical Shared TikZ Styles ---
+\tikzset{
+    lmbox/.style={draw=codeframe, fill=codebg, thick, rounded corners=2pt, inner sep=4pt, font=\small},
+    lmactive/.style={draw=primaryblue, fill=primaryblue!8, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=primaryblue},
+    lmaccepted/.style={draw=codegreen, fill=codegreen!10, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=codegreen},
+    lmpruned/.style={draw=red!70!black, fill=red!70!black!6, thick, dashed, rounded corners=2pt, inner sep=4pt, font=\small, text=red!70!black},
+    lmarrow/.style={-{Stealth[length=5pt]}, thick, primaryblue},
+    lmmuted/.style={-{Stealth[length=5pt]}, thick, codegray},
+    lmprunedarrow/.style={-{Stealth[length=5pt]}, thick, dashed, red!70!black}
+}
 
 % --- Hyperref Setup ---
 \hypersetup{
@@ -32,40 +120,129 @@
     pdfauthor={Antigravity Engineering}
 }
 
-% --- Theorem & Definition Environments ---
+% --- Example Environment ---
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{example}{Example}[section]
 
-% --- Callout Box Environment ---
-\newenvironment{calloutbox}[1]{
-    \par\vspace{0.3cm}
-    \noindent\begin{tabular}{|p{0.96\textwidth}|}
-    \hline
-    \vspace{0.1cm}
-    \textbf{#1}\par\vspace{0.1cm}
-}{
-    \vspace{0.1cm}
-    \\ \hline
-    \end{tabular}
-    \vspace{0.3cm}\par
+% --- Semantic Narrative Beat Labels & Solution Trap Diagnostic ---
+\newcommand{\painbeat}{\textbf{\color{accentamber}The Problem:} }
+\newcommand{\ahabeat}{\textbf{\color{accentteal}The ``Aha!'' Insight:} }
+\newcommand{\examplebeat}{\textbf{\color{primaryblue}Mini-Example First:} }
+\newcommand{\breaksbeat}{\textbf{\color{accentred}When It Breaks:} }
+\newcommand{\invariantbeat}[1]{\par\noindent\textbf{\color{accentteal}Loop Invariant (#1):} }
+\newcommand{\trapnote}[1]{\par\smallskip\noindent{\footnotesize\textbf{\color{accentamber}Common trap:} #1}}
+
+% --- Modern Overview Card ---
+\newtcolorbox{overviewbox}[1][What You'll Learn]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
 }
 
-% --- Modern C++ Code Listing Setup ---
+% --- Key Takeaway / Core Rule Box ---
+\newtcolorbox{calloutbox}[1]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Plain-English Formula Card ---
+\newtcolorbox{formulabox}[1][Formula in Plain English]{
+    enhanced,
+    colback=primaryblue!4, colframe=primaryblue!22,
+    borderline west={3.5pt}{0pt}{primaryblue},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=6pt, bottom=6pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\small\bfseries\color{primaryblue},
+    title={#1},
+    attach title to upper={\par\vspace{2pt}}
+}
+
+% --- Watch-Out / Edge-Case Warning Box ---
+\newtcolorbox{watchoutbox}[1][Watch Out --- When It Breaks]{
+    enhanced,
+    colback=accentamber!6, colframe=accentamber!30,
+    borderline west={3.5pt}{0pt}{accentamber},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentamber},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Local Symbol Mini-Table Environment ---
+\newenvironment{notationbox}[1][Symbols Used Here]{
+    \par\vspace{0.15cm}
+    \noindent\textbf{\small\color{primaryblue}#1}\par\vspace{0.1cm}
+    \begingroup
+    \footnotesize
+    \rowcolors{2}{codebg}{white}
+    \noindent\tabularx{\textwidth}{>{\raggedright\arraybackslash\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.8cm}}
+    \arrayrulecolor{primaryblue}\toprule[1.1pt]
+    \rowcolor{primaryblue!10}
+    \textcolor{primaryblue}{\textbf{Symbol}} & \textcolor{primaryblue}{\textbf{Plain-English Meaning}} & \textcolor{primaryblue}{\textbf{Example / Type}} \\
+    \arrayrulecolor{codeframe}\midrule[0.6pt]
+}{
+    \arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+    \endtabularx
+    \endgroup
+    \vspace{0.2cm}\par
+}
+
+% --- Print-First Pen-and-Paper Exercise Environment ---
+\newcounter{exercise}
+\newtcolorbox{tryitbox}[3]{
+    enhanced,
+    step=exercise,
+    colback=codegreen!3, colframe=codegreen!45,
+    colbacktitle=codegreen!14, coltitle=codegreen!85!black,
+    borderline west={3.5pt}{0pt}{codegreen},
+    arc=3pt, boxrule=0.6pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    toptitle=4pt, bottomtitle=4pt,
+    before skip=9pt, after skip=9pt,
+    fonttitle=\bfseries,
+    title={Exercise \theexercise\hspace{0.5em}{\colorbox{codegreen!85!black}{\color{white}\scriptsize\bfseries\;#1\;}}\hspace{0.5em}#2 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#3}}}
+}
+
+% --- Modern C++23 Code Listing Setup ---
 \lstset{
     language=C++,
-    basicstyle=\footnotesize\ttfamily,
-    keywordstyle=\color{codeblue}\bfseries,
+    basicstyle=\small\ttfamily\color{codeink},
+    keywordstyle=\color{codekw}\bfseries,
+    morekeywords={constexpr,noexcept,nullptr,static_assert,auto,override,final,decltype,concept,requires},
+    keywordstyle=[2]\color{codetype}\bfseries,
+    morekeywords=[2]{std,vector,span,deque,string,string_view,size_t,int64_t,uint32_t,uint64_t,optional,nullopt,pair,tuple,array,priority_queue,unordered_map,unordered_set,map,set,ranges,views,nodiscard},
+    moredelim=[l][\color{codeblue}\bfseries]{\#},
+    deletestring=[b]',
     commentstyle=\color{codegreen}\itshape,
-    stringstyle=\color{orange!80!black},
+    stringstyle=\color{codestr},
     numberstyle=\tiny\color{codegray},
     numbers=left,
     numbersep=8pt,
+    xleftmargin=24pt,
+    framexleftmargin=22pt,
+    framexrightmargin=4pt,
+    framextopmargin=4pt,
+    framexbottommargin=4pt,
     backgroundcolor=\color{codebg},
     frame=single,
     rulecolor=\color{codeframe},
+    aboveskip=8pt,
+    belowskip=10pt,
     breaklines=true,
     breakatwhitespace=true,
     tabsize=4,
@@ -73,451 +250,689 @@
     captionpos=b
 }
 
-% --- Title Block ---
-\title{\vspace{-1.5cm}\textbf{\Huge Number Theory}\\[0.3cm]
-\Large Primes, Divisors, Factorization, GCD, and Euler's Totient Function}
-\author{Technical Monograph}
-\date{\today}
-
 \begin{document}
 
-\maketitle
+% --- Modern Title Banner ---
+\thispagestyle{plain}
+\begin{tcolorbox}[
+    enhanced,
+    colback=primaryblue!6, colframe=primaryblue!20,
+    borderline west={5pt}{0pt}{primaryblue},
+    arc=4pt, boxrule=0.6pt,
+    left=14pt, right=14pt, top=12pt, bottom=12pt,
+    before skip=0pt, after skip=10pt
+]
+    {\footnotesize\bfseries\color{accentteal}MODULE 03 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
+    {\Huge\bfseries\color{primaryblue}Number Theory}\\[5pt]
+    {\large\color{codegray}Primes, Divisors, Factorization, GCD, Sieves, and Euler's Totient Function}\\[6pt]
+    {\footnotesize\color{codegray}Updated \today}
+\end{tcolorbox}
 
-\begin{abstract}
-\noindent
-Number theory is the study of whole numbers and how they divide, multiply, and combine. At its foundation are prime numbers---the indestructible atomic building blocks from which all integers are constructed. This guide starts from absolute zero: what it means for one number to divide another, how to test if a number is prime without checking every possibility, and how to break composite numbers into their unique prime factors. We then explore the Greatest Common Divisor (GCD), the Euclidean Algorithm, divisor-counting formulas, and Euler's Totient function. Each concept includes plain-English explanations, step-by-step worked traces, and modern C++23 implementations designed for solving problems in algorithmic contests.
-\end{abstract}
+\begin{overviewbox}[What You'll Learn]
+Number theory studies how whole numbers divide, factor, and share structure. Built around prime numbers---the indivisible ``atoms'' of multiplication---this guide takes you from basic divisibility to the $\sqrt{n}$ pairing shortcut, divisor counting and summing ($\tau, \sigma$), the Euclidean Algorithm for GCD and LCM, Euler's Totient $\phi(n)$, and high-speed sieves (Eratosthenes, Smallest Prime Factor, and Segmented Sieve). Every formula is derived from a small concrete example first and paired with overflow-safe C++23 code and pen-and-paper drills.
+\end{overviewbox}
 
-\tableofcontents
-\vspace{0.5cm}
-\hrule
-\vspace{0.5cm}
+\vspace{2pt}
+{\setlength{\parskip}{1pt}\small\tableofcontents}
+
+% Every major section starts cleanly on a new page
+\renewcommand{\sectionbreak}{\clearpage}
 
 % ============================================================================
-\section{Foundations: Divisibility and Integers}
+\section{Foundations: Divisibility, Primes, and Integers}
 % ============================================================================
 
-All of number theory is built on integer division: what happens when you divide one whole number by another, and whether there is anything left over.
+All of number theory begins with integer division: what happens when you split one whole number into equal groups, and whether anything is left over.
+
+\begin{notationbox}[Symbols Used in Section 1]
+    $b \mid a$ & ``$b$ divides $a$'' with zero remainder & $4 \mid 12$ (true) \\
+    $b \nmid a$ & ``$b$ does not divide $a$'' evenly & $5 \nmid 12$ (remainder $2$) \\
+    $q, r$ & Quotient and remainder from dividing $a$ by $b$ & $12 = 2 \cdot 5 + 2$ \\
+    $p$ & A prime number (strictly $> 1$, divisors only $1$ and $p$) & $p \in \{2, 3, 5, 7, 11, \dots\}$ \\
+\end{notationbox}
 
 \subsection{Divisibility and Remainders}
-When you divide an integer $a$ by a positive integer $b$, you get a quotient $q$ and a remainder $r$:
-\begin{equation}
-a = q \cdot b + r, \quad \text{where } 0 \le r < b
-\end{equation}
 
-If the remainder $r$ is $0$, we say that \textbf{$b$ divides $a$} (or $b$ is a divisor of $a$, or $a$ is a multiple of $b$). In mathematical notation, we write:
-$$ b \mid a \quad \text{(read: ``$b$ divides $a$'')} $$
-If $b$ does not divide $a$, we write $b \nmid a$.
+When you divide any integer $a$ by a positive integer $b$, there is always a unique quotient $q$ and non-negative remainder $r$:
 
-\noindent \textbf{Example:} $4 \mid 12$ because $12 = 3 \times 4 + 0$. However, $5 \nmid 12$ because $12 = 2 \times 5 + 2$ (remainder 2).
+\begin{formulabox}[Division Algorithm in Plain English]
+\[
+    a = q \cdot b + r, \qquad 0 \le r < b.
+\]
+\textbf{Read this as:} ``Pack as many full copies of $b$ into $a$ as fit ($q$ copies). Whatever is left over is $r$, strictly smaller than $b$. If $r = 0$, we write $b \mid a$ ($b$ divides $a$, or $a$ is a multiple of $b$).''
+\end{formulabox}
+
+\noindent
+\examplebeat Check $b = 4$ and $b = 5$ against $a = 12$:
+\begin{itemize}
+    \item $12 = 3 \times 4 + 0 \implies r = 0$, so $4 \mid 12$ ($4$ is a divisor of $12$).
+    \item $12 = 2 \times 5 + 2 \implies r = 2$, so $5 \nmid 12$.
+\end{itemize}
 
 \subsection{Prime and Composite Numbers}
-Every positive integer greater than 1 belongs to one of two categories:
 
-\begin{definition}[Prime Number]
-An integer $p > 1$ is \textbf{prime} if its only positive divisors are $1$ and $p$.
-\end{definition}
+Every integer greater than $1$ falls into exactly one of two buckets:
+\begin{itemize}
+    \item \textbf{Prime ($p > 1$):} Its only positive divisors are $1$ and $p$. It cannot be broken into smaller integer factors.
+    \item \textbf{Composite ($n > 1$):} It can be written as $n = a \times b$ with $1 < a, b < n$.
+\end{itemize}
 
-\begin{definition}[Composite Number]
-An integer $n > 1$ is \textbf{composite} if it has at least one positive divisor other than $1$ and itself. That is, $n = a \times b$ where $1 < a, b < n$.
-\end{definition}
+The smallest primes are $2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, \dots$. Notice that \textbf{$2$ is the only even prime}---every other even integer is divisible by $2$ and therefore composite.
 
-\begin{calloutbox}{What about 0 and 1?}
-The number $1$ is \textbf{neither prime nor composite}---it is called a \textbf{unit}. Excluding 1 from being prime is not an arbitrary rule; it is required so that prime factorizations remain unique. (If 1 were prime, you could write $6 = 2 \times 3 = 1 \times 2 \times 3 = 1 \times 1 \times 2 \times 3$, ruining uniqueness). The number $0$ has infinitely many divisors and is neither prime nor composite.
-\end{calloutbox}
+\begin{watchoutbox}[Watch Out --- What About $0$ and $1$?]
+Neither $0$ nor $1$ is prime or composite!
+\begin{itemize}
+    \item \textbf{$1$ is a unit:} If $1$ were called prime, you could write $6 = 2 \times 3 = 1 \times 2 \times 3 = 1^5 \times 2 \times 3$, destroying the uniqueness of prime factorizations.
+    \item \textbf{$0$ has infinitely many divisors:} For every $b > 0$, $0 = 0 \cdot b + 0$, so $b \mid 0$ is always true---yet $0 \mid a$ is false for every nonzero $a$ (you cannot divide by zero).
+\end{itemize}
+\end{watchoutbox}
 
-\noindent The first few prime numbers are:
-$$ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, \dots $$
-Notice that \textbf{2 is the only even prime number}. Every other even number is divisible by 2 and therefore composite.
+\begin{tryitbox}{Edge Cases}{Divisibility \& Primality Boundaries}{ex1}
+Classify each of $0, 1, 2, 51$ as \emph{prime}, \emph{composite}, or \emph{neither}. Then determine whether $0 \mid 5$ and $5 \mid 0$ are true or false using $a = q \cdot b + r$.
+\end{tryitbox}
 
 % ============================================================================
-\section{Core Concepts: Divisors, Factors, and Factorization}
+\section{Divisors, Factorization, and Multiplicative Functions}
 % ============================================================================
 
-\subsection{The Symmetry of Divisors: The $\sqrt{n}$ Rule}
-Suppose you want to find all divisors of $n = 36$. You could test every number from $1$ to $36$. But notice how divisors always appear in pairs:
+Once you know what a divisor is, the next question is speed: how do you find all divisors, factorize a number, or count its divisors without testing every integer up to $n$?
 
+\begin{notationbox}[Symbols Used in Section 2]
+    $\sqrt{n},\; \lfloor \sqrt{n} \rfloor$ & Exact square root and its floor (largest integer $\le \sqrt{n}$) & $\lfloor \sqrt{35} \rfloor = 5$ \\
+    $\prod_{i=1}^k p_i^{a_i}$ & Unique prime-power factorization of $n$ & $360 = 2^3 \cdot 3^2 \cdot 5^1$ \\
+    $\tau(n)$ & Total count of positive divisors of $n$ & $\tau(36) = 9$ \\
+    $\sigma(n)$ & Sum of all positive divisors of $n$ & $\sigma(28) = 56$ \\
+\end{notationbox}
 
+\subsection{Divisor Symmetry: The \texorpdfstring{$\sqrt{n}$}{sqrt(n)} Breakthrough}
 
-If $d$ divides $n$, then $n/d$ must also divide $n$. One of these two factors must be less than or equal to $\sqrt{n}$, and the other must be greater than or equal to $\sqrt{n}$. (If both were larger than $\sqrt{n}$, their product would exceed $n$).
+\painbeat Checking every $d \in [1, n]$ to test primality or list divisors takes $O(n)$ steps. For $n = 10^{12}$, a loop running $10^{12}$ times takes several hours and fails immediately.
 
-\begin{calloutbox}{Where does this come from?}
-Think of factors as rectangles. If you have 36 blocks, you can arrange them as a $1 \times 36$ rectangle, a $2 \times 18$ rectangle, and so on. As you make the rectangle wider, it must get shorter. The most "square-like" rectangle you can make is $6 \times 6$. Once you pass the square root (6), the rectangles just repeat but rotated (for example, $9 \times 4$ is just $4 \times 9$ rotated). Therefore, every unique pair is discovered before or exactly at the square root!
-\end{calloutbox}
+\ahabeat Divisors always come in \textbf{mirror pairs} $(d,\; n / d)$. If both factors were strictly larger than $\sqrt{n}$, their product would satisfy $d \cdot (n / d) > \sqrt{n} \cdot \sqrt{n} = n$, which is impossible! Thus every pair has at least one member $\le \sqrt{n}$.
 
-\begin{calloutbox}{The $\sqrt{n}$ Breakthrough}
-To find \textbf{all} divisors or to test if a number is prime, you never need to check beyond $\sqrt{n}$. For $n = 1{,}000{,}000$, instead of checking a million numbers, you only check up to $\sqrt{10^6} = 1000$. This changes an impossible problem into an instantaneous calculation.
-\end{calloutbox}
+\examplebeat Arrange $n = 36$ tiles into rectangles: $1 \times 36$, $2 \times 18$, $3 \times 12$, $4 \times 9$, and the square $6 \times 6$. Past $\sqrt{36} = 6$, rectangles simply repeat rotated ($9 \times 4$, $12 \times 3$, \dots). Checking just $1 \dots 6$ discovers all $9$ divisors!
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    dNode/.style={circle, draw=primaryblue, fill=primaryblue!10, thick, minimum size=0.72cm, inner sep=0pt, font=\footnotesize\bfseries, text=primaryblue},
+    mirrorNode/.style={circle, draw=codeframe, fill=codebg, thick, minimum size=0.72cm, inner sep=0pt, font=\footnotesize\bfseries, text=codeink},
+    pivotNode/.style={circle, draw=accentteal, fill=accentteal!14, line width=1.4pt, minimum size=0.80cm, inner sep=0pt, font=\footnotesize\bfseries, text=accentteal},
+    card/.style={draw=codeframe, fill=codebg!60, rounded corners=4pt, thick}
+]
+    % Outer container (natural width 15.6cm, zero scaling)
+    \draw[card] (0.0, -4.15) rectangle (15.6, 5.45);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.35, 5.20)
+        {Divisor Pair Symmetry for $N = 36$ Across the $\sqrt{N} = 6$ Axis};
+
+    % Top white panel for arcs & nodes
+    \draw[draw=codeframe, fill=white, rounded corners=3pt, thick] (0.35, 0.25) rectangle (15.25, 4.65);
+
+    % Symmetry axis through D6 at x = 7.8
+    \draw[dashed, line width=1.2pt, accentteal] (7.8, 0.45) -- (7.8, 4.35);
+    \node[fill=white, inner sep=2pt, font=\scriptsize\bfseries, text=accentteal] at (7.8, 0.65)
+        {Pivot Axis: $\sqrt{36} = 6$};
+
+    % 9 evenly spaced divisor circles along y = 1.45 (spacing 1.65cm -> zero overlap)
+    \node[dNode]      (D1)  at (1.20, 1.45) {1};
+    \node[dNode]      (D2)  at (2.85, 1.45) {2};
+    \node[dNode]      (D3)  at (4.50, 1.45) {3};
+    \node[dNode]      (D4)  at (6.15, 1.45) {4};
+    \node[pivotNode]  (D6)  at (7.80, 1.45) {6};
+    \node[mirrorNode] (D9)  at (9.45, 1.45) {9};
+    \node[mirrorNode] (D12) at (11.10, 1.45) {12};
+    \node[mirrorNode] (D18) at (12.75, 1.45) {18};
+    \node[mirrorNode] (D36) at (14.40, 1.45) {36};
+
+    % Smooth complementary arcs with exact midpoint labels (uniform 0.56cm vertical separation)
+    \draw[<->, line width=1.0pt, primaryblue] (D4.north) .. controls (6.45, 2.35) and (9.15, 2.35) .. (D9.north)
+        node[midway, fill=white, inner sep=1.5pt, font=\scriptsize\bfseries, text=primaryblue] {$4 \times 9 = 36$};
+
+    \draw[<->, line width=1.0pt, primaryblue] (D3.north) .. controls (4.95, 3.12) and (10.65, 3.12) .. (D12.north)
+        node[midway, fill=white, inner sep=1.5pt, font=\scriptsize\bfseries, text=primaryblue] {$3 \times 12 = 36$};
+
+    \draw[<->, line width=1.0pt, primaryblue] (D2.north) .. controls (3.45, 3.88) and (12.15, 3.88) .. (D18.north)
+        node[midway, fill=white, inner sep=1.5pt, font=\scriptsize\bfseries, text=primaryblue] {$2 \times 18 = 36$};
+
+    \draw[<->, line width=1.0pt, primaryblue] (D1.north) .. controls (1.95, 4.65) and (13.65, 4.65) .. (D36.north)
+        node[midway, fill=white, inner sep=1.5pt, font=\scriptsize\bfseries, text=primaryblue] {$1 \times 36 = 36$};
+
+    % Bottom-left card: Inspected vs Mirror Range
+    \draw[draw=primaryblue!40, fill=white, rounded corners=3pt, thick] (0.35, -3.82) rectangle (7.60, -0.05);
+    \node[anchor=north west, font=\footnotesize\bfseries, text=primaryblue] at (0.55, -0.22)
+        {Inspected vs.\ Mirror Range};
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.85cm] at (0.55, -0.68) {
+        \textbf{Left ($d \le \sqrt{N}$):} Loop tests only $d = 1, 2, 3, 4, 5, 6$.\\[4pt]
+        \textbf{Right ($d' = N / d$):} Every match yields its partner for free!\\[4pt]
+        \textbf{Perfect square guard:} When $d = N / d$ (here $6 = 36 / 6$), record $6$ \emph{once} so it is not double-counted.\\[5pt]
+        \textcolor{codegreen}{\textbf{Speedup:}} $N = 10^{12} \longrightarrow \sqrt{N} = 10^6$ steps ($\approx 2$ ms).
+    };
+
+    % Bottom-right card: Product Contradiction Proof
+    \draw[draw=accentteal!45, fill=white, rounded corners=3pt, thick] (7.95, -3.82) rectangle (15.25, -0.05);
+    \node[anchor=north west, font=\footnotesize\bfseries, text=accentteal] at (8.15, -0.22)
+        {Why Stopping at $\lfloor\sqrt{N}\rfloor$ Is Exact};
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.85cm] at (8.15, -0.68) {
+        Suppose $N$ is composite, so $N = a \cdot b$ with $1 < a \le b < N$.\\[4pt]
+        Assume for contradiction that \emph{both} $a > \sqrt{N}$ and $b > \sqrt{N}$.\\[4pt]
+        Multiplying gives $N = a \cdot b > \sqrt{N} \cdot \sqrt{N} = N$ --- impossible!\\[5pt]
+        Therefore \textbf{every composite $N$ has a factor $a \le \lfloor\sqrt{N}\rfloor$}. If none divides $N$, then $N$ is guaranteed prime.
+    };
+\end{tikzpicture}
+\caption{Divisor complementary symmetry around $\sqrt{N}$ for $N = 36$. Every divisor $d \le \sqrt{N}$ uniquely pairs with $N/d \ge \sqrt{N}$, cutting trial division and divisor listing from $O(N)$ to $O(\sqrt{N})$.}
+\label{fig:divisor-symmetry}
+\end{figure}
+
+\begin{watchoutbox}[Watch Out --- Overflow and Perfect Squares]
+Two classic bugs lurk in $\sqrt{n}$ loops:
+\begin{enumerate}
+    \item \textbf{Loop condition overflow:} Never write \texttt{i * i <= n} when $n$ can be close to $2^{63} - 1$; \texttt{i * i} overflows signed 64-bit integers! Always write \texttt{i <= n / i}.
+    \item \textbf{Double-counting the square root:} For perfect squares ($36 = 6 \times 6$), guard \texttt{if (i != n / i)} before pushing \texttt{n / i}.
+\end{enumerate}
+\end{watchoutbox}
 
 \subsection{The Fundamental Theorem of Arithmetic}
-Primes are the ``atoms'' of multiplication. Every positive integer greater than 1 can be broken down into a product of primes in exactly one way (ignoring the order of factors).
 
-\begin{theorem}[Fundamental Theorem of Arithmetic]
-Every integer $n \ge 2$ can be uniquely expressed in prime-power form:
-\begin{equation}
-n = p_1^{a_1} \cdot p_2^{a_2} \cdot \dots \cdot p_k^{a_k}
-\end{equation}
-where $p_1 < p_2 < \dots < p_k$ are distinct prime numbers and $a_i \ge 1$ are positive integer exponents.
-\end{theorem}
+Primes are the indivisible ``atoms'' of multiplication. Every integer $n \ge 2$ breaks down into prime powers in \textbf{exactly one way} (up to ordering):
 
-\noindent \textbf{Example:} For $n = 360$:
-$$ 360 = 2^3 \cdot 3^2 \cdot 5^1 $$
-There is no other combination of prime powers that multiplies to 360.
+\begin{formulabox}[Fundamental Theorem of Arithmetic]
+\[
+    n = p_1^{a_1} \cdot p_2^{a_2} \cdots p_k^{a_k}, \qquad p_1 < p_2 < \dots < p_k \text{ primes},\quad a_i \ge 1.
+\]
+\textbf{Read this as:} ``Every integer $\ge 2$ has a unique prime-power fingerprint. For example, $360 = 2^3 \cdot 3^2 \cdot 5^1$---no other multiset of primes multiplies to $360$.''
+\end{formulabox}
 
-\subsection{Counting Divisors: The $\tau(n)$ Function}
-How many total divisors does a number have? Instead of listing them all, you can count them directly from the prime factorization.
+Notice why this makes prime factorization so powerful: multiplication simply \emph{adds} exponents, divisibility ($d \mid n$) simply checks $b_i \le a_i$ on every prime, $\gcd$ takes the \emph{minimum} exponent per prime, and $\operatorname{lcm}$ takes the \emph{maximum} exponent per prime!
 
-Any divisor $d$ of $n = p_1^{a_1} p_2^{a_2} \dots p_k^{a_k}$ must take the form:
-$$ d = p_1^{b_1} p_2^{b_2} \dots p_k^{b_k}, \quad \text{where } 0 \le b_i \le a_i $$
-For each prime $p_i$, you have $(a_i + 1)$ choices for the exponent $b_i$ (from $0$ up to $a_i$). By the Rule of Product, the total number of divisors $\tau(n)$ is:
-\begin{equation}
-\tau(n) = (a_1 + 1)(a_2 + 1) \dots (a_k + 1) = \prod_{i=1}^k (a_i + 1)
-\end{equation}
+\subsection{Counting Divisors: The \texorpdfstring{$\tau(n)$}{tau(n)} Function}
 
-\begin{calloutbox}{Where does this come from?}
-Think of picking a divisor as ordering a meal from a menu. For $360 = 2^3 \cdot 3^2 \cdot 5^1$, you must choose how many $2$s to include (0, 1, 2, or 3), how many $3$s (0, 1, or 2), and how many $5$s (0 or 1). That gives exactly $4 \times 3 \times 2 = 24$ possible combinations. Every unique combination forms a unique divisor.
-\end{calloutbox}
+\painbeat Suppose a problem asks for the number of divisors of $n = 2^{10} \cdot 3^5 \cdot 5^4$. Listing every divisor one by one is slow and unnecessary when you only need the count.
 
-\noindent \textbf{Worked Example: Find $\tau(360)$}
+\ahabeat Every divisor $d$ of $n = p_1^{a_1} \cdots p_k^{a_k}$ is built by independently choosing an exponent $b_i \in \{0, 1, \dots, a_i\}$ for each prime $p_i$. That gives $(a_i + 1)$ independent menu choices per prime!
+
+\examplebeat For $12 = 2^2 \cdot 3^1$, you pick how many $2$s to include ($0, 1,$ or $2$ --- $3$ choices) and how many $3$s ($0$ or $1$ --- $2$ choices). That yields $3 \times 2 = 6$ divisors: $\{1, 2, 4, 3, 6, 12\}$.
+
+\begin{formulabox}[Divisor Count Formula $\tau(n)$]
+\[
+    \tau(n) = (a_1 + 1)(a_2 + 1) \cdots (a_k + 1) = \prod_{i=1}^k (a_i + 1).
+\]
+\textbf{Read this as:} ``Add $1$ to each prime exponent (to allow taking zero copies of that prime) and multiply the results together.''
+\end{formulabox}
+
+\subsection{Sum of Divisors: The \texorpdfstring{$\sigma(n)$}{sigma(n)} Function}
+
+\painbeat Adding all divisors of a large number directly can require iterating through hundreds or thousands of factors.
+
+\ahabeat Expanding the product of each prime's power sum algebraically distributes across every combination of exponents---generating \textbf{every divisor of $n$ exactly once}!
+
+\examplebeat For $12 = 2^2 \cdot 3^1$:
+\[
+    (1 + 2 + 4)(1 + 3) = 1 + 3 + 2 + 6 + 4 + 12 = 7 \times 4 = 28.
+\]
+Each prime factor's parenthesis $1 + p + p^2 + \dots + p^a$ is a geometric series equal to $(p^{a+1} - 1)/(p - 1)$.
+
+\begin{formulabox}[Sum of Divisors Formula $\sigma(n)$]
+\[
+    \sigma(n) = \prod_{i=1}^k \left(1 + p_i + p_i^2 + \dots + p_i^{a_i}\right) = \prod_{i=1}^k \frac{p_i^{a_i + 1} - 1}{p_i - 1}.
+\]
+\textbf{Read this as:} ``For each prime power $p_i^{a_i}$, sum $1 + p_i + \dots + p_i^{a_i}$ (or use the closed geometric formula), then multiply those sums across all distinct primes.''
+\end{formulabox}
+
+\begin{tryitbox}{Trace}{Factorizing $360$ to Compute $\tau(360)$ and $\sigma(360)$}{ex2}
+Find the unique prime-power factorization of $n = 360$, then compute both $\tau(360)$ (total divisor count) and $\sigma(360)$ (sum of all divisors) without listing the divisors.
+\end{tryitbox}
+
+\subsection{Perfect Numbers: When \texorpdfstring{$\sigma(n) = 2n$}{sigma(n) = 2n}}
+
+A \textbf{perfect number} is a positive integer equal to the sum of its \textbf{proper divisors} (all divisors strictly less than $n$). Because $\sigma(n)$ includes $n$ itself, $n$ is perfect if and only if $\sigma(n) = 2n$.
+
+\examplebeat Test $n = 28 = 2^2 \cdot 7^1$:
 \begin{enumerate}
-    \item Factorize: $360 = 2^3 \cdot 3^2 \cdot 5^1$.
-    \item Add 1 to each exponent: $(3+1), (2+1), (1+1)$.
-    \item Multiply: $4 \times 3 \times 2 = \mathbf{24}$ divisors.
+    \item Proper divisors: $\{1, 2, 4, 7, 14\}$, whose sum is $1 + 2 + 4 + 7 + 14 = 28$.
+    \item Check via $\sigma$: $\sigma(28) = (1 + 2 + 4)(1 + 7) = 7 \times 8 = 56 = 2 \times 28$. Confirmed!
 \end{enumerate}
 
-\subsection{Sum of Divisors: The $\sigma(n)$ Function}
-The sum of all divisors of $n$, denoted $\sigma(n)$, is also directly computable from its prime powers:
-\begin{equation}
-\sigma(n) = \prod_{i=1}^k \left( 1 + p_i + p_i^2 + \dots + p_i^{a_i} \right) = \prod_{i=1}^k \frac{p_i^{a_i + 1} - 1}{p_i - 1}
-\end{equation}
+The first four perfect numbers are $6, 28, 496, 8128$. Every even perfect number has the form $2^{p-1}(2^p - 1)$ whenever $2^p - 1$ is a \textbf{Mersenne prime}. Note that $1$ is \emph{not} perfect because its proper divisor sum is $0 \neq 1$.
 
-\begin{calloutbox}{Where does this come from?}
-If you expand the product $(1 + p_1 + p_1^2)(1 + p_2)$, you get $1 + p_2 + p_1 + p_1 p_2 + p_1^2 + p_1^2 p_2$. This algebraic expansion perfectly generates every possible divisor exactly once! So, the sum of all divisors is just the product of the sums of prime powers. Since $1 + p + p^2 + \dots + p^a$ is a geometric series, we can use the formula $(p^{a+1} - 1)/(p - 1)$ to compute it instantly.
-\end{calloutbox}
-
-\noindent \textbf{Worked Example: Find $\sigma(360)$}
-\begin{enumerate}
-    \item Factorize: $360 = 2^3 \cdot 3^2 \cdot 5^1$.
-    \item Evaluate for $p=2$: $(2^4 - 1)/(2 - 1) = 15 / 1 = 15$.
-    \item Evaluate for $p=3$: $(3^3 - 1)/(3 - 1) = 26 / 2 = 13$.
-    \item Evaluate for $p=5$: $(5^2 - 1)/(5 - 1) = 24 / 4 = 6$.
-    \item Multiply: $15 \times 13 \times 6 = \mathbf{1170}$.
-\end{enumerate}
-
-\subsection{Perfect Numbers: When $\sigma(n) = 2n$}
-A \textbf{perfect number} is a positive integer equal to the sum of all its \textbf{proper} divisors (every divisor except the number itself). Equivalently, $n$ is perfect when $\sigma(n) = 2n$ --- because the sum of \emph{all} divisors equals $n$ (the number itself) plus the sum of the proper divisors.
-
-\noindent \textbf{Example: Is 28 a perfect number?}
-\begin{enumerate}
-    \item Factorize: $28 = 2^2 \cdot 7$.
-    \item Find all divisors: $1, 2, 4, 7, 14, 28$. Proper divisors (excluding 28): $\{1, 2, 4, 7, 14\}$.
-    \item Sum of proper divisors: $1 + 2 + 4 + 7 + 14 = \mathbf{28}$. Yes, 28 is perfect.
-    \item Verification using $\sigma$: $\sigma(28) = (1+2+4)(1+7) = 7 \times 8 = 56 = 2 \times 28$. Confirmed.
-\end{enumerate}
-
-\begin{calloutbox}{The Perfect Number Test in Code}
-To test if $n$ is perfect, compute the sum of divisors using the $O(\sqrt{n})$ pair-collection method (stopping before adding $n$ itself), then check if the sum equals $n$. By convention, 1 is not considered perfect because it has no proper divisors (the sum is 0).
-\end{calloutbox}
-
-The first four perfect numbers are $6, 28, 496, 8128$. All known even perfect numbers come from the formula $2^{p-1}(2^p - 1)$ when $2^p - 1$ is prime (a \textbf{Mersenne prime}). Whether any odd perfect numbers exist is one of the oldest unsolved problems in mathematics.
+\begin{tryitbox}{Derive}{Which Numbers Have an Odd Number of Divisors?}{ex3}
+Compute $\tau(n)$ by hand for $n = 1, 2, 3, 4, 5, 6, 7, 8, 9$. Which values of $n$ have an \textbf{odd} divisor count? Explain why using both $\sqrt{n}$ pairing and the formula $\tau(n) = \prod(a_i + 1)$.
+\end{tryitbox}
 
 % ============================================================================
-\section{Greatest Common Divisor (GCD) and LCM}
+\section{Greatest Common Divisor (GCD) and Least Common Multiple (LCM)}
 % ============================================================================
 
-\subsection{Greatest Common Divisor (GCD)}
-The \textbf{Greatest Common Divisor} of two integers $a$ and $b$ (written $\gcd(a, b)$) is the largest positive integer that divides both $a$ and $b$ with zero remainder.
+GCD and LCM are the workhorses of fraction reduction, cycle synchronization, and lattice-grid problems.
 
-\noindent \textbf{Worked Example: Find $\gcd(24, 36)$}
-\begin{enumerate}
-    \item Divisors of 24: $1, 2, 3, 4, 6, 8, 12, 24$
-    \item Divisors of 36: $1, 2, 3, 4, 6, 9, 12, 18, 36$
-    \item Common divisors: $1, 2, 3, 4, 6, 12$. The largest is $\mathbf{12}$.
-\end{enumerate}
+\begin{notationbox}[Symbols Used in Section 3]
+    $\gcd(a, b)$ & Largest positive integer dividing both $a$ and $b$ & $\gcd(24, 36) = 12$ \\
+    $\operatorname{lcm}(a, b)$ & Smallest positive integer divisible by both $a$ and $b$ & $\operatorname{lcm}(24, 36) = 72$ \\
+    Coprime & Two integers sharing no factor $> 1$, i.e., $\gcd(a, b) = 1$ & $\gcd(8, 15) = 1$ \\
+\end{notationbox}
 
-\begin{definition}[Coprime / Relatively Prime]
-Two integers $a$ and $b$ are \textbf{coprime} (or relatively prime) if their only common divisor is $1$:
-\begin{equation}
-\gcd(a, b) = 1
-\end{equation}
-\end{definition}
+\subsection{Greatest Common Divisor and Coprimality}
 
-\noindent \textbf{Example:} $\gcd(8, 15) = 1$. Even though neither 8 nor 15 is prime, they share no common prime factors ($8 = 2^3$, $15 = 3 \times 5$). Thus, they are coprime.
+The \textbf{Greatest Common Divisor} $\gcd(a, b)$ is the largest positive integer dividing both $a$ and $b$ cleanly. For example, the divisors of $24$ are $\{1,2,3,4,6,8,12,24\}$ and those of $36$ are $\{1,2,3,4,6,9,12,18,36\}$; their largest shared divisor is $\gcd(24, 36) = 12$.
+
+Two integers are \textbf{coprime} (relatively prime) when $\gcd(a, b) = 1$. Neither number needs to be prime: $8 = 2^3$ and $15 = 3 \times 5$ are both composite, yet they share no prime factor, so $\gcd(8, 15) = 1$.
+
+\begin{calloutbox}{Real-World Intuition: GCD as Simplification}
+To simplify a fraction like $\frac{12}{18}$, divide numerator and denominator by $\gcd(12, 18) = 6$ to get $\frac{2}{3}$. Whenever code normalizes a slope $(dx, dy)$ or ratio so distinct fractions map to a canonical key, divide both components by their GCD.
+\end{calloutbox}
 
 \subsection{The Euclidean Algorithm}
-The naive way to find $\gcd(a, b)$ is to factorize both numbers, which takes $O(\sqrt{n})$ time. The \textbf{Euclidean Algorithm} finds the GCD in logarithmic time $O(\log \min(a, b))$ using a simple observation:
-\begin{equation}
-\gcd(a, b) = \gcd(b, a \bmod b), \quad \text{with base case } \gcd(a, 0) = a
-\end{equation}
 
-\textbf{Why does this work?} If a number $d$ divides both $a$ and $b$, then $d$ must also divide their difference $a - q \cdot b$, which is the remainder $a \bmod b$. The set of common divisors does not change when replacing $a$ with $a \bmod b$.
+\painbeat Finding $\gcd(a, b)$ by factorizing both numbers takes $O(\sqrt{a} + \sqrt{b})$ time---way too slow for $10^{18}$-scale inputs or tight inner loops.
 
-\begin{calloutbox}{Where does this come from?}
-Imagine a $252 \times 105$ rectangle. You want to tile it perfectly with the largest possible square tiles. First, you place two $105 \times 105$ squares. The uncovered part is a $105 \times 42$ rectangle. Now tile that with $42 \times 42$ squares. You fit two, leaving a $42 \times 21$ rectangle. Finally, you fit two $21 \times 21$ squares perfectly. The side length of the final square that perfectly tiles the space (21) is the GCD! This geometric process perfectly mirrors $\gcd(252, 105) \to \gcd(105, 42) \to \gcd(42, 21) \to \gcd(21, 0)$.
-\end{calloutbox}
+\ahabeat Any common divisor $d$ of $a$ and $b$ also divides $a - q \cdot b$, which is the remainder $a \bmod b$. Therefore replacing $(a, b)$ with $(b, a \bmod b)$ shrinks the numbers exponentially without changing a single common divisor!
 
-\noindent \textbf{Worked Example: Euclidean Algorithm Trace for $\gcd(252, 105)$}
-
+\examplebeat Geometrically, finding $\gcd(252, 105)$ is equivalent to tiling a $252 \times 105$ rectangle with the largest possible square tiles (Figure~\ref{fig:euclid-tiling}):
 \begin{enumerate}
-    \item $a = 252, b = 105$. $252 \bmod 105 = 42$. Next step: $\gcd(105, 42)$.
-    \item $a = 105, b = 42$. $105 \bmod 42 = 21$. Next step: $\gcd(42, 21)$.
-    \item $a = 42, b = 21$. $42 \bmod 21 = 0$. Next step: $\gcd(21, 0)$.
-    \item Since $b = 0$, the GCD is $\mathbf{21}$.
+    \item Fit two $105 \times 105$ squares $\implies$ leaves a $42 \times 105$ strip ($252 \bmod 105 = 42$).
+    \item Fit two $42 \times 42$ squares $\implies$ leaves a $42 \times 21$ strip ($105 \bmod 42 = 21$).
+    \item Fit two $21 \times 21$ squares perfectly ($42 \bmod 21 = 0$). Final tile side $= \mathbf{21} = \gcd(252, 105)$!
 \end{enumerate}
 
-\subsection{Least Common Multiple (LCM)}
-The \textbf{Least Common Multiple} of $a$ and $b$ (written $\operatorname{lcm}(a, b)$) is the smallest positive integer that is a multiple of both $a$ and $b$.
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+    % Natural coordinates: 252 x 105 mapped cleanly to 12.0cm x 5.0cm (exact 2.4 ratio)
+    % Square 1 (105x105): (0,0)-(5,5), Square 2: (5,0)-(10,5)
+    % Remainder 42x105: (10,0)-(12,5) -> two 42x42 squares (2x2cm) + two 21x21 tiles (1x1cm)
+    \draw[line width=1.4pt, draw=primaryblue] (0.0, 0.0) rectangle (12.0, 5.0);
 
-There is a fundamental connection between GCD and LCM:
-\begin{equation}
-\gcd(a, b) \times \operatorname{lcm}(a, b) = a \times b
-\end{equation}
-Rearranging gives the standard formula used in code:
-\begin{equation}
-\operatorname{lcm}(a, b) = \frac{a \times b}{\gcd(a, b)} = \frac{a}{\gcd(a, b)} \times b
-\end{equation}
-In programming, always divide by the GCD \emph{before} multiplying to prevent integer overflow.
+    % Step 1: Two 105 x 105 squares
+    \draw[thick, draw=codeframe, fill=codebg] (0.0, 0.0) rectangle (5.0, 5.0)
+        node[midway, align=center, font=\small] {\textbf{Square 1}\\$105 \times 105$};
+    \draw[thick, draw=codeframe, fill=codebg] (5.0, 0.0) rectangle (10.0, 5.0)
+        node[midway, align=center, font=\small] {\textbf{Square 2}\\$105 \times 105$};
 
-\begin{calloutbox}{The GCD×LCM Identity: The Most Useful Shortcut}
-For any two positive integers $a$ and $b$:
-$$ \gcd(a, b) \times \operatorname{lcm}(a, b) = a \times b $$
-This means if you know any two of the three values (GCD, LCM, or the product), you can compute the third instantly. In code: always compute $\operatorname{lcm}(a, b) = (a / \gcd(a, b)) \times b$ --- divide \emph{first}, then multiply, to avoid overflow.
-\end{calloutbox}
+    % Step 2: Two 42 x 42 squares
+    \draw[thick, draw=primaryblue!70, fill=primaryblue!6] (10.0, 3.0) rectangle (12.0, 5.0)
+        node[midway, align=center, font=\scriptsize, text=primaryblue] {\textbf{Sq.\ 3}\\$42 \times 42$};
+    \draw[thick, draw=primaryblue!70, fill=primaryblue!6] (10.0, 1.0) rectangle (12.0, 3.0)
+        node[midway, align=center, font=\scriptsize, text=primaryblue] {\textbf{Sq.\ 4}\\$42 \times 42$};
 
-\begin{calloutbox}{Pitfall: Integer Overflow in LCM}
-Even if $a$ and $b$ fit in 32-bit integers, their product $a \times b$ might exceed $2^{31}-1$. Computing $(a \times b) / \gcd(a, b)$ can overflow during the multiplication step. By calculating $(a / \gcd(a, b)) \times b$, you keep the intermediate values as small as possible. However, the final LCM can still exceed 32 bits, so always use 64-bit integers (\texttt{int64\_t} or \texttt{long long}) when computing LCM.
-\end{calloutbox}
+    % Step 3: Two 21 x 21 final GCD squares
+    \draw[thick, draw=codegreen, fill=codegreen!14] (10.0, 0.0) rectangle (11.0, 1.0)
+        node[midway, font=\scriptsize\bfseries, text=codegreen] {$21^2$};
+    \draw[thick, draw=codegreen, fill=codegreen!14] (11.0, 0.0) rectangle (12.0, 1.0)
+        node[midway, font=\scriptsize\bfseries, text=codegreen] {$21^2$};
 
-\noindent \textbf{Worked Example: Compute $\operatorname{lcm}(252, 105)$}
-\begin{enumerate}
-    \item We know $\gcd(252, 105) = 21$.
-    \item Divide first: $252 / 21 = 12$.
-    \item Multiply: $12 \times 105 = \mathbf{1260}$.
-    \item Therefore, $1260$ is the smallest number divisible by both $252$ and $105$.
-\end{enumerate}
+    % Clean outer dimension arrows
+    \draw[<->, thick, primaryblue] (0.0, 5.75) -- (12.0, 5.75)
+        node[midway, above=2pt, font=\small\bfseries, text=primaryblue] {$a = 252$};
+    \draw[<->, thick, primaryblue] (-0.45, 0.0) -- (-0.45, 5.0)
+        node[midway, left=3pt, font=\small\bfseries, text=primaryblue] {$b = 105$};
 
-\begin{calloutbox}{Real-World Analogy: GCD as Simplification}
-Imagine you have the fraction $\frac{12}{18}$ and you want to simplify it. You divide both numerator and denominator by their GCD (which is 6): $\frac{12}{18} = \frac{12/6}{18/6} = \frac{2}{3}$. The GCD is exactly the largest number by which you can shrink both sides without creating fractions. In code, you do this any time you reduce a ratio or check if one thing divides another cleanly.
-\end{calloutbox}
+    % Remainder callouts with generous clearance
+    \draw[<->, thick, codegray] (10.0, 5.25) -- (12.0, 5.25)
+        node[midway, above=1pt, font=\scriptsize\bfseries, text=codegray] {rem $= 42$};
+    \draw[<->, thick, codegreen] (12.35, 0.0) -- (12.35, 1.0)
+        node[midway, right=3pt, font=\scriptsize\bfseries, text=codegreen] {rem $= 21$};
+
+    % Bottom reduction chain badge
+    \node[draw=codeframe, fill=codebg, rounded corners=3pt, thick, font=\footnotesize, inner sep=6pt, align=center, text width=14.0cm] at (6.0, -0.85) {
+        $\gcd(252, 105) \longrightarrow \gcd(105, 42) \longrightarrow \gcd(42, 21) \longrightarrow \gcd(21, 0) = \mathbf{21}$
+        \quad (\textcolor{codegreen}{\textbf{Final tile side $= \gcd$}})
+    };
+\end{tikzpicture}
+\caption{Geometric rectangle tiling for $\gcd(252, 105)$. Repeatedly cutting off maximal squares mirrors modulo reduction $(a, b) \to (b, a \bmod b)$ until the remaining area tiles cleanly with $21 \times 21$ squares.}
+\label{fig:euclid-tiling}
+\end{figure}
+
+\begin{formulabox}[Euclidean Algorithm Recurrence]
+\[
+    \gcd(a, b) = \gcd(b,\; a \bmod b), \qquad \text{base case: } \gcd(a, 0) = |a|.
+\]
+\textbf{Read this as:} ``Keep replacing the larger number with its remainder modulo the smaller one until the remainder hits $0$; the last nonzero number is the GCD.'' Every two iterations cut $a$ at least in half, giving $O(\log \min(a, b))$ time!
+\end{formulabox}
+
+\invariantbeat{Euclidean Loop} Before and after every step \texttt{(a, b) = (b, a \% b)}, the value $\gcd(a, b)$ stays identical to the original $\gcd(a_0, b_0)$, while $|b|$ strictly decreases toward $0$.
+
+\subsection{Least Common Multiple (LCM) and Overflow Prevention}
+
+\painbeat Scanning multiples $a, 2a, 3a, \dots$ until one is divisible by $b$ takes $O(b)$ time---hopeless when $a, b \sim 10^9$.
+
+\ahabeat For every prime $p$ with exponents $\alpha$ in $a$ and $\beta$ in $b$, notice that $\min(\alpha, \beta) + \max(\alpha, \beta) = \alpha + \beta$. Multiplying across all primes immediately connects GCD and LCM!
+
+\begin{formulabox}[The GCD $\times$ LCM Identity]
+\[
+    \gcd(a, b) \times \operatorname{lcm}(a, b) = |a \times b|
+    \quad \Longrightarrow \quad
+    \operatorname{lcm}(a, b) = \frac{|a|}{\gcd(a, b)} \times |b|.
+\]
+\textbf{Read this as:} ``Divide out the shared factors \emph{first}, then multiply by the other number.'' Knowing any two of GCD, LCM, or the product immediately determines the third.
+\end{formulabox}
+
+\examplebeat For $a = 252, b = 105$: we found $\gcd(252, 105) = 21$. Divide first: $252 / 21 = 12$. Multiply: $12 \times 105 = \mathbf{1{,}260}$.
+
+\begin{watchoutbox}[Watch Out --- Integer Overflow in LCM]
+Never compute \texttt{(a * b) / gcd(a, b)}! Even when the true LCM fits easily inside 64 bits, the intermediate product $a \times b$ can overflow first (undefined behavior on signed integers). Always compute \texttt{(a / gcd(a, b)) * b} using 64-bit types (or \texttt{std::lcm} in \texttt{<numeric>}).
+\end{watchoutbox}
+
+\begin{tryitbox}{Debug}{Overflow Trap in Naive LCM}{ex4}
+A teammate writes \texttt{int64\_t lcm(int64\_t a, int64\_t b) \{ return (a * b) / gcd(a, b); \}} and calls it with $a = 4 \times 10^9$ and $b = 6 \times 10^9$. Explain why this triggers signed 64-bit overflow even though the answer fits easily, and compute the exact LCM using the safe order.
+\end{tryitbox}
 
 % ============================================================================
-\section{Euler's Totient Function $\phi(n)$}
+\section{Euler's Totient Function \texorpdfstring{$\phi(n)$}{phi(n)}}
 % ============================================================================
+
+Euler's Totient Function bridges divisibility and modular arithmetic (powering Euler's Theorem $a^{\phi(n)} \equiv 1 \pmod n$ and RSA cryptography).
+
+\begin{notationbox}[Symbols Used in Section 4]
+    $\phi(n)$ & Count of integers in $[1, n]$ coprime to $n$ & $\phi(9) = 6$ \\
+    $p \mid n$ & Iterating over each \emph{distinct} prime dividing $n$ & For $72 = 2^3 \cdot 3^2$: $p \in \{2, 3\}$ \\
+    $p^k$ & A prime power ($p$ prime, $k \ge 1$) & $\phi(3^2) = 9 - 3 = 6$ \\
+\end{notationbox}
 
 \subsection{What Does the Totient Function Count?}
-For any positive integer $n$, \textbf{Euler's Totient Function}, written $\phi(n)$ (Greek letter Phi), counts how many integers in the range $[1, n]$ are \textbf{coprime to $n$}:
-\begin{equation}
-\phi(n) = \big| \{ k \in \{1, 2, \dots, n\} \mid \gcd(k, n) = 1 \} \big|
-\end{equation}
 
-\noindent \textbf{Small Example:} What is $\phi(9)$?
-The numbers from 1 to 9 are: $\{1, 2, 3, 4, 5, 6, 7, 8, 9\}$.
+For any positive integer $n$, \textbf{Euler's Totient Function} $\phi(n)$ counts how many integers $k \in \{1, 2, \dots, n\}$ satisfy $\gcd(k, n) = 1$.
+
+\examplebeat For $n = 9$, the range is $\{1, 2, 3, 4, 5, 6, 7, 8, 9\}$. Removing multiples of $3$ ($\{3, 6, 9\}$) leaves $\{1, 2, 4, 5, 7, 8\}$, so $\phi(9) = \mathbf{6}$.
+
+\subsection{Euler's Product Formula}
+
+\painbeat Checking $\gcd(k, n) = 1$ for every $k$ from $1$ to $n$ takes $O(n \log n)$ time---far too slow when $n = 10^{12}$.
+
+\ahabeat Think in fractions of survivors! Among $\{1, \dots, n\}$, exactly $1/p$ of the numbers are divisible by a prime factor $p \mid n$, so the surviving fraction is $(1 - 1/p)$. Because divisibility by distinct primes is independent over $[1, n]$, multiplying those survivor fractions removes every multiple of any prime factor of $n$ cleanly!
+
+\examplebeat For $n = 72 = 2^3 \cdot 3^2$, the distinct prime factors are $2$ and $3$:
 \begin{itemize}
-    \item Numbers sharing a factor with 9 (multiples of 3): $\{3, 6, 9\}$.
-    \item Numbers coprime to 9: $\{1, 2, 4, 5, 7, 8\}$.
+    \item Keep non-multiples of $2$: $72 \times (1 - \tfrac{1}{2}) = 36$ numbers remain.
+    \item Of those $36$, keep non-multiples of $3$: $36 \times (1 - \tfrac{1}{3}) = 36 \times \tfrac{2}{3} = \mathbf{24}$.
 \end{itemize}
-There are 6 such numbers, so $\phi(9) = \mathbf{6}$.
+Check: $72 - 36\text{ (evens)} - 12\text{ (odd multiples of 3)} = 24$!
 
-\subsection{The Formula for $\phi(n)$}
-Calculating $\phi(n)$ by checking $\gcd(k, n)$ for every $k$ takes $O(n \log n)$ time. Instead, Euler proved an exact product formula based on prime factorization:
+\begin{formulabox}[Euler's Totient Product Formula]
+\[
+    \phi(n) = n \cdot \prod_{\substack{p \mid n \\ p \text{ prime}}} \left(1 - \frac{1}{p}\right).
+\]
+\textbf{Read this as:} ``Start with $n$. For each \emph{distinct} prime $p$ dividing $n$, replace $\text{result}$ with $\text{result} - \text{result} / p$.'' Notice the integer division \texttt{result -= result / p} is always exact and avoids floating-point error!
+\end{formulabox}
 
-\begin{theorem}[Euler's Totient Formula]
-For an integer $n$ with prime factorization $n = p_1^{a_1} p_2^{a_2} \dots p_k^{a_k}$:
-\begin{equation}
-\phi(n) = n \cdot \prod_{p \mid n} \left( 1 - \frac{1}{p} \right) = n \cdot \left(1 - \frac{1}{p_1}\right) \left(1 - \frac{1}{p_2}\right) \dots \left(1 - \frac{1}{p_k}\right)
-\end{equation}
-\end{theorem}
+\subsection{Special Cases and Multiplicative Rules}
 
-\begin{calloutbox}{Where does this come from?}
-Think in terms of probabilities or fractions:
-\begin{itemize}
-    \item A fraction $1/p$ of all numbers up to $n$ are multiples of $p$.
-    \item Therefore, a fraction $(1 - 1/p)$ are \emph{not} divisible by $p$.
-    \item Multiplying these fractions across all distinct prime factors removes all numbers that share any prime factor with $n$.
-\end{itemize}
+Four identities save massive work on paper and in code:
+\begin{enumerate}
+    \item \textbf{Prime $p$:} Every integer in $[1, p - 1]$ is coprime to $p$, so $\phi(p) = p - 1$.
+    \item \textbf{Prime power $p^k$:} Exactly $p^{k-1}$ integers in $[1, p^k]$ are multiples of $p$, leaving $\phi(p^k) = p^k - p^{k-1}$.
+    \item \textbf{Multiplicative property:} Whenever $\gcd(a, b) = 1$, $\phi(a \cdot b) = \phi(a) \cdot \phi(b)$.
+    \item \textbf{Divisor sum identity (Gauss):} Summing $\phi(d)$ over all positive divisors of $n$ recovers $n$: $\sum_{d \mid n} \phi(d) = n$.
+\end{enumerate}
+
+\begin{watchoutbox}[Watch Out --- Multiplicativity Requires $\gcd(a, b) = 1$]
+Do \emph{not} split $\phi(12)$ as $\phi(2) \cdot \phi(6) = 1 \times 2 = 2$! Because $\gcd(2, 6) = 2 \neq 1$, that fails badly. Split only into \textbf{coprime} parts: $\phi(12) = \phi(4) \cdot \phi(3) = 2 \times 2 = 4$ (coprimes: $\{1, 5, 7, 11\}$).
+\end{watchoutbox}
+
+\begin{tryitbox}{Trace}{Computing $\phi(36)$ Two Ways}{ex5}
+Compute $\phi(36)$ using Euler's product formula, then verify your answer by explicitly listing every integer in $[1, 36]$ coprime to $36$.
+\end{tryitbox}
+
+% ============================================================================
+\section{Key Algorithmic Patterns and Sieve Techniques}
+% ============================================================================
+
+Single-number queries up to $10^{12}$ are easy with $O(\sqrt{n})$ trial division. The real algorithmic challenge arrives when you need \emph{millions} of primes, \emph{hundreds of thousands} of factorizations, or primes in a high window $[L, R]$ where $R \le 10^{12}$.
+
+\subsection{Why Naive Loops Fail: Before vs.\ After}
+
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.8cm} >{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash\bfseries}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Task}} & \textcolor{primaryblue}{\textbf{Naive Approach}} & \textcolor{primaryblue}{\textbf{Number Theory Shortcut}} & \textcolor{primaryblue}{\textbf{Speedup}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Single primality ($n = 10^{12}$) & Loop $2 \dots n-1$: $10^{12}$ ops (TLE) & Trial division to $\sqrt{n}$ ($6k \pm 1$) & $10^6\times$ faster \\
+All primes $\le 10^7$ & Test each in $O(\sqrt{n})$: $O(N\sqrt{N})$ & Sieve of Eratosthenes: $O(N\log\log N)$ & $\sim 1{,}000\times$ faster \\
+$10^5$ factorizations ($n \le 10^7$) & Trial division per query: $\sim 10^9$ ops & Precompute SPF array, $O(\log n)$/query & $\sim 100\times$ faster \\
+Primes in $[10^{12} - 10^6, 10^{12}]$ & Full $10^{12}$ sieve (1 TB RAM $\to$ MLE) & Segmented Sieve ($\sqrt{R} = 10^6$ base) & Fits in $< 2$ MB \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
+
+\subsection{Pattern 1: The Sieve of Eratosthenes}
+
+\painbeat Testing each integer from $2$ to $N = 10^7$ individually with $O(\sqrt{n})$ trial division performs $\approx 2 \times 10^{10}$ divisions---minutes of CPU time.
+
+\ahabeat Flip the question from \emph{``does anything divide $x$?''} to \emph{``mark every multiple of each prime $p$ as composite!''} Better yet, start crossing out multiples of $p$ at $p^2$ (not $2p$), because every smaller multiple $k \cdot p$ with $k < p$ already has a prime factor $\le k < p$ and was crossed out earlier!
+
+\examplebeat For $N = 30$, $\lfloor\sqrt{30}\rfloor = 5$. We only need to cross out multiples of primes $2$, $3$, and $5$ starting at $4$, $9$, and $25$ (Figure~\ref{fig:sieve-matrix}). Once $p = 7 > \sqrt{30}$, every remaining uncrossed cell is guaranteed prime!
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+    % Title across left panel (natural width ~15.4cm, zero scaling)
+    \node[anchor=west, font=\bfseries\small, text=primaryblue] at (0.0, 5.45)
+        {Sieve of Eratosthenes Matrix ($N = 30, \; \lfloor\sqrt{30}\rfloor = 5$)};
+
+    % 5 rows x 6 cols grid for 1..30 (x: 0.0 to 8.65, y: 0.2 to 5.0)
+    \foreach \n in {1,2,...,30} {
+        \pgfmathtruncatemacro{\col}{mod(\n-1, 6)}
+        \pgfmathtruncatemacro{\row}{int((\n-1)/6)}
+        \pgfmathsetmacro{\x}{\col * 1.48}
+        \pgfmathsetmacro{\y}{4.2 - \row * 0.96}
+
+        \ifnum\n=1
+            \draw[thick, draw=codeframe, fill=codebg] (\x, \y) rectangle (\x+1.28, \y+0.78);
+            \node[font=\footnotesize\bfseries, text=codegray] at (\x+0.64, \y+0.50) {\n};
+            \node[font=\tiny, text=codegray] at (\x+0.64, \y+0.20) {Unit};
+        \else\ifnum\n=2
+            \draw[line width=1.3pt, draw=primaryblue, fill=primaryblue!10] (\x, \y) rectangle (\x+1.28, \y+0.78);
+            \node[font=\small\bfseries, text=primaryblue] at (\x+0.64, \y+0.39) {\n};
+        \else\ifnum\n=3
+            \draw[line width=1.3pt, draw=primaryblue, fill=primaryblue!10] (\x, \y) rectangle (\x+1.28, \y+0.78);
+            \node[font=\small\bfseries, text=primaryblue] at (\x+0.64, \y+0.39) {\n};
+        \else\ifnum\n=5
+            \draw[line width=1.3pt, draw=primaryblue, fill=primaryblue!10] (\x, \y) rectangle (\x+1.28, \y+0.78);
+            \node[font=\small\bfseries, text=primaryblue] at (\x+0.64, \y+0.39) {\n};
+        \else\ifnum\n=7
+            \draw[line width=1.3pt, draw=primaryblue, fill=primaryblue!10] (\x, \y) rectangle (\x+1.28, \y+0.78);
+            \node[font=\small\bfseries, text=primaryblue] at (\x+0.64, \y+0.39) {\n};
+        \else\ifnum\n=11
+            \draw[line width=1.3pt, draw=primaryblue, fill=primaryblue!10] (\x, \y) rectangle (\x+1.28, \y+0.78);
+            \node[font=\small\bfseries, text=primaryblue] at (\x+0.64, \y+0.39) {\n};
+        \else\ifnum\n=13
+            \draw[line width=1.3pt, draw=primaryblue, fill=primaryblue!10] (\x, \y) rectangle (\x+1.28, \y+0.78);
+            \node[font=\small\bfseries, text=primaryblue] at (\x+0.64, \y+0.39) {\n};
+        \else\ifnum\n=17
+            \draw[line width=1.3pt, draw=primaryblue, fill=primaryblue!10] (\x, \y) rectangle (\x+1.28, \y+0.78);
+            \node[font=\small\bfseries, text=primaryblue] at (\x+0.64, \y+0.39) {\n};
+        \else\ifnum\n=19
+            \draw[line width=1.3pt, draw=primaryblue, fill=primaryblue!10] (\x, \y) rectangle (\x+1.28, \y+0.78);
+            \node[font=\small\bfseries, text=primaryblue] at (\x+0.64, \y+0.39) {\n};
+        \else\ifnum\n=23
+            \draw[line width=1.3pt, draw=primaryblue, fill=primaryblue!10] (\x, \y) rectangle (\x+1.28, \y+0.78);
+            \node[font=\small\bfseries, text=primaryblue] at (\x+0.64, \y+0.39) {\n};
+        \else\ifnum\n=29
+            \draw[line width=1.3pt, draw=primaryblue, fill=primaryblue!10] (\x, \y) rectangle (\x+1.28, \y+0.78);
+            \node[font=\small\bfseries, text=primaryblue] at (\x+0.64, \y+0.39) {\n};
+        \else
+            \draw[thick, draw=codeframe, fill=white] (\x, \y) rectangle (\x+1.28, \y+0.78);
+            \node[font=\small, text=codegray] at (\x+0.64, \y+0.39) {\n};
+            \draw[thick, codegray!75] (\x+0.14, \y+0.12) -- (\x+1.14, \y+0.66);
+        \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+    }
+
+    % Right Panel: Elimination Trace & Principle Card (x: 9.25 to 15.35)
+    \node[anchor=north west, draw=codeframe, fill=codebg, rounded corners=3pt, thick, align=left, font=\scriptsize, inner sep=7pt, text width=5.65cm] at (9.25, 4.98) {
+        {\footnotesize\bfseries\color{primaryblue}Elimination Progression}\\[5pt]
+        \textbf{1.\ Prime $p = 2$:} Start at $2^2 = 4$; cross out $4, 6, 8, \dots, 30$.\\[4pt]
+        \textbf{2.\ Prime $p = 3$:} Start at $3^2 = 9$; cross out $9, 12, 15, \dots, 30$ (newly striking $9, 15, 21, 27$; evens already hit by $2$).\\[4pt]
+        \textbf{3.\ Prime $p = 5$:} Start at $5^2 = 25$; cross out $25, 30$ (newly striking only $25$).\\[4pt]
+        \textbf{4.\ Stop:} Next prime $7 > \lfloor\sqrt{30}\rfloor = 5$.\\[5pt]
+        \textcolor{codegreen}{\textbf{Surviving primes ($10$):}}\\
+        $2, 3, 5, 7, 11, 13, 17, 19, 23, 29$.
+    };
+\end{tikzpicture}
+\caption{Sieve of Eratosthenes elimination matrix for $N = 30$. Highlighted blue cells survive as primes; slashed cells are composites eliminated by primes $p \le \lfloor\sqrt{30}\rfloor = 5$.}
+\label{fig:sieve-matrix}
+\end{figure}
+
+\begin{calloutbox}{Why Is $O(N \log\log N)$ Virtually Linear?}
+Each prime $p \le \sqrt{N}$ marks at most $N / p$ multiples. Summing over primes gives $N \cdot \left(\tfrac{1}{2} + \tfrac{1}{3} + \tfrac{1}{5} + \tfrac{1}{7} + \dots \right)$. By Mertens' theorem, the harmonic sum of primes grows like $\ln \ln N$---and for $N = 10^9$, $\ln\ln(10^9) \approx 3.03$! That means each array cell is touched only about $3$ times on average.
 \end{calloutbox}
 
-\noindent \textbf{Worked Example: Computing $\phi(72)$ from Prime Factorization}
+\begin{tryitbox}{Debug}{Sieve Inner-Loop Overflow and Start Index}{ex6}
+Suppose someone writes a Sieve with 32-bit \texttt{int} variables: \texttt{for (int p = 2; p * p <= max\_n; ++p)} and \texttt{for (int m = p * p; m <= max\_n; m += p)}.
 \begin{enumerate}
-    \item Factorize: $72 = 2^3 \cdot 3^2$. Distinct primes: $\{2, 3\}$.
-    \item Apply the product formula:
-    $$ \phi(72) = 72 \cdot \left(1 - \frac{1}{2}\right) \cdot \left(1 - \frac{1}{3}\right) = 72 \cdot \frac{1}{2} \cdot \frac{2}{3} = 72 \cdot \frac{1}{3} = \mathbf{24}. $$
-    \item Verification: Check a few values. Numbers from 1 to 72 that share a factor with 72 are multiples of 2 ($36$ of them) plus multiples of 3 not already counted ($12$ of them), totalling $48$ excluded. So $72 - 48 = 24$ remain coprime to 72.
+    \item At what prime $p$ does \texttt{p * p} overflow a signed 32-bit \texttt{int}, and how do you eliminate the overflow cleanly?
+    \item What bug occurs if you mistakenly start the inner loop at \texttt{m = p} instead of \texttt{m = p * p}?
+\end{enumerate}
+\end{tryitbox}
+
+\subsection{Pattern 2: Smallest Prime Factor (SPF) Sieve}
+
+\painbeat Answering $Q = 10^5$ prime-factorization queries on numbers $x \le 10^7$ via $O(\sqrt{x})$ trial division takes $\sim 3 \times 10^8$ operations and risks Time Limit Exceeded.
+
+\ahabeat Modify the Sieve of Eratosthenes to store \emph{which} smallest prime crossed out each number: \texttt{spf[x]} = smallest prime dividing $x$. Then factoring any $x$ simply divides repeatedly by \texttt{spf[x]} until $x = 1$---taking at most $\lfloor \log_2 x \rfloor \le 24$ steps!
+
+\examplebeat With \texttt{spf[60] = 2}, \texttt{spf[30] = 2}, \texttt{spf[15] = 3}, \texttt{spf[5] = 5}:
+\[
+    60 \xrightarrow{\div 2} 30 \xrightarrow{\div 2} 15 \xrightarrow{\div 3} 5 \xrightarrow{\div 5} 1
+    \quad \Longrightarrow \quad
+    60 = 2^2 \cdot 3^1 \cdot 5^1
+\]
+in just $4$ array lookups! Precomputation runs in $O(N \log\log N)$ time (a true $O(N)$ Euler linear sieve also exists, though the Eratosthenes-style SPF sieve is shorter, cache-friendly, and practically identical in speed up to $N = 10^7$).
+
+\subsection{Pattern 3: The Segmented Sieve (Primes in High Range \texorpdfstring{$[L, R]$}{[L, R]})}
+
+\painbeat Suppose you need all primes in $[L, R]$ where $R = 10^{12}$ and $R - L = 10^6$. A standard sieve of size $R$ needs $10^{12}$ bytes ($\sim 1$ TB RAM)---impossible!
+
+\ahabeat Every composite number in $[L, R]$ must have a prime factor $\le \sqrt{R} \le 10^6$. So you only need two small arrays:
+\begin{enumerate}
+    \item Standard sieve all \textbf{base primes} up to $\lfloor \sqrt{R} \rfloor$ ($\le 10^6$ cells).
+    \item Allocate a shifted window array of length $(R - L + 1)$ representing values $L, L+1, \dots, R$.
+    \item For each base prime $p$, jump straight to its first composite multiple inside $[L, R]$:
 \end{enumerate}
 
-\subsection{Special Cases and Key Properties}
-\begin{enumerate}
-    \item \textbf{If $p$ is prime:} All numbers from $1$ to $p-1$ are coprime to $p$:
-    $$ \phi(p) = p - 1 $$
-    \item \textbf{Prime powers:} Only multiples of $p$ share a factor with $p^k$. There are $p^k / p = p^{k-1}$ multiples:
-    $$ \phi(p^k) = p^k - p^{k-1} = p^k \left( 1 - \frac{1}{p} \right) $$
-    \item \textbf{Multiplicative Property:} If $\gcd(a, b) = 1$, then:
-    $$ \phi(a \cdot b) = \phi(a) \cdot \phi(b) $$
-    \item \textbf{Sum of Totients of Divisors:} Summing $\phi(d)$ over all divisors of $n$ returns $n$:
-    $$ \sum_{d \mid n} \phi(d) = n $$
-\end{enumerate}
+\begin{formulabox}[Segmented Sieve First Multiple Formula]
+\[
+    \text{start}(p) = \max\!\left(p^2,\; \left\lceil \frac{L}{p} \right\rceil \cdot p\right),
+    \qquad \text{window index} = \text{multiple} - L.
+\]
+\textbf{Read this as:} ``Round $L$ up to the next multiple of $p$, but never start below $p^2$ (otherwise when $L \le p$ you would accidentally cross out the prime $p$ itself!).''
+\end{formulabox}
+
+\begin{watchoutbox}[Watch Out --- Clamping $L < 2$]
+If a query asks for primes in $[0, 10]$ or $[1, 20]$, neither $0$ nor $1$ is a multiple of any prime $p \ge 2$, so they would survive uncrossed as fake primes! Always clamp \texttt{L = std::max<std::int64\_t>(L, 2)} before building the window.
+\end{watchoutbox}
+
+\begin{tryitbox}{Trace}{Segmented Sieve on $[20, 35]$}{ex7}
+Find all primes in $[L, R] = [20, 35]$ by hand using the Segmented Sieve: list the base primes up to $\lfloor\sqrt{35}\rfloor$, compute $\text{start}(p) = \max(p^2, \lceil L/p \rceil p)$ for each base prime, cross out multiples in $[20, 35]$, and list the surviving primes.
+\end{tryitbox}
 
 % ============================================================================
-\section{Key Algorithmic Patterns and Techniques}
+\section{Worked Examples}
 % ============================================================================
 
-In algorithmic problem-solving, numbers can reach $10^9$ or $10^{18}$. A naive algorithm that counts one-by-one will immediately cause Time Limit Exceeded (TLE). Here are the foundational algorithmic patterns of number theory.
+Each example uses fresh numbers distinct from the conceptual traces above and can be reproduced step-by-step on paper.
 
-\begin{calloutbox}{The One Idea Behind Every Efficient Number Theory Algorithm}
-If $n$ has any factor other than 1 and itself, it must have at least one factor that is $\le \sqrt{n}$. This single observation is the engine behind trial division, the Sieve of Eratosthenes, prime factorization, and the segmented sieve. Every efficient algorithm in this section exploits it. When you see a loop that runs up to $\sqrt{n}$, this is why.
-\end{calloutbox}
-
-\subsection{Why Naive Approaches Fail}
-\begin{itemize}
-    \item \textbf{Checking every number up to $n$:} Testing if $n = 10^9 + 7$ is prime by dividing by all numbers up to $n$ requires $10^9$ operations ($\approx 1$ second in C++). Doing this for 100 queries takes minutes.
-    \item \textbf{Generating primes individually:} Calling an $O(\sqrt{n})$ primality test on every number up to $N = 10^7$ takes $O(N \sqrt{N}) \approx 10^{10}$ operations.
-    \item \textbf{Factoring repeatedly:} If a problem asks you to factorize $10^5$ queries, running $O(\sqrt{n})$ on each query takes $10^5 \times 10^4 = 10^9$ operations.
-\end{itemize}
-
-\subsection{Pattern 1: The Sieve of Eratosthenes (Batch Prime Finding)}
-Instead of testing each number for primality, start with an array of numbers from $2$ to $N$ marked as prime. Find the first prime (2), and cross out all of its multiples ($4, 6, 8, \dots$). Move to the next uncrossed number (3), and cross out its multiples ($6, 9, 12, \dots$). Repeat until $\sqrt{N}$.
-
-\vspace{0.2cm}
-\noindent \textbf{Key Optimization:} When crossing out multiples of $p$, start at $p^2$ rather than $2p$, because all smaller multiples ($2p, 3p, \dots$) have already been crossed out by smaller prime factors!
-
-\begin{calloutbox}{Pitfall: Inner Loop Starting at $i \times i$}
-A common mistake is writing the inner loop as \texttt{for (int j = i * 2; ...)}. This does unnecessary work. Starting at \texttt{i * i} is correct and drastically faster, but beware of integer overflow if \texttt{i} is near $10^5$. Always use \texttt{int64\_t} for the loop variables if $N$ is large!
-\end{calloutbox}
-
-\vspace{0.2cm}
-\noindent \textbf{Complexity:} $O(N \log \log N)$ time, which is practically linear. For $N = 10^7$, this runs in under 0.1 seconds in C++.
-
-\noindent \textbf{Worked Trace: Sieve of Eratosthenes for $N = 30$}
-{\footnotesize
-
-}
-We stop because the next prime is $7 > \sqrt{30}$. Remaining primes: $\mathbf{2, 3, 5, 7, 11, 13, 17, 19, 23, 29}$.
-
-\subsection{Pattern 2: The Smallest Prime Factor (SPF) / Linear Sieve}
-When you have multiple factorization queries ($Q \le 10^6$), you can precompute the \textbf{Smallest Prime Factor} (SPF) for every number up to $N$.
-\begin{itemize}
-    \item \texttt{spf[x]} stores the smallest prime that divides $x$.
-    \item To factorize any number $x$, repeatedly divide by \texttt{spf[x]}:
-    $$ x \leftarrow x / \texttt{spf}[x] $$
-    \item Each division takes $O(1)$ time, so factorization takes $O(\log x)$ time!
-\end{itemize}
-
-\noindent \textbf{Worked Trace: Factorize 60 using the SPF array (with $N = 60$)}
-
-
-After running the SPF sieve, the relevant entries are: \texttt{spf[60]=2}, \texttt{spf[30]=2}, \texttt{spf[15]=3}, \texttt{spf[5]=5}.
+\begin{example}[All Divisors of a Perfect Square: $n = 100$]
+Find all positive divisors of $100$ using the $\sqrt{n}$ pairing method.
 \begin{enumerate}
-    \item $x = 60$. \texttt{spf[60] = 2}. Divide: $60 / 2 = 30$, $30 / 2 = 15$. Factor $2^2$ extracted. $x = 15$.
-    \item $x = 15$. \texttt{spf[15] = 3}. Divide: $15 / 3 = 5$. Factor $3^1$ extracted. $x = 5$.
-    \item $x = 5$. \texttt{spf[5] = 5}. Divide: $5 / 5 = 1$. Factor $5^1$ extracted. $x = 1$.
-    \item Result: $60 = 2^2 \cdot 3 \cdot 5$. Total steps: 4 divisions.
-\end{enumerate}
-Compare this to trial division on 60, which would test divisors $2, 3, 5, 7 (> \sqrt{60})$ --- 4 candidates. For larger $x$ (say $x = 2^{20}$), SPF takes only 20 lookups versus trial division's $\sqrt{2^{20}} \approx 1024$ attempts.
-
-\subsection{Pattern 3: The Segmented Sieve (Primes in Range $[L, R]$)}
-What if you need to find primes in the range $[L, R]$ where $L, R \le 10^{12}$, but the range length $R - L \le 10^6$?
-\begin{itemize}
-    \item You cannot allocate an array of size $10^{12}$ (Memory Limit Exceeded).
-    \item But any composite number in $[L, R]$ must have a prime factor $\le \sqrt{R} \le 10^6$.
-    \item \textbf{Technique:} Sieve the small primes up to $\sqrt{R} = 10^6$ first. Then allocate an array of size $(R - L + 1)$ and use the small primes to cross out multiples inside $[L, R]$.
-\end{itemize}
-
-\noindent \textbf{Worked Trace: Segmented Sieve Concept for Primes in {$[20, 35]$}}
-\begin{enumerate}
-    \item Find small primes up to $\lfloor \sqrt{35} \rfloor = 5$. Small primes are $\{2, 3, 5\}$.
-    \item Create a boolean array of length $R - L + 1 = 35 - 20 + 1 = 16$ representing indices $0$ to $15$ (values $20$ to $35$), initially all marked as prime.
-    \item Strike multiples of $p = 2$: First multiple $\ge 20$ is $20$. Multiples: $20, 22, 24, 26, 28, 30, 32, 34$.
-    \item Strike multiples of $p = 3$: First multiple $\ge 20$ is $21$. Multiples: $21, 24, 27, 30, 33$.
-    \item Strike multiples of $p = 5$: First multiple $\ge 20$ is $20$. Multiples: $20, 25, 30, 35$.
-    \item Remaining uncrossed values in $[20, 35]$ are: $\mathbf{23, 29, 31}$.
-\end{enumerate}
-
-% ============================================================================
-\section{Worked Examples with Step-by-Step Traces}
-% ============================================================================
-
-\begin{example}[Finding All Divisors of $n = 36$]
-Find all positive divisors of $36$ using the square root pairing method.
-\begin{enumerate}
-    \item Compute limit: $\lfloor \sqrt{36} \rfloor = 6$.
-    \item Iterate $i$ from $1$ to $6$:
+    \item Compute search bound: $\lfloor \sqrt{100} \rfloor = 10$.
+    \item Test $i = 1 \dots 10$:
     \begin{itemize}
-        \item $i = 1$: $36 \bmod 1 = 0 \implies$ pair is $(1, 36/1) = (\mathbf{1}, \mathbf{36})$.
-        \item $i = 2$: $36 \bmod 2 = 0 \implies$ pair is $(2, 36/2) = (\mathbf{2}, \mathbf{18})$.
-        \item $i = 3$: $36 \bmod 3 = 0 \implies$ pair is $(3, 36/3) = (\mathbf{3}, \mathbf{12})$.
-        \item $i = 4$: $36 \bmod 4 = 0 \implies$ pair is $(4, 36/4) = (\mathbf{4}, \mathbf{9})$.
-        \item $i = 5$: $36 \bmod 5 = 1 \implies$ not a divisor.
-        \item $i = 6$: $36 \bmod 6 = 0 \implies$ pair is $(6, 36/6) = (6, 6) \implies$ add $\mathbf{6}$ once.
+        \item $i = 1$: $100 \bmod 1 = 0 \implies$ add $(1, 100)$.
+        \item $i = 2$: $100 \bmod 2 = 0 \implies$ add $(2, 50)$.
+        \item $i = 3$: $100 \bmod 3 = 1$ (skip).
+        \item $i = 4$: $100 \bmod 4 = 0 \implies$ add $(4, 25)$.
+        \item $i = 5$: $100 \bmod 5 = 0 \implies$ add $(5, 20)$.
+        \item $i = 6, 7, 8, 9$: nonzero remainders (skip).
+        \item $i = 10$: $100 \bmod 10 = 0$ and $10 = 100 / 10 \implies$ add $\mathbf{10}$ \emph{once}.
     \end{itemize}
-    \item Sorted list of divisors: $[1, 2, 3, 4, 6, 9, 12, 18, 36]$. Total = 9 divisors.
+    \item Sorted divisors: $[1, 2, 4, 5, 10, 20, 25, 50, 100]$ --- $9$ divisors (odd count because $100 = 10^2$ is a perfect square).
 \end{enumerate}
 \end{example}
 
-\begin{example}[Prime Factorization and Divisor Analysis for $n = 360$]
-Factorize $360$ into prime powers, then compute its total number and sum of divisors.
+\begin{example}[Prime Factorization, $\tau(180)$, and $\sigma(180)$]
+Factorize $n = 180$ into prime powers, then compute its divisor count and divisor sum.
 \begin{enumerate}
-    \item Divide out 2: $360 / 2 = 180 \implies 180 / 2 = 90 \implies 90 / 2 = 45$. Count of 2s = 3.
-    \item Divide out 3: $45 / 3 = 15 \implies 15 / 3 = 5$. Count of 3s = 2.
-    \item Divide out 5: $5 / 5 = 1$. Count of 5s = 1.
-    \item Prime factorization: $360 = 2^3 \cdot 3^2 \cdot 5^1$.
-    \item Count of divisors $\tau(360) = (3 + 1)(2 + 1)(1 + 1) = 4 \times 3 \times 2 = \mathbf{24}$.
-    \item Sum of divisors $\sigma(360) = (1+2+4+8)(1+3+9)(1+5) = 15 \times 13 \times 6 = \mathbf{1170}$.
+    \item Divide out $2$: $180 \to 90 \to 45$ (exponent $2$).
+    \item Divide out $3$: $45 \to 15 \to 5$ (exponent $2$).
+    \item Remaining $5 > 1$ has no factor $\le \sqrt{5}$, so $5$ is prime (exponent $1$).
+    \item Prime factorization: $180 = 2^2 \cdot 3^2 \cdot 5^1$.
+    \item Divisor count: $\tau(180) = (2 + 1)(2 + 1)(1 + 1) = 3 \times 3 \times 2 = \mathbf{18}$.
+    \item Divisor sum: $\sigma(180) = (1 + 2 + 4)(1 + 3 + 9)(1 + 5) = 7 \times 13 \times 6 = \mathbf{546}$.
 \end{enumerate}
 \end{example}
 
-\begin{example}[Euclidean Algorithm Trace: $\gcd(252, 105)$ and $\operatorname{lcm}(252, 105)$]
-Compute the GCD and LCM of $252$ and $105$ using Euclidean modulo reduction.
+\begin{example}[Euclidean GCD and Overflow-Safe LCM: $a = 198, b = 84$]
+Compute $\gcd(198, 84)$ and $\operatorname{lcm}(198, 84)$ step-by-step.
 \begin{enumerate}
-    \item $\gcd(252, 105)$: $252 \bmod 105 = 42 \implies \gcd(105, 42)$.
-    \item $\gcd(105, 42)$: $105 \bmod 42 = 21 \implies \gcd(42, 21)$.
-    \item $\gcd(42, 21)$: $42 \bmod 21 = 0 \implies \gcd(21, 0) = \mathbf{21}$.
-    \item Compute LCM using $\operatorname{lcm}(a, b) = (a / \gcd(a, b)) \times b$:
-    $$ \operatorname{lcm}(252, 105) = \left( \frac{252}{21} \right) \times 105 = 12 \times 105 = \mathbf{1260}. $$
+    \item $198 = 2 \times 84 + 30 \implies \gcd(198, 84) = \gcd(84, 30)$.
+    \item $84 = 2 \times 30 + 24 \implies \gcd(84, 30) = \gcd(30, 24)$.
+    \item $30 = 1 \times 24 + 6 \implies \gcd(30, 24) = \gcd(24, 6)$.
+    \item $24 = 4 \times 6 + 0 \implies \gcd(24, 6) = \gcd(6, 0) = \mathbf{6}$.
+    \item Overflow-safe LCM (divide first, then multiply):
+    \[
+        \operatorname{lcm}(198, 84) = \left(\frac{198}{6}\right) \times 84 = 33 \times 84 = \mathbf{2{,}772}.
+    \]
+    Check: $6 \times 2{,}772 = 16{,}632 = 198 \times 84$.
 \end{enumerate}
 \end{example}
 
-\begin{example}[Computing Euler's Totient $\phi(36)$]
-Find how many integers in $[1, 36]$ are coprime to $36$.
+\begin{example}[Euler's Totient $\phi(60)$ via Two Methods]
+Count how many integers in $[1, 60]$ are coprime to $60$.
 \begin{enumerate}
-    \item Find distinct prime factors of $36$: $36 = 2^2 \cdot 3^2$. The distinct primes are $p = 2$ and $p = 3$.
-    \item Apply Euler's product formula:
-    $$ \phi(36) = 36 \cdot \left(1 - \frac{1}{2}\right) \left(1 - \frac{1}{3}\right) = 36 \cdot \frac{1}{2} \cdot \frac{2}{3} = 36 \cdot \frac{1}{3} = \mathbf{12}. $$
-    \item Verification by listing: The 12 coprime integers are $1, 5, 7, 11, 13, 17, 19, 23, 25, 29, 31, 35$.
+    \item Prime factorization: $60 = 2^2 \cdot 3^1 \cdot 5^1$.
+    \item \textbf{Method A (Product formula):}
+    \[
+        \phi(60) = 60 \cdot \left(1 - \frac{1}{2}\right)\left(1 - \frac{1}{3}\right)\left(1 - \frac{1}{5}\right)
+        = 60 \cdot \frac{1}{2} \cdot \frac{2}{3} \cdot \frac{4}{5} = \mathbf{16}.
+    \]
+    \item \textbf{Method B (Multiplicativity on coprime prime powers):}
+    \[
+        \phi(60) = \phi(2^2) \cdot \phi(3) \cdot \phi(5) = (4 - 2) \times 2 \times 4 = 2 \times 2 \times 4 = \mathbf{16}.
+    \]
+    \item Verification: The $16$ coprimes are $1, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 49, 53, 59$.
 \end{enumerate}
 \end{example}
 
-\begin{example}[Segmented Sieve Concept: Primes in {$[20, 35]$}]
-Find all prime numbers between $L = 20$ and $R = 35$.
+\begin{example}[Segmented Sieve on a Fresh Window: {$[50, 70]$}]
+Find all primes in $[L, R] = [50, 70]$.
 \begin{enumerate}
-    \item Find small primes up to $\lfloor \sqrt{35} \rfloor = 5$. Small primes are $\{2, 3, 5\}$.
-    \item Create a boolean array of length $R - L + 1 = 35 - 20 + 1 = 16$ representing indices $0$ to $15$ (values $20$ to $35$), initially all marked as prime.
-    \item Strike multiples of $p = 2$: First multiple $\ge 20$ is $20$. Multiples: $20, 22, 24, 26, 28, 30, 32, 34$.
-    \item Strike multiples of $p = 3$: First multiple $\ge 20$ is $21$. Multiples: $21, 24, 27, 30, 33$.
-    \item Strike multiples of $p = 5$: First multiple $\ge 20$ is $20$. Multiples: $20, 25, 30, 35$.
-    \item Remaining uncrossed values in $[20, 35]$ are: $\mathbf{23, 29, 31}$.
+    \item Compute base bound $\lfloor \sqrt{70} \rfloor = 8 \implies$ base primes $\{2, 3, 5, 7\}$.
+    \item Create a window of length $70 - 50 + 1 = 21$ (offset $k$ represents $50 + k$).
+    \item $p = 2$: $\text{start} = \max(4, 50) = 50 \implies$ strike $50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70$.
+    \item $p = 3$: $\text{start} = \max(9, 51) = 51 \implies$ strike $51, 54, 57, 60, 63, 66, 69$.
+    \item $p = 5$: $\text{start} = \max(25, 50) = 50 \implies$ strike $50, 55, 60, 65, 70$.
+    \item $p = 7$: $\text{start} = \max(49, 56) = 56 \implies$ strike $56, 63, 70$.
+    \item Uncrossed survivors in $[50, 70]$: $\mathbf{53, 59, 61, 67}$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Fast $O(\log x)$ Factorization of $x = 90$ Using an SPF Array]
+Assume \texttt{spf[1..100]} is precomputed with \texttt{spf[90]=2}, \texttt{spf[45]=3}, \texttt{spf[15]=3}, \texttt{spf[5]=5}.
+\begin{enumerate}
+    \item $x = 90$: \texttt{p = spf[90] = 2}. Divide once $\to x = 45$; emit $(2, 1)$.
+    \item $x = 45$: \texttt{p = spf[45] = 3}. Divide twice ($45 \to 15 \to 5$) $\to x = 5$; emit $(3, 2)$.
+    \item $x = 5$: \texttt{p = spf[5] = 5}. Divide once $\to x = 1$; emit $(5, 1)$.
+    \item Stop at $x = 1$. Output: $90 = 2^1 \cdot 3^2 \cdot 5^1$ in $4$ constant-time divisions.
 \end{enumerate}
 \end{example}
 
 % ============================================================================
-\section{C++ Implementations for Algorithmic Challenges}
+\section{C++23 Implementations}
 % ============================================================================
 
-All implementations use modern \textbf{C++23} standards, avoiding obsolete practices like raw pointers or global variables.
+Every listing below is standalone modern \textbf{C++23}, qualifies \texttt{std::int64\_t} / \texttt{std::uint64\_t}, avoids \texttt{i * i <= n} signed overflow by writing \texttt{i <= n / i}, and compiles cleanly under \texttt{-std=c++23 -Wall -Wextra}.
 
-\subsection{What is Trial Division?}
-Trial division is the direct process of testing whether a candidate factor divides $n$. Instead of checking all numbers up to $n$, we check only up to $\sqrt{n}$. Furthermore, after checking 2 and 3, any remaining prime must be of the form $6k \pm 1$ ($5, 7, 11, 13, 17, 19, \dots$), allowing us to skip all other even numbers and multiples of 3.
+\subsection{Primality Testing via \texorpdfstring{$6k \pm 1$}{6k +/- 1} Trial Division}
 
-\begin{lstlisting}[caption={$O(\sqrt{n})$ Primality Testing with 6k+-1 Optimization}]
+After filtering out $n \le 3$ and multiples of $2$ and $3$, every remaining prime has the form $6k - 1$ or $6k + 1$ ($5, 7, 11, 13, \dots$). Stepping by $6$ skips two-thirds of all candidates while \texttt{i <= n / i} guarantees zero multiplication overflow even near \texttt{INT64\_MAX}.
+
+\begin{lstlisting}[caption={$O(\sqrt{n})$ Overflow-Safe Primality Testing ($6k \pm 1$)}]
 #include <cstdint>
 
-[[nodiscard]] constexpr bool isPrime(int64_t n) noexcept {
-    // 1. Handle base edge cases
+[[nodiscard]] constexpr bool is_prime(std::int64_t n) noexcept {
     if (n <= 1) return false;
-    if (n <= 3) return true; // 2 and 3 are prime
-    if (n % 2 == 0 || n % 3 == 0) return false; // Exclude multiples of 2 and 3
+    if (n <= 3) return true;
+    if (n % 2 == 0 || n % 3 == 0) return false;
 
-    // 2. Test candidate factors of the form 6k - 1 and 6k + 1 up to sqrt(n)
-    for (int64_t i = 5; i * i <= n; i += 6) {
+    for (std::int64_t i = 5; i <= n / i; i += 6) {
         if (n % i == 0 || n % (i + 2) == 0) {
             return false;
         }
@@ -526,46 +941,46 @@ Trial division is the direct process of testing whether a candidate factor divid
 }
 \end{lstlisting}
 
-\subsection{What is the Divisor Extraction Algorithm?}
-By iterating from $1$ up to $\sqrt{n}$, each time we find a divisor $i$, we automatically obtain its matching partner $n / i$. Collecting both and sorting yields all divisors.
+\subsection{Extracting All Divisors in Sorted Order}
 
-\begin{lstlisting}[caption={Extracting All Divisors in $O(\sqrt{n})$ Sorted Order}]
-#include <vector>
+Iterating $i$ from $1$ up to $\lfloor\sqrt{n}\rfloor$ discovers every pair $(i, n / i)$ simultaneously. Guarding \texttt{i != n / i} prevents duplicating $\sqrt{n}$ for perfect squares, and \texttt{std::ranges::sort} returns the result in ascending order.
+
+\begin{lstlisting}[caption={Extracting All Positive Divisors in $O(\sqrt{n})$ Time}]
 #include <algorithm>
 #include <cstdint>
+#include <vector>
 
-[[nodiscard]] std::vector<int64_t> getDivisors(int64_t n) {
-    std::vector<int64_t> divisors;
+[[nodiscard]] std::vector<std::int64_t> get_divisors(std::int64_t n) {
+    std::vector<std::int64_t> divisors;
     if (n <= 0) return divisors;
 
-    // 1. Iterate up to sqrt(n)
-    for (int64_t i = 1; i * i <= n; ++i) {
+    for (std::int64_t i = 1; i <= n / i; ++i) {
         if (n % i == 0) {
             divisors.push_back(i);
-            if (i * i != n) { // Avoid adding the square root twice for perfect squares
+            if (i != n / i) {
                 divisors.push_back(n / i);
             }
         }
     }
 
-    // 2. Sort to return in ascending order (using C++23 ranges)
     std::ranges::sort(divisors);
     return divisors;
 }
 \end{lstlisting}
 
-\subsection{What is Prime Factorization?}
-To factorize $n$, divide out 2 until $n$ is odd, then check odd candidates $3, 5, 7, \dots$ up to $\sqrt{n}$. Whenever a candidate divides $n$, divide it out completely and count the exponent. If $n > 1$ remains after the loop, that remaining value is itself a prime.
+\subsection{Prime Factorization in \texorpdfstring{$O(\sqrt{n})$}{O(sqrt(n))} Time}
 
-\begin{lstlisting}[caption={Prime Factorization in $O(\sqrt{n})$ Time}]
-#include <vector>
-#include <utility>
+Guard \texttt{n <= 1} first so \texttt{prime\_factorize(0)} never enters an infinite loop on \texttt{0 \% 2 == 0}. Strip all factors of $2$, then test odd candidates $d = 3, 5, 7, \dots$ while \texttt{d <= n / d}. Any leftover $n > 1$ at the end is necessarily a prime factor with exponent $1$.
+
+\begin{lstlisting}[caption={Overflow-Safe Prime Factorization in $O(\sqrt{n})$ Time}]
 #include <cstdint>
+#include <utility>
+#include <vector>
 
-[[nodiscard]] std::vector<std::pair<int64_t, int>> primeFactorize(int64_t n) {
-    std::vector<std::pair<int64_t, int>> factors;
+[[nodiscard]] std::vector<std::pair<std::int64_t, int>> prime_factorize(std::int64_t n) {
+    std::vector<std::pair<std::int64_t, int>> factors;
+    if (n <= 1) return factors;
 
-    // 1. Extract power of 2
     if (n % 2 == 0) {
         int count = 0;
         while (n % 2 == 0) {
@@ -575,8 +990,7 @@ To factorize $n$, divide out 2 until $n$ is odd, then check odd candidates $3, 5
         factors.emplace_back(2, count);
     }
 
-    // 2. Extract odd prime factors up to sqrt(n)
-    for (int64_t d = 3; d * d <= n; d += 2) {
+    for (std::int64_t d = 3; d <= n / d; d += 2) {
         if (n % d == 0) {
             int count = 0;
             while (n % d == 0) {
@@ -587,102 +1001,117 @@ To factorize $n$, divide out 2 until $n$ is odd, then check odd candidates $3, 5
         }
     }
 
-    // 3. If n > 1 remains, the remaining number is prime
     if (n > 1) {
         factors.emplace_back(n, 1);
     }
-
     return factors;
 }
 \end{lstlisting}
 
-\subsection{How Does the Euclidean Algorithm Work in Code?}
-The Euclidean algorithm replaces $(a, b)$ with $(b, a \bmod b)$ until $b = 0$. In C++17 onward, \texttt{std::gcd} and \texttt{std::lcm} are included in \texttt{<numeric>}. Here is the production implementation showing the internal logic.
+\subsection{Euclidean Algorithm for GCD and Overflow-Safe LCM}
 
-\begin{lstlisting}[caption={Iterative Euclidean Algorithm for GCD and LCM}]
+In production C++17+, prefer \texttt{std::gcd} and \texttt{std::lcm} from \texttt{<numeric>}. Below is the internal Euclidean logic written with unsigned magnitudes so even \texttt{INT64\_MIN} never triggers signed negation or \texttt{INT64\_MIN \% -1} undefined behavior.
+
+\begin{lstlisting}[caption={UB-Free Euclidean GCD and Divide-First LCM}]
 #include <cstdint>
 
-[[nodiscard]] constexpr int64_t gcd(int64_t a, int64_t b) noexcept {
-    while (b != 0) {
-        int64_t rem = a % b;
-        a = b;
-        b = rem;
-    }
-    return a < 0 ? -a : a; // Return non-negative GCD
+[[nodiscard]] constexpr std::uint64_t abs_u64(std::int64_t x) noexcept {
+    return x < 0 ? 0ULL - static_cast<std::uint64_t>(x)
+                 : static_cast<std::uint64_t>(x);
 }
 
-[[nodiscard]] constexpr int64_t lcm(int64_t a, int64_t b) noexcept {
-    if (a == 0 || b == 0) return 0;
-    // Divide before multiplying to prevent 64-bit integer overflow
-    return (a / gcd(a, b)) * b;
+[[nodiscard]] constexpr std::uint64_t gcd(std::int64_t a, std::int64_t b) noexcept {
+    std::uint64_t ua = abs_u64(a);
+    std::uint64_t ub = abs_u64(b);
+    while (ub != 0) {
+        std::uint64_t rem = ua % ub;
+        ua = ub;
+        ub = rem;
+    }
+    return ua;
+}
+
+[[nodiscard]] constexpr std::uint64_t lcm(std::int64_t a, std::int64_t b) noexcept {
+    std::uint64_t ua = abs_u64(a);
+    std::uint64_t ub = abs_u64(b);
+    if (ua == 0 || ub == 0) return 0;
+    // Divide before multiplying to minimize intermediate value
+    return (ua / gcd(a, b)) * ub;
 }
 \end{lstlisting}
 
-\subsection{What is the Sieve of Eratosthenes?}
-The Sieve creates a boolean table representing numbers $0 \dots N$. Starting from 2, whenever an uncrossed prime $p$ is encountered, its multiples $p^2, p^2 + p, p^2 + 2p, \dots$ are crossed out.
+\subsection{Sieve of Eratosthenes}
 
-\begin{lstlisting}[caption={Sieve of Eratosthenes Generating Primes up to N}]
-#include <vector>
+Using \texttt{std::vector<char>} (1 byte per entry) avoids the bit-packing overhead of \texttt{std::vector<bool>} while fitting $N = 10^7$ in $\approx 10$ MB. The outer loop stops at \texttt{p <= max\_n / p} and marks multiples from $p^2$ upward.
+
+\begin{lstlisting}[caption={Sieve of Eratosthenes Generating All Primes up to $N$}]
+#include <cstddef>
 #include <cstdint>
+#include <vector>
 
-[[nodiscard]] std::vector<int> sievePrimes(int max_n) {
+[[nodiscard]] std::vector<int> sieve_primes(int max_n) {
     if (max_n < 2) return {};
 
-    // 1. Initialize boolean vector: true means potentially prime
-    std::vector<bool> is_prime(max_n + 1, true);
-    is_prime[0] = is_prime[1] = false;
+    std::vector<char> is_prime(static_cast<std::size_t>(max_n) + 1, 1);
+    is_prime[0] = 0;
+    is_prime[1] = 0;
 
-    // 2. Mark multiples from p^2 onwards
-    for (long long p = 2; p * p <= max_n; ++p) {
-        if (is_prime[p]) {
-            for (long long multiple = p * p; multiple <= max_n; multiple += p) {
-                is_prime[multiple] = false;
+    for (int p = 2; p <= max_n / p; ++p) {
+        if (is_prime[static_cast<std::size_t>(p)]) {
+            for (std::int64_t m = static_cast<std::int64_t>(p) * p; m <= max_n; m += p) {
+                is_prime[static_cast<std::size_t>(m)] = 0;
             }
         }
     }
 
-    // 3. Collect all primes
     std::vector<int> primes;
     for (int i = 2; i <= max_n; ++i) {
-        if (is_prime[i]) primes.push_back(i);
+        if (is_prime[static_cast<std::size_t>(i)]) {
+            primes.push_back(i);
+        }
     }
     return primes;
 }
 \end{lstlisting}
 
-\subsection{What is the Smallest Prime Factor (SPF) Precomputation?}
-For applications where you must factorize thousands of numbers up to $N \le 10^7$, we compute an array where \texttt{spf[x]} stores the smallest prime dividing $x$. This enables instant $O(\log x)$ prime factorization.
+\subsection{Smallest Prime Factor (SPF) Sieve for Fast Queries}
 
-\begin{lstlisting}[caption={Linear Sieve with Smallest Prime Factor (SPF) for Fast Queries}]
-#include <vector>
+This Eratosthenes-style SPF sieve runs in $O(N \log\log N)$ preprocessing time and answers every factorization query $x \le N$ in $O(\log x)$ time by repeatedly dividing by \texttt{spf[x]}. Note that \texttt{if (spf[j] == j)} ensures only the \emph{smallest} prime claims \texttt{j}.
+
+\begin{lstlisting}[caption={Smallest Prime Factor (SPF) Sieve for $O(\log x)$ Factorization Queries}]
+#include <cstddef>
+#include <cstdint>
+#include <numeric>
 #include <utility>
+#include <vector>
 
-class FastFactorizer {
+class SpfFactorizer {
 private:
-    std::vector<int> spf; // spf[x] = smallest prime factor of x
+    std::vector<int> spf;
 
 public:
-    explicit FastFactorizer(int max_n) : spf(max_n + 1) {
-        // 1. Initialize spf[i] = i
-        for (int i = 0; i <= max_n; ++i) spf[i] = i;
+    explicit SpfFactorizer(int max_n)
+        : spf(max_n > 0 ? static_cast<std::size_t>(max_n) + 1 : 1, 0) {
+        std::iota(spf.begin(), spf.end(), 0);
 
-        // 2. Mark smallest prime factors
-        for (long long i = 2; i * i <= max_n; ++i) {
-            if (spf[i] == i) { // i is prime
-                for (long long j = i * i; j <= max_n; j += i) {
-                    if (spf[j] == j) { // Only set if not already set by a smaller prime
-                        spf[j] = i;
+        for (int i = 2; i <= max_n / i; ++i) {
+            if (spf[static_cast<std::size_t>(i)] == i) {
+                for (std::int64_t j = static_cast<std::int64_t>(i) * i; j <= max_n; j += i) {
+                    auto idx = static_cast<std::size_t>(j);
+                    if (spf[idx] == static_cast<int>(j)) {
+                        spf[idx] = i;
                     }
                 }
             }
         }
     }
 
-    // O(log x) factorization query
     [[nodiscard]] std::vector<std::pair<int, int>> factorize(int x) const {
         std::vector<std::pair<int, int>> factors;
+        if (x <= 1 || static_cast<std::size_t>(x) >= spf.size()) return factors;
+
         while (x > 1) {
-            int p = spf[x];
+            int p = spf[static_cast<std::size_t>(x)];
             int count = 0;
             while (x % p == 0) {
                 ++count;
@@ -695,20 +1124,84 @@ public:
 };
 \end{lstlisting}
 
-\subsection{What is the Euler Totient Calculation?}
-To compute $\phi(n)$ for a single number in $O(\sqrt{n})$ time, apply the formula $\phi(n) = n \prod (1 - 1/p)$. To compute $\phi$ for all numbers up to $N$, adapt the Sieve: initialize $\phi[i] = i$, and whenever a prime $p$ is seen, multiply all its multiples by $(1 - 1/p) = (p - 1)/p$.
+\subsection{Segmented Sieve for High Ranges \texorpdfstring{$[L, R]$}{[L, R]}}
 
-\begin{lstlisting}[caption={Single Query $\phi(n)$ and Batch Totient Sieve}]
-#include <vector>
+First compute an exact integer square root $\lfloor \sqrt{R} \rfloor$ (correcting any floating-point rounding), sieve all base primes up to that limit, and then mark multiples across a shifted boolean window of size $R - L + 1$.
+
+\begin{lstlisting}[caption={Segmented Sieve Finding All Primes in Range $L$ to $R$ ($R \le 10^{12}$)}]
+#include <algorithm>
+#include <cmath>
+#include <cstddef>
 #include <cstdint>
+#include <vector>
 
-// O(sqrt(n)) single query
-[[nodiscard]] int64_t computeTotient(int64_t n) {
-    int64_t result = n;
-    for (int64_t p = 2; p * p <= n; ++p) {
+[[nodiscard]] std::int64_t isqrt(std::int64_t n) noexcept {
+    if (n <= 0) return 0;
+    auto r = static_cast<std::int64_t>(std::sqrt(static_cast<long double>(n)));
+    while ((r + 1) <= n / (r + 1)) ++r;
+    while (r > n / r) --r;
+    return r;
+}
+
+[[nodiscard]] std::vector<std::int64_t> segmented_sieve(std::int64_t L, std::int64_t R) {
+    if (L > R || R < 2) return {};
+    L = std::max<std::int64_t>(L, 2);
+
+    const int limit = static_cast<int>(isqrt(R));
+    std::vector<char> small(static_cast<std::size_t>(limit) + 1, 1);
+    std::vector<int> base_primes;
+    for (int p = 2; p <= limit; ++p) {
+        if (small[static_cast<std::size_t>(p)]) {
+            base_primes.push_back(p);
+            if (p <= limit / p) {
+                for (std::int64_t m = static_cast<std::int64_t>(p) * p; m <= limit; m += p) {
+                    small[static_cast<std::size_t>(m)] = 0;
+                }
+            }
+        }
+    }
+
+    const auto len = static_cast<std::size_t>(R - L + 1);
+    std::vector<char> is_prime(len, 1);
+
+    for (int p : base_primes) {
+        const std::int64_t rem = L % p;
+        const std::int64_t first = (rem == 0) ? L : L + (p - rem);
+        const std::int64_t start = std::max(static_cast<std::int64_t>(p) * p, first);
+
+        for (std::int64_t m = start; m <= R; m += p) {
+            is_prime[static_cast<std::size_t>(m - L)] = 0;
+            if (m > R - p) break; // Guard against m + p overflow near INT64_MAX
+        }
+    }
+
+    std::vector<std::int64_t> primes;
+    for (std::size_t i = 0; i < len; ++i) {
+        if (is_prime[i]) {
+            primes.push_back(L + static_cast<std::int64_t>(i));
+        }
+    }
+    return primes;
+}
+\end{lstlisting}
+
+\subsection{Euler's Totient: Single Query and Batch Sieve}
+
+For a single $n$, extract each distinct prime factor $p \le \sqrt{n}$ and apply \texttt{result -= result / p}. For all values $\phi(1) \dots \phi(N)$ at once, initialize $\phi[i] = i$ and apply that exact update to every multiple of each prime $p$.
+
+\begin{lstlisting}[caption={Single-Query $O(\sqrt{n})$ Totient and $O(N \log\log N)$ Batch Totient Sieve}]
+#include <cstddef>
+#include <cstdint>
+#include <numeric>
+#include <vector>
+
+[[nodiscard]] constexpr std::int64_t compute_totient(std::int64_t n) noexcept {
+    if (n <= 0) return 0;
+    std::int64_t result = n;
+    for (std::int64_t p = 2; p <= n / p; ++p) {
         if (n % p == 0) {
             while (n % p == 0) n /= p;
-            result -= result / p; // Equivalent to result * (1 - 1/p)
+            result -= result / p;
         }
     }
     if (n > 1) {
@@ -717,15 +1210,17 @@ To compute $\phi(n)$ for a single number in $O(\sqrt{n})$ time, apply the formul
     return result;
 }
 
-// O(N log log N) batch precomputation for phi(1) ... phi(N)
-[[nodiscard]] std::vector<int> totientSieve(int max_n) {
-    std::vector<int> phi(max_n + 1);
-    for (int i = 0; i <= max_n; ++i) phi[i] = i;
+[[nodiscard]] std::vector<int> totient_sieve(int max_n) {
+    if (max_n < 0) return {};
+    std::vector<int> phi(static_cast<std::size_t>(max_n) + 1);
+    std::iota(phi.begin(), phi.end(), 0);
 
     for (int p = 2; p <= max_n; ++p) {
-        if (phi[p] == p) { // p is prime
-            for (int multiple = p; multiple <= max_n; multiple += p) {
-                phi[multiple] -= phi[multiple] / p;
+        if (phi[static_cast<std::size_t>(p)] == p) { // p is prime
+            for (int m = p; m <= max_n; m += p) {
+                auto idx = static_cast<std::size_t>(m);
+                phi[idx] -= phi[idx] / p;
+                if (m > max_n - p) break;
             }
         }
     }
@@ -733,112 +1228,118 @@ To compute $\phi(n)$ for a single number in $O(\sqrt{n})$ time, apply the formul
 }
 \end{lstlisting}
 
+\begin{tryitbox}{Twist}{Perfect Number Check Without a Vector}{ex8}
+Adapt \texttt{get\_divisors} into an $O(\sqrt{n})$ function \texttt{is\_perfect(std::int64\_t n)} using $O(1)$ space that checks whether $n$ equals the sum of its \emph{proper} divisors. State the base case for $n \le 1$, initial \texttt{sum}, loop bounds, and duplicate guard.
+\end{tryitbox}
+
 % ============================================================================
 \section{Problem Pattern Recognition}
 % ============================================================================
 
-When facing an algorithmic problem, use this step-by-step decision framework to choose the correct number theory tool.
+Use this three-step filter whenever a problem involves integers, divisibility, cycles, or prime factors.
 
-\subsection*{Step 1: What is the Problem Asking For?}
+\subsection*{Step 1: What Is the Problem Asking For?}
 \begin{itemize}
-    \item \textbf{``Is this number prime?''} $\implies$ Single query: $O(\sqrt{n})$ trial division with $6k \pm 1$. Range query: Sieve of Eratosthenes.
-    \item \textbf{``Find all divisors / count divisors''} $\implies$ Small single number: extract pairs up to $\sqrt{n}$. Counting only: factorize and compute $\prod (a_i + 1)$.
-    \item \textbf{``Find the Greatest Common Factor / Simplify Fractions''} $\implies$ Euclidean Algorithm (\texttt{std::gcd}).
-    \item \textbf{``Find the smallest number divisible by both $A$ and $B$''} $\implies$ Least Common Multiple (\texttt{std::lcm}).
-    \item \textbf{``Count how many numbers $\le N$ share no factors with $N$''} $\implies$ Euler's Totient function $\phi(n)$.
-    \item \textbf{``Many queries to factorize numbers''} $\implies$ Precompute SPF array with Sieve, then factorize each in $O(\log n)$.
+    \item \textbf{Single primality test} $\implies$ $O(\sqrt{n})$ trial division with $6k \pm 1$.
+    \item \textbf{List or count divisors} $\implies$ Pair enumeration up to $\sqrt{n}$, or factorize and use $\tau(n) = \prod(a_i + 1)$.
+    \item \textbf{Reduce fractions / tile a grid / common step size} $\implies$ Euclidean Algorithm (\texttt{std::gcd}).
+    \item \textbf{Synchronize repeating cycles} $\implies$ Least Common Multiple (\texttt{std::lcm}, divide before multiplying).
+    \item \textbf{Count coprimes in $[1, n]$} $\implies$ Euler's Totient $\phi(n)$ (or Totient Sieve for a full range).
+    \item \textbf{Factorize $Q \ge 10^4$ numbers up to $10^7$} $\implies$ Precompute SPF Sieve, then $O(\log x)$ per query.
 \end{itemize}
 
-\subsection*{Step 2: What is the Key Constraint?}
+\subsection*{Step 2: What Is the Key Constraint?}
 \begin{itemize}
-    \item \textbf{Query Count vs. Input Size:} Single query with $n \le 10^{12} \implies$ Trial division $O(\sqrt{n})$ runs in $10^6$ steps. Multiple queries ($Q \approx 10^5$) with $n \le 10^7 \implies$ Sieve / SPF precomputation is mandatory.
-    \item \textbf{Range $[L, R]$ with large bounds ($R \le 10^{12}$):} If $R - L \le 10^6$, use a Segmented Sieve. Never allocate an array of size $10^{12}$.
-    \item \textbf{Extremely large $N \ge 10^{18}$:} Standard trial division fails. Specialized randomized methods (Miller-Rabin for primality, Pollard's Rho for factorization) are required.
+    \item \textbf{Single query vs.\ batch queries:} One $n \le 10^{12}$ fits $O(\sqrt{n}) \approx 10^6$ ops easily; $10^5$ queries up to $10^7$ require a Sieve or SPF array.
+    \item \textbf{High window $[L, R]$ with $R \le 10^{12}$ and $R - L \le 10^6$:} Use a Segmented Sieve so RAM stays $O((R - L) + \sqrt{R})$.
+    \item \textbf{Very large single $n > 10^{14}$:} Trial division exceeds $10^7$ iterations; switch to deterministic Miller--Rabin (primality) or Pollard's Rho (factorization).
+\end{itemize}
+
+\subsection*{Step 3: Is the Input Too Large for Direct Computation?}
+\begin{itemize}
+    \item $N \le 10^7$: Standard Sieve or SPF array ($\approx 10$--$40$ MB) runs in $< 0.1$ s.
+    \item $10^7 < N \le 10^{14}$: Too big for a flat array; single-query $O(\sqrt{N})$ trial division takes $\le 10^7$ ops ($\approx 0.02$ s).
+    \item $N > 10^{14}$: Both flat arrays and $O(\sqrt{N})$ fail; use probabilistic/specialized 64-bit factorization tools.
 \end{itemize}
 
 \subsection*{Quick Reference: Keyword-to-Tool Mapping}
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
-\hline
-\textbf{Keywords in the Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
-``is $N$ prime?'' (single query) & Test if any number divides $N$ & Trial division up to $\sqrt{N}$ ($6k \pm 1$) \\ \hline
-``count primes up to $N$'' ($N \le 10^7$) & Find all primes in a large range & Sieve of Eratosthenes \\ \hline
-``primes in range $[L, R]$'' ($R \le 10^{12}$) & Memory too small for full sieve & Segmented Sieve ($O(\sqrt{R})$ base primes) \\ \hline
-``all divisors of $N$'' & Pairs of numbers multiplying to $N$ & $O(\sqrt{N})$ pair collection \\ \hline
-``number of divisors of $N$'' & Count total divisors without listing & Prime factorize $\implies \prod (a_i + 1)$ \\ \hline
-``greatest common divisor / reduce fraction'' & Largest shared factor between two numbers & Euclidean Algorithm (\texttt{std::gcd}) \\ \hline
-``events repeat every $A$ and $B$ days'' & Smallest time when both events align & Least Common Multiple (\texttt{std::lcm}) \\ \hline
-``count numbers $\le N$ coprime to $N$'' & Numbers sharing no common prime factors & Euler's Totient $\phi(N) = N \prod (1 - 1/p)$ \\ \hline
-``factorize $10^5$ different numbers'' & Individual $O(\sqrt{N})$ tests would TLE & Precompute SPF array, query in $O(\log N)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection*{Step 3: Is the Input Too Large for Direct Computation?}
-\begin{itemize}
-    \item $N \le 10^7$: Array allocation ($10^7$ booleans $\approx 10$ MB) fits in memory. Use a \textbf{standard Sieve}.
-    \item $10^7 < N \le 10^{14}$: Array will cause Memory Limit Exceeded. A single query using \textbf{$O(\sqrt{N})$ trial division} takes $\le 10^7$ iterations and runs in $\approx 0.02$ seconds.
-    \item $N > 10^{14}$: Trial division reaches $10^8$ operations and risks Time Limit Exceeded. Use Miller-Rabin deterministic primality testing for 64-bit integers.
-\end{itemize}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.1cm}}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``Is $N$ prime?'' (single query) & Check whether any $d \le \sqrt{N}$ divides $N$ & Trial division ($6k \pm 1$) \\
+``Count primes up to $N$'' ($N \le 10^7$) & Find all primes in $[2, N]$ in batch & Sieve of Eratosthenes \\
+``Primes in $[L, R]$'' ($R \le 10^{12}$) & Full sieve exceeds memory limit & Segmented Sieve \\
+``All divisors of $N$'' & Collect $(d, N/d)$ factor pairs & $O(\sqrt{N})$ pair loop \\
+``Number / sum of divisors'' & Avoid listing every divisor individually & Prime factorize $\to \tau(N), \sigma(N)$ \\
+``Reduce fraction / largest tile'' & Largest shared factor between integers & Euclidean Algorithm (\texttt{std::gcd}) \\
+``Events repeat every $A$ and $B$'' & Earliest time both cycles align & LCM: $(A / \gcd(A,B)) \times B$ \\
+``Count numbers $\le N$ coprime to $N$'' & Share no prime factor with $N$ & Euler's Totient $\phi(N)$ \\
+``Factorize $10^5$ numbers $\le 10^7$'' & Per-query $O(\sqrt{N})$ causes TLE & SPF Sieve + $O(\log N)$ query \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
 % ============================================================================
 \section{Summary and Complexity Reference}
 % ============================================================================
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
-\hline
-\textbf{Task} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
-Primality Test ($6k \pm 1$) & $O(\sqrt{N})$ & $O(1)$ & Single number $N \le 10^{12}$ \\ \hline
-All Divisors & $O(\sqrt{N})$ & $O(\sqrt{N})$ & Finding all factors of a single number \\ \hline
-Prime Factorization & $O(\sqrt{N})$ & $O(\log N)$ & Single number factorization \\ \hline
-$\gcd(a, b)$ / $\operatorname{lcm}(a, b)$ & $O(\log \min(a, b))$ & $O(1)$ & Computing common factors or multiples \\ \hline
-Sieve of Eratosthenes & $O(N \log \log N)$ & $O(N)$ & Finding all primes up to $N \le 10^7$ \\ \hline
-SPF Precomputation & $O(N \log \log N)$ & $O(N)$ & $Q \ge 10^4$ factorization queries on $N \le 10^7$ \\ \hline
-SPF Query Factorization & $O(\log N)$ & $O(\log N)$ & After precomputing SPF array \\ \hline
-Euler's Totient $\phi(N)$ & $O(\sqrt{N})$ & $O(1)$ & Single number totient query \\ \hline
-Totient Sieve & $O(N \log \log N)$ & $O(N)$ & Computing $\phi(1) \dots \phi(N)$ in batch \\ \hline
-Segmented Sieve & $O((R - L) \log \log R)$ & $O(R - L)$ & Primes in $[L, R]$ with $R \le 10^{12}$, $R-L \le 10^6$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.9cm} >{\centering\arraybackslash}p{3.4cm} >{\centering\arraybackslash}p{2.3cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Task / Operation}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Space}} & \textcolor{primaryblue}{\textbf{Use When}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Primality Test ($6k \pm 1$) & $O(\sqrt{N})$ & $O(1)$ & Single query with $N \le 10^{12}$ \\
+All Divisors & $O(\sqrt{N})$ & $O(\tau(N))$ & Listing all factors of one $N$ \\
+Prime Factorization & $O(\sqrt{N})$ & $O(\log N)$ & Factoring a single $N \le 10^{12}$ \\
+$\gcd(a, b)$ / $\operatorname{lcm}(a, b)$ & $O(\log \min(a, b))$ & $O(1)$ & Common factors, ratios, cycle sync \\
+Sieve of Eratosthenes & $O(N \log\log N)$ & $O(N)$ & All primes up to $N \le 10^7$ \\
+SPF Sieve Build & $O(N \log\log N)$ & $O(N)$ & Preprocessing for $Q \ge 10^4$ queries \\
+SPF Factorize Query & $O(\log N)$ & $O(\log N)$ & Factoring each query after SPF build \\
+Euler's Totient $\phi(N)$ & $O(\sqrt{N})$ & $O(1)$ & Single totient query ($N \le 10^{12}$) \\
+Totient Sieve & $O(N \log\log N)$ & $O(N)$ & Batch $\phi(1) \dots \phi(N)$ for $N \le 10^7$ \\
+Segmented Sieve & $O\big((R{-}L{+}1)\log\log R + \sqrt{R}\log\log R\big)$ & $O(R{-}L{+}\sqrt{R})$ & Primes in $[L, R]$ with $R \le 10^{12},\; R{-}L \le 10^6$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
 % ============================================================================
-\section{Glossary of Terms and Symbols}
+\section{Glossary}
 % ============================================================================
-
-If you are new to number theory, this dictionary provides plain-English definitions for every term and symbol used in this document:
 
 \subsection*{Core Concepts}
 \begin{itemize}
-    \item \textbf{Prime Number}: A whole number greater than 1 that cannot be formed by multiplying two smaller whole numbers.
-    \item \textbf{Composite Number}: A whole number that has divisors other than 1 and itself (for example, $6 = 2 \times 3$).
-    \item \textbf{Factor / Divisor}: A whole number that divides another evenly without leaving a remainder.
-    \item \textbf{Coprime (Relatively Prime)}: Two numbers that share no common factors other than 1 (for example, 8 and 15).
-    \item \textbf{Prime Factorization}: Writing a number as a product of prime powers (for example, $12 = 2^2 \times 3$).
-    \item \textbf{Greatest Common Divisor (GCD)}: The largest positive integer that divides both numbers evenly.
-    \item \textbf{Least Common Multiple (LCM)}: The smallest positive integer that is a multiple of both numbers.
-    \item \textbf{Trial Division}: The direct method of testing whether a number $n$ is prime by dividing it by every candidate factor from 2 up to $\sqrt{n}$. The $6k \pm 1$ optimization skips all multiples of 2 and 3, reducing the number of tests by two thirds.
-    \item \textbf{Sieve of Eratosthenes}: An algorithm that finds all primes up to $N$ by systematically crossing out multiples. Much faster than calling trial division on every number individually.
-    \item \textbf{Segmented Sieve}: A variant of the Sieve of Eratosthenes that works on a range $[L, R]$ without allocating memory proportional to $R$. Used when $R$ is too large for a standard sieve array but $R - L$ is manageable.
-    \item \textbf{Smallest Prime Factor (SPF)}: The smallest prime number that divides $x$. Used to factorize numbers in $O(\log x)$.
-    \item \textbf{Euler's Totient Function $\phi(n)$}: Counts how many numbers from 1 to $n$ share no common factors with $n$.
-    \item \textbf{Multiplicative Function}: A number-theoretic function where $f(a \cdot b) = f(a) \cdot f(b)$ whenever $\gcd(a, b) = 1$. Both $\phi(n)$, $\tau(n)$, and $\sigma(n)$ are multiplicative.
+    \item \textbf{Composite Number:} An integer $n > 1$ divisible by at least one integer strictly between $1$ and $n$.
+    \item \textbf{Coprime (Relatively Prime):} Two integers sharing no positive common divisor other than $1$ ($\gcd(a, b) = 1$).
+    \item \textbf{Divisor / Factor:} An integer $b > 0$ that divides $a$ with zero remainder ($a = q \cdot b$).
+    \item \textbf{Euclidean Algorithm:} Computing $\gcd(a, b)$ in $O(\log \min(a, b))$ steps via $\gcd(a, b) = \gcd(b, a \bmod b)$.
+    \item \textbf{Euler's Totient Function $\phi(n)$:} Number of integers in $[1, n]$ coprime to $n$.
+    \item \textbf{Greatest Common Divisor (GCD):} Largest positive integer dividing both $a$ and $b$.
+    \item \textbf{Least Common Multiple (LCM):} Smallest positive integer divisible by both $a$ and $b$.
+    \item \textbf{Mersenne Prime:} A prime of the form $2^p - 1$ (e.g., $3, 7, 31, 127$).
+    \item \textbf{Multiplicative Function:} A function satisfying $f(ab) = f(a)f(b)$ whenever $\gcd(a, b) = 1$ (including $\tau, \sigma, \phi$).
+    \item \textbf{Perfect Number:} A positive integer equal to the sum of its proper divisors ($\sigma(n) = 2n$).
+    \item \textbf{Prime Factorization:} Unique representation $n = \prod p_i^{a_i}$ guaranteed by the Fundamental Theorem of Arithmetic.
+    \item \textbf{Prime Number:} An integer $p > 1$ whose only positive divisors are $1$ and $p$.
+    \item \textbf{Segmented Sieve:} Windowed sieve over $[L, R]$ using base primes up to $\sqrt{R}$ to avoid $O(R)$ memory.
+    \item \textbf{Sieve of Eratosthenes:} Batch prime finder crossing out multiples of each prime $p$ starting from $p^2$.
+    \item \textbf{Smallest Prime Factor (SPF):} Array storing the smallest prime dividing each $x \le N$ for $O(\log x)$ factorization.
+    \item \textbf{Trial Division:} Testing candidate divisors up to $\sqrt{n}$ (often stepping by $6k \pm 1$).
+    \item \textbf{Unit:} The integer $1$, which is neither prime nor composite.
 \end{itemize}
 
 \subsection*{Mathematical Symbols}
 \begin{itemize}
-    \item $a \mid b$ \textbf{(Divides)}: Means ``$a$ divides $b$ with zero remainder'' (for example, $3 \mid 12$).
-    \item $a \nmid b$ \textbf{(Does Not Divide)}: Means ``$a$ does not divide $b$ evenly'' (for example, $5 \nmid 12$).
-    \item $\gcd(a, b)$: The Greatest Common Divisor of $a$ and $b$.
-    \item $\operatorname{lcm}(a, b)$: The Least Common Multiple of $a$ and $b$.
-    \item $\phi(n)$ \textbf{(Euler's Totient)}: The count of integers in $[1, n]$ coprime to $n$.
-    \item $\tau(n)$ or $d(n)$ \textbf{(Number of Divisors)}: The total count of positive divisors of $n$.
-    \item $\sigma(n)$ \textbf{(Sum of Divisors)}: The sum of all positive divisors of $n$.
-    \item $\prod$ \textbf{(Product Notation)}: The Greek letter capital Pi. Means ``multiply all these terms together in a loop'' (just as $\sum$ means add).
-    \item $\lfloor x \rfloor$ \textbf{(Floor)}: Rounding a decimal down to the nearest whole integer (for example, $\lfloor 3.8 \rfloor = 3$).
-    \item $\sqrt{n}$ \textbf{(Square Root)}: The number that, when multiplied by itself, equals $n$.
+    \item $b \mid a$ / $b \nmid a$: ``$b$ divides $a$ evenly'' / ``$b$ does not divide $a$''.
+    \item $\gcd(a, b)$ / $\operatorname{lcm}(a, b)$: Greatest common divisor / Least common multiple.
+    \item $\tau(n)$ (also $d(n)$): Total count of positive divisors of $n$.
+    \item $\sigma(n)$: Sum of all positive divisors of $n$.
+    \item $\phi(n)$: Euler's Totient Function (coprime count in $[1, n]$).
+    \item $\prod$: Product notation (multiply all indexed terms together, analog of $\sum$).
+    \item $\lfloor x \rfloor$ / $\lceil x \rceil$: Floor (round down) / Ceiling (round up) to the nearest integer.
+    \item $\sqrt{n}$: Principal square root of $n$.
 \end{itemize}
 
 % ============================================================================
@@ -847,39 +1348,183 @@ If you are new to number theory, this dictionary provides plain-English definiti
 
 \subsection*{Free Online Resources (Start Here)}
 \begin{itemize}
-    \item \textbf{CP-Algorithms: Number Theory} (\url{https://cp-algorithms.com}) --- High-performance implementations of the Sieve, Linear Sieve, GCD, and Euler's Totient function with rigorous algorithmic complexity notes.
-    \item \textbf{Art of Problem Solving (AoPS) Number Theory Wiki} (\url{https://artofproblemsolving.com/wiki}) --- Clear, intuitive explanations of divisibility, prime factorization, and modular arithmetic from competitive math trainers.
-    \item \textbf{Brilliant.org: Number Theory} (\url{https://brilliant.org}) --- Interactive, visual puzzles covering primes, factorization, and modular arithmetic from intuition to mastery.
-    \item \textbf{Project Euler} (\url{https://projecteuler.net}) --- The premier training ground for number theory. Highly recommended starter problems directly solved by this guide:
+    \item \textbf{CP-Algorithms: Number Theory} (\url{https://cp-algorithms.com}) --- Clean derivations and C++ implementations for Sieve of Eratosthenes, Linear Sieve, Segmented Sieve, GCD, and Euler's Totient.
+    \item \textbf{Art of Problem Solving (AoPS) Wiki} (\url{https://artofproblemsolving.com/wiki}) --- Intuitive introductions to divisibility, prime factorization, and multiplicative functions.
+    \item \textbf{Brilliant.org: Number Theory} (\url{https://brilliant.org}) --- Visual, interactive puzzles covering primes, divisors, and factorization.
+    \item \textbf{Project Euler} (\url{https://projecteuler.net}) --- Ideal practice problems mapped directly to this module:
     \begin{itemize}
-        \item \textbf{Problem 3}: Largest Prime Factor (Trial division / factorization).
-        \item \textbf{Problem 5}: Smallest Multiple (LCM across an array).
-        \item \textbf{Problem 7}: 10001st Prime (Sieve of Eratosthenes).
-        \item \textbf{Problem 10}: Summation of Primes (Sieve summation).
-        \item \textbf{Problem 12}: Highly Divisible Triangular Number (Divisor counting $\tau(n)$ via prime factorization).
-        \item \textbf{Problem 69}: Totient Maximum (Euler's totient function properties).
-        \item \textbf{Problem 72}: Counting Fractions (Sum of Euler's totient values).
+        \item \textbf{Problem 3:} Largest Prime Factor (trial division).
+        \item \textbf{Problem 5:} Smallest Multiple (iterated LCM).
+        \item \textbf{Problem 7 \& Problem 10:} 10001st Prime and Summation of Primes (Sieve of Eratosthenes).
+        \item \textbf{Problem 12:} Highly Divisible Triangular Number (divisor counting $\tau(n)$).
+        \item \textbf{Problem 69 \& Problem 72:} Totient Maximum and Counting Fractions (Euler's Totient $\phi(n)$).
     \end{itemize}
 \end{itemize}
 
 \subsection*{Books (When You Are Ready to Go Deeper)}
 \begin{itemize}
-    \item K.\ H.\ Rosen, \emph{Elementary Number Theory and Its Applications} --- an approachable, well-written undergraduate text covering prime numbers, divisibility, the Euclidean algorithm, and cryptography from scratch.
-    \item G.\ H.\ Hardy and E.\ M.\ Wright, \emph{An Introduction to the Theory of Numbers} --- the timeless classic of mathematical number theory. Dense, elegant, and exhaustive in its coverage of primes and divisors. Read this after Rosen, not before.
-    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- dedicated chapter on Mathematics covers sieves, GCD, and number-theoretic algorithms with contest-tested C++ snippets.
+    \item K.\ H.\ Rosen, \emph{Elementary Number Theory and Its Applications} --- Approachable undergraduate text covering divisibility, primes, GCD, and multiplicative functions from scratch. (Beginner--Intermediate)
+    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- Dedicated Mathematics chapter with contest-tested sieve, factorization, and GCD patterns. (Intermediate)
+    \item G.\ H.\ Hardy and E.\ M.\ Wright, \emph{An Introduction to the Theory of Numbers} --- Classic rigorous reference on primes, arithmetic functions, and divisor bounds. (Advanced)
 \end{itemize}
 
-% --- Version History (always the last section of the document) ---
-\section*{Version History}
-\addcontentsline{toc}{section}{Version History}
+% ============================================================================
+\section*{Practice Sheet: Mixed Pen-and-Paper Drills}
+\addcontentsline{toc}{section}{Practice Sheet: Mixed Pen-and-Paper Drills}
+\markboth{Practice Sheet: Mixed Pen-and-Paper Drills}{}
+% ============================================================================
 
 \noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Date} & \textbf{Change} \\ \hline
-2026-09-05 & Document created. \\ \hline
-2026-10-03 & Refactored against the learning materials skill: canonical preamble, worked examples added to GCD, LCM, divisor-count and divisor-sum subsections, traces merged into Key Algorithmic Patterns, intuition callouts and text diagrams added, banned phrases and platform names removed. \\ \hline
-2026-10-03 & Fixed integer overflow bugs in Sieve of Eratosthenes and FastFactorizer loops. \\ \hline
+Work through these six mixed cold-start drills on scratch paper \emph{without} flipping back to the chapter. Each exercise tests a distinct thinking mode with zero section hints.
+
+\begin{tryitbox}{Triage}{Cold-Start Number Theory Diagnosis}{ex9}
+Pick the exact algorithm and time complexity for each disguised scenario:
+\begin{enumerate}
+    \item \textbf{Festival Sync:} Three lanterns flash every $18$, $24$, and $30$ seconds; all flash at $t = 0$. Find the next time all three flash together.
+    \item \textbf{Half-Million Factorizations:} Answer $Q = 5 \times 10^5$ queries asking for the divisor count $\tau(x)$ of integers $x \le 10^7$.
+    \item \textbf{High-Altitude Primes:} Count every prime in $[L, R] = [10^{12} - 10^5,\; 10^{12}]$.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Trace}{Euclidean Reduction and LCM}{ex10}
+Reduce the fraction $\frac{273}{117}$ to lowest terms by tracing the Euclidean Algorithm on $(273, 117)$ step-by-step, and compute $\operatorname{lcm}(273, 117)$ using the overflow-safe formula.
+\end{tryitbox}
+
+\begin{tryitbox}{Debug}{Infinite Loop on Zero Input}{ex11}
+Suppose \texttt{prime\_factorize(std::int64\_t n)} begins immediately with \texttt{while (n \% 2 == 0) \{ ++count; n /= 2; \}} without an early guard.
+\begin{enumerate}
+    \item Trace what happens when called with \texttt{n = 0}, and what happens with \texttt{n = -12}.
+    \item Write the exact one-line guard that eliminates both bugs.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Twist}{Totient of 1000 via Multiplicativity}{ex12}
+Compute $\phi(1{,}000)$ in two lines using $\phi(a \cdot b) = \phi(a)\phi(b)$ (for $\gcd(a, b) = 1$) and $\phi(p^k) = p^k - p^{k-1}$. Then state how many integers in $[1, 1{,}000]$ share a factor $> 1$ with $1{,}000$.
+\end{tryitbox}
+
+\begin{tryitbox}{Edge Cases}{Boundary Stress Test}{ex13}
+Evaluate each boundary case carefully without guessing:
+\begin{enumerate}
+    \item $\gcd(0, 17)$,\; $\gcd(0, 0)$ (C++ convention), and $\operatorname{lcm}(0, 17)$.
+    \item $\phi(1)$ and $\tau(1)$.
+    \item What primes does a Segmented Sieve return on $[L, R] = [1, 5]$, and what goes wrong if you forget to clamp $L$?
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Derive}{Why $6k \pm 1$ Skips Two-Thirds of Candidates}{ex14}
+Every integer $n \ge 5$ has remainder $0, 1, 2, 3, 4,$ or $5$ modulo $6$ (i.e., $6k + r$).
+\begin{enumerate}
+    \item Prove why four of those six residue classes can \emph{never} be prime for $n \ge 5$.
+    \item Explain why a $6k \pm 1$ primality test still must check \texttt{n \% 2 == 0 || n \% 3 == 0} before entering its loop.
+\end{enumerate}
+\end{tryitbox}
+
+% ============================================================================
+\section*{Solutions to Pen-and-Paper Exercises}
+\addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
+\markboth{Solutions to Pen-and-Paper Exercises}{}
+% ============================================================================
+
+\begin{enumerate}
+    \item \label{sol:ex1}\textbf{Exercise 1 (Edge Cases) --- Divisibility \& Primality Boundaries:}
+    $0$: \textbf{neither}; $1$: \textbf{neither} (unit); $2$: \textbf{prime} (only even prime); $51 = 3 \times 17$: \textbf{composite}.
+    $5 \mid 0$ is \textbf{true} ($0 = 0 \cdot 5 + 0$), whereas $0 \mid 5$ is \textbf{false} (no integer $q$ satisfies $5 = q \cdot 0$).
+    \trapnote{Treating $1$ as prime (breaks unique factorization), swapping $5 \mid 0$ with $0 \mid 5$, or missing $3 \mid 51$ because $51$ looks odd.}
+
+    \item \label{sol:ex2}\textbf{Exercise 2 (Trace) --- Factorizing $360$ for $\tau$ and $\sigma$:}
+    $360 = 2^3 \cdot 3^2 \cdot 5^1$.
+    $\tau(360) = (3 + 1)(2 + 1)(1 + 1) = 4 \times 3 \times 2 = \mathbf{24}$.
+    $\sigma(360) = (1 + 2 + 4 + 8)(1 + 3 + 9)(1 + 5) = 15 \times 13 \times 6 = \mathbf{1{,}170}$.
+    \trapnote{Multiplying raw exponents ($3 \times 2 \times 1 = 6$) instead of adding $1$ to each exponent for the $p_i^0 = 1$ choice.}
+
+    \item \label{sol:ex3}\textbf{Exercise 3 (Derive) --- Odd Divisor Counts:}
+    $\tau(1 \dots 9) = 1, 2, 2, 3, 2, 4, 2, 4, 3$. Odd counts occur exactly at \textbf{perfect squares} ($1, 4, 9$).
+    By pairing, every $d \neq \sqrt{n}$ pairs with $n/d \neq d$ ($+2$), while $d = \sqrt{n}$ pairs with itself ($+1$). By formula, $\prod(a_i + 1)$ is odd iff every $a_i$ is even iff $n$ is a square.
+    \trapnote{Forgetting the \texttt{i != n / i} guard in a divisor loop, which double-counts $\sqrt{n}$ and makes perfect squares appear to have an even divisor count.}
+
+    \item \label{sol:ex4}\textbf{Exercise 4 (Debug) --- Overflow Trap in Naive LCM:}
+    $a \times b = 2.4 \times 10^{19} > 2^{63} - 1 \approx 9.22 \times 10^{18}$, causing signed 64-bit overflow (UB).
+    With $\gcd(4 \times 10^9, 6 \times 10^9) = 2 \times 10^9$, divide first: $(a / \gcd) \times b = 2 \times 6 \times 10^9 = \mathbf{1.2 \times 10^{10}}$.
+    \trapnote{Assuming \texttt{int64\_t} prevents overflow on $10^9$-scale products---two numbers around $4 \times 10^9$ already overflow 64-bit multiplication before the division runs.}
+
+    \item \label{sol:ex5}\textbf{Exercise 5 (Trace) --- Computing $\phi(36)$ Two Ways:}
+    $36 = 2^2 \cdot 3^2 \implies \phi(36) = 36 \cdot (1 - \tfrac{1}{2})(1 - \tfrac{1}{3}) = 36 \cdot \tfrac{1}{3} = \mathbf{12}$.
+    Explicit coprimes in $[1, 36]$: $\{1, 5, 7, 11, 13, 17, 19, 23, 25, 29, 31, 35\}$ (count $= 12$).
+    \trapnote{Repeating a prime factor according to its exponent, e.g., multiplying by $(1 - \tfrac{1}{2})^2$ instead of using each \emph{distinct} prime once.}
+
+    \item \label{sol:ex6}\textbf{Exercise 6 (Debug) --- Sieve Loop Overflow and Start Index:}
+    \textbf{(1)} At $p = 46{,}341$, $p^2 = 2{,}147{,}488{,}281 > 2^{31} - 1$ (signed 32-bit UB). Fix by writing \texttt{p <= max\_n / p} and promoting \texttt{m} to \texttt{std::int64\_t}.
+    \textbf{(2)} Starting at \texttt{m = p} marks the prime $p$ itself as composite, erasing every prime in the table!
+    \trapnote{Using \texttt{int} for \texttt{p * p} on large $N$ or accidentally crossing out \texttt{is\_prime[p]} itself inside the marking loop.}
+
+    \item \label{sol:ex7}\textbf{Exercise 7 (Trace) --- Segmented Sieve on $[20, 35]$:}
+    Base primes $\le \lfloor\sqrt{35}\rfloor = 5$: $\{2, 3, 5\}$.
+    $p = 2$: $\text{start} = \max(4, 20) = 20 \to$ strike $20, 22, 24, 26, 28, 30, 32, 34$.
+    $p = 3$: $\text{start} = \max(9, 21) = 21 \to$ strike $21, 24, 27, 30, 33$.
+    $p = 5$: $\text{start} = \max(25, 20) = 25 \to$ strike $25, 30, 35$.
+    Survivors: $\mathbf{23, 29, 31}$.
+    \trapnote{Omitting \texttt{max(p * p, first\_multiple)} when $L \le p$, which would strike the prime $p$ itself as composite.}
+
+    \item \label{sol:ex8}\textbf{Exercise 8 (Twist) --- Perfect Number Check in $O(1)$ Space:}
+    If $n \le 1$, return \texttt{false}. Initialize \texttt{std::int64\_t sum = 1;} (accounts for divisor $1$ while excluding $n$). Loop \texttt{for (std::int64\_t i = 2; i <= n / i; ++i)}: if \texttt{n \% i == 0}, add \texttt{i} and (if \texttt{i != n / i}) add \texttt{n / i}. Return \texttt{sum == n}.
+    \trapnote{Starting the loop at \texttt{i = 1} and adding \texttt{n / 1 = n} into \texttt{sum}, which computes $\sigma(n)$ instead of the proper-divisor sum $\sigma(n) - n$.}
+
+    \item \label{sol:ex9}\textbf{Exercise 9 (Triage) --- Cold-Start Number Theory Diagnosis:}
+    \textbf{(1)} Iterated \textbf{LCM}: $\operatorname{lcm}(\operatorname{lcm}(18, 24), 30) = \operatorname{lcm}(72, 30) = \mathbf{360}$ s in $O(k \log M)$.
+    \textbf{(2)} \textbf{SPF Sieve} build in $O(N \log\log N)$ + $O(\log x)$ factorization per query to evaluate $\prod(a_i + 1)$.
+    \textbf{(3)} \textbf{Segmented Sieve} with base primes $\le 10^6$ in $O((R-L+1)\log\log R + \sqrt{R}\log\log R)$ time and $O(R-L+\sqrt{R})$ space.
+    \trapnote{Running $O(\sqrt{x})$ trial division per query in (2) ($\approx 1.6 \times 10^9$ ops $\to$ TLE) or allocating a $10^{12}$ array in (3) (MLE).}
+
+    \item \label{sol:ex10}\textbf{Exercise 10 (Trace) --- Euclidean Reduction of $273 / 117$:}
+    $273 = 2(117) + 39 \to \gcd(117, 39)$;\; $117 = 3(39) + 0 \to \gcd = \mathbf{39}$.
+    Reduced fraction: $\frac{273 / 39}{117 / 39} = \mathbf{\frac{7}{3}}$.
+    $\operatorname{lcm}(273, 117) = (273 / 39) \times 117 = 7 \times 117 = \mathbf{819}$.
+    \trapnote{Stopping before the remainder reaches $0$ and returning the wrong divisor, or multiplying $273 \times 117$ before dividing.}
+
+    \item \label{sol:ex11}\textbf{Exercise 11 (Debug) --- Infinite Loop in \texttt{prime\_factorize}:}
+    \textbf{(1)} For \texttt{n = 0}, \texttt{0 \% 2 == 0} stays true forever because \texttt{0 / 2 == 0} (infinite loop!). For \texttt{n = -12}, stripping $2$s leaves \texttt{n = -3}, which both the odd loop and \texttt{if (n > 1)} skip, silently dropping $-3$.
+    \textbf{(2)} Guard: \texttt{if (n <= 1) return factors;}.
+    \trapnote{Assuming \texttt{n /= 2} always shrinks \texttt{n} strictly toward $1$---at $n = 0$ it is a fixed point that loops forever.}
+
+    \item \label{sol:ex12}\textbf{Exercise 12 (Twist) --- Computing $\phi(1{,}000)$ via Multiplicativity:}
+    $1{,}000 = 2^3 \cdot 5^3$ with $\gcd(8, 125) = 1$, so $\phi(1{,}000) = \phi(2^3)\phi(5^3) = (8 - 4)(125 - 25) = 4 \times 100 = \mathbf{400}$.
+    Integers in $[1, 1{,}000]$ sharing a factor $> 1$: $1{,}000 - 400 = \mathbf{600}$.
+    \trapnote{Splitting into non-coprime factors like $\phi(10) \cdot \phi(100) = 4 \times 40 = 160 \neq 400$ ($\gcd(10, 100) = 10 \neq 1$).}
+
+    \item \label{sol:ex13}\textbf{Exercise 13 (Edge Cases) --- Boundary Stress Test:}
+    \textbf{(1)} $\gcd(0, 17) = \mathbf{17}$;\; $\gcd(0, 0) = \mathbf{0}$;\; $\operatorname{lcm}(0, 17) = \mathbf{0}$.
+    \textbf{(2)} $\phi(1) = \mathbf{1}$ ($\gcd(1, 1) = 1$);\; $\tau(1) = \mathbf{1}$.
+    \textbf{(3)} Clamping $L = \max(1, 2) = 2$ returns $\mathbf{2, 3, 5}$; without clamping, $1$ is never crossed out by any prime $p \ge 2$ and falsely survives!
+    \trapnote{Forgetting \texttt{L = std::max<std::int64\_t>(L, 2)} in a segmented sieve, causing $0$ or $1$ to be emitted as prime.}
+
+    \item \label{sol:ex14}\textbf{Exercise 14 (Derive) --- Why $6k \pm 1$ Skips Two-Thirds:}
+    \textbf{(1)} For $n \ge 5$, $6k,\; 6k + 2 = 2(3k + 1),\; 6k + 4 = 2(3k + 2)$ are even composites, and $6k + 3 = 3(2k + 1)$ is divisible by $3$. Only $6k + 1$ and $6k + 5 = 6(k + 1) - 1$ can be prime ($4/6 = 2/3$ eliminated).
+    \textbf{(2)} Because the loop starts at $i = 5$, omitting \texttt{n \% 2 == 0 || n \% 3 == 0} misses factors $2$ and $3$ and misclassifies numbers like $4, 6, 9, 15$ as prime.
+    \trapnote{Thinking every $6k \pm 1$ integer is prime---it is necessary, not sufficient (e.g., $25 = 6(4) + 1 = 5^2$ is composite).}
+\end{enumerate}
+
+% ============================================================================
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+\markboth{Version History}{}
+% ============================================================================
+
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\bfseries}l >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Date}} & \textcolor{primaryblue}{\textbf{Change}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+2026-09-05 & Document created. \\
+2026-10-03 & Refactored against the learning materials skill: canonical preamble, worked examples added to GCD, LCM, divisor-count and divisor-sum subsections, traces merged into Key Algorithmic Patterns, intuition callouts and text diagrams added, banned phrases and platform names removed. \\
+2026-10-03 & Fixed integer overflow bugs in Sieve of Eratosthenes and FastFactorizer loops. \\
+2026-11-25 & Overhauled to canonical print-first layout; stripped BOM and non-ASCII chars; fixed primeFactorize(0) infinite loop, i*i overflow, INT64\_MIN GCD/LCM UB, SPF Sieve naming/narrowing, and Segmented Sieve code/complexity; deduplicated worked examples; embedded fixed Diagrams 6, 7, and 39; added 4-beat Origin Stories, local notation boxes, 8 inline drills, 6-drill Practice Sheet, and solutions with trap notes. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
+\endgroup
+\end{center}
 
 \end{document}
