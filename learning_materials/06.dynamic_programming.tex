@@ -1,22 +1,114 @@
-﻿\documentclass[11pt,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 
 % --- Core LaTeX Packages ---
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\ttdefault}{txtt}
+\usepackage{upquote}
+\usepackage[margin=0.85in, headheight=15pt]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{xcolor}
+\usepackage[helvet]{sfmath}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[explicit]{titlesec}
+\usepackage[skins,breakable]{tcolorbox}
 \usepackage{listings}
 \usepackage{hyperref}
-\usepackage{tabularx}
 \usepackage{graphicx}
 
-% --- Unified Color Palette ---
+% --- Diagram Packages ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,decorations.pathreplacing}
+
+% --- Unified Print-Safe Color Palette ---
 \definecolor{primaryblue}{RGB}{24, 75, 140}
-\definecolor{codebg}{RGB}{248, 249, 250}
-\definecolor{codeframe}{RGB}{210, 215, 222}
-\definecolor{codegreen}{RGB}{40, 130, 60}
-\definecolor{codeblue}{RGB}{20, 90, 180}
-\definecolor{codegray}{RGB}{120, 120, 120}
+\definecolor{accentteal}{RGB}{15, 118, 110}
+\definecolor{accentamber}{RGB}{180, 83, 9}
+\definecolor{accentred}{RGB}{185, 28, 28}
+\definecolor{codebg}{RGB}{246, 248, 250}
+\definecolor{codeframe}{RGB}{204, 212, 220}
+\definecolor{codeink}{RGB}{24, 30, 38}
+\definecolor{codekw}{RGB}{126, 34, 206}
+\definecolor{codetype}{RGB}{0, 118, 138}
+\definecolor{codegreen}{RGB}{22, 138, 66}
+\definecolor{codeblue}{RGB}{15, 92, 212}
+\definecolor{codestr}{RGB}{194, 65, 12}
+\definecolor{codegray}{RGB}{105, 115, 125}
+
+% --- Global Typography & Spacing ---
+\linespread{1.08}
+\renewcommand{\arraystretch}{1.35}
+\setlength{\tabcolsep}{7pt}
+\setlist[itemize]{itemsep=3pt, topsep=4pt, leftmargin=1.5em}
+\setlist[enumerate]{itemsep=4pt, topsep=4pt, leftmargin=1.6em}
+
+% --- Running Header & Footer (Screen + Print Navigation) ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{codegray}\textbf{Dynamic Programming}}
+\fancyhead[R]{\footnotesize\color{codegray}\nouppercase{\leftmark}}
+\fancyfoot[C]{\footnotesize\color{codegray}Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{codeframe}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{}}
+
+% --- Section & Subsection Styling (High-Contrast + Per-Section Page Breaks) ---
+\newcommand{\sectionbreak}{}
+
+\titleformat{\section}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {\colorbox{primaryblue}{\color{white}\bfseries\Large\;\thesection\;}\hspace{0.55em}#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+\titlespacing*{\section}{0pt}{4pt}{14pt}
+
+\titleformat{name=\section,numberless}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{primaryblue!90!black}}
+  {}
+  {0pt}
+  {\begin{tcolorbox}[
+      enhanced, colback=primaryblue!6, colframe=primaryblue!6,
+      borderline west={3.5pt}{0pt}{primaryblue},
+      sharp corners=west, arc=2pt,
+      left=8pt, right=8pt, top=5pt, bottom=5pt,
+      boxsep=0pt, before skip=0pt, after skip=0pt
+  ]\large\bfseries\color{primaryblue!90!black}\thesubsection\hspace{0.55em}#1\end{tcolorbox}}
+\titlespacing*{\subsection}{0pt}{18pt}{8pt}
+
+\titleformat{name=\subsection,numberless}[block]
+  {\normalsize\bfseries\color{accentteal}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{2pt}{\color{accentteal!40}\titlerule[0.7pt]}]
+\titlespacing*{\subsection}{0pt}{14pt}{6pt}
+
+% --- Canonical Shared TikZ Styles ---
+\tikzset{
+    lmbox/.style={draw=codeframe, fill=codebg, thick, rounded corners=2pt, inner sep=4pt, font=\small},
+    lmactive/.style={draw=primaryblue, fill=primaryblue!8, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=primaryblue},
+    lmaccepted/.style={draw=codegreen, fill=codegreen!10, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=codegreen},
+    lmpruned/.style={draw=red!70!black, fill=red!70!black!6, thick, dashed, rounded corners=2pt, inner sep=4pt, font=\small, text=red!70!black},
+    lmarrow/.style={-{Stealth[length=5pt]}, thick, primaryblue},
+    lmmuted/.style={-{Stealth[length=5pt]}, thick, codegray},
+    lmprunedarrow/.style={-{Stealth[length=5pt]}, thick, dashed, red!70!black}
+}
 
 % --- Hyperref Setup ---
 \hypersetup{
@@ -28,40 +120,129 @@
     pdfauthor={Antigravity Engineering}
 }
 
-% --- Theorem & Definition Environments ---
+% --- Example Environment ---
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{example}{Example}[section]
 
-% --- Callout Box Environment ---
-\newenvironment{calloutbox}[1]{
-    \par\vspace{0.3cm}
-    \noindent\begin{tabular}{|p{0.96\textwidth}|}
-    \hline
-    \vspace{0.1cm}
-    \textbf{#1}\par\vspace{0.1cm}
-}{
-    \vspace{0.1cm}
-    \\ \hline
-    \end{tabular}
-    \vspace{0.3cm}\par
+% --- Semantic Narrative Beat Labels & Solution Trap Diagnostic ---
+\newcommand{\painbeat}{\textbf{\color{accentamber}The Problem:} }
+\newcommand{\ahabeat}{\textbf{\color{accentteal}The ``Aha!'' Insight:} }
+\newcommand{\examplebeat}{\textbf{\color{primaryblue}Mini-Example First:} }
+\newcommand{\breaksbeat}{\textbf{\color{accentred}When It Breaks:} }
+\newcommand{\invariantbeat}[1]{\par\noindent\textbf{\color{accentteal}Loop Invariant (#1):} }
+\newcommand{\trapnote}[1]{\par\smallskip\noindent{\footnotesize\textbf{\color{accentamber}Common trap:} #1}}
+
+% --- Modern Overview Card ---
+\newtcolorbox{overviewbox}[1][What You'll Learn]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
 }
 
-% --- Modern C++ Code Listing Setup ---
+% --- Key Takeaway / Core Rule Box ---
+\newtcolorbox{calloutbox}[1]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Plain-English Formula Card ---
+\newtcolorbox{formulabox}[1][Formula in Plain English]{
+    enhanced,
+    colback=primaryblue!4, colframe=primaryblue!22,
+    borderline west={3.5pt}{0pt}{primaryblue},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=6pt, bottom=6pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\small\bfseries\color{primaryblue},
+    title={#1},
+    attach title to upper={\par\vspace{2pt}}
+}
+
+% --- Watch-Out / Edge-Case Warning Box ---
+\newtcolorbox{watchoutbox}[1][Watch Out --- When It Breaks]{
+    enhanced,
+    colback=accentamber!6, colframe=accentamber!30,
+    borderline west={3.5pt}{0pt}{accentamber},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentamber},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Local Symbol Mini-Table Environment ---
+\newenvironment{notationbox}[1][Symbols Used Here]{
+    \par\vspace{0.15cm}
+    \noindent\textbf{\small\color{primaryblue}#1}\par\vspace{0.1cm}
+    \begingroup
+    \footnotesize
+    \rowcolors{2}{codebg}{white}
+    \noindent\tabularx{\textwidth}{>{\raggedright\arraybackslash\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.8cm}}
+    \arrayrulecolor{primaryblue}\toprule[1.1pt]
+    \rowcolor{primaryblue!10}
+    \textcolor{primaryblue}{\textbf{Symbol}} & \textcolor{primaryblue}{\textbf{Plain-English Meaning}} & \textcolor{primaryblue}{\textbf{Example / Type}} \\
+    \arrayrulecolor{codeframe}\midrule[0.6pt]
+}{
+    \arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+    \endtabularx
+    \endgroup
+    \vspace{0.2cm}\par
+}
+
+% --- Print-First Pen-and-Paper Exercise Environment ---
+\newcounter{exercise}
+\newtcolorbox{tryitbox}[3]{
+    enhanced,
+    step=exercise,
+    colback=codegreen!3, colframe=codegreen!45,
+    colbacktitle=codegreen!14, coltitle=codegreen!85!black,
+    borderline west={3.5pt}{0pt}{codegreen},
+    arc=3pt, boxrule=0.6pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    toptitle=4pt, bottomtitle=4pt,
+    before skip=9pt, after skip=9pt,
+    fonttitle=\bfseries,
+    title={Exercise \theexercise\hspace{0.5em}{\colorbox{codegreen!85!black}{\color{white}\scriptsize\bfseries\;#1\;}}\hspace{0.5em}#2 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#3}}}
+}
+
+% --- Modern C++23 Code Listing Setup ---
 \lstset{
     language=C++,
-    basicstyle=\footnotesize\ttfamily,
-    keywordstyle=\color{codeblue}\bfseries,
+    basicstyle=\small\ttfamily\color{codeink},
+    keywordstyle=\color{codekw}\bfseries,
+    morekeywords={constexpr,noexcept,nullptr,static_assert,auto,override,final,decltype,concept,requires},
+    keywordstyle=[2]\color{codetype}\bfseries,
+    morekeywords=[2]{std,vector,span,deque,string,string_view,size_t,int64_t,uint32_t,uint64_t,optional,nullopt,pair,tuple,array,priority_queue,unordered_map,unordered_set,map,set,ranges,views,nodiscard},
+    moredelim=[l][\color{codeblue}\bfseries]{\#},
+    deletestring=[b]',
     commentstyle=\color{codegreen}\itshape,
-    stringstyle=\color{orange!80!black},
+    stringstyle=\color{codestr},
     numberstyle=\tiny\color{codegray},
     numbers=left,
     numbersep=8pt,
+    xleftmargin=24pt,
+    framexleftmargin=22pt,
+    framexrightmargin=4pt,
+    framextopmargin=4pt,
+    framexbottommargin=4pt,
     backgroundcolor=\color{codebg},
     frame=single,
     rulecolor=\color{codeframe},
+    aboveskip=8pt,
+    belowskip=10pt,
     breaklines=true,
     breakatwhitespace=true,
     tabsize=4,
@@ -69,430 +250,1156 @@
     captionpos=b
 }
 
-% --- Title Block ---
-\title{\vspace{-1.5cm}\textbf{\Huge Dynamic Programming}\\[0.3cm]
-\Large States, Transitions, Memoization, Tabulation, and Classic Table-Filling Patterns}
-\author{Technical Monograph}
-\date{\today}
-
 \begin{document}
 
-\maketitle
+% --- Modern Title Banner ---
+\thispagestyle{plain}
+\begin{tcolorbox}[
+    enhanced,
+    colback=primaryblue!6, colframe=primaryblue!20,
+    borderline west={5pt}{0pt}{primaryblue},
+    arc=4pt, boxrule=0.6pt,
+    left=14pt, right=14pt, top=12pt, bottom=12pt,
+    before skip=0pt, after skip=10pt
+]
+    {\footnotesize\bfseries\color{accentteal}MODULE 06 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
+    {\Huge\bfseries\color{primaryblue}Dynamic Programming}\\[5pt]
+    {\large\color{codegray}States, Transitions, Memoization, Tabulation, and Classic Table-Filling Patterns}\\[6pt]
+    {\footnotesize\color{codegray}Updated \today}
+\end{tcolorbox}
 
-\begin{abstract}
-\noindent
-Dynamic programming is a method for solving complex problems by breaking them down into simpler, recurring overlapping subproblems. This document guides you from basic recursive approaches to efficient tabular techniques using caching and optimal substructure. Designed for programmers familiar with C++ and basic recursion, it covers everything from 1D sequences to advanced multidimensional and knapsack patterns.
-\end{abstract}
+\begin{overviewbox}[What You'll Learn]
+Dynamic Programming (DP) turns exponential brute-force recursion into fast, predictable polynomial-time algorithms by storing and reusing answers to recurring subproblems. This guide takes you from discovering your very first DP state all the way through 1D sequences, 2D grids, two-string alignments, Knapsack loop-direction invariants, Interval DP, Bitmask DP, and solution reconstruction. Written for programmers comfortable with C++ loops and basic recursion, it emphasizes concrete visual traces, why every loop direction works, and pen-and-paper drills you can practice without a computer.
+\end{overviewbox}
 
-\tableofcontents
-\newpage
+\vspace{2pt}
+{\setlength{\parskip}{1pt}\small\tableofcontents}
 
+% Every major section starts cleanly on a new page
+\renewcommand{\sectionbreak}{\clearpage}
+
+% ============================================================================
 \section{Foundations}
+% ============================================================================
 
-If you know recursion, you already know how to solve problems by breaking them down into smaller pieces. However, pure recursion often recalculates the same results multiple times. Dynamic Programming (DP) is the art of identifying this repeated work and saving the results so you only compute them once.
+If you have written a recursive function, you already know how to break a big problem into smaller pieces. Dynamic Programming (DP) adds one decisive idea: \textbf{never solve the exact same subproblem twice}. By remembering subproblem answers in a table, exponential trees collapse into fast linear or quadratic sweeps.
 
-\subsection{What is a Subproblem?}
+\begin{notationbox}[Symbols Used in Foundations]
+\texttt{dp[s]} & Stored optimal answer (cost, count, or boolean) for state $s$ & \texttt{dp[5] = 5} (\texttt{int} / \texttt{int64\_t}) \\
+$f(n)$ & Value of the $n$-th subproblem in a recurrence & Fibonacci $f(5) = 5$ \\
+$\infty$ (\texttt{INF}) & Safe sentinel representing an impossible or unreached state & \texttt{INT\_MAX / 2} \\
+DAG & Directed Acyclic Graph formed by states (nodes) and transitions (edges) & No cycles allowed \\
+\end{notationbox}
 
-A subproblem is simply a smaller version of your original problem. For example, if you want to find the shortest path from your house to the grocery store, a subproblem might be finding the shortest path from the intersection halfway there to the store.
+\subsection{Why Plain Recursion Blows Up}
 
-\subsection{Repeated Work in Plain Recursion}
+\painbeat Consider computing the Fibonacci sequence ($f(0) = 0$, $f(1) = 1$, $f(n) = f(n-1) + f(n-2)$) with plain recursion. Calling $f(5)$ computes $f(3)$ twice and $f(2)$ three times, making $2 f(6) - 1 = 15$ total calls. By $f(40)$, plain recursion wastes over \textbf{331 million} calls recalculating the same 41 values!
 
-Consider the classic Fibonacci sequence, where each number is the sum of the two preceding ones. The base cases are $f(0) = 0$ and $f(1) = 1$. Let us trace the recursive calls for $f(5)$ in a naive recursive approach:
+\ahabeat There are only $n + 1$ distinct inputs between $0$ and $n$. If we save each computed result the first time we see it, every later call becomes an $O(1)$ cache lookup instead of an entire recursive subtree.
 
-Notice how $f(3)$ is computed entirely from scratch twice. $f(2)$ is computed three times. The number of calls grows exponentially. The total number of calls to compute $f(n)$ using this naive branching is exactly $2 \times f(n+1) - 1$. For $f(5)$, where $f(6) = 8$, the formula yields $2 \times 8 - 1 = 15$ calls, exactly matching the 15 nodes in the tree above. By the time you ask for $f(40)$, plain recursion makes over 330 million calls!
+\examplebeat For $f(5)$, caching trims the call count from $15$ down to $2(5) - 1 = 9$ calls. For $f(40)$, the call count plunges from $331{,}160{,}281$ to just \textbf{79} calls---a $4$-million-fold speedup!
 
-By remembering (caching) what we compute, we trim the tree. The first time a node is evaluated, we save the result. Subsequent requests for the same value are immediate cache hits:
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.3cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Approach for $f(n)$}} & \textcolor{primaryblue}{\textbf{Calls at $n = 5$}} & \textcolor{primaryblue}{\textbf{Calls at $n = 40$}} & \textcolor{primaryblue}{\textbf{Asymptotic Cost}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Plain Recursion & $15$ & $331{,}160{,}281$ & $O(2^n)$ time, $O(n)$ stack \\
+Top-Down Memoization & $9$ & $79$ & $O(n)$ time, $O(n)$ cache + stack \\
+Bottom-Up Tabulation & $4$ loop steps & $39$ loop steps & $O(n)$ time, $O(1)$ rolling space \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
-With memoization, the call count for $f(5)$ drops to just 9 nodes ($2n - 1$). For $f(40)$, it takes a mere 79 calls.
+\subsection{The Two Properties Required for DP}
 
-\subsection{The Two Properties of DP}
+A problem admits Dynamic Programming when it satisfies two structural properties:
 
-A problem is solvable with DP if it has two properties:
 \begin{enumerate}
-    \item \textbf{Overlapping Subproblems}: You encounter the exact same subproblem multiple times, as seen with $f(3)$ appearing multiple times above. In programming, if a recursive function takes the same parameters repeatedly, it has overlapping subproblems.
-    \item \textbf{Optimal Substructure}: The optimal solution to a large problem can be constructed from the optimal solutions of its subproblems. Everyday analogy: the shortest path from City A to City C going through City B is the shortest path from A to B combined with the shortest path from B to C.
+    \item \textbf{Overlapping Subproblems:} The recursive breakdown hits the exact same parameter tuple repeatedly (like $f(3)$ and $f(2)$ above). If every subproblem is unique---as in Merge Sort---caching buys nothing.
+    \item \textbf{Optimal Substructure:} An optimal answer for a larger state can be built directly from optimal answers to smaller states. Everyday analogy: if the cheapest flight from Paris to Tokyo stops in Dubai, then the Paris-to-Dubai leg must itself be the cheapest flight to Dubai.
 \end{enumerate}
 
-When you have these two properties, you can apply DP. At its core, DP is just ``recursion plus a memory cache'' (memoization) or ``filling a table in the right order'' (tabulation). You map the inputs of your recursive function to a spot in an array or a \texttt{std::unordered\_map}, and check if you already solved it before doing the work.
+\begin{watchoutbox}[When Optimal Substructure Breaks]
+Suppose you want the \textbf{longest simple path} (no repeated cities) from City A to City C. Knowing the longest path from A to B does \emph{not} help, because that path might already use a city needed on the B-to-C leg! Because the past path cannot be summarized by a tiny state, ordinary DP fails here.
+\end{watchoutbox}
 
-\subsection{Core Vocabulary}
+\subsection{Core Vocabulary and How to Discover the State}
+
+Every DP design reduces to five concrete pieces:
 
 \begin{itemize}
-    \item \textbf{State}: A set of variables that perfectly describes a specific subproblem. In Fibonacci, the state is just the integer $n$.
-    \item \textbf{Transition} (or Recurrence): The formula that expresses the answer for a state in terms of smaller states. For Fibonacci: $f(n) = f(n-1) + f(n-2)$.
-    \item \textbf{Base Case}: The smallest states that do not need recursion to solve. For Fibonacci: $f(0) = 0$ and $f(1) = 1$.
-    \item \textbf{Answer State}: The specific state that holds the final answer to the overall problem. For Fibonacci to the $n$-th number, it is $f(n)$.
-    \item \textbf{Evaluation Order}: The sequence in which you must solve subproblems so that whenever you need to compute a transition, the smaller states are already solved. For Fibonacci, you evaluate from smallest $n$ to largest $n$.
+    \item \textbf{State:} The minimal tuple of variables describing a subproblem (e.g., index $i$, or pair $(i, w)$).
+    \item \textbf{Transition (Recurrence):} The formula computing a state from strictly smaller states.
+    \item \textbf{Base Case:} Trivial boundary states filled directly without transitions (e.g., $f(0) = 0, f(1) = 1$).
+    \item \textbf{Evaluation Order:} A loop sequence guaranteeing every dependency is computed before it is read.
+    \item \textbf{Answer State:} The specific cell (or $\max/\min$ over a row) that answers the original question.
 \end{itemize}
 
-\begin{calloutbox}{Key Insight: DP is just a Directed Acyclic Graph}
-Every DP problem is a graph. The nodes are the states. The directed edges are the dependencies (transitions). The evaluation order is a topological sort of this graph, guaranteeing you never need an answer that has not been computed yet.
+\begin{calloutbox}{Key Insight: How to Discover the State When Stuck}
+Ask yourself one question: \emph{``What is the minimum information from the past I need right now to decide the future?''} Strip away everything else. If you only need the running sum (not which exact numbers created it), then the state is just the sum. Every valid DP is a \textbf{Directed Acyclic Graph (DAG)} whose states are nodes, transitions are directed edges, and evaluation order is a topological sort.
 \end{calloutbox}
 
+\begin{tryitbox}{Derive}{Discovering the Frog-Jump State}{ex1}
+A frog starts on stone $0$ and wants to reach stone $N-1$ with minimum total energy. From stone $i$, it can jump to $i + 1$ or $i + 2$ at cost $|h_{\text{dest}} - h_i|$.
+\begin{enumerate}
+    \item Define the minimal 1D state \texttt{dp[i]}, write the transition and base cases.
+    \item Compute \texttt{dp[0..3]} by hand for stone heights \texttt{h = [10, 30, 40, 20]}.
+\end{enumerate}
+\end{tryitbox}
+
+% ============================================================================
 \section{Main Topics}
+% ============================================================================
 
-\subsection{Top-down Memoization vs Bottom-up Tabulation}
+This section introduces the core families of DP problems. For each family, focus on \textbf{what the state summarizes}, \textbf{which cells the transition reads}, and \textbf{why the loop order respects those arrows}.
 
-There are two primary ways to write a DP solution. Both have the same time complexity, but they differ in how they compute the states.
+\subsection{Top-Down Memoization vs.\ Bottom-Up Tabulation}
 
-Let us use a simple example: counting the number of ways to climb $n$ stairs if you can take 1 or 2 steps at a time. The transition is $W(n) = W(n-1) + W(n-2)$. If we represent this as a state dependency graph, we see that Step 3 needs Step 1 and Step 2:
+There are two ways to evaluate any DP DAG. Both visit every reachable state once and share the same time complexity, but they travel the dependency graph in opposite directions.
 
-\textbf{Top-down Memoization} starts at the final goal $W(n)$ and recursively asks for smaller answers. Whenever it computes an answer, it saves it in a cache (like an array initialized to -1). Before computing a state, it checks if the cache already has the answer.
-
-\textbf{Bottom-up Tabulation} starts at the base cases and iteratively fills an array up to the final answer. It uses a loop instead of recursion.
-
-\begin{calloutbox}{Decision Guide: Memoization vs Tabulation}
 \begin{itemize}
-    \item Use \textbf{Tabulation} (Bottom-up) by default. It avoids function call overhead, never hits recursion depth limits, and makes space optimization easier.
-    \item Use \textbf{Memoization} (Top-down) when the state space is very sparse (meaning you only need to visit a small fraction of all possible states), or if the transitions are extremely complex to figure out via loops.
+    \item \textbf{Top-Down Memoization:} Start at the goal state (e.g., $W(n)$) and recurse toward base cases. Before computing, check a cache (such as \texttt{memo[s] != -1}).
+    \item \textbf{Bottom-Up Tabulation:} Start at base cases and fill a table iteratively in topological order until you reach the answer state.
+\end{itemize}
+
+\begin{calloutbox}{Decision Guide: Memoization vs.\ Tabulation}
+\begin{itemize}
+    \item Prefer \textbf{Tabulation} by default: zero recursion overhead, no stack-overflow risk at $N = 10^5$, better CPU cache locality, and easy rolling-array space optimization.
+    \item Choose \textbf{Memoization} when only a tiny fraction of states is reachable (sparse state space) or when the topological loop order is awkward to write iteratively.
 \end{itemize}
 \end{calloutbox}
 
-\subsection{The 5-Step Recipe}
+\subsection{The 5-Step Recipe and 1D Linear DP}
 
-To reliably solve DP problems, always follow these 5 steps in order:
-\begin{enumerate}
-    \item \textbf{Define the state in words}: What exactly does \texttt{dp[i]} represent?
-    \item \textbf{Write the transition}: How do you compute \texttt{dp[i]} from previous states?
-    \item \textbf{Set base cases}: What are the simplest states?
-    \item \textbf{Choose evaluation order}: How should your loops run to respect dependencies?
-    \item \textbf{Locate the answer}: Which \texttt{dp} cell holds the final answer?
-\end{enumerate}
+\painbeat Beginners often jump straight to coding loops before deciding what \texttt{dp[i]} means, leading to mismatched base cases and off-by-one bugs.
 
-We will apply this to the \textbf{House Robber} problem in the Worked Examples section. The core idea is that you want to maximize money without choosing adjacent houses, leading to a transition where you either skip the current house or rob it.
+\ahabeat Lock down the \textbf{5-Step Recipe} on paper first: (1) Define the state in plain English, (2) write the transition, (3) set base cases, (4) pick the evaluation order, and (5) identify the answer state.
 
-\subsection{1D DP: Coins and Subsequences}
+\examplebeat In the \textbf{House Robber} problem, you maximize loot along a street without robbing two adjacent houses. Defining \texttt{dp[i]} as the best loot from houses $0 \dots i$ gives two choices at house $i$: \textbf{skip} it (keep \texttt{dp[i-1]}) or \textbf{rob} it (add $A[i]$ to \texttt{dp[i-2]}).
 
-1D DP problems have a state defined by a single index. A classic example is the \textbf{Longest Increasing Subsequence (LIS)} problem, where the state \texttt{dp[i]} tracks the best sequence ending exactly at index $i$.
+\begin{formulabox}[House Robber Transition in Plain English]
+$$\texttt{dp[i]} = \max\big(\texttt{dp[i-1]},\; \texttt{dp[i-2]} + A[i]\big)$$
+\textbf{Read this as:} The best haul up to house $i$ is the better of leaving house $i$ alone (keeping yesterday's best) or robbing house $i$ plus the best haul from two houses back.
+\end{formulabox}
 
-Another fundamental 1D problem is \textbf{Coin Change - Counting Ways}. The loop order matters deeply when counting combinations versus permutations. Let us use coins $\{1, 2\}$ and target amount $3$:
+Because \texttt{dp[i]} reads only \texttt{dp[i-1]} and \texttt{dp[i-2]}, we can discard older cells and keep just two rolling variables (\texttt{prev2} and \texttt{prev1}), shrinking memory from $O(N)$ to $O(1)$ (Figure~\ref{fig:dp-1d-tape}).
 
-If the outer loop is the coins and the inner loop is the amounts, you count \textit{combinations} (order does not matter, for example, $1+2$ is the same as $2+1$). The table evolves coin by coin:
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    housecell/.style={draw=codeframe, fill=codebg, thick, rounded corners=2pt, minimum width=1.35cm, minimum height=0.92cm, align=center},
+    dpcell/.style={draw=primaryblue!60, fill=white, thick, rounded corners=2pt, minimum width=1.35cm, minimum height=0.92cm, align=center},
+    activecell/.style={draw=codegreen, fill=codegreen!14, line width=1.2pt, rounded corners=2pt, minimum width=1.35cm, minimum height=0.92cm, align=center}
+]
+    % Left row labels
+    \node[anchor=east, font=\bfseries\small, text=primaryblue] at (2.45, 5.15) {House Values $A[i]$:};
+    \node[anchor=east, font=\bfseries\small, text=primaryblue] at (2.45, 2.35) {DP Tape $dp[i]$:};
 
-If the outer loop is the amount and the inner loop is the coins, you count \textit{permutations} (order matters). The table evolves amount by amount:
+    % 6 Houses (indices 0..5)
+    \foreach \i/\val in {0/2, 1/7, 2/9, 3/3, 4/1, 5/8} {
+        \pgfmathsetmacro{\cx}{3.4 + \i * 2.22}
+        \node[housecell] (H\i) at (\cx, 5.15) {\textbf{\large \val}};
+        \node[above=2pt, font=\scriptsize, text=codegray] at (H\i.north) {House \i};
+    }
+
+    % DP Cells (indices 0..5)
+    \foreach \i/\val in {0/2, 1/7, 3/11, 4/12, 5/19} {
+        \pgfmathsetmacro{\cx}{3.4 + \i * 2.22}
+        \node[dpcell] (DP\i) at (\cx, 2.35) {\textbf{\large \val}};
+        \node[below=2pt, font=\scriptsize\ttfamily, text=codegray] at (DP\i.south) {dp[\i]};
+    }
+    % Highlight DP2 being computed
+    \node[activecell] (DP2) at (7.84, 2.35) {\textbf{\large 11}};
+    \node[below=2pt, font=\scriptsize\ttfamily\bfseries, text=codegreen] at (DP2.south) {dp[2]};
+
+    % Transition arrows for dp[2]
+    \draw[-{Stealth[length=5pt]}, line width=1.4pt, primaryblue, shorten <=2pt, shorten >=2pt] (DP1.east) -- (DP2.west)
+        node[midway, above=2pt, font=\tiny\bfseries, text=primaryblue] {Skip: 7};
+
+    \draw[-{Stealth[length=5pt]}, line width=1.4pt, codegreen] (DP0.north) to[out=35, in=145] (DP2.north);
+    \node[above, font=\scriptsize\bfseries, text=codegreen] at (5.62, 3.62) {Rob: $dp[0] + A[2] = 2 + 9 = 11$};
+
+    % Sliding window space optimization card
+    \draw[draw=codeframe, fill=codebg, rounded corners=4pt, thick] (0.0, -0.35) rectangle (15.4, 1.35);
+    \node[anchor=west, font=\bfseries\small, text=primaryblue] at (0.35, 1.02) {Space Optimization ($O(N) \longrightarrow O(1)$ Auxiliary Memory):};
+
+    \node[draw=codeframe, fill=white, rounded corners=2pt, minimum width=2.15cm, minimum height=0.62cm, font=\scriptsize] at (1.9, 0.35) {\texttt{prev2} $= 2$};
+    \node[font=\small, text=codegray] at (3.35, 0.35) {$\longrightarrow$};
+    \node[draw=codeframe, fill=white, rounded corners=2pt, minimum width=2.15cm, minimum height=0.62cm, font=\scriptsize] at (4.8, 0.35) {\texttt{prev1} $= 7$};
+    \node[font=\small, text=codegray] at (6.25, 0.35) {$\longrightarrow$};
+    \node[draw=codegreen, fill=codegreen!14, rounded corners=2pt, minimum width=2.25cm, minimum height=0.62cm, font=\scriptsize\bfseries, text=codegreen] at (7.75, 0.35) {\texttt{curr} $= 11$};
+
+    \node[anchor=west, font=\scriptsize, text=codeink, align=left] at (9.35, 0.35) {
+        Slide window for $i = 3$:\\
+        \texttt{prev2 = prev1; prev1 = curr;}
+    };
+\end{tikzpicture}
+\caption{1D DP state dependency tape for House Robber ($N = 6$). Computing $dp[i]$ depends strictly on $dp[i-1]$ and $dp[i-2]$, enabling a two-variable rolling window that reduces space from $O(N)$ to $O(1)$.}
+\label{fig:dp-1d-tape}
+\end{figure}
+
+\subsection{1D DP: Coin Change (Loop Order) and Subsequences}
+
+\begin{notationbox}[Symbols Used in Coin Change \& LIS]
+$A$ & Target monetary amount to build from coins & $A = 6$ \\
+$c \in C$ & Denomination of a single coin in coin set $C$ & $C = \{1, 3, 4\}$ \\
+\texttt{dp[a]} & Minimum coins (or total ways) to make exact amount $a$ & \texttt{dp[0] = 0} (min) or \texttt{1} (ways) \\
+\texttt{dp[i]} & Length of Longest Increasing Subsequence ending at index $i$ & Base: \texttt{dp[i] = 1} \\
+\end{notationbox}
+
+\painbeat When counting ways to make change for amount $A$ with unlimited coins, swapping two \texttt{for} loops silently changes the answer! Why?
+
+\ahabeat \textbf{Loop order decides whether coin order matters.} Putting coins in the \emph{outer} loop processes every \texttt{1}-coin before any \texttt{2}-coin is ever considered, forcing canonical sorted multisets (\textbf{combinations}). Putting amounts in the \emph{outer} loop allows any coin to be appended at any step, counting distinct ordered sequences (\textbf{permutations}).
+
+\examplebeat With coins $\{1, 2\}$ and target amount $A = 3$, Figure~\ref{fig:dp-coin-loop-order} shows how the outer-coin loop yields \textbf{2} combinations ($\{1+1+1,\; 1+2\}$), while the outer-amount loop yields \textbf{3} permutations ($1+1+1,\; 2+1,\; 1+2$).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    cbox/.style={draw=codeframe, fill=white, thick, minimum width=1.12cm, minimum height=0.56cm, font=\scriptsize\ttfamily, align=center},
+    hbox/.style={draw=primaryblue!50, fill=primaryblue!10, thick, minimum width=1.12cm, minimum height=0.54cm, font=\scriptsize\bfseries\ttfamily, text=primaryblue, align=center},
+    gbox/.style={draw=codegreen, fill=codegreen!15, line width=1.2pt, minimum width=1.12cm, minimum height=0.56cm, font=\scriptsize\bfseries\ttfamily, text=codegreen, align=center},
+    bbox/.style={draw=primaryblue, fill=primaryblue!14, line width=1.2pt, minimum width=1.12cm, minimum height=0.56cm, font=\scriptsize\bfseries\ttfamily, text=primaryblue, align=center}
+]
+    % Outer container
+    \draw[draw=codeframe, fill=codebg, rounded corners=4pt, thick] (0.0, -3.55) rectangle (15.4, 3.85);
+    \node[anchor=north west, font=\bfseries\small, text=primaryblue] at (0.28, 3.62) {Coin Change Counting Ways: Coins $\{1, 2\}$, Target $A = 3$ (Loop-Order Comparison)};
+
+    % --- Left Panel: Combinations (Outer = Coins) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (0.25, -3.28) rectangle (7.55, 2.98);
+    \node[anchor=north west, font=\footnotesize\bfseries, text=codegreen] at (0.45, 2.78) {Combinations (Outer = Coins, Inner = Amount)};
+    \node[anchor=north west, font=\tiny\ttfamily, text=codeink] at (0.45, 2.30) {for (int c : \{1, 2\}) for (int a = c; a <= 3; ++a)};
+
+    % Mini grid headers
+    \node[anchor=east, font=\scriptsize\bfseries, text=codegray] at (2.15, 1.42) {Stage};
+    \foreach \j in {0,1,2,3} {
+        \pgfmathsetmacro{\cx}{2.85 + \j * 1.18}
+        \node[hbox] at (\cx, 1.42) {a=\j};
+    }
+
+    % Row 0: Init
+    \node[anchor=east, font=\scriptsize, text=codegray] at (2.15, 0.76) {Init:};
+    \foreach \j/\v in {0/1, 1/0, 2/0, 3/0} {
+        \node[cbox] at (2.85 + \j*1.18, 0.76) {\v};
+    }
+
+    % Row 1: After Coin 1
+    \node[anchor=east, font=\scriptsize, text=primaryblue] at (2.15, 0.10) {+ Coin 1:};
+    \foreach \j/\v in {0/1, 1/1, 2/1, 3/1} {
+        \node[cbox] at (2.85 + \j*1.18, 0.10) {\v};
+    }
+
+    % Row 2: After Coin 2
+    \node[anchor=east, font=\scriptsize\bfseries, text=codegreen] at (2.15, -0.56) {+ Coin 2:};
+    \node[cbox] at (2.85, -0.56) {1};
+    \node[cbox] at (4.03, -0.56) {1};
+    \node[cbox] at (5.21, -0.56) {2};
+    \node[gbox] at (6.39, -0.56) {2};
+
+    % Explanation
+    \draw[draw=codeframe!60] (0.45, -1.16) -- (7.35, -1.16);
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.75cm] at (0.45, -1.30) {
+        \textbf{Result:} $\texttt{dp[3]} = \mathbf{2}$ ways: \texttt{\{1+1+1\}} and \texttt{\{1+2\}}.\\[3pt]
+        All \texttt{1}-coins finish \emph{before} any \texttt{2}-coin is added, so coins are always chosen in non-decreasing order. \texttt{2+1} is \textbf{never} double-counted!
+    };
+
+    % --- Right Panel: Permutations (Outer = Amount) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (7.85, -3.28) rectangle (15.15, 2.98);
+    \node[anchor=north west, font=\footnotesize\bfseries, text=primaryblue] at (8.05, 2.78) {Permutations (Outer = Amount, Inner = Coins)};
+    \node[anchor=north west, font=\tiny\ttfamily, text=codeink] at (8.05, 2.30) {for (int a = 1; a <= 3; ++a) for (int c : \{1, 2\})};
+
+    % Mini trace table
+    \node[anchor=east, font=\scriptsize\bfseries, text=codegray] at (9.75, 1.42) {Amount};
+    \node[hbox, minimum width=1.20cm] at (10.52, 1.42) {dp[a]};
+    \node[hbox, minimum width=3.45cm] at (13.08, 1.42) {Ordered Sequences Formed};
+
+    \node[anchor=east, font=\scriptsize, text=codegray] at (9.75, 0.76) {a = 0:};
+    \node[cbox, minimum width=1.20cm] at (10.52, 0.76) {1};
+    \node[cbox, minimum width=3.45cm] at (13.08, 0.76) {()};
+
+    \node[anchor=east, font=\scriptsize, text=codeink] at (9.75, 0.10) {a = 1:};
+    \node[cbox, minimum width=1.20cm] at (10.52, 0.10) {1};
+    \node[cbox, minimum width=3.45cm] at (13.08, 0.10) {1};
+
+    \node[anchor=east, font=\scriptsize, text=codeink] at (9.75, -0.56) {a = 2:};
+    \node[cbox, minimum width=1.20cm] at (10.52, -0.56) {2};
+    \node[cbox, minimum width=3.45cm] at (13.08, -0.56) {1+1,\; 2};
+
+    \node[anchor=east, font=\scriptsize\bfseries, text=primaryblue] at (9.75, -1.22) {a = 3:};
+    \node[bbox, minimum width=1.20cm] at (10.52, -1.22) {3};
+    \node[bbox, minimum width=3.45cm] at (13.08, -1.22) {1+1+1,\; 2+1,\; 1+2};
+
+    \draw[draw=codeframe!60] (8.05, -1.76) -- (14.95, -1.76);
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.75cm] at (8.05, -1.90) {
+        \textbf{Result:} $\texttt{dp[3]} = \mathbf{3}$ ways: \texttt{dp[2]} appends \texttt{+1} (giving \texttt{1+1+1, 2+1}), and \texttt{dp[1]} appends \texttt{+2} (giving \texttt{1+2}). Order \textbf{matters}!
+    };
+\end{tikzpicture}
+\caption{Loop-order invariance in Coin Change counting ways ($C = \{1, 2\}$, $A = 3$). Outer-coin iteration enforces sorted combinations ($\texttt{dp[3]} = 2$); outer-amount iteration counts all ordered permutations ($\texttt{dp[3]} = 3$).}
+\label{fig:dp-coin-loop-order}
+\end{figure}
+
+In the \textbf{Longest Increasing Subsequence (LIS)} problem, \texttt{dp[i]} stores the longest strictly increasing subsequence \textbf{ending at index $i$}. For each $j < i$ with $\text{nums}[j] < \text{nums}[i]$, we relax $\texttt{dp[i]} = \max(\texttt{dp[i]},\; \texttt{dp[j]} + 1)$ in $O(N^2)$ time.
+
+\begin{tryitbox}{Trace}{Coin Change Minimum Coins \& Greedy Failure}{ex2}
+Given coins $C = \{1, 3, 4\}$ and target amount $A = 6$, fill both \texttt{dp[0..6]} (minimum coins) and \texttt{parent[0..6]} (the last coin chosen) by hand. Reconstruct the optimal coins for $6$, and state why a greedy largest-coin-first strategy fails here.
+\end{tryitbox}
 
 \subsection{2D DP on Grids}
 
-Many problems give you a 2D grid and ask you to navigate from the top-left to the bottom-right, only moving right or down. The state \texttt{dp[i][j]} represents the minimum cost or total paths to reach row $i$, col $j$. The transition checks the cell above and the cell to the left.
+\painbeat On an $M \times N$ grid where you can only move \textbf{right} or \textbf{down}, the number of paths grows like $\binom{M+N-2}{M-1}$---already over $10^{11}$ on a $20 \times 20$ grid! Exploring every path with recursion is impossible.
 
-\subsection{Contiguous Subarrays and Substrings (The `Ends Exactly At'' Pattern)}
+\ahabeat Any path reaching cell $(i, j)$ must step in from either the cell directly \textbf{above} $(i-1, j)$ or directly to the \textbf{left} $(i, j-1)$. Merging all paths that arrive at $(i, j)$ into one optimal cost collapses exponential routes into $M \times N$ cells.
 
-Many dynamic programming problems deal with substrings or contiguous subarrays (unlike subsequences, where elements can be skipped). Because a substring must remain perfectly unbroken, tracking the `best answer seen so far'' in \texttt{dp[i]} breaks the DP transition---if you only know the best overall score, you have no way to attach the current character $i$ to it, because the best sequence might have ended several indices ago.
+\begin{formulabox}[2D Grid Minimum Path Transition]
+$$\texttt{dp[i][j]} = \text{cost}[i][j] + \min\big(\texttt{dp[i-1][j]},\; \texttt{dp[i][j-1]}\big)$$
+\textbf{Read this as:} The cheapest route to cell $(i, j)$ pays this cell's toll plus whichever entrance---from above or from the left---was cheaper.
+\end{formulabox}
 
-The universal solution to this is the `Ends Exactly At'' pattern. We rigidly define our state:
-\begin{calloutbox}{The Substring DP State Rule}
-\texttt{dp[i]} must represent the optimal answer for a valid sequence that \textbf{stops exactly at index $i$}.
-\end{calloutbox}
+\invariantbeat{2D Grid Row Sweep} Before updating cell $(i, j)$, every cell in row $i-1$ and every cell to the left in row $i$ already holds its final optimal cost.
 
-By forcing the sequence to end exactly at the current character, we guarantee that any sequence extending it will remain unbroken. 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    gridcell/.style={draw=codeframe, fill=white, thick, rounded corners=2pt, minimum width=1.55cm, minimum height=1.12cm, align=center},
+    pathcell/.style={draw=codegreen, fill=codegreen!14, line width=1.2pt, rounded corners=2pt, minimum width=1.55cm, minimum height=1.12cm, align=center}
+]
+    % --- Left Panel: 3x3 Grid ---
+    \node[anchor=west, font=\bfseries\small, text=primaryblue] at (0.0, 5.75) {3$\times$3 Cost Grid \& Accumulated $dp[i][j]$:};
 
-\textbf{Worked Trace: Kadane's Algorithm for Maximum Subarray Sum} \\
-Given the array [-2, 1, -3, 4, -1, 2]. We define \texttt{dp[i]} as the maximum sum of a contiguous subarray ending \textit{exactly} at $i$. At each step, we have two choices: extend the subarray ending at $i-1$, or start a brand new subarray at $i$.
+    \foreach \r/\c/\cost/\dpval/\ispath in {
+        0/0/1/1/1, 0/1/3/4/1, 0/2/1/5/1,
+        1/0/1/2/0, 1/1/5/7/0, 1/2/1/6/1,
+        2/0/4/6/0, 2/1/2/8/0, 2/2/1/7/1
+    } {
+        \pgfmathsetmacro{\cx}{0.85 + \c * 2.55}
+        \pgfmathsetmacro{\cy}{4.75 - \r * 1.75}
+        \ifnum\ispath=1
+            \node[pathcell] (C\r\c) at (\cx, \cy) {};
+        \else
+            \node[gridcell] (C\r\c) at (\cx, \cy) {};
+        \fi
+        \node[font=\tiny, text=codegray, anchor=north west] at (C\r\c.north west) {(\r,\c)};
+        \node[font=\tiny, text=codegray, anchor=south west] at (C\r\c.south west) {cost:\cost};
+        \node[font=\large\bfseries, text=primaryblue, anchor=center] at (C\r\c.center) {\dpval};
+    }
+
+    % Optimal path arrows
+    \draw[-{Stealth[length=5pt]}, line width=1.9pt, codegreen, shorten <=2pt, shorten >=2pt] (C00.east) -- (C01.west);
+    \draw[-{Stealth[length=5pt]}, line width=1.9pt, codegreen, shorten <=2pt, shorten >=2pt] (C01.east) -- (C02.west);
+    \draw[-{Stealth[length=5pt]}, line width=1.9pt, codegreen, shorten <=2pt, shorten >=2pt] (C02.south) -- (C12.north);
+    \draw[-{Stealth[length=5pt]}, line width=1.9pt, codegreen, shorten <=2pt, shorten >=2pt] (C12.south) -- (C22.north);
+
+    % Transition arrows for cell (1,1) with generous clearance
+    \draw[-{Stealth[length=5pt]}, line width=1.2pt, primaryblue, dashed, shorten <=2pt, shorten >=2pt] (C10.east) -- (C11.west)
+        node[midway, above=2pt, font=\tiny\bfseries, text=primaryblue] {Left: 2};
+    \draw[-{Stealth[length=5pt]}, line width=1.2pt, primaryblue, dashed, shorten <=2pt, shorten >=2pt] (C01.south) -- (C11.north)
+        node[midway, right=2pt, font=\tiny\bfseries, text=primaryblue] {Top: 4};
+
+    % --- Right Panel: Computation Trace & Recurrence Card ---
+    \draw[draw=codeframe, fill=codebg, rounded corners=4pt, thick] (7.45, 0.35) rectangle (15.65, 5.9);
+    \node[anchor=west, font=\bfseries\small, text=primaryblue] at (7.75, 5.5) {Recurrence \& Decision Invariant:};
+
+    \node[anchor=west, font=\scriptsize, align=left, text width=7.5cm] at (7.75, 4.65) {
+        \textbf{State Transition:}\\
+        $dp[i][j] = \text{cost}[i][j] + \min\big(dp[i-1][j],\; dp[i][j-1]\big)$
+    };
+
+    \draw[draw=codeframe!60] (7.75, 3.95) -- (15.35, 3.95);
+
+    \node[anchor=west, font=\scriptsize, align=left, text width=7.5cm] at (7.75, 2.95) {
+        \textbf{Step-by-Step for Cell $(1,1)$:}\\
+        $\bullet$ Arrive from Left $(1,0)$: $dp[1][0] = 2$\\
+        $\bullet$ Arrive from Top $(0,1)$: $dp[0][1] = 4$\\
+        $\bullet$ Pick cheaper entrance: $\min(2, 4) = 2$\\
+        $\implies dp[1][1] = 5 + 2 = \mathbf{7}$
+    };
+
+    \draw[draw=codeframe!60] (7.75, 1.92) -- (15.35, 1.92);
+
+    \node[anchor=west, font=\scriptsize, align=left, text width=7.5cm] at (7.75, 1.12) {
+        \textbf{Optimal Global Path:}\\
+        $(0,0) \to (0,1) \to (0,2) \to (1,2) \to (2,2)$\\
+        Total Minimum Path Sum $= 1 + 3 + 1 + 1 + 1 = \mathbf{7}$\\
+        \textbf{Space}: $O(M \times N) \longrightarrow O(N)$ via 1D rolling row.
+    };
+\end{tikzpicture}
+\caption{2D Grid DP minimum path computation. Every interior cell evaluates only its top and left predecessors; the optimal green route reaches $(2, 2)$ with total cost $7$.}
+\label{fig:dp-2d-grid}
+\end{figure}
+
+\subsection{Contiguous Subarrays and Substrings (The ``Ends Exactly At'' Pattern)}
+
+\painbeat Suppose you want the maximum sum of a \textbf{contiguous} subarray. If you define \texttt{dp[i]} as ``the best subarray anywhere inside $0 \dots i$,'' you cannot attach element $i$ cleanly---that earlier best subarray might have ended three indices ago!
+
+\ahabeat Force the state to stay glued to index $i$: define \texttt{dp[i]} as the optimal contiguous segment that \textbf{ends exactly at index $i$}. Now you have just two legal moves: extend the previous segment ending at $i-1$, or start fresh at $i$.
+
+\begin{formulabox}[Kadane's Algorithm (``Ends Exactly At'' Recurrence)]
+$$\texttt{dp[i]} = \max\big(A[i],\; \texttt{dp[i-1]} + A[i]\big), \qquad \text{Answer} = \max_{0 \le i < n} \texttt{dp[i]}$$
+\textbf{Read this as:} Either discard a dragging negative prefix and start fresh at $A[i]$, or extend the best streak ending right before you.
+\end{formulabox}
+
+\examplebeat Tracing Kadane's algorithm on $A = [-2, 1, -3, 4, -1, 2]$:
 \begin{enumerate}
-    \item $i=0$ (val -2): \texttt{dp[0]} = -2. 
-    \item $i=1$ (val 1): Extend (-2 + 1 = -1) or Start fresh (1). Max is 1. \texttt{dp[1]} = 1.
-    \item $i=2$ (val -3): Extend (1 + -3 = -2) or Start fresh (-3). Max is -2. \texttt{dp[2]} = -2.
-    \item $i=3$ (val 4): Extend (-2 + 4 = 2) or Start fresh (4). Max is 4. \texttt{dp[3]} = 4.
-    \item $i=4$ (val -1): Extend (4 + -1 = 3) or Start fresh (-1). Max is 3. \texttt{dp[4]} = 3.
-    \item $i=5$ (val 2): Extend (3 + 2 = 5) or Start fresh (2). Max is 5. \texttt{dp[5]} = 5.
+    \item $i = 0$ ($-2$): $\texttt{dp[0]} = -2$.
+    \item $i = 1$ ($1$): extend ($-2 + 1 = -1$) vs.\ fresh ($1$) $\implies \texttt{dp[1]} = 1$.
+    \item $i = 2$ ($-3$): extend ($1 - 3 = -2$) vs.\ fresh ($-3$) $\implies \texttt{dp[2]} = -2$.
+    \item $i = 3$ ($4$): extend ($-2 + 4 = 2$) vs.\ fresh ($4$) $\implies \texttt{dp[3]} = 4$.
+    \item $i = 4$ ($-1$): extend ($4 - 1 = 3$) vs.\ fresh ($-1$) $\implies \texttt{dp[4]} = 3$.
+    \item $i = 5$ ($2$): extend ($3 + 2 = 5$) vs.\ fresh ($2$) $\implies \texttt{dp[5]} = 5$.
 \end{enumerate}
-Because \texttt{dp[i]} only tracks the sequence ending at $i$, the global optimal answer is simply the maximum value found anywhere in the \texttt{dp} array (which is 5). This identical `ends exactly at'' logic applies to Longest Valid Parentheses, Longest Palindromic Substring, and any contiguous-segment problem.
+The global optimum is $\max(\texttt{dp}) = \mathbf{5}$ (subarray $[4, -1, 2]$). This exact ``ends at $i$'' trick powers Longest Valid Parentheses and Maximum Product Subarray.
 
-\subsection{Two-Sequence DP: Longest Common Subsequence and Edit Distance}
+\begin{tryitbox}{Twist}{Maximum Product Subarray}{ex3}
+Why does Kadane's single-state recurrence fail for \textbf{Maximum Product Subarray} on \texttt{[-2, 3, -4]}? What second state must you maintain at every index $i$ so the optimal substructure holds?
+\end{tryitbox}
 
-When comparing two strings or sequences, the state needs two indices: $i$ for the first string and $j$ for the second.
-In \textbf{Edit Distance}, we find the minimum insert, delete, or replace operations to transform one string into another. In \textbf{LCS}, we find the longest shared characters in order. Both rely on checking if the current characters match, and branching accordingly.
+\subsection{Two-Sequence DP: LCS and Edit Distance}
 
-\subsection{The Knapsack Family}
+\begin{notationbox}[Symbols Used in Two-Sequence DP]
+$S_1, S_2$ & Two input strings of lengths $M$ and $N$ & $S_1 = \texttt{"ABCDE"}$, $S_2 = \texttt{"ACE"}$ \\
+$S_1[0 \dots i-1]$ & Prefix of $S_1$ containing its first $i$ characters & $i = 0$ means empty string $\emptyset$ \\
+\texttt{dp[i][j]} & Optimal LCS length (or Edit Distance) for prefixes of length $i$ and $j$ & Table size $(M+1) \times (N+1)$ \\
+\end{notationbox}
 
-\textbf{0/1 Knapsack}: You have items with weights and values. You have a bag of capacity $W$. Maximize value without exceeding capacity. You can take each item at most once. The state \texttt{dp[i][w]} tracks the best value using the first $i$ items and $w$ capacity.
-When optimizing the space to a 1D array \texttt{dp[w]}, you must iterate the capacity \textit{backwards}. If you iterate forwards, you risk using the same item multiple times, turning it into the Unbounded Knapsack problem.
+\painbeat Aligning two strings of lengths $M$ and $N$ by brute-force subsequence search checks up to $2^M$ subsets---hopeless even for $M = 40$.
 
-\textbf{Subset-Sum}: A boolean variant of knapsack. Can we find a subset that sums exactly to a target? The state is boolean.
+\ahabeat Compare the two strings from the end of their prefixes $(i, j)$. Every decision consumes one character from $S_1$, one from $S_2$, or both simultaneously, forming an $(M+1) \times (N+1)$ \textbf{2D DAG} whose edges only move right, down, or diagonally down-right!
 
-\subsection{Interval DP}
+\begin{formulabox}[LCS and Edit Distance Transitions]
+\textbf{Longest Common Subsequence (LCS):}
+$$\texttt{dp[i][j]} = \begin{cases} \texttt{dp[i-1][j-1]} + 1 & \text{if } S_1[i-1] = S_2[j-1], \\ \max(\texttt{dp[i-1][j]},\; \texttt{dp[i][j-1]}) & \text{otherwise.} \end{cases}$$
+\textbf{Edit Distance (Levenshtein):}
+$$\texttt{dp[i][j]} = \begin{cases} \texttt{dp[i-1][j-1]} & \text{if } S_1[i-1] = S_2[j-1], \\ 1 + \min(\underbrace{\texttt{dp[i-1][j]}}_{\text{delete}},\; \underbrace{\texttt{dp[i][j-1]}}_{\text{insert}},\; \underbrace{\texttt{dp[i-1][j-1]}}_{\text{replace}}) & \text{otherwise.} \end{cases}$$
+\textbf{Read this as:} Matching final characters advances both prefixes diagonally; a mismatch pays the best local edit or skips one character from either string.
+\end{formulabox}
 
-In Interval DP, you combine adjacent elements (like multiplying matrices or merging piles). The state is defined by a left and right boundary: \texttt{dp[L][R]}. Because computing a large interval requires the answers to smaller sub-intervals, the evaluation order mandates looping over the \textit{length} of the interval first, starting from 1 up to $N$.
+Figure~\ref{fig:dp-lcs-matrix} illustrates the complete 2D LCS table for $S_1 = \texttt{"ABCDE"}$ and $S_2 = \texttt{"ACE"}$ alongside its $O(M + N)$ backward reconstruction path.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    cell/.style={draw=codeframe, fill=white, thick, minimum width=0.90cm, minimum height=0.54cm, font=\scriptsize\ttfamily, align=center},
+    matchCell/.style={draw=codegreen, fill=codegreen!18, line width=1.2pt, minimum width=0.90cm, minimum height=0.54cm, font=\scriptsize\bfseries\ttfamily, text=codegreen, align=center},
+    headCell/.style={draw=primaryblue!55, fill=primaryblue!10, thick, minimum width=0.90cm, minimum height=0.54cm, font=\scriptsize\bfseries\ttfamily, text=primaryblue, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Outer container
+    \draw[card] (0.0, -4.65) rectangle (15.4, 4.35);
+    \node[anchor=north west, font=\bfseries\small, text=primaryblue] at (0.28, 4.12) {LCS 2D Matrix \& Reconstruction: $S_1 = \texttt{"ABCDE"}$ vs.\ $S_2 = \texttt{"ACE"}$ (LCS $= \texttt{"ACE"}$, Length $= 3$)};
+
+    % --- Left Panel: 2D Matrix (x: 0.25 to 7.45) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (0.25, -4.35) rectangle (7.45, 3.48);
+
+    % Column Headers (S2: \emptyset, A, C, E)
+    \node[font=\tiny\bfseries, text=primaryblue] at (4.25, 3.24) {String $S_2$ (columns $j$)};
+    \foreach \j/\ch in {0/$\emptyset$, 1/A, 2/C, 3/E} {
+        \node[headCell] at (2.42 + \j*1.24, 2.74) {\ch};
+    }
+
+    % Row Headers (S1: \emptyset, A, B, C, D, E)
+    \node[font=\tiny\bfseries, text=primaryblue, rotate=90] at (0.52, 0.05) {String $S_1$ (rows $i$)};
+    \foreach \i/\ch in {0/$\emptyset$, 1/A, 2/B, 3/C, 4/D, 5/E} {
+        \node[headCell] at (1.18, 2.00 - \i*0.78) {\ch};
+    }
+
+    % Row 0 (\emptyset): 0, 0, 0, 0
+    \node[cell] (C00) at (2.42, 2.00) {0};
+    \node[cell] at (3.66, 2.00) {0};
+    \node[cell] at (4.90, 2.00) {0};
+    \node[cell] at (6.14, 2.00) {0};
+
+    % Row 1 (A): 0, 1*, 1, 1
+    \node[cell] at (2.42, 1.22) {0};
+    \node[matchCell] (C11) at (3.66, 1.22) {1};
+    \node[cell] at (4.90, 1.22) {1};
+    \node[cell] at (6.14, 1.22) {1};
+
+    % Row 2 (B): 0, 1, 1, 1
+    \node[cell] at (2.42, 0.44) {0};
+    \node[cell] (C21) at (3.66, 0.44) {1};
+    \node[cell] at (4.90, 0.44) {1};
+    \node[cell] at (6.14, 0.44) {1};
+
+    % Row 3 (C): 0, 1, 2*, 2
+    \node[cell] at (2.42, -0.34) {0};
+    \node[cell] at (3.66, -0.34) {1};
+    \node[matchCell] (C32) at (4.90, -0.34) {2};
+    \node[cell] at (6.14, -0.34) {2};
+
+    % Row 4 (D): 0, 1, 2, 2
+    \node[cell] at (2.42, -1.12) {0};
+    \node[cell] at (3.66, -1.12) {1};
+    \node[cell] (C42) at (4.90, -1.12) {2};
+    \node[cell] at (6.14, -1.12) {2};
+
+    % Row 5 (E): 0, 1, 2, 3*
+    \node[cell] at (2.42, -1.90) {0};
+    \node[cell] at (3.66, -1.90) {1};
+    \node[cell] at (4.90, -1.90) {2};
+    \node[matchCell] (C53) at (6.14, -1.90) {3};
+
+    % Clean Backtracking Arrows with crisp white-backed pills
+    \draw[-{Stealth[length=4.5pt]}, line width=1.4pt, primaryblue, shorten <=1pt, shorten >=1pt] (C53.north west) -- (C42.south east)
+        node[midway, fill=white, inner sep=1pt, font=\tiny\bfseries, text=primaryblue] {'E'};
+    \draw[-{Stealth[length=4.5pt]}, line width=1.1pt, codegray, dashed, shorten <=1pt, shorten >=1pt] (C42.north) -- (C32.south);
+    \draw[-{Stealth[length=4.5pt]}, line width=1.4pt, primaryblue, shorten <=1pt, shorten >=1pt] (C32.north west) -- (C21.south east)
+        node[midway, fill=white, inner sep=1pt, font=\tiny\bfseries, text=primaryblue] {'C'};
+    \draw[-{Stealth[length=4.5pt]}, line width=1.1pt, codegray, dashed, shorten <=1pt, shorten >=1pt] (C21.north) -- (C11.south);
+    \draw[-{Stealth[length=4.5pt]}, line width=1.4pt, primaryblue, shorten <=1pt, shorten >=1pt] (C11.north west) -- (C00.south east)
+        node[midway, fill=white, inner sep=1pt, font=\tiny\bfseries, text=primaryblue] {'A'};
+
+    % Clean contained legend inside left panel
+    \draw[draw=codeframe!60] (0.48, -2.42) -- (7.22, -2.42);
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.7cm] at (0.48, -2.56) {
+        {\color{codegreen}\textbf{Green cells:}} Character match ($+1$ from top-left).\\[2pt]
+        {\color{primaryblue}\textbf{Solid blue arrows:}} Record matched char (\texttt{'E'}, \texttt{'C'}, \texttt{'A'}) $\to$ reverse to \texttt{"ACE"}.\\[2pt]
+        {\color{codegray}\textbf{Dashed arrows:}} Mismatch step to max neighbor.
+    };
+
+    % --- Right Panel: Rules & Complexity (x: 7.70 to 15.15) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (7.70, -4.35) rectangle (15.15, 3.48);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (7.95, 3.24) {Transition Invariants \& Reconstruction:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.95cm] at (7.95, 2.72) {
+        \textbf{1. Diagonal Match Transition:}\\[3pt]
+        \texttt{if (S1[i-1] == S2[j-1]):}\\
+        \hspace*{1em}$\texttt{dp[i][j]} = \texttt{dp[i-1][j-1]} + 1$\\[3pt]
+        Both prefixes match on their last character, extending the shorter LCS by $1$.
+    };
+
+    \draw[draw=codeframe!60] (7.95, 0.72) -- (14.92, 0.72);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.95cm] at (7.95, 0.54) {
+        \textbf{2. Mismatch Max Transition:}\\[3pt]
+        $\texttt{dp[i][j]} = \max\big(\texttt{dp[i-1][j]},\; \texttt{dp[i][j-1]}\big)$\\[3pt]
+        Keep whichever prefix drop---skipping $S_1[i-1]$ (up) or $S_2[j-1]$ (left)---retains a longer match.
+    };
+
+    \draw[draw=codeframe!60] (7.95, -1.16) -- (14.92, -1.16);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.95cm] at (7.95, -1.34) {
+        \textbf{3. Backtracking Reconstruction:}\\[3pt]
+        $\bullet$ Start at $(M, N)$. On a match, emit the char and step diagonally to $(i-1, j-1)$.\\
+        $\bullet$ On a mismatch, step to the larger of $(i-1, j)$ or $(i, j-1)$.\\
+        $\bullet$ Reverse collected chars in $O(M + N)$ time.
+    };
+
+    \draw[draw=codeframe!60] (7.95, -3.52) -- (14.92, -3.52);
+    \node[anchor=north west, font=\scriptsize\bfseries, text=primaryblue, align=left, text width=6.95cm] at (7.95, -3.68) {
+        Time: $O(M \cdot N)$ \quad|\quad Space: $O(\min(M, N))$ (length)
+    };
+\end{tikzpicture}
+\caption{Longest Common Subsequence (LCS) 2D state matrix and backward reconstruction path. Green cells mark matched characters; solid blue diagonal arrows recover \texttt{"ACE"} in $O(M + N)$ time.}
+\label{fig:dp-lcs-matrix}
+\end{figure}
+
+\begin{tryitbox}{Trace}{Tiny Edit Distance Table: cat to cut}{ex4}
+Fill the complete $4 \times 4$ Edit Distance table (including the empty-prefix row $i = 0$ and column $j = 0$) transforming \texttt{"cat"} into \texttt{"cut"}. Trace the optimal walk-back path from $(3, 3)$ to $(0, 0)$ and list the exact edit operation(s).
+\end{tryitbox}
+
+\subsection{The Knapsack Family: Why 0/1 Loops Backward}
+
+\begin{notationbox}[Symbols Used in Knapsack DP]
+$N,\; W$ & Number of items and maximum knapsack weight capacity & $N = 3,\; W = 5$ \\
+$w_i,\; v_i$ & Weight and value of item $i$ & $(w_i, v_i) = (2, 3)$ \\
+\texttt{dp[i][w]} & Best value using a subset of the first $i$ items within capacity $w$ & 2D table: $O(N \cdot W)$ space \\
+\texttt{dp[w]} & Space-optimized 1D array holding best value for capacity $w$ & 1D table: $O(W)$ space \\
+\end{notationbox}
+
+\painbeat With $N$ items, trying all subsets takes $O(2^N)$ time. A 2D table \texttt{dp[i][w]} solves it in $O(N \cdot W)$, yet compressing that table to a 1D array \texttt{dp[w]} hides one of DP's most famous traps: \textbf{iterating capacity forward corrupts 0/1 Knapsack!}
+
+\ahabeat In row $i$, computing \texttt{dp[i][w]} reads \texttt{dp[i-1][w - w\_i]} from the \emph{previous} row. When you collapse the table to one array \texttt{dp[w]}, looping \textbf{backward} ($w = W$ down to $w_i$) guarantees that \texttt{dp[w - w\_i]} has not been overwritten yet---so it still holds row $i-1$ (each item used \textbf{at most once}). Looping \textbf{forward} ($w = w_i$ up to $W$) reads the freshly updated row $i$, permitting \textbf{unlimited reuse} (Unbounded Knapsack)!
+
+\begin{formulabox}[0/1 Knapsack 1D Recurrence]
+$$\text{For each item } (w_i, v_i), \quad \text{for } w = W \text{ down to } w_i: \quad \texttt{dp[w]} = \max\big(\texttt{dp[w]},\; \texttt{dp[w - w\_i]} + v_i\big)$$
+\textbf{Read this as:} Sweeping right-to-left protects smaller capacities from already containing item $i$, enforcing strict take-once semantics in $O(W)$ RAM.
+\end{formulabox}
+
+\textbf{Subset-Sum} is simply the boolean version of 0/1 Knapsack: \texttt{dp[w]} tracks whether some subset sums to $w$, initialized with \texttt{dp[0] = true} and updated backward via \texttt{dp[w] = dp[w] || dp[w - x]}. Figure~\ref{fig:dp-knapsack-reverse} contrasts the 2D dependency with the 1D loop-direction rule.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    cell/.style={draw=codeframe, fill=white, thick, minimum width=1.12cm, minimum height=0.62cm, font=\scriptsize\ttfamily, align=center},
+    hiCell/.style={draw=primaryblue, fill=primaryblue!14, line width=1.2pt, minimum width=1.12cm, minimum height=0.62cm, font=\scriptsize\bfseries, text=primaryblue, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Outer container
+    \draw[card] (0.0, -4.35) rectangle (15.4, 4.55);
+    \node[anchor=north west, font=\bfseries\small, text=primaryblue] at (0.28, 4.30) {0/1 Knapsack Dynamics: 2D State Dependencies and the 1D Reverse-Loop Invariant};
+
+    % --- Left Panel: 2D Dependency Lattice ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (0.25, -4.05) rectangle (7.55, 3.65);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (0.48, 3.42) {2D State Transition Dependency:};
+
+    \node[anchor=west, font=\scriptsize\bfseries, text=codegray] at (0.48, 2.05) {Row $i-1$:};
+    \node[cell] (PrevSub) at (3.00, 2.05) {dp};
+    \node[above=2pt of PrevSub, font=\tiny\ttfamily, text=codegray] {cap $w - w_i$};
+
+    \node[cell] (PrevW) at (5.90, 2.05) {dp};
+    \node[above=2pt of PrevW, font=\tiny\ttfamily, text=codegray] {cap $w$};
+
+    \node[anchor=west, font=\scriptsize\bfseries, text=primaryblue] at (0.48, 0.35) {Row $i$:};
+    \node[hiCell] (CurrW) at (5.90, 0.35) {target};
+    \node[below=2pt of CurrW, font=\tiny\ttfamily\bfseries, text=primaryblue] {dp[i][w]};
+
+    % Decision arrows
+    \draw[-{Stealth[length=5pt]}, line width=1.3pt, codegray] (PrevW.south) -- (CurrW.north)
+        node[midway, right=2pt, font=\tiny\bfseries, text=codegray, align=left] {Skip $i$:\\$dp[i-1][w]$};
+
+    \draw[-{Stealth[length=5pt]}, line width=1.3pt, codegreen] (PrevSub.south east) -- (CurrW.north west)
+        node[midway, below left=1pt, font=\tiny\bfseries, text=codegreen, align=right] {Take $i$:\\$dp[i-1][w-w_i] + v_i$};
+
+    \draw[draw=codeframe!60] (0.48, -0.68) -- (7.30, -0.68);
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.75cm] at (0.48, -0.82) {
+        \textbf{Recurrence Relation:}\\[3pt]
+        $dp[i][w] = \max\Big(\underbrace{dp[i-1][w]}_{\text{Skip}},\; \underbrace{dp[i-1][w-w_i] + v_i}_{\text{Take}}\Big)$\\[5pt]
+        $\bullet$ \textbf{Time:} $O(N \cdot W)$ total cell evaluations.\\
+        $\bullet$ \textbf{2D Space:} $O(N \cdot W)$ full matrix (needed if reconstructing items directly without parent flags).
+    };
+
+    % --- Right Panel: 1D Space Optimization & Traversal Direction ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (7.80, -4.05) rectangle (15.15, 3.65);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (8.02, 3.42) {Why 1D Array MUST Iterate in Reverse:};
+
+    \node[anchor=north west, font=\scriptsize\bfseries, text=red!70!black] at (8.02, 2.86) {Forward Loop ($w = w_i \dots W$) --- UNBOUNDED:};
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.9cm] at (8.02, 2.45) {
+        When computing $dp[w]$, $dp[w - w_i]$ was \emph{already updated} for item $i$. Item $i$ gets reused multiple times $\implies$ \textbf{Unbounded Knapsack!}\\[2pt]
+        \texttt{\scriptsize for (int w = w\_i; w <= W; ++w) // WRONG for 0/1!}
+    };
+
+    \draw[draw=codeframe!60] (8.02, 0.72) -- (14.92, 0.72);
+
+    \node[anchor=north west, font=\scriptsize\bfseries, text=codegreen] at (8.02, 0.50) {Reverse Loop ($w = W \dots w_i$) --- STRICT 0/1:};
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.9cm] at (8.02, 0.09) {
+        Sweeping right-to-left guarantees $dp[w - w_i]$ still holds row $i - 1$. Item $i$ is selected \textbf{at most once}!\\[2pt]
+        \texttt{\scriptsize for (int w = W; w >= w\_i; {-}{-}w) // STRICT 0/1!}
+    };
+
+    \draw[draw=codeframe!60] (8.02, -1.55) -- (14.92, -1.55);
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=6.9cm] at (8.02, -1.72) {
+        \textbf{Space Complexity Reduction:}\\[2pt]
+        $O(N \cdot W) \text{ matrix} \longrightarrow \mathbf{O(W)} \text{ single vector}$.\\
+        For $N = 10^3, W = 10^4$, memory drops from $40\text{ MB}$ to $40\text{ KB}$ ($1{,}000\times$ smaller), fitting cleanly inside L1 CPU cache.
+    };
+\end{tikzpicture}
+\caption{0/1 Knapsack decision dynamics. Left: 2D skip and take arrows read strictly from row $i - 1$. Right: sweeping capacity backward ($W$ down to $w_i$) preserves row $i - 1$ inside a single $O(W)$ array.}
+\label{fig:dp-knapsack-reverse}
+\end{figure}
+
+\begin{tryitbox}{Trace}{4-Item 1D Knapsack: Forward vs.\ Backward}{ex5}
+Given capacity $W = 5$ and four items $(w, v) = (1, 2),\; (2, 5),\; (3, 6),\; (4, 7)$, compute the final 1D array \texttt{dp[0..5]} using:
+\begin{enumerate}
+    \item The \textbf{backward} capacity loop (0/1 Knapsack).
+    \item The \textbf{forward} capacity loop (Unbounded Knapsack).
+\end{enumerate}
+Why does \texttt{dp[5]} differ between the two passes?
+\end{tryitbox}
+
+\subsection{Interval DP: Filling by Length, Not Row-by-Row}
+
+\begin{notationbox}[Symbols Used in Interval DP]
+$[L, R]$ & Contiguous subarray or subchain from index $L$ to $R$ inclusive & $0 \le L \le R < N$ \\
+$k$ & Split point dividing $[L, R]$ into $[L, k]$ and $[k+1, R]$ & $L \le k < R$ \\
+$\text{len}$ & Interval length $R - L + 1$, used as the \textbf{outer} loop variable & $\text{len} = 2, 3, \dots, N$ \\
+\end{notationbox}
+
+\painbeat When merging adjacent items (Matrix Chain Multiplication, bursting balloons, merging stone piles), the final step merges two smaller contiguous blocks $[L, k]$ and $[k+1, R]$. Filling \texttt{dp[L][R]} row-by-row top-down breaks because \texttt{dp[0][n-1]} needs \texttt{dp[k+1][n-1]} from rows not computed yet!
+
+\ahabeat Every sub-interval $[L, k]$ and $[k+1, R]$ is strictly \textbf{shorter} than $[L, R]$. Therefore, looping over interval \textbf{length} $\text{len} = 2, 3, \dots, N$ in the outer loop guarantees every smaller sub-interval is already solved!
+
+\begin{formulabox}[Interval DP Template]
+$$\texttt{dp[L][R]} = \min_{L \le k < R}\big(\texttt{dp[L][k]} + \texttt{dp[k+1][R]} + \text{mergeCost}(L, k, R)\big)$$
+\textbf{Read this as:} Try every possible last cut $k$ inside $[L, R]$; add the optimal costs of the left and right halves plus the cost to combine them.
+\end{formulabox}
+
+\begin{tryitbox}{Debug}{Wrong Loop Order in Interval DP}{ex6}
+A programmer implements Matrix Chain Multiplication using \texttt{for (L = 0; L < n; ++L) for (R = L + 1; R < n; ++R)} instead of looping by interval length. On $n = 3$ matrices, identify the exact first cell $(L, R)$ that reads an uncomputed dependency and name the uncomputed cell it reads.
+\end{tryitbox}
 
 \subsection{Space Optimization (Rolling Arrays)}
 
-Often, a state only depends on the immediate previous row. In a 2D grid, \texttt{dp[i][j]} only reads from row $i$ and row $i-1$. Once row $i$ is finished, row $i-2$ is completely useless. We can reduce an $O(N \times M)$ space complexity to $O(M)$ by keeping only two rows, swapping them as we progress.
+Whenever row $i$ of a 2D DP table only reads row $i - 1$ (and possibly earlier cells in row $i$), older rows $0 \dots i - 2$ are dead memory. Keeping just two rows (or one carefully ordered row) shrinks space dramatically:
+
+\begin{itemize}
+    \item \textbf{2D Grid Min Path:} Reads \texttt{dp[i-1][j]} (top) and \texttt{dp[i][j-1]} (left) $\implies$ single 1D row swept \textbf{left-to-right}, $O(N)$ space.
+    \item \textbf{0/1 Knapsack:} Reads \texttt{dp[i-1][w]} and \texttt{dp[i-1][w - wt]} $\implies$ single 1D row swept \textbf{right-to-left}, $O(W)$ space.
+    \item \textbf{LCS / Edit Distance (value only):} Reads $(i-1, j-1)$, $(i-1, j)$, and $(i, j-1)$ $\implies$ two rows \texttt{prev} and \texttt{curr} swapped each step, $O(\min(M, N))$ space.
+\end{itemize}
+
+\begin{watchoutbox}[When NOT to Compress Space]
+If you must \textbf{reconstruct the full solution path} (such as the actual LCS string or the chosen Knapsack items), dropping older rows destroys the backtrack table! Keep the 2D table (or store compact parent-choice bits) whenever reconstruction is required.
+\end{watchoutbox}
 
 \subsection{Bitmask DP}
 
-When you have a small set of items ($N \le 20$), you can represent which items are visited using an integer where each bit is a boolean flag. The state is often \texttt{dp[mask][last\_visited]}. The transitions use bitwise operations (\texttt{<<}, \texttt{\&}, \texttt{|}) to check or set visited items.
+\begin{notationbox}[Symbols Used in Bitmask DP]
+\texttt{mask} & $N$-bit integer encoding a subset of visited items (bit $u = 1 \iff u$ visited) & $\texttt{0b101} = 5 \equiv \{0, 2\}$ \\
+\texttt{1ULL << u} & Bitmask with only bit $u$ set (unsigned shift prevents UB) & Bit $2 \to \texttt{0b100} = 4$ \\
+\texttt{dp[mask][u]} & Best tour cost having visited subset \texttt{mask} and currently standing at node $u$ & Size $2^N \times N$ \\
+\end{notationbox}
 
-\subsection{Reconstructing the Solution}
+\painbeat Finding the shortest tour visiting all $N$ cities tries $N!$ permutations---at $N = 18$, $18! \approx 6.4 \times 10^{15}$ is completely hopeless.
 
-Sometimes you need the actual path, not just the max value. You can deduce the choice backwards by checking which transition gave the optimal value, or you can maintain an explicit \texttt{parent} array during the computation that stores the exact choice made at each state, allowing you to walk the pointers back to the start.
+\ahabeat To extend a partial tour, you do \textbf{not} care in what order the visited cities were toured---only \emph{which subset} has been visited (\texttt{mask}) and \emph{where you stand now} (\texttt{last}). Encoding the subset as an $N$-bit integer collapses $N!$ paths into $N \cdot 2^N$ states (at $N = 18$, only $4.7 \times 10^6$ states!).
 
-\subsection{DP vs Greedy vs Backtracking}
+\begin{formulabox}[Bitmask Shortest-Tour Transition]
+$$\texttt{dp[mask | (1 << nxt)][nxt]} = \min\big(\dots,\; \texttt{dp[mask][last]} + \text{dist}[\text{last}][\text{nxt}]\big)$$
+\textbf{Read this as:} From every reachable state $(\texttt{mask}, \texttt{last})$, try stepping to each unvisited node \texttt{nxt} (where bit \texttt{nxt} of \texttt{mask} is $0$) and flip its bit on.
+\end{formulabox}
 
-\begin{calloutbox}{Decision Guide: Backtracking vs Greedy vs DP}
+Because adding a bit strictly increases the integer value of \texttt{mask}, iterating \texttt{mask} from $1$ up to $(1 \ll N) - 1$ is automatically a valid topological order!
+
+\subsection{Solution Reconstruction, Counting Modulo \texorpdfstring{$M$}{M}, and DP vs.\ Greedy}
+
+\textbf{Reconstructing the Optimal Choices:} Two clean techniques recover the actual path or items instead of just the optimal number:
+\begin{enumerate}
+    \item \textbf{Walk-back via the DP table:} Starting at the answer cell, check which neighbor satisfied the transition equation (used for LCS and Edit Distance).
+    \item \textbf{Explicit \texttt{parent} array:} Whenever a transition improves \texttt{dp[s]}, record the exact move in \texttt{parent[s]}, then follow pointers backward to the base case (used in Coin Change).
+\end{enumerate}
+
+\textbf{Counting Modulo $M$:} Path counts explode past 64-bit integers quickly. Whenever a problem asks for the answer modulo $M = 10^9 + 7$, reduce on every addition: \texttt{dp[i] = (dp[i] + val) \% MOD}. When subtracting in C++, negative dividends produce negative remainders, so always add \texttt{MOD} first: \texttt{((a - b) \% MOD + MOD) \% MOD}. If no modulus is requested, default to \texttt{std::int64\_t}.
+
+\begin{calloutbox}{Decision Guide: Backtracking vs.\ Greedy vs.\ DP}
 \begin{itemize}
-    \item \textbf{Backtracking}: Explores all possible paths. Used when you need to list EVERY valid configuration, or $N$ is tiny (for example, N=10).
-    \item \textbf{Greedy}: Makes the locally optimal choice at every step. Extremely fast but often wrong! Example where Greedy fails: Coins \{1, 3, 4\}, amount 6. Greedy picks 4, then 1, 1 (3 coins). DP correctly picks 3, 3 (2 coins).
-    \item \textbf{DP}: Explores all paths intelligently by merging overlapping subproblems. Used when you need an optimal value (min/max) or count, and subproblems overlap.
+    \item \textbf{Backtracking:} Must emit \emph{every} valid configuration, or $N$ is tiny ($N \le 15$) with no overlapping subproblems.
+    \item \textbf{Greedy:} Makes one irreversible local choice per step. Blazingly fast when provable, but fails whenever local optimum $\neq$ global optimum (e.g., coins $\{1, 3, 4\}$ for target $6$: greedy picks $4+1+1$, DP picks $3+3$).
+    \item \textbf{DP:} Optimizes (min/max), counts ways, or checks feasibility when subproblems overlap and the past compresses into a small state.
 \end{itemize}
 \end{calloutbox}
 
-\begin{calloutbox}{When DP is the wrong tool}
-If the problem asks you to find the lexicographically smallest path, or a path without returning to visited nodes (and $N$ is large), the state requires remembering the entire history. This destroys overlapping subproblems. DP only works when the past can be summarized by a small state.
-\end{calloutbox}
+\begin{tryitbox}{Edge Cases}{Sentinel Overflow \& Negative Modulo in C++}{ex7}
+\begin{enumerate}
+    \item What happens in C++ if you initialize a minimum-cost \texttt{int} DP array to \texttt{std::numeric\_limits<int>::max()} and evaluate \texttt{dp[u] + 5} on an unreachable state?
+    \item In C++, what does \texttt{(3 - 5) \% 7} evaluate to, and what expression fixes it safely?
+\end{enumerate}
+\end{tryitbox}
 
-\subsection{Counting Problems with a Modulus}
-
-Because counting paths can yield huge numbers, problems often ask for the answer modulo a prime (like $10^9 + 7$). Apply the modulo operation at every single addition: \texttt{dp[i] = (dp[i] + dp[i-1]) \% MOD}. 
-
-If you ever subtract, you must avoid negative numbers in C++: \texttt{dp[i] = (dp[i] - val + MOD) \% MOD}. For example, if doing calculations modulo 7, and you subtract 5 from 3: $(3 - 5) \dots -2 \dots (-2 + 7) \dots 5$. The \texttt{+ MOD} guarantees a positive result before the final modulo.
-
-\begin{calloutbox}{Integer Overflow Without Modulo}
-If a counting problem does not specify a modulus, the answer might still exceed a 32-bit integer. Always use \texttt{long long} (64-bit integers) for combinations or path counts unless bounds explicitly fit in a standard integer.
-\end{calloutbox}
-
-\begin{calloutbox}{Common Pitfalls}
-\begin{itemize}
-    \item \textbf{Off-by-one in base cases}: Forgetting to set $dp[0] = 1$ in counting problems, resulting in an array of zeroes.
-    \item \textbf{Wrong sentinel values}: Initializing a minimum-cost array with exactly the maximum integer, which overflows and wraps to a negative number when you add a transition cost.
-    \item \textbf{Wrong loop direction}: Overwriting a 1D array value before reading the older value needed for the current transition.
-\end{itemize}
-\end{calloutbox}
-
-\begin{calloutbox}{How to find the state when stuck}
-Ask yourself: \textit{What is the minimum amount of information I need to know about the past to make the correct decision right now?} Strip away anything you do not need. If you do not need the exact sequence of items picked, just their sum, the state is the sum.
-\end{calloutbox}
-
+% ============================================================================
 \section{Key Algorithmic Patterns}
+% ============================================================================
 
-Why is naive recursion exponential? Because it explores a tree where many branches are identical. As shown earlier, $f(40)$ requires hundreds of millions of calls, but there are only 41 distinct states! The efficient technique is to identify the state space, initialize a data structure (the table or cache) to store the result of each state, and compute them exactly once.
+Every DP problem in this library maps onto one of six recurring structural templates. Recognizing which template governs the dependency graph immediately reveals both the table dimensions and the required loop order.
 
-\textbf{Where does this come from?}
-This is valid because of the optimal substructure property: a state fully determines the future. If you know you are at index 5 with 10 capacity remaining, it does not matter \textit{how} you got there. The best decisions from this point onward are always the same. Storing the answer is safe.
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.3cm} >{\raggedright\arraybackslash}p{3.0cm} >{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{DP Family}} & \textcolor{primaryblue}{\textbf{Canonical State}} & \textcolor{primaryblue}{\textbf{Evaluation Order}} & \textcolor{primaryblue}{\textbf{Core Intuition / Signature}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+1D Linear / ``Ends At'' & \texttt{dp[i]} & $i = 0 \to N-1$ & Prefix decisions or unbroken subarrays (Stairs, Robber, Kadane, LIS) \\
+2D Grid & \texttt{dp[i][j]} & Row-by-row, left-to-right & Moving right/down on a matrix; collapses to 1D left-to-right row \\
+Two-Sequence & \texttt{dp[i][j]} & $i = 1 \to M$, $j = 1 \to N$ & Prefix alignment of two strings (LCS, Edit Distance) \\
+Knapsack / Subset & \texttt{dp[w]} & Outer item; inner $w$ \textbf{back} (0/1) or \textbf{fwd} (Unbounded) & Budgeted selection or exact-sum reachability \\
+Interval DP & \texttt{dp[L][R]} & Outer $\text{len} = 2 \to N$; inner $L$, split $k$ & Merging adjacent blocks or palindrome windows \\
+Bitmask DP & \texttt{dp[mask][u]} & $\texttt{mask} = 1 \to 2^N - 1$ & Small subset tracking ($N \le 20$): TSP, assignment \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
-Here are the canonical DP patterns you will see again and again:
+\begin{watchoutbox}[Three Classic DP Pitfalls]
+\begin{enumerate}
+    \item \textbf{Forgetting base cases:} Leaving \texttt{dp[0] = 0} in a counting problem causes the entire table to stay zero forever.
+    \item \textbf{Sentinel overflow:} Using \texttt{INT\_MAX} instead of \texttt{INT\_MAX / 2} (and forgetting to skip \texttt{dp == INF}) causes signed overflow wrap-around to negative infinity.
+    \item \textbf{Wrong 1D sweep direction:} Sweeping forward in 0/1 Knapsack silently turns it into Unbounded Knapsack; sweeping backward in 1D Grid Min Path breaks the left-neighbor dependency.
+\end{enumerate}
+\end{watchoutbox}
 
-\begin{itemize}
-    \item \textbf{Linear Sequence (1D)}: State is just the index \texttt{i}. Usually represents a prefix array. Example trace: Array $[3, 1, 4]$. \texttt{dp[0]=3}, \texttt{dp[1]=4}, \texttt{dp[2]=8}.
-    \item \textbf{Two-Index (2D Grid)}: State is \texttt{dp[i][j]}. You move right/down on a grid.
-    \item \textbf{Two-Sequence}: State is \texttt{dp[i][j]}, consuming characters from two strings.
-    \item \textbf{Knapsack}: State is \texttt{dp[item][capacity]}. You decide whether to take an item, branching to \texttt{w} or \texttt{w - weight}.
-    \item \textbf{Interval}: State is \texttt{dp[L][R]}. You solve for small ranges (length 1, then length 2) and expand outwards to the full string.
-    \item \textbf{Subset / Bitmask}: State is an integer representing a set of booleans. You iterate over bits to transition.
-\end{itemize}
-
+% ============================================================================
 \section{Worked Examples}
+% ============================================================================
 
-\textbf{Example 1: The House Robber (1D Linear)}
-Problem: Maximize money without stealing from adjacent houses. Values: $[2, 7, 9, 3, 1]$.
-State: \texttt{dp[i]} = max money using prefix up to $i$.
-Transition: $\texttt{dp[i]} = \max(\texttt{dp[i-1]} \text{ (skip)}, \texttt{dp[i-2]} + \text{val}[i] \text{ (rob)})$.
-Trace:
-\begin{enumerate}
-    \item Base cases: \texttt{dp[0]} = 2. \texttt{dp[1]} = $\max(2, 7) = 7$.
-    \item $i=2$ (val 9): skip=7, rob=$2+9=11$. \texttt{dp[2]} = 11.
-    \item $i=3$ (val 3): skip=11, rob=$7+3=10$. \texttt{dp[3]} = 11.
-    \item $i=4$ (val 1): skip=11, rob=$11+1=12$. \texttt{dp[4]} = 12.
-\end{enumerate}
+Each example below is completely self-contained so you can cover the table, work it out on scratch paper, and verify every cell.
 
-The final answer is 12.
-
-\textbf{Example 2: Minimum Path Sum (2D Grid)}
-Problem: Minimum cost to reach bottom-right.
-Values:
-
-State: \texttt{dp[i][j]} = $\text{grid}[i][j] + \min(\texttt{dp[i-1][j]}, \texttt{dp[i][j-1]})$.
-Trace with arrows showing dependencies (cells read from left and above):
-
-For cell (1,1) containing 5: It reads left (2) and above (4). $\min(2, 4) + 5 = 7$.
-For cell (1,2) containing 1: It reads left (7) and above (5). $\min(7, 5) + 1 = 6$. The final answer is 6.
-
-\textbf{Example 3: Longest Increasing Subsequence}
-
-Problem: Find LIS on $[10, 9, 2, 5, 3, 7, 101, 18]$.
-State: \texttt{dp[i]} is the LIS ending at index $i$.
-Initialize all to 1.
-\begin{enumerate}
-    \item $i=0$ (10): \texttt{dp[0]} = 1.
-    \item $i=1$ (9): No previous element is smaller. \texttt{dp[1]} = 1.
-    \item $i=2$ (2): \texttt{dp[2]} = 1.
-    \item $i=3$ (5): 2 is smaller. \texttt{dp[3]} = $\max(1, \texttt{dp[2]}+1) = 2$.
-    \item $i=4$ (3): 2 is smaller. \texttt{dp[4]} = 2.
-    \item $i=5$ (7): 2, 5, 3 are smaller. Max is from 5 or 3. \texttt{dp[5]} = 3.
-    \item $i=6$ (101): All are smaller. Max is from 7. \texttt{dp[6]} = 4.
-    \item $i=7$ (18): 10, 9, 2, 5, 3, 7 are smaller. Max is from 7. \texttt{dp[7]} = 4.
-\end{enumerate}
-
-The max value in \texttt{dp} is 4.
-
-\textbf{Example 4: Edit Distance (Two-Sequence)}
-Problem: Transform ``kitten'' to ``sitting''.
-State: \texttt{dp[i][j]} = min edits for prefix $i$ of word1 and prefix $j$ of word2.
-Trace of the full $7 \times 8$ table. If characters match, cost is \texttt{dp[i-1][j-1]}. Otherwise, $1 + \min(\text{insert}, \text{delete}, \text{replace})$.
-
-Walk-back path to reconstruct:
-\begin{enumerate}
-    \item Start at $(6,7)$ with value 3. Characters \texttt{'n'} vs \texttt{'g'} differ. Minimum neighbor is $(5,6)$ with value 2 (Replace \texttt{'n'} with \texttt{'g'}).
-    \item At $(5,6)$ with value 2. Characters \texttt{'e'} vs \texttt{'n'} differ. Minimum neighbor is $(4,5)$ with value 2 (Insert \texttt{'n'}).
-    \item At $(4,5)$ with value 2. Characters \texttt{'t'} vs \texttt{'i'} differ. Minimum neighbor is $(3,4)$ with value 1 (Replace \texttt{'t'} with \texttt{'i'}).
-    \item At $(3,4)$ with value 1. Characters \texttt{'t'} vs \texttt{'t'} match. Move diagonally to $(2,3)$ with value 1.
-    \item At $(2,3)$ with value 1. Characters \texttt{'i'} vs \texttt{'t'} differ. Minimum neighbor is $(2,2)$ with value 1 (Insert \texttt{'t'}).
-\end{enumerate}
-The final answer is 3 operations.
-
-\textbf{Example 4b: Longest Common Subsequence}
-Problem: Find the LCS of ``ABCB'' and ``BDCB''.
-State: \texttt{dp[i][j]} is the length of the LCS of the prefixes.
-Transition: If match, $1 + \texttt{dp[i-1][j-1]}$. If differ, $\max(\texttt{dp[i-1][j]}, \texttt{dp[i][j-1]})$.
-
-Reconstructing the answer (marked by path traversal):
-\begin{enumerate}
-    \item Start at bottom-right $(4,4)$ with value 3. Characters \texttt{'B'} and \texttt{'B'} match. Move diagonally up-left to $(3,3)$ with value 2. (Record \texttt{'B'}).
-    \item At $(3,3)$ with value 2 (\texttt{'C'} vs \texttt{'C'}), match. Move diagonally up-left to $(2,2)$ with value 1. (Record \texttt{'C'}).
-    \item At $(2,2)$ with value 1 (\texttt{'B'} vs \texttt{'D'}), mismatch. Maximum neighbor is left at $(2,1)$ with value 1. Move left to $(2,1)$.
-    \item At $(2,1)$ with value 1 (\texttt{'B'} vs \texttt{'B'}), match. Move diagonally up-left to $(1,0)$ with value 0. (Record \texttt{'B'}).
-\end{enumerate}
-The characters matched backwards are \texttt{'B'}, \texttt{'C'}, \texttt{'B'}. Reversing gives the longest common subsequence: ``BCB''.
-
-\textbf{Example 5: 0/1 Knapsack and Space Optimization}
-Problem: Capacity $W=5$. Items (Weight, Value): Item 1 (2, 3), Item 2 (3, 4), Item 3 (4, 8).
-Full 2D table trace \texttt{dp[item][w]}:
-
-The 1D version updates a single array. When adding Item 2 (weight 3, value 4), we iterate backwards:
-
-Counter-demonstration of FORWARD loop taking the same item twice:
-If we loop forwards for Item 1 (weight 2, value 3):
-\texttt{w=2}: \texttt{dp[2]} becomes 3.
-\texttt{w=4}: \texttt{dp[4]} checks \texttt{dp[4-2]} which is \texttt{dp[2]}. It sees 3, adds 3, and becomes 6! We just used Item 1 twice. Backwards looping prevents this.
-
-\textbf{Example 6: Equal Partition (Subset-Sum)}
-Problem: Array $[1, 5, 11, 5]$. Target sum is $(1+5+11+5)/2 = 11$.
-Boolean 1D table (True/False, iterating backwards):
-
-Since \texttt{dp[11]} is True, it is possible.
-
-\textbf{Example 6b: Palindromic Substrings (Interval DP)}
-Problem: Count palindromic substrings in ``aba''.
-State: \texttt{dp[L][R]} is true if substring from $L$ to $R$ is a palindrome.
-\begin{enumerate}
-    \item Base case: Length 1 (\texttt{L=R}) is always true (3 palindromes: \texttt{'a'}, \texttt{'b'}, \texttt{'a'}).
-    \item Length 2: ``ab'' and ``ba''. Both differ. \texttt{dp[0][1]} = False, \texttt{dp[1][2]} = False.
-    \item Length 3: ``aba''. Outer characters \texttt{str[0] == str[2]} (\texttt{'a'} == \texttt{'a'}). Inner string is \texttt{'b'} (length 1, where \texttt{dp[1][1]} is true). Thus \texttt{dp[0][2]} = True (1 palindrome: ``aba'').
-\end{enumerate}
-Total palindromes: 4.
-Table:
-
-\textbf{Example 7: Matrix Chain Multiplication (Interval DP)}
-Problem: Dimensions $[10, 30, 5, 60]$. Matrices $A(10 \times 30), B(30 \times 5), C(5 \times 60)$.
-Table \texttt{dp[L][R]} holds min cost. Filled by length.
-Length 1 (Base): \texttt{dp[0][0]=0, dp[1][1]=0, dp[2][2]=0}.
-Length 2:
-\texttt{dp[0][1]} (A*B): $10 \times 30 \times 5 = 1500$.
-\texttt{dp[1][2]} (B*C): $30 \times 5 \times 60 = 9000$.
-Length 3 (A*B*C):
-Split at 0: \texttt{dp[0][0] + dp[1][2]} + $10 \times 30 \times 60 = 0 + 9000 + 18000 = 27000$.
-Split at 1: \texttt{dp[0][1] + dp[2][2]} + $10 \times 5 \times 60 = 1500 + 0 + 3000 = 4500$.
-Min cost is 4500.
-Triangular table trace:
-
-\textbf{Example 8: Bitmask Shortest Tour}
-
-Problem: Visit nodes $0, 1, 2$. Distances: $0 \to 1 = 10, 0 \to 2 = 15, 1 \to 2 = 20$.
-State: \texttt{dp[mask][last\_visited]}. The mask \texttt{101} in binary (5 in decimal) means nodes 0 and 2 are visited.
-
+\begin{example}[The House Robber --- 1D Linear DP]
+Maximize money robbed from street values $A = [2, 7, 9, 3, 1]$ without robbing two adjacent houses.
 \begin{itemize}
-    \item Base: \texttt{dp[001][0] = 0}.
-    \item Mask 011 (nodes 0,1), last=1: \texttt{dp[011][1] = dp[001][0] + dist[0][1] = 10}.
-    \item Mask 101 (nodes 0,2), last=2: \texttt{dp[101][2] = dp[001][0] + dist[0][2] = 15}.
-    \item Mask 111 (all nodes):
-    \begin{itemize}
-        \item End at 1: \texttt{dp[111][1] = dp[101][2] + dist[2][1] = 15 + 20 = 35}.
-        \item End at 2: \texttt{dp[111][2] = dp[011][1] + dist[1][2] = 10 + 20 = 30}.
-    \end{itemize}
-    \item Answer is $\min(35, 30) = \mathbf{30}$.
+    \item \textbf{State:} \texttt{dp[i]} = maximum money robbed from houses $0 \dots i$.
+    \item \textbf{Transition:} $\texttt{dp[i]} = \max(\texttt{dp[i-1]},\; \texttt{dp[i-2]} + A[i])$.
 \end{itemize}
+\begin{enumerate}
+    \item Base cases: $\texttt{dp[0]} = 2$; $\texttt{dp[1]} = \max(2, 7) = 7$.
+    \item $i = 2$ ($A[2] = 9$): skip $= 7$, rob $= 2 + 9 = 11 \implies \texttt{dp[2]} = 11$.
+    \item $i = 3$ ($A[3] = 3$): skip $= 11$, rob $= 7 + 3 = 10 \implies \texttt{dp[3]} = 11$.
+    \item $i = 4$ ($A[4] = 1$): skip $= 11$, rob $= 11 + 1 = 12 \implies \texttt{dp[4]} = 12$.
+\end{enumerate}
+\textbf{Answer:} $\texttt{dp[4]} = \mathbf{12}$ (robbing houses $0, 2, 4$: $2 + 9 + 1 = 12$).
+\end{example}
 
-\textbf{Example 9: Solution Reconstruction via Parent Pointers}
-Problem: Min coins for amount 6 with $\{1, 3, 4\}$.
-We maintain a \texttt{parent} array storing the coin used.
+\begin{example}[Minimum Path Sum --- 2D Grid DP]
+Find the minimum path cost from top-left $(0, 0)$ to bottom-right $(1, 2)$ moving only right or down on the $2 \times 3$ cost grid below.
 
-To reconstruct 6: \texttt{parent[6] = 3}. (Amount becomes 6 - 3 = 3).
-To reconstruct 3: \texttt{parent[3] = 3}. (Amount becomes 3 - 3 = 0).
-Output: 3 + 3.
+\begin{center}
+\begingroup\small
+\begin{tabular}{cccc}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\multicolumn{4}{c}{\textcolor{primaryblue}{\textbf{Input Cost Grid}}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+ & $c=0$ & $c=1$ & $c=2$ \\
+$r=0$ & $1$ & $3$ & $1$ \\
+$r=1$ & $1$ & $5$ & $1$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabular}
+\hspace{1.4cm}
+\begin{tabular}{cccc}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\multicolumn{4}{c}{\textcolor{primaryblue}{\textbf{Filled DP Table \texttt{dp[r][c]}}}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+ & $c=0$ & $c=1$ & $c=2$ \\
+$r=0$ & \textbf{1} & \textbf{4} & \textbf{5} \\
+$r=1$ & $2$ & $7$ & \textbf{6} \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabular}
+\endgroup
+\end{center}
 
+\begin{enumerate}
+    \item Top row (only from left): $\texttt{dp[0][0]} = 1$, $\texttt{dp[0][1]} = 1 + 3 = 4$, $\texttt{dp[0][2]} = 4 + 1 = 5$.
+    \item Left column (only from above): $\texttt{dp[1][0]} = 1 + 1 = 2$.
+    \item Cell $(1, 1)$ (cost $5$): reads left ($2$) and above ($4$) $\implies \min(2, 4) + 5 = 7$.
+    \item Cell $(1, 2)$ (cost $1$): reads left ($7$) and above ($5$) $\implies \min(7, 5) + 1 = \mathbf{6}$.
+\end{enumerate}
+\textbf{Answer:} $\mathbf{6}$ along $(0,0) \to (0,1) \to (0,2) \to (1,2)$.
+\end{example}
+
+\begin{example}[Longest Increasing Subsequence --- $O(N^2)$ 1D DP]
+Find the length of the longest strictly increasing subsequence of $A = [10, 9, 2, 5, 3, 7, 101, 18]$.
+State: \texttt{dp[i]} = length of LIS ending exactly at index $i$ (initialized to $1$).
+\begin{enumerate}
+    \item $i = 0$ ($10$): $\texttt{dp[0]} = 1$. \quad $i = 1$ ($9$): none smaller $\implies \texttt{dp[1]} = 1$. \quad $i = 2$ ($2$): $\texttt{dp[2]} = 1$.
+    \item $i = 3$ ($5$): $2 < 5 \implies \texttt{dp[3]} = \texttt{dp[2]} + 1 = 2$.
+    \item $i = 4$ ($3$): $2 < 3 \implies \texttt{dp[4]} = \texttt{dp[2]} + 1 = 2$.
+    \item $i = 5$ ($7$): smaller predecessors are $2, 5, 3$ (max \texttt{dp} $= 2$) $\implies \texttt{dp[5]} = 3$.
+    \item $i = 6$ ($101$): all precede and are smaller (max \texttt{dp} $= 3$ at $7$) $\implies \texttt{dp[6]} = 4$.
+    \item $i = 7$ ($18$): smaller predecessors up to $7$ give max \texttt{dp} $= 3 \implies \texttt{dp[7]} = 4$.
+\end{enumerate}
+\textbf{Answer:} $\max(\texttt{dp}) = \mathbf{4}$ (e.g., $[2, 3, 7, 18]$).
+\end{example}
+
+\begin{example}[Edit Distance --- Transforming \texttt{"kitten"} to \texttt{"sitting"}]
+Find the minimum insertions, deletions, and replacements to turn $S_1 = \texttt{"kitten"}$ ($M = 6$) into $S_2 = \texttt{"sitting"}$ ($N = 7$). Figure~\ref{fig:dp-edit-distance} displays the exact $7 \times 8$ DP table and the optimal walk-back arrows.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    ecell/.style={draw=codeframe, fill=white, thick, minimum width=0.82cm, minimum height=0.48cm, font=\scriptsize\ttfamily, align=center},
+    hcell/.style={draw=primaryblue!55, fill=primaryblue!10, thick, minimum width=0.82cm, minimum height=0.48cm, font=\scriptsize\bfseries\ttfamily, text=primaryblue, align=center},
+    mcell/.style={draw=codegreen, fill=codegreen!16, line width=1.1pt, minimum width=0.82cm, minimum height=0.48cm, font=\scriptsize\bfseries\ttfamily, text=codegreen, align=center},
+    opcell/.style={draw=primaryblue, fill=primaryblue!14, line width=1.2pt, minimum width=0.82cm, minimum height=0.48cm, font=\scriptsize\bfseries\ttfamily, text=primaryblue, align=center},
+    zcell/.style={draw=primaryblue!70, fill=codebg, line width=1.1pt, minimum width=0.82cm, minimum height=0.48cm, font=\scriptsize\bfseries\ttfamily, text=primaryblue, align=center}
+]
+    % Outer container
+    \draw[draw=codeframe, fill=codebg, rounded corners=4pt, thick] (0.0, -2.35) rectangle (15.4, 4.75);
+    \node[anchor=north west, font=\bfseries\small, text=primaryblue] at (0.28, 4.52) {Edit Distance Matrix \& Walk-Back: $S_1 = \texttt{"kitten"}$ $\longrightarrow$ $S_2 = \texttt{"sitting"}$ (Min Cost $= 3$)};
+
+    % --- Left Panel: 7x8 Matrix (x: 0.25 to 9.85) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (0.25, -2.08) rectangle (9.85, 3.88);
+
+    % Column headers (j = 0..7)
+    \foreach \j/\ch in {0/$\emptyset$, 1/s, 2/i, 3/t, 4/t, 5/i, 6/n, 7/g} {
+        \node[hcell] at (1.98 + \j*1.02, 3.42) {\ch};
+    }
+    % Row headers (i = 0..6)
+    \foreach \i/\ch in {0/$\emptyset$, 1/k, 2/i, 3/t, 4/t, 5/e, 6/n} {
+        \node[hcell] at (0.94, 2.70 - \i*0.68) {\ch};
+    }
+
+    % Row 0: 0 1 2 3 4 5 6 7
+    \node[zcell] (E00) at (1.98, 2.70) {0};
+    \foreach \j in {1,...,7} { \node[ecell] at (1.98 + \j*1.02, 2.70) {\j}; }
+
+    % Row 1 (k): 1 1* 2 3 4 5 6 7
+    \node[ecell] at (1.98, 2.02) {1};
+    \node[opcell] (E11) at (3.00, 2.02) {1};
+    \foreach \j/\v in {2/2, 3/3, 4/4, 5/5, 6/6, 7/7} { \node[ecell] at (1.98 + \j*1.02, 2.02) {\v}; }
+
+    % Row 2 (i): 2 2 1* 2 3 4 5 6
+    \node[ecell] at (1.98, 1.34) {2};
+    \node[ecell] at (3.00, 1.34) {2};
+    \node[mcell] (E22) at (4.02, 1.34) {1};
+    \foreach \j/\v in {3/2, 4/3, 5/4, 6/5, 7/6} { \node[ecell] at (1.98 + \j*1.02, 1.34) {\v}; }
+
+    % Row 3 (t): 3 3 2 1* 2 3 4 5
+    \foreach \j/\v in {0/3, 1/3, 2/2} { \node[ecell] at (1.98 + \j*1.02, 0.66) {\v}; }
+    \node[mcell] (E33) at (5.04, 0.66) {1};
+    \foreach \j/\v in {4/2, 5/3, 6/4, 7/5} { \node[ecell] at (1.98 + \j*1.02, 0.66) {\v}; }
+
+    % Row 4 (t): 4 4 3 2 1* 2 3 4
+    \foreach \j/\v in {0/4, 1/4, 2/3, 3/2} { \node[ecell] at (1.98 + \j*1.02, -0.02) {\v}; }
+    \node[mcell] (E44) at (6.06, -0.02) {1};
+    \foreach \j/\v in {5/2, 6/3, 7/4} { \node[ecell] at (1.98 + \j*1.02, -0.02) {\v}; }
+
+    % Row 5 (e): 5 5 4 3 2 2* 3 4
+    \foreach \j/\v in {0/5, 1/5, 2/4, 3/3, 4/2} { \node[ecell] at (1.98 + \j*1.02, -0.70) {\v}; }
+    \node[opcell] (E55) at (7.08, -0.70) {2};
+    \node[ecell] at (8.10, -0.70) {3};
+    \node[ecell] at (9.12, -0.70) {4};
+
+    % Row 6 (n): 6 6 5 4 3 3 2* 3*
+    \foreach \j/\v in {0/6, 1/6, 2/5, 3/4, 4/3, 5/3} { \node[ecell] at (1.98 + \j*1.02, -1.38) {\v}; }
+    \node[mcell] (E66) at (8.10, -1.38) {2};
+    \node[opcell] (E67) at (9.12, -1.38) {3};
+
+    % Walk-back arrows from (6,7) -> (6,6) -> (5,5) -> (4,4) -> (3,3) -> (2,2) -> (1,1) -> (0,0)
+    \draw[-{Stealth[length=4pt]}, line width=1.3pt, primaryblue, shorten <=1pt, shorten >=1pt] (E67.west) -- (E66.east);
+    \draw[-{Stealth[length=4pt]}, line width=1.2pt, codegreen, shorten <=1pt, shorten >=1pt] (E66.north west) -- (E55.south east);
+    \draw[-{Stealth[length=4pt]}, line width=1.3pt, primaryblue, shorten <=1pt, shorten >=1pt] (E55.north west) -- (E44.south east);
+    \draw[-{Stealth[length=4pt]}, line width=1.2pt, codegreen, shorten <=1pt, shorten >=1pt] (E44.north west) -- (E33.south east);
+    \draw[-{Stealth[length=4pt]}, line width=1.2pt, codegreen, shorten <=1pt, shorten >=1pt] (E33.north west) -- (E22.south east);
+    \draw[-{Stealth[length=4pt]}, line width=1.2pt, codegreen, shorten <=1pt, shorten >=1pt] (E22.north west) -- (E11.south east);
+    \draw[-{Stealth[length=4pt]}, line width=1.3pt, primaryblue, shorten <=1pt, shorten >=1pt] (E11.north west) -- (E00.south east);
+
+    % --- Right Panel: Walk-back steps (x: 10.08 to 15.15) ---
+    \draw[draw=codeframe!80, fill=white, rounded corners=3pt, thick] (10.08, -2.08) rectangle (15.15, 3.88);
+    \node[anchor=north west, font=\small\bfseries, text=primaryblue] at (10.28, 3.65) {Optimal Walk-Back:};
+
+    \node[anchor=north west, font=\scriptsize, align=left, text width=4.72cm] at (10.28, 3.12) {
+        Start at $(6, 7) = \mathbf{3}$:\\[4pt]
+        \textbf{1.} $(6,7)\to(6,6)$: {\color{primaryblue}\textbf{Ins \texttt{'g'}}} ($+1$)\\
+        \textbf{2.} $(6,6)\to(5,5)$: {\color{codegreen}Match \texttt{'n'}} ($+0$)\\
+        \textbf{3.} $(5,5)\to(4,4)$: {\color{primaryblue}\textbf{Sub \texttt{'e'}$\to$\texttt{'i'}}} ($+1$)\\
+        \textbf{4.} $(4,4)\to(3,3)$: {\color{codegreen}Match \texttt{'t'}} ($+0$)\\
+        \textbf{5.} $(3,3)\to(2,2)$: {\color{codegreen}Match \texttt{'t'}} ($+0$)\\
+        \textbf{6.} $(2,2)\to(1,1)$: {\color{codegreen}Match \texttt{'i'}} ($+0$)\\
+        \textbf{7.} $(1,1)\to(0,0)$: {\color{primaryblue}\textbf{Sub \texttt{'k'}$\to$\texttt{'s'}}} ($+1$)
+    };
+
+    \draw[draw=codeframe!60] (10.28, -0.58) -- (14.94, -0.58);
+    \node[anchor=north west, font=\scriptsize, align=left, text width=4.72cm] at (10.28, -0.76) {
+        \textbf{Transformation (3 edits):}\\[2pt]
+        \texttt{kitten} $\to$ \texttt{sitten} $\to$\\
+        \texttt{sittin} $\to$ \texttt{sitting}
+    };
+\end{tikzpicture}
+\caption{Full $7 \times 8$ Edit Distance DP matrix for \texttt{"kitten"} $\to$ \texttt{"sitting"}. Blue cells indicate cost-$1$ edit operations; green cells indicate free character matches.}
+\label{fig:dp-edit-distance}
+\end{figure}
+
+Walking backward from $(6, 7)$ confirms the three operations: replace \texttt{'k'} with \texttt{'s'}, replace \texttt{'e'} with \texttt{'i'}, and insert \texttt{'g'} at the end ($\texttt{dp[6][7]} = \mathbf{3}$).
+\end{example}
+
+\begin{example}[Longest Common Subsequence --- Reconstruction on \texttt{"ABCB"} and \texttt{"BDCB"}]
+Find both the length and string for the LCS of $S_1 = \texttt{"ABCB"}$ and $S_2 = \texttt{"BDCB"}$.
+
+\begin{center}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabular}{cccccc}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{$S_1 \backslash S_2$}} & \textcolor{primaryblue}{\textbf{$\emptyset$}} & \textcolor{primaryblue}{\textbf{\texttt{B}}} & \textcolor{primaryblue}{\textbf{\texttt{D}}} & \textcolor{primaryblue}{\textbf{\texttt{C}}} & \textcolor{primaryblue}{\textbf{\texttt{B}}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+\textbf{$\emptyset$} & $0$ & $0$ & $0$ & $0$ & $0$ \\
+\textbf{\texttt{A}} & $0$ & $0$ & $0$ & $0$ & $0$ \\
+\textbf{\texttt{B}} & $0$ & \textbf{1} & $1$ & $1$ & $1$ \\
+\textbf{\texttt{C}} & $0$ & $1$ & $1$ & \textbf{2} & $2$ \\
+\textbf{\texttt{B}} & $0$ & $1$ & $1$ & $2$ & \textbf{3} \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabular}
+\endgroup
+\end{center}
+
+\begin{enumerate}
+    \item Start at $(4, 4) = 3$: \texttt{'B'} matches \texttt{'B'} $\implies$ record \texttt{'B'}, move diagonally to $(3, 3) = 2$.
+    \item At $(3, 3) = 2$: \texttt{'C'} matches \texttt{'C'} $\implies$ record \texttt{'C'}, move diagonally to $(2, 2) = 1$.
+    \item At $(2, 2) = 1$: \texttt{'B'} $\neq$ \texttt{'D'}. Compare up $(1, 2) = 0$ vs.\ left $(2, 1) = 1 \implies$ move left to $(2, 1) = 1$.
+    \item At $(2, 1) = 1$: \texttt{'B'} matches \texttt{'B'} $\implies$ record \texttt{'B'}, move diagonally to $(1, 0) = 0$ and stop.
+\end{enumerate}
+Reversing the collected characters \texttt{'B'}, \texttt{'C'}, \texttt{'B'} yields the LCS \texttt{"BCB"} (length $\mathbf{3}$).
+\end{example}
+
+\begin{example}[0/1 Knapsack --- Full 2D Table and 1D Backward Sweep]
+Capacity $W = 5$, items $(w, v)$: Item 1 $(2, 3)$, Item 2 $(3, 4)$, Item 3 $(4, 8)$.
+
+\begin{center}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabular}{lcccccc}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Items Considered}} & \textcolor{primaryblue}{\textbf{$w=0$}} & \textcolor{primaryblue}{\textbf{$w=1$}} & \textcolor{primaryblue}{\textbf{$w=2$}} & \textcolor{primaryblue}{\textbf{$w=3$}} & \textcolor{primaryblue}{\textbf{$w=4$}} & \textcolor{primaryblue}{\textbf{$w=5$}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Row $0$ (none) & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ \\
+Row $1$: Item 1 $(2, 3)$ & $0$ & $0$ & $3$ & $3$ & $3$ & $3$ \\
+Row $2$: Item 2 $(3, 4)$ & $0$ & $0$ & $3$ & $4$ & $4$ & $7$ \\
+Row $3$: Item 3 $(4, 8)$ & $0$ & $0$ & $3$ & $4$ & $8$ & \textbf{8} \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabular}
+\endgroup
+\end{center}
+
+\textbf{1D Backward Update (adding Item 2 $(3, 4)$ onto $[0, 0, 3, 3, 3, 3]$):}
+\begin{enumerate}
+    \item $w = 5$: $\max(\texttt{dp[5]},\; \texttt{dp[2]} + 4) = \max(3, 3 + 4) = 7$.
+    \item $w = 4$: $\max(\texttt{dp[4]},\; \texttt{dp[1]} + 4) = \max(3, 0 + 4) = 4$.
+    \item $w = 3$: $\max(\texttt{dp[3]},\; \texttt{dp[0]} + 4) = \max(3, 0 + 4) = 4$.
+\end{enumerate}
+Result: $[0, 0, 3, 4, 4, 7]$. Had we swept \textbf{forward} on Item 1 $(2, 3)$, $w = 2$ sets $\texttt{dp[2]} = 3$ and then $w = 4$ reads $\texttt{dp[2]} + 3 = 6$---illegally taking Item 1 twice! \textbf{Answer:} $\mathbf{8}$ (Item 3 alone).
+\end{example}
+
+\begin{example}[Equal Partition --- 1D Boolean Subset-Sum]
+Can $A = [1, 5, 11, 5]$ be partitioned into two subsets of equal sum? Total sum is $22$ (even), so target $= 22 / 2 = 11$. Sweeping backward across $w = 11 \dots x$:
+
+\begin{center}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabular}{lcccccccccccc}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{After Item}} & \textbf{0} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} & \textbf{10} & \textbf{11} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Init & T & F & F & F & F & F & F & F & F & F & F & F \\
+$x = 1$ & T & T & F & F & F & F & F & F & F & F & F & F \\
+$x = 5$ & T & T & F & F & F & T & T & F & F & F & F & F \\
+$x = 11$ & T & T & F & F & F & T & T & F & F & F & F & \textbf{T} \\
+$x = 5$ & T & T & F & F & F & T & T & F & F & F & T & \textbf{T} \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabular}
+\endgroup
+\end{center}
+Since $\texttt{dp[11]} = \text{True}$, a valid split exists: $\{11\}$ and $\{1, 5, 5\}$.
+\end{example}
+
+\begin{example}[Palindromic Substrings \& Matrix Chain Multiplication --- Interval DP]
+\textbf{Part A (Palindromic Substrings of \texttt{"aba"}):} State \texttt{dp[L][R]} is True if $S[L \dots R]$ is a palindrome.
+\begin{enumerate}
+    \item Length $1$: $\texttt{dp[0][0]} = \texttt{dp[1][1]} = \texttt{dp[2][2]} = \text{True}$ ($3$ palindromes: \texttt{'a'}, \texttt{'b'}, \texttt{'a'}).
+    \item Length $2$: \texttt{"ab"} and \texttt{"ba"} mismatch $\implies \texttt{dp[0][1]} = \texttt{dp[1][2]} = \text{False}$.
+    \item Length $3$: \texttt{"aba"} has $S[0] = S[2] = \texttt{'a'}$ and inner $\texttt{dp[1][1]} = \text{True} \implies \texttt{dp[0][2]} = \text{True}$.
+\end{enumerate}
+Total palindromic substrings $= \mathbf{4}$.
+
+\textbf{Part B (Matrix Chain Multiplication on \texttt{dims = [10, 30, 5, 60]}):} Matrices $A(10 \times 30)$, $B(30 \times 5)$, $C(5 \times 60)$.
+\begin{enumerate}
+    \item Length $1$: $\texttt{dp[0][0]} = \texttt{dp[1][1]} = \texttt{dp[2][2]} = 0$.
+    \item Length $2$: $\texttt{dp[0][1]} = 10 \times 30 \times 5 = 1500$; $\texttt{dp[1][2]} = 30 \times 5 \times 60 = 9000$.
+    \item Length $3$ ($[0, 2]$): split $k = 0$ gives $0 + 9000 + 10 \times 30 \times 60 = 27000$; split $k = 1$ gives $1500 + 0 + 10 \times 5 \times 60 = \mathbf{4500}$.
+\end{enumerate}
+
+\begin{center}
+\begingroup\small
+\begin{tabular}{cccc}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\multicolumn{4}{c}{\textcolor{primaryblue}{\textbf{Palindromes (\texttt{"aba"})}}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+$L \backslash R$ & $0$ & $1$ & $2$ \\
+$0$ & \textbf{T} & F & \textbf{T} \\
+$1$ & --- & \textbf{T} & F \\
+$2$ & --- & --- & \textbf{T} \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabular}
+\hspace{1.4cm}
+\begin{tabular}{cccc}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\multicolumn{4}{c}{\textcolor{primaryblue}{\textbf{Matrix Chain \texttt{dp[L][R]}}}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+$L \backslash R$ & $0$ & $1$ & $2$ \\
+$0$ & $0$ & $1500$ & \textbf{4500} \\
+$1$ & --- & $0$ & $9000$ \\
+$2$ & --- & --- & $0$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabular}
+\endgroup
+\end{center}
+\end{example}
+
+\begin{example}[Bitmask Shortest Tour \& Parent-Pointer Coin Reconstruction]
+\textbf{Part A (Bitmask Tour on $3$ nodes):} Symmetric distances $d(0,1) = 10,\; d(0,2) = 15,\; d(1,2) = 20$, starting at node $0$.
+\begin{enumerate}
+    \item Base: $\texttt{dp[001][0]} = 0$.
+    \item 2-node masks: $\texttt{dp[011][1]} = 0 + 10 = 10$; $\texttt{dp[101][2]} = 0 + 15 = 15$.
+    \item Full mask \texttt{111}: ending at $1$ gives $\texttt{dp[101][2]} + 20 = 35$; ending at $2$ gives $\texttt{dp[011][1]} + 20 = \mathbf{30}$.
+\end{enumerate}
+Minimum tour cost is $\min(35, 30) = \mathbf{30}$ (route $0 \to 1 \to 2$).
+
+\textbf{Part B (Parent-Pointer Reconstruction for Coins $\{1, 3, 4\}$, Target $6$):}
+\begin{center}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabular}{lccccccc}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Amount $a$}} & \textbf{0} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+\texttt{dp[a]} (min coins) & $0$ & $1$ & $2$ & $1$ & $1$ & $2$ & \textbf{2} \\
+\texttt{parent[a]} (last coin) & $-1$ & $1$ & $1$ & \textbf{3} & $4$ & $1$ & \textbf{3} \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabular}
+\endgroup
+\end{center}
+Walk backward from $a = 6$: emit $\texttt{parent[6]} = 3 \implies a = 6 - 3 = 3$; emit $\texttt{parent[3]} = 3 \implies a = 0$. Output: \texttt{[3, 3]}.
+\end{example}
+
+% ============================================================================
 \section{C++ Implementations}
+% ============================================================================
 
-In modern C++23, we prefer \texttt{std::vector} to raw arrays and use \texttt{constexpr} and \texttt{[[nodiscard]]} where it makes sense.
-We define \texttt{INF} carefully to avoid integer overflow if we accidentally add to it. We use \texttt{std::numeric\_limits<int>::max() / 2}. Functions allocating memory (like those returning or creating \texttt{std::vector}) omit \texttt{noexcept}.
+Every listing below is standalone C++23 (\texttt{-std=c++23 -Wall -Wextra} clean) with explicit boundary guards, safe sentinels (\texttt{INF = std::numeric\_limits<int>::max() / 2}), and \texttt{[[nodiscard]]} where appropriate.
 
-\subsection{Tabulated Table}
-A tabular approach iteratively fills an array. This explicitly builds the table so you can see all states.
+\subsection{Tabulated Fibonacci}
+Fills a 1D table bottom-up from $0$ to $n$. Uses \texttt{std::int64\_t} so values up to $f(92)$ stay overflow-free.
 
-\begin{lstlisting}[caption={Fibonacci with full tabular vector}]
-#include <vector>
+\begin{lstlisting}[caption={Fibonacci with bottom-up tabulation}]
 #include <cstddef>
+#include <cstdint>
+#include <vector>
 
-[[nodiscard]] int fib_tabulated(int n) {
-    if (n <= 1) return n;
-    // 1. Initialize full DP table
-    std::vector<int> dp(n + 1, 0);
-    // 2. Set base cases
-    dp[0] = 0;
+[[nodiscard]] std::int64_t fib_tabulated(int n) {
+    if (n <= 0) return 0;
+    if (n == 1) return 1;
+
+    std::vector<std::int64_t> dp(static_cast<std::size_t>(n) + 1, 0);
     dp[1] = 1;
-    
-    // 3. Evaluate strictly from smallest to largest
+
     for (std::size_t i = 2; i <= static_cast<std::size_t>(n); ++i) {
         dp[i] = dp[i - 1] + dp[i - 2];
     }
-    // 4. Return the answer state
-    return dp[n];
+    return dp[static_cast<std::size_t>(n)];
 }
 \end{lstlisting}
 
-\subsection{House Robber (O(1) Space)}
-Since we only ever need \texttt{dp[i-1]} and \texttt{dp[i-2]}, we can use rolling variables.
+\subsection{House Robber (\texorpdfstring{$O(1)$}{O(1)} Rolling Space)}
+Because each house depends only on the previous two totals, two local variables replace the entire \texttt{dp} vector.
 
-\begin{lstlisting}[caption={House Robber optimized to O(1) space}]
-#include <vector>
+\begin{lstlisting}[caption={House Robber optimized to $O(1)$ auxiliary space}]
 #include <algorithm>
 #include <cstddef>
+#include <span>
 
-[[nodiscard]] int houseRobber(const std::vector<int>& nums) noexcept {
+[[nodiscard]] int house_robber(std::span<const int> nums) noexcept {
     if (nums.empty()) return 0;
     if (nums.size() == 1) return nums[0];
-    
-    // 1. Initialize rolling variables
+
     int prev2 = nums[0];
     int prev1 = std::max(nums[0], nums[1]);
-    
-    // 2. Iterate from index 2 onwards
+
     for (std::size_t i = 2; i < nums.size(); ++i) {
-        int current = std::max(prev1, prev2 + nums[i]);
+        const int curr = std::max(prev1, prev2 + nums[i]);
         prev2 = prev1;
-        prev1 = current;
+        prev1 = curr;
     }
-    // 3. prev1 holds the final answer
     return prev1;
 }
 \end{lstlisting}
 
 \subsection{Grid Minimum Path Sum (2D and Rolling 1D)}
+Both versions guard against empty grids. In the 1D rolling version, \texttt{dp[j]} before updating represents the cell directly \emph{above}, while \texttt{dp[j - 1]} has already been updated for the current row (\emph{left}).
 
-\begin{lstlisting}[caption={Grid Minimum Path Sum in 2D and Space Optimized}]
-#include <vector>
+\begin{lstlisting}[caption={Grid Minimum Path Sum in 2D and rolling 1D space}]
 #include <algorithm>
 #include <cstddef>
+#include <vector>
 
-// 2D Version
-[[nodiscard]] int minPathSum2D(const std::vector<std::vector<int>>& grid) {
-    std::size_t m = grid.size();
-    std::size_t n = grid[0].size();
+[[nodiscard]] int min_path_sum_2d(const std::vector<std::vector<int>>& grid) {
+    if (grid.empty() || grid[0].empty()) return 0;
+    const std::size_t m = grid.size();
+    const std::size_t n = grid[0].size();
     std::vector<std::vector<int>> dp = grid;
-    
-    // 1. Initialize edges (base cases)
+
     for (std::size_t i = 1; i < m; ++i) dp[i][0] += dp[i - 1][0];
     for (std::size_t j = 1; j < n; ++j) dp[0][j] += dp[0][j - 1];
-    
-    // 2. Fill the table
+
     for (std::size_t i = 1; i < m; ++i) {
         for (std::size_t j = 1; j < n; ++j) {
             dp[i][j] += std::min(dp[i - 1][j], dp[i][j - 1]);
@@ -501,17 +1408,15 @@ Since we only ever need \texttt{dp[i-1]} and \texttt{dp[i-2]}, we can use rollin
     return dp[m - 1][n - 1];
 }
 
-// 1D Rolling Array Version
-[[nodiscard]] int minPathSum1D(const std::vector<std::vector<int>>& grid) {
-    std::size_t m = grid.size();
-    std::size_t n = grid[0].size();
+[[nodiscard]] int min_path_sum_1d(const std::vector<std::vector<int>>& grid) {
+    if (grid.empty() || grid[0].empty()) return 0;
+    const std::size_t m = grid.size();
+    const std::size_t n = grid[0].size();
     std::vector<int> dp(n, 0);
-    
-    // 1. Initialize first row
+
     dp[0] = grid[0][0];
     for (std::size_t j = 1; j < n; ++j) dp[j] = dp[j - 1] + grid[0][j];
-    
-    // 2. Roll through rows
+
     for (std::size_t i = 1; i < m; ++i) {
         dp[0] += grid[i][0];
         for (std::size_t j = 1; j < n; ++j) {
@@ -523,18 +1428,20 @@ Since we only ever need \texttt{dp[i-1]} and \texttt{dp[i-2]}, we can use rollin
 \end{lstlisting}
 
 \subsection{Longest Common Subsequence with String Reconstruction}
+Builds the full $(M + 1) \times (N + 1)$ table, walks backward from $(M, N)$ collecting matched characters, and calls C++20/23 \texttt{std::ranges::reverse}.
 
-\begin{lstlisting}[caption={LCS with string reconstruction}]
-#include <vector>
-#include <string>
+\begin{lstlisting}[caption={LCS length computation and string reconstruction}]
 #include <algorithm>
 #include <cstddef>
+#include <string>
+#include <string_view>
+#include <vector>
 
-[[nodiscard]] std::string getLCS(const std::string& s1, const std::string& s2) {
-    std::size_t m = s1.length(), n = s2.length();
+[[nodiscard]] std::string get_lcs(std::string_view s1, std::string_view s2) {
+    const std::size_t m = s1.size();
+    const std::size_t n = s2.size();
     std::vector<std::vector<int>> dp(m + 1, std::vector<int>(n + 1, 0));
-    
-    // 1. Fill the LCS length table
+
     for (std::size_t i = 1; i <= m; ++i) {
         for (std::size_t j = 1; j <= n; ++j) {
             if (s1[i - 1] == s2[j - 1]) {
@@ -544,50 +1451,48 @@ Since we only ever need \texttt{dp[i-1]} and \texttt{dp[i-2]}, we can use rollin
             }
         }
     }
-    
-    // 2. Reconstruct the string backwards
-    std::string lcs = "";
-    std::size_t i = m, j = n;
+
+    std::string lcs;
+    std::size_t i = m;
+    std::size_t j = n;
     while (i > 0 && j > 0) {
         if (s1[i - 1] == s2[j - 1]) {
-            lcs += s1[i - 1];
-            --i; --j;
+            lcs.push_back(s1[i - 1]);
+            --i;
+            --j;
         } else if (dp[i - 1][j] > dp[i][j - 1]) {
             --i;
         } else {
             --j;
         }
     }
-    
-    // 3. Reverse the reconstructed path
-    std::reverse(lcs.begin(), lcs.end());
+
+    std::ranges::reverse(lcs);
     return lcs;
 }
 \end{lstlisting}
 
-\subsection{Edit Distance}
-To find the minimum insertions, deletions, and replacements between two strings, we branch on matching characters or taking the minimum of three single-character operations.
+\subsection{Edit Distance (Levenshtein)}
+Initializes row $0$ and column $0$ to prefix lengths (all insertions or all deletions), then relaxes every interior cell over delete, insert, and replace.
 
 \begin{lstlisting}[caption={Edit Distance using a 2D DP table}]
-#include <vector>
-#include <string>
 #include <algorithm>
 #include <cstddef>
+#include <string_view>
+#include <vector>
 
-[[nodiscard]] int editDistance(const std::string& word1, const std::string& word2) {
-    std::size_t m = word1.length();
-    std::size_t n = word2.length();
+[[nodiscard]] int edit_distance(std::string_view word1, std::string_view word2) {
+    const std::size_t m = word1.size();
+    const std::size_t n = word2.size();
     std::vector<std::vector<int>> dp(m + 1, std::vector<int>(n + 1, 0));
 
-    // 1. Base cases: transforming to/from an empty string
     for (std::size_t i = 0; i <= m; ++i) dp[i][0] = static_cast<int>(i);
     for (std::size_t j = 0; j <= n; ++j) dp[0][j] = static_cast<int>(j);
 
-    // 2. Fill the table
     for (std::size_t i = 1; i <= m; ++i) {
         for (std::size_t j = 1; j <= n; ++j) {
             if (word1[i - 1] == word2[j - 1]) {
-                dp[i][j] = dp[i - 1][j - 1]; // Characters match
+                dp[i][j] = dp[i - 1][j - 1];
             } else {
                 dp[i][j] = 1 + std::min({
                     dp[i - 1][j],    // Delete from word1
@@ -601,21 +1506,21 @@ To find the minimum insertions, deletions, and replacements between two strings,
 }
 \end{lstlisting}
 
-\subsection{Longest Increasing Subsequence ($O(N^2)$)}
-At each index $i$, we inspect all preceding elements $j < i$ that are strictly smaller than $\text{nums}[i]$ and take the maximum extending length.
+\subsection{Longest Increasing Subsequence (\texorpdfstring{$O(N^2)$}{O(N^2)})}
+For each index $i$, scans every earlier index $j < i$ with \texttt{nums[j] < nums[i]} to extend the longest valid chain ending at $i$.
 
 \begin{lstlisting}[caption={Longest Increasing Subsequence in $O(N^2)$ time}]
-#include <vector>
 #include <algorithm>
 #include <cstddef>
+#include <span>
+#include <vector>
 
-[[nodiscard]] int lengthOfLIS(const std::vector<int>& nums) {
+[[nodiscard]] int length_of_lis(std::span<const int> nums) {
     if (nums.empty()) return 0;
-    std::size_t n = nums.size();
+    const std::size_t n = nums.size();
     std::vector<int> dp(n, 1);
     int max_len = 1;
 
-    // 1. Build LIS ending at index i
     for (std::size_t i = 1; i < n; ++i) {
         for (std::size_t j = 0; j < i; ++j) {
             if (nums[j] < nums[i]) {
@@ -628,77 +1533,85 @@ At each index $i$, we inspect all preceding elements $j < i$ that are strictly s
 }
 \end{lstlisting}
 
-\subsection{0/1 Knapsack (Value and Weight with 1D Backward Loop)}
-Iterating backwards through capacity ensures that each item is added at most once per configuration, preventing unintended duplicate reuse.
+\subsection{0/1 Knapsack and Boolean Subset-Sum (1D Backward Sweep)}
+Both listings guard negative capacities and invalid item weights, and sweep capacity \textbf{backward} so every item is taken at most once.
 
 \begin{lstlisting}[caption={0/1 Knapsack space-optimized to a 1D backward loop}]
-#include <vector>
 #include <algorithm>
 #include <cstddef>
+#include <span>
+#include <vector>
 
-[[nodiscard]] int knapsack01(int W, const std::vector<int>& weights, const std::vector<int>& values) {
-    std::size_t n = weights.size();
-    std::vector<int> dp(W + 1, 0);
+[[nodiscard]] int knapsack_01(
+    int capacity,
+    std::span<const int> weights,
+    std::span<const int> values
+) {
+    if (capacity <= 0 || weights.size() != values.size()) return 0;
 
-    // 1. Process each item sequentially
-    for (std::size_t i = 0; i < n; ++i) {
-        int weight = weights[i];
-        int value = values[i];
-        // 2. Iterate capacity backwards to use the item at most once
-        for (int w = W; w >= weight; --w) {
-            dp[w] = std::max(dp[w], dp[w - weight] + value);
+    std::vector<int> dp(static_cast<std::size_t>(capacity) + 1, 0);
+    for (std::size_t i = 0; i < weights.size(); ++i) {
+        const int wt = weights[i];
+        const int val = values[i];
+        if (wt <= 0 || wt > capacity) continue;
+
+        for (int w = capacity; w >= wt; --w) {
+            const auto idx = static_cast<std::size_t>(w);
+            const auto prev = static_cast<std::size_t>(w - wt);
+            dp[idx] = std::max(dp[idx], dp[prev] + val);
         }
     }
-    return dp[W];
+    return dp[static_cast<std::size_t>(capacity)];
 }
 \end{lstlisting}
 
-\subsection{Boolean Knapsack (Subset Sum)}
-
-\begin{lstlisting}[caption={Subset-Sum optimized to 1D boolean array}]
-#include <vector>
+\begin{lstlisting}[caption={Boolean Subset-Sum optimized to 1D backward loop}]
 #include <cstddef>
+#include <span>
+#include <vector>
 
-[[nodiscard]] bool canPartition(const std::vector<int>& nums, int target) {
-    // 1. Initialize boolean DP array
-    std::vector<bool> dp(target + 1, false);
+[[nodiscard]] bool can_reach_sum(std::span<const int> nums, int target) {
+    if (target < 0) return false;
+    if (target == 0) return true;
+
+    std::vector<bool> dp(static_cast<std::size_t>(target) + 1, false);
     dp[0] = true;
-    
-    // 2. Iterate items, updating capacity BACKWARDS
+
     for (int num : nums) {
+        if (num <= 0 || num > target) continue;
         for (int w = target; w >= num; --w) {
-            if (dp[w - num]) {
-                dp[w] = true;
+            if (dp[static_cast<std::size_t>(w - num)]) {
+                dp[static_cast<std::size_t>(w)] = true;
             }
         }
     }
-    return dp[target];
+    return dp[static_cast<std::size_t>(target)];
 }
 \end{lstlisting}
 
 \subsection{Matrix Chain Multiplication (Interval DP)}
+Guards \texttt{dims.size() < 2} to prevent unsigned underflow, then sweeps outer interval length from $2$ up to $n$.
 
-\begin{lstlisting}[caption={Matrix Chain Multiplication by length}]
-#include <vector>
+\begin{lstlisting}[caption={Matrix Chain Multiplication filled by interval length}]
 #include <algorithm>
-#include <limits>
 #include <cstddef>
+#include <limits>
+#include <span>
+#include <vector>
 
-constexpr int INF = std::numeric_limits<int>::max() / 2;
-
-[[nodiscard]] int matrixChain(const std::vector<int>& dims) {
-    std::size_t n = dims.size() - 1; // Number of matrices
+[[nodiscard]] int matrix_chain(std::span<const int> dims) {
+    if (dims.size() < 2) return 0;
+    constexpr int INF = std::numeric_limits<int>::max() / 2;
+    const std::size_t n = dims.size() - 1;
     std::vector<std::vector<int>> dp(n, std::vector<int>(n, 0));
-    
-    // 1. Iterate over interval lengths from 2 to n
+
     for (std::size_t length = 2; length <= n; ++length) {
         for (std::size_t left = 0; left <= n - length; ++left) {
-            std::size_t right = left + length - 1;
+            const std::size_t right = left + length - 1;
             dp[left][right] = INF;
-            // 2. Try every split point k
             for (std::size_t k = left; k < right; ++k) {
-                int cost = dp[left][k] + dp[k + 1][right] + 
-                           dims[left] * dims[k + 1] * dims[right + 1];
+                const int cost = dp[left][k] + dp[k + 1][right] +
+                                 dims[left] * dims[k + 1] * dims[right + 1];
                 dp[left][right] = std::min(dp[left][right], cost);
             }
         }
@@ -707,283 +1620,434 @@ constexpr int INF = std::numeric_limits<int>::max() / 2;
 }
 \end{lstlisting}
 
-\subsection{Bitmask DP (Shortest Tour / Assignment)}
-Using bitwise shifts and C++20 \texttt{std::popcount} to process sizes.
+\subsection{Bitmask DP (Shortest Hamiltonian Path)}
+Uses unsigned shifts (\texttt{std::size\_t\{1\} << n}), guards $n \le 1$, defines a local overflow-safe \texttt{INF}, and uses C++20 \texttt{std::popcount} to skip masks that already visited all nodes.
 
-\begin{lstlisting}[caption={Shortest tour on a small graph using bitmask DP}]
-#include <vector>
+\begin{lstlisting}[caption={Shortest Hamiltonian path from node 0 using bitmask DP}]
 #include <algorithm>
-#include <limits>
+#include <bit>
 #include <cstddef>
-#include <bit> // For std::popcount
+#include <limits>
+#include <vector>
 
-[[nodiscard]] int shortestTour(const std::vector<std::vector<int>>& dist) {
-    std::size_t n = dist.size();
-    std::size_t limit = 1 << n; // 2^N states
+[[nodiscard]] int shortest_tour(const std::vector<std::vector<int>>& dist) {
+    constexpr int INF = std::numeric_limits<int>::max() / 2;
+    const std::size_t n = dist.size();
+    if (n <= 1) return 0;
+
+    const std::size_t limit = std::size_t{1} << n;
     std::vector<std::vector<int>> dp(limit, std::vector<int>(n, INF));
-    
-    // 1. Base case: starting at node 0
-    dp[1][0] = 0;
-    
-    // 2. Iterate masks
+    dp[1][0] = 0; // Start at node 0 with mask 0b...001
+
     for (std::size_t mask = 1; mask < limit; ++mask) {
-        // Optional: std::popcount(mask) tells us how many nodes are visited
-        int visited_count = std::popcount(mask);
-        
+        if (static_cast<std::size_t>(std::popcount(mask)) == n) continue;
+
         for (std::size_t last = 0; last < n; ++last) {
-            if (!(mask & (1 << last))) continue; // node 'last' not in mask
-            
-            // 3. Try to transition to unvisited node 'next'
+            if ((mask & (std::size_t{1} << last)) == 0) continue;
+            if (dp[mask][last] == INF) continue;
+
             for (std::size_t nxt = 0; nxt < n; ++nxt) {
-                if (!(mask & (1 << nxt)) && dp[mask][last] != INF) {
-                    std::size_t newMask = mask | (1 << nxt);
-                    dp[newMask][nxt] = std::min(dp[newMask][nxt], 
-                                                dp[mask][last] + dist[last][nxt]);
-                }
+                if ((mask & (std::size_t{1} << nxt)) != 0) continue;
+                const std::size_t next_mask = mask | (std::size_t{1} << nxt);
+                dp[next_mask][nxt] = std::min(
+                    dp[next_mask][nxt],
+                    dp[mask][last] + dist[last][nxt]
+                );
             }
         }
     }
-    
-    // 4. Find the minimum tour ending at any node
-    int ans = INF;
+
+    int best = INF;
     for (std::size_t last = 1; last < n; ++last) {
-        ans = std::min(ans, dp[limit - 1][last]);
+        best = std::min(best, dp[limit - 1][last]);
     }
-    return ans;
+    return best;
 }
 \end{lstlisting}
 
-\subsection{Top-down Memoization with Lambda}
-We can capture a \texttt{std::vector} in a recursive lambda.
+\subsection{Top-Down Memoization with C++23 Deducing \texorpdfstring{\texttt{this}}{this}}
+Uses a C++23 explicit-object (\texttt{this auto\& self}) recursive lambda with explicit empty-grid guards and a local \texttt{INF} sentinel.
 
-\begin{lstlisting}[caption={Top-down memoization using a recursive lambda}]
-#include <vector>
+\begin{lstlisting}[caption={Top-down grid memoization using a C++23 recursive lambda}]
 #include <algorithm>
 #include <cstddef>
+#include <limits>
+#include <vector>
 
-[[nodiscard]] int minPathMemo(const std::vector<std::vector<int>>& grid) {
-    std::size_t m = grid.size(), n = grid[0].size();
+[[nodiscard]] int min_path_memo(const std::vector<std::vector<int>>& grid) {
+    if (grid.empty() || grid[0].empty()) return 0;
+    constexpr int INF = std::numeric_limits<int>::max() / 2;
+    const std::size_t m = grid.size();
+    const std::size_t n = grid[0].size();
     std::vector<std::vector<int>> memo(m, std::vector<int>(n, -1));
-    
-    // 1. Recursive lambda for DP
+
     auto dfs = [&](this auto& self, std::size_t i, std::size_t j) -> int {
         if (i == 0 && j == 0) return grid[0][0];
-        if (i >= m || j >= n) return INF; // Out of bounds safety
-        
-        // 2. Cache check
         if (memo[i][j] != -1) return memo[i][j];
-        
-        // 3. Transitions
-        int cost_up = (i > 0) ? self(i - 1, j) : INF;
-        int cost_left = (j > 0) ? self(i, j - 1) : INF;
-        
-        // 4. Store and return
+
+        const int cost_up = (i > 0) ? self(i - 1, j) : INF;
+        const int cost_left = (j > 0) ? self(i, j - 1) : INF;
+
         memo[i][j] = grid[i][j] + std::min(cost_up, cost_left);
         return memo[i][j];
     };
-    
+
     return dfs(m - 1, n - 1);
 }
 \end{lstlisting}
 
-\subsection{Coin Change (Counting Combinations and Path Reconstruction)}
-The loop order determines whether we count combinations (outer loop over coins) or permutations (outer loop over amounts). We also demonstrate path reconstruction using parent pointers.
+\subsection{Coin Change (Combinations Count and Parent Reconstruction)}
+Demonstrates both combination counting (outer loop over coins) and optimal coin reconstruction via explicit \texttt{parent} pointers, guarding negative amounts and non-positive coin values.
 
-\begin{lstlisting}[caption={Coin change: counting combinations and reconstructing optimal coins}]
-#include <vector>
-#include <algorithm>
+\begin{lstlisting}[caption={Coin Change: combination count and parent-pointer reconstruction}]
 #include <cstddef>
+#include <cstdint>
+#include <limits>
+#include <span>
+#include <vector>
 
-[[nodiscard]] int countCoinWays(const std::vector<int>& coins, int amount) {
-    // 1. Initialize combinations array
-    std::vector<int> dp(amount + 1, 0);
-    dp[0] = 1; // 1 way to make amount 0
+[[nodiscard]] std::int64_t count_coin_ways(std::span<const int> coins, int amount) {
+    if (amount < 0) return 0;
+    std::vector<std::int64_t> dp(static_cast<std::size_t>(amount) + 1, 0);
+    dp[0] = 1;
 
-    // 2. Outer loop over coins ensures combinations (not permutations)
     for (int coin : coins) {
+        if (coin <= 0 || coin > amount) continue;
         for (int a = coin; a <= amount; ++a) {
-            dp[a] += dp[a - coin];
+            const auto idx = static_cast<std::size_t>(a);
+            dp[idx] += dp[static_cast<std::size_t>(a - coin)];
         }
     }
-    return dp[amount];
+    return dp[static_cast<std::size_t>(amount)];
 }
 
-[[nodiscard]] std::vector<int> getMinCoins(const std::vector<int>& coins, int amount) {
-    std::vector<int> dp(amount + 1, INF);
-    std::vector<int> parent(amount + 1, -1);
+[[nodiscard]] std::vector<int> get_min_coins(std::span<const int> coins, int amount) {
+    if (amount <= 0) return {};
+    constexpr int INF = std::numeric_limits<int>::max() / 2;
+    const auto sz = static_cast<std::size_t>(amount) + 1;
+    std::vector<int> dp(sz, INF);
+    std::vector<int> parent(sz, -1);
     dp[0] = 0;
-    
-    // 1. Fill DP and parent pointers
-    for (int i = 1; i <= amount; ++i) {
+
+    for (int a = 1; a <= amount; ++a) {
+        const auto idx = static_cast<std::size_t>(a);
         for (int coin : coins) {
-            if (i >= coin && dp[i - coin] != INF) {
-                if (dp[i - coin] + 1 < dp[i]) {
-                    dp[i] = dp[i - coin] + 1;
-                    parent[i] = coin; // Store the coin used
-                }
+            if (coin <= 0 || coin > a) continue;
+            const auto prev = static_cast<std::size_t>(a - coin);
+            if (dp[prev] != INF && dp[prev] + 1 < dp[idx]) {
+                dp[idx] = dp[prev] + 1;
+                parent[idx] = coin;
             }
         }
     }
-    
-    // 2. Reconstruct path
+
     std::vector<int> result;
-    if (dp[amount] == INF) return result;
-    
+    if (dp[static_cast<std::size_t>(amount)] == INF) return result;
+
     int curr = amount;
     while (curr > 0) {
-        result.push_back(parent[curr]);
-        curr -= parent[curr];
+        const int chosen = parent[static_cast<std::size_t>(curr)];
+        result.push_back(chosen);
+        curr -= chosen;
     }
     return result;
 }
 \end{lstlisting}
 
+\begin{tryitbox}{Debug}{Spot Three Boundary Bugs in DP Code}{ex8}
+Explain the exact failure triggered by each unguarded line below:
+\begin{enumerate}
+    \item In \texttt{shortest\_tour}, omitting \texttt{if (n <= 1) return 0;} and running \texttt{for (last = 1; last < n; ++last)} on a $1$-city graph.
+    \item Writing \texttt{std::size\_t limit = 1 << n;} instead of \texttt{std::size\_t\{1\} << n;} when $n = 31$.
+    \item Calling \texttt{grid[0].size()} before checking \texttt{grid.empty()}.
+\end{enumerate}
+\end{tryitbox}
+
+% ============================================================================
 \section{Problem Pattern Recognition}
+% ============================================================================
 
-Recognizing a DP problem is a skill that requires three steps.
+Use this three-step filter to diagnose whether an unseen problem belongs to Dynamic Programming and which table shape to draw first.
 
-\subsection{Step 1: What does the problem ask?}
+\subsection*{Step 1: What Kind of Answer Does the Problem Ask For?}
 \begin{itemize}
-    \item The minimum or maximum cost.
-    \item The total number of ways (combinations/paths).
-    \item Is it possible? (a boolean yes/no).
-    \item If the problem asks you to list ALL configurations, it is NOT DP; use Backtracking.
+    \item \textbf{Minimum or maximum cost / profit / length} $\implies$ Optimization DP ($\min$ / $\max$ transitions).
+    \item \textbf{Total number of ways} (often modulo $10^9 + 7$) $\implies$ Counting DP (additive transitions).
+    \item \textbf{``Is it possible to reach target $T$?''} $\implies$ Boolean feasibility DP (\texttt{||} transitions).
+    \item \textbf{``List ALL valid solutions''} $\implies$ \textbf{Not DP}; use Backtracking (Module 05).
 \end{itemize}
 
-\subsection{Step 2: Key Constraint Analysis}
+\subsection*{Step 2: What Is the Key Constraint?}
 \begin{itemize}
-    \item Can you describe the current situation using just a few integer variables (indices)? 
-    \item If the state requires you to remember the entire path visited so far, it might be a factorial-time problem unless $N \le 20$ (which implies Bitmask DP).
+    \item Can you summarize the entire past with $1$--$3$ small integers (indices, remaining budget, last state)? If yes, DP applies.
+    \item Must you remember the exact set of visited items? Only feasible as \textbf{Bitmask DP} when $N \le 20$.
 \end{itemize}
 
-\subsection{Step 3: Threshold Checking}
-Check the input constraints. Memory arithmetic rules the state size:
+\subsection*{Step 3: Constraint Thresholds (Reading the Budget)}
 \begin{itemize}
-    \item $N \le 5000$: Likely an $O(N^2)$ 1D DP or 2D string DP. $5000 \times 5000$ integers is exactly 100 MB, which fits comfortably, but using rolling rows guarantees safety.
-    \item Knapsack capacity $W \times N \le 10^7$: Pseudo-polynomial time is acceptable.
-    \item $N \le 20$: Exponential time is small enough. Look for bitmask DP.
-    \item If both $N$ and the values are huge, it is probably not DP (or it is a Greedy problem).
+    \item $N \le 10^5$: Needs $O(N)$ 1D DP (or $O(N \log N)$ patience-sorting LIS).
+    \item $N \le 5{,}000$: Fits $O(N^2)$ 1D/2D DP; use rolling rows if $5{,}000 \times 5{,}000 \times 4\text{ B} = 100\text{ MB}$ approaches memory limits.
+    \item $N \cdot W \le 10^7$: Pseudo-polynomial Knapsack fits comfortably.
+    \item $N \le 500$: Permits $O(N^3)$ Interval DP.
+    \item $N \le 20$: Signals $O(N^2 \cdot 2^N)$ Bitmask DP.
 \end{itemize}
 
-\noindent
-\vspace{0.3cm}
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
-\hline
-\textbf{Keywords in the Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
-number of ways to reach & Counting paths or combinations & DP (add transitions) \\ \hline
-number of distinct subsequences / ways to form a string & Counting matches between characters & DP on Strings \\ \hline
-minimum cost/minimum number of ... & Shortest path in state graph & DP (min transition) \\ \hline
-minimum number of coins / steps to reach a target & Shortest path bounded by transitions & 1D Coin Change \\ \hline
-maximum value without exceeding capacity & Choose items with a budget & 0/1 Knapsack \\ \hline
-maximum sum of a non-adjacent selection & Pick separated elements & House Robber (1D) \\ \hline
-longest common subsequence & Match characters in order & Two-Sequence DP \\ \hline
-longest palindromic subsequence/substring & Palindrome check in a window & Interval DP (expand) \\ \hline
-minimum edits to transform & Insert/Delete/Replace ops & Edit Distance DP \\ \hline
-longest increasing subsequence & Pick elements strictly increasing & 1D DP (LIS) \\ \hline
-can we split into equal sum halves & Target sum is exactly half total & Subset-Sum (Knapsack) \\ \hline
-partition into k groups with minimum cost & Cost grouped by elements & DP (Index and K) \\ \hline
-minimum cost to merge/multiply a sequence & Cost depends on final merge point & Interval DP \\ \hline
-stock-style buy/sell with states (holding / not holding) & State transitions with multiple roles & State-Machine DP \\ \hline
-unbounded reuse of items & Take the same item infinitely & Unbounded Knapsack (forward loop) \\ \hline
-visit every node exactly once, $n \le 20$ & Traveling Salesman style & Bitmask DP \\ \hline
-count ways modulo & Answers get too large & DP (apply \% at adds) \\ \hline
-grid paths with obstacles & Navigating 2D array & 2D Grid DP \\ \hline
-no two adjacent chosen & House robber constraint & 1D DP \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\subsection*{Quick Reference: Keyword-to-Tool Mapping}
 
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.1cm}}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``Number of ways to reach\dots'' & Count paths or combinations & Counting DP ($+$ transitions) \\
+``Distinct subsequences / ways to form string'' & Count character alignments & Two-Sequence String DP \\
+``Minimum cost / minimum steps'' & Shortest path in a state DAG & Optimization DP ($\min$) \\
+``Minimum coins / unbounded change'' & Shortest path with reusable steps & 1D Coin Change (fwd loop) \\
+``Maximum value within capacity $W$'' & Budgeted take-once item selection & 0/1 Knapsack (bwd loop) \\
+``Unbounded reuse of items'' & Take any item infinitely often & Unbounded Knapsack (fwd) \\
+``Max sum, no two adjacent chosen'' & Skip/take with $1$-step cooldown & 1D Linear DP (House Robber) \\
+``Max/longest contiguous subarray'' & Unbroken segment ending at $i$ & ``Ends Exactly At'' (Kadane) \\
+``Longest common subsequence'' & Match characters in order & Two-Sequence DP (LCS) \\
+``Minimum edits to transform'' & Insert / delete / replace cost & Edit Distance 2D DP \\
+``Longest increasing subsequence'' & Strictly rising non-contiguous chain & 1D DP ($O(N^2)$) / Binary Search \\
+``Split into two equal-sum halves'' & Subset summing to $\text{total} / 2$ & Boolean Subset-Sum DP \\
+``Partition into $k$ groups, min cost'' & Group prefix $i$ into $j$ blocks & 2D DP (\texttt{dp[i][k]}) \\
+``Min cost to merge / multiply / burst'' & Cost depends on final split point & Interval DP (\texttt{dp[L][R]}) \\
+``Longest palindromic substring/subseq'' & Match outer ends around inner block & Interval DP (by length) \\
+``Buy/sell stock with cooldown / fee'' & Distinct modes per day (hold/cash) & State-Machine DP \\
+``Visit every node once ($N \le 20$)'' & Track visited subset + last node & Bitmask DP (\texttt{dp[mask][u]}) \\
+``Grid paths with obstacles'' & Blocked cells set to $0$ or $\infty$ & 2D Grid DP \\
+``Count ways modulo $10^9 + 7$'' & Prevent 64-bit count overflow & DP ($\%$ on every add) \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
+
+% ============================================================================
 \section{Summary and Complexity Reference}
+% ============================================================================
 
-\noindent
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
-\hline
-\textbf{Task / Operation} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
-1D DP (Stairs, Robber) & $O(N)$ & $O(N)$ & Only depends on index \\ \hline
-1D DP Space Optimized & $O(N)$ & $O(1)$ & Depends only on $k$ last states \\ \hline
-2D Grid DP & $O(N \times M)$ & $O(N \times M)$ & Moving in a matrix \\ \hline
-2D Space Optimized & $O(N \times M)$ & $O(\min(N, M))$ & State only reads previous row \\ \hline
-0/1 Knapsack & $O(N \times W)$ & $O(W)$ & Maximize value with weight limit \\ \hline
-Longest Common Subsequence & $O(N \times M)$ & $O(N \times M)$ & Subsequence match two strings \\ \hline
-Longest Increasing Subsequence & $O(N^2)$ & $O(N)$ & Standard LIS DP formulation \\ \hline
-Interval DP & $O(N^3)$ & $O(N^2)$ & Merging adjacent items \\ \hline
-Bitmask DP & $O(2^N \times N)$ & $O(2^N \times N)$ & Set of visited items, $N \le 20$ \\ \hline
-\end{tabularx}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.3cm} >{\centering\arraybackslash}p{2.1cm} >{\centering\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Task / Operation}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Space}} & \textcolor{primaryblue}{\textbf{Use When}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+1D Linear DP (Stairs, Robber) & $O(N)$ & $O(N)$ & Full history or reconstruction needed \\
+1D DP Space-Optimized & $O(N)$ & $O(1)$ & Transition reads only last $k$ cells \\
+2D Grid DP & $O(M \cdot N)$ & $O(M \cdot N)$ & Matrix path + path reconstruction \\
+2D Grid Space-Optimized & $O(M \cdot N)$ & $O(\min(M, N))$ & Value only; reads only previous row \\
+0/1 \& Unbounded Knapsack & $O(N \cdot W)$ & $O(W)$ & Budgeted selection ($N \cdot W \le 10^7$) \\
+LCS / Edit Distance & $O(M \cdot N)$ & $O(M \cdot N)$ & Two-string alignment ($O(\min)$ val only) \\
+Longest Increasing Subsequence & $O(N^2)$ & $O(N)$ & Standard DP (or $O(N \log N)$ with BS) \\
+Interval DP (Matrix Chain) & $O(N^3)$ & $O(N^2)$ & Merging adjacent ranges ($N \le 500$) \\
+Bitmask DP (Shortest Tour) & $O(2^N \cdot N^2)$ & $O(2^N \cdot N)$ & Visiting small sets ($N \le 20$) \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
+% ============================================================================
 \section{Glossary}
+% ============================================================================
 
-\subsection{Core Concepts}
+\subsection*{Core Concepts}
 \begin{itemize}
-    \item \textbf{0/1 Knapsack}: A constraint where an item can be chosen at most once. Represented by a backward capacity loop.
-    \item \textbf{Answer State}: The specific state holding the final answer to the overall problem.
-    \item \textbf{Backtracking}: A brute-force search that explores all valid permutations. Used when you must list all configurations.
-    \item \textbf{Base Case}: The smallest instances requiring no recursive calculation.
-    \item \textbf{Bitmask}: Using the binary representation of an integer to track subsets (for example, bit 2 is 1 if item 2 is used).
-    \item \textbf{Directed Acyclic Graph (DAG)}: A graph with one-way edges and no cycles. DP states form a DAG.
-    \item \textbf{Edit Distance (Levenshtein)}: Minimum operations (insert, delete, replace) to transform one sequence into another.
-    \item \textbf{Evaluation Order}: The sequence in which subproblems must be solved.
-    \item \textbf{Greedy}: An algorithm that picks the locally best choice. Often fails when future choices depend on the current one.
-    \item \textbf{Longest Common Subsequence (LCS)}: The longest shared sequence of characters between two strings in order.
-    \item \textbf{Longest Increasing Subsequence (LIS)}: The longest strictly increasing subsequence of an array.
-    \item \textbf{Memoization}: A top-down optimization caching recursive function results.
-    \item \textbf{Optimal Substructure}: A property where the optimal solution contains optimal solutions to its subproblems.
-    \item \textbf{Overlapping Subproblems}: When an algorithm solves the exact same subproblem repeatedly.
-    \item \textbf{Parent Pointer}: An array used during reconstruction to explicitly store the decision made at a state.
-    \item \textbf{Popcount}: The count of set bits (1s) in a binary representation.
-    \item \textbf{Pseudo-polynomial}: Complexity dependent on the numeric value of the input rather than just the number of items.
-    \item \textbf{Reconstruction}: Tracing backwards from the final state to deduce the exact sequence of optimal choices.
-    \item \textbf{Rolling Array}: A space optimization keeping only the required slice of previous computations.
-    \item \textbf{State}: A distinct subproblem configuration.
-    \item \textbf{Subsequence vs Substring}: A subsequence is derived by deleting elements; a substring must be contiguous.
-    \item \textbf{Tabulation}: A bottom-up technique using iterative loops to fill a table.
-    \item \textbf{Topological Order}: An ordering of DAG nodes such that every node appears after all its dependencies.
-    \item \textbf{Transition (Recurrence)}: The rule to calculate a state from smaller states.
-    \item \textbf{Unbounded Knapsack}: Items can be chosen infinitely many times. Represented by a forward capacity loop.
+    \item \textbf{0/1 Knapsack:} Budgeted item selection where each item is used at most once (backward 1D capacity loop).
+    \item \textbf{Answer State:} The specific cell (or aggregation over cells) holding the overall problem's final answer.
+    \item \textbf{Backtracking:} Exhaustive DFS search that explores and undoes choices; required when listing all solutions.
+    \item \textbf{Base Case:} Smallest boundary states initialized directly without transitions.
+    \item \textbf{Bitmask:} Integer whose binary bits encode membership in a subset ($N \le 20$).
+    \item \textbf{Directed Acyclic Graph (DAG):} Graph with directed edges and zero cycles; every valid DP forms a DAG.
+    \item \textbf{Edit Distance (Levenshtein):} Minimum insertions, deletions, and replacements transforming one string into another.
+    \item \textbf{Evaluation Order:} Loop order (topological sort) guaranteeing dependencies are computed before being read.
+    \item \textbf{Greedy:} Making one irreversible locally optimal choice per step; fails without a provable exchange property.
+    \item \textbf{Longest Common Subsequence (LCS):} Longest sequence of characters appearing in the same relative order in two strings.
+    \item \textbf{Longest Increasing Subsequence (LIS):} Longest strictly increasing subsequence of a numeric sequence.
+    \item \textbf{Memoization:} Top-down recursion augmented with a cache storing solved subproblem answers.
+    \item \textbf{Optimal Substructure:} Property that an optimal solution is composed of optimal solutions to smaller subproblems.
+    \item \textbf{Overlapping Subproblems:} Property that the same subproblem parameters recur repeatedly in a recursive tree.
+    \item \textbf{Parent Pointer:} Auxiliary array recording the decision taken at each state for fast solution reconstruction.
+    \item \textbf{Popcount:} Number of \texttt{1}-bits set in an integer's binary representation (\texttt{std::popcount}).
+    \item \textbf{Pseudo-Polynomial:} Runtime polynomial in a numeric parameter's \emph{value} (like capacity $W$) rather than its bit length.
+    \item \textbf{Reconstruction:} Walking backward through the DP table or parent pointers to emit the actual optimal choices.
+    \item \textbf{Rolling Array:} Space optimization keeping only the active frontier slice of the DP table.
+    \item \textbf{State:} Minimal tuple of parameters uniquely identifying a subproblem.
+    \item \textbf{Subsequence vs.\ Substring:} A subsequence may delete elements (order preserved); a substring must be contiguous.
+    \item \textbf{Tabulation:} Bottom-up iterative filling of a DP table from base cases upward.
+    \item \textbf{Topological Order:} Linear ordering of DAG nodes so every node follows all of its prerequisites.
+    \item \textbf{Transition (Recurrence):} Formula computing a state's value from strictly smaller prerequisite states.
+    \item \textbf{Unbounded Knapsack:} Budgeted item selection permitting unlimited reuse of each item (forward 1D capacity loop).
 \end{itemize}
 
-\subsection{Mathematical Symbols}
+\subsection*{Mathematical Symbols}
 \begin{itemize}
-    \item \textbf{$2^N$}: Exponential growth. Characteristic of subsets and Bitmask DP limits.
-    \item \textbf{$\le$}: Less than or equal to.
-    \item \textbf{$N!$}: Factorial growth. Characteristic of permutation generation.
-    \item \textbf{$O(N)$ (Big-O)}: Describes the upper bound of an algorithm's complexity.
-    \item \textbf{$\max / \min$}: Functions returning the largest or smallest value.
-    \item \textbf{$\min_k$}: The minimum over all possible values of variable $k$. Used in Interval DP.
-    \item \textbf{\texttt{dp[i][j]}}: Array access notation for the stored answer of a 2D state.
-    \item \textbf{$\implies$}: Logical implication (if A is true, then B is true).
-    \item \textbf{$\sum$}: Summation of a sequence of values.
-    \item \textbf{INF (Sentinel)}: A large constant representing infinity.
-    \item \textbf{$\%$ MOD}: Modulo arithmetic keeping values within bounds.
-    \item \textbf{\texttt{<<}, \texttt{\&}, \texttt{|}}: Bitwise left-shift, AND, and OR operations used for manipulating Bitmasks.
+    \item \texttt{dp[i]}, \texttt{dp[i][j]}: Stored optimal value for a 1D or 2D DP state.
+    \item $\infty$ (\texttt{INF}): Overflow-safe sentinel (\texttt{INT\_MAX / 2}) marking unreachable minimization states.
+    \item $\max / \min,\; \min_k$: Maximum/minimum across candidate choices or split points $k$.
+    \item $2^N,\; N!$: Exponential subset count (Bitmask DP) vs.\ factorial permutation count (brute-force TSP).
+    \item $\texttt{<<},\; \texttt{\&},\; \texttt{|}$: Bitwise left-shift, AND, and OR used to test and set bits in a bitmask.
+    \item $\% \text{ MOD}$: Modular reduction applied at every addition/subtraction in counting DP.
 \end{itemize}
 
+% ============================================================================
 \section{Further Reading}
+% ============================================================================
 
 \subsection*{Free Online Resources (Start Here)}
 \begin{itemize}
-    \item \textbf{cp-algorithms.com}: Dynamic Programming pages (Highly recommended free resource for exact code templates).
-    \item \textbf{Project Euler}: Practice problems. Problem 15 (Lattice Paths), Problem 31 (Coin Sums), Problems 18 and 67 (Maximum path sum in a triangle), Problems 76 and 77 (Partitions).
-    \item \textbf{Art of Problem Solving (AoPS) Wiki}: Excellent theoretical breakdown of combinations and path counting.
-    \item \textbf{Brilliant.org}: Visual guides on dynamic programming transitions.
-    \item \textbf{Wikipedia}: Articles on ``Dynamic Programming'', ``Knapsack Problem'', ``Longest Common Subsequence'', and ``Levenshtein Distance''.
+    \item \textbf{CP-Algorithms: Dynamic Programming} (\url{https://cp-algorithms.com}) --- Clear derivations and C++ templates for Knapsack, Bitmask DP, and DP optimizations.
+    \item \textbf{Project Euler} (\url{https://projecteuler.net}) --- Problem 15 (Lattice Paths), Problem 31 (Coin Sums), Problems 18 \& 67 (Maximum Path Sum in a Triangle), and Problems 76 \& 77 (Counting Summations).
+    \item \textbf{Art of Problem Solving (AoPS) Wiki} (\url{https://artofproblemsolving.com/wiki}) --- Deep counting intuition for recurrences, lattice paths, and partitions.
+    \item \textbf{Brilliant.org} (\url{https://brilliant.org}) --- Interactive visual walkthroughs of DP state tables and transitions.
 \end{itemize}
 
 \subsection*{Books (When You Are Ready to Go Deeper)}
 \begin{itemize}
-    \item \textit{The Algorithm Design Manual} by Steven Skiena: Intermediate. Great real-world intuition for DP.
-    \item \textit{Competitive Programming} by Steven Halim: Intermediate. Actionable guidance for translating math constraints into code.
-    \item \textit{Algorithms} by Dasgupta, Papadimitriou, and Vazirani: Friendly intermediate math textbook with excellent DP visual examples.
-    \item \textit{Introduction to Algorithms} (CLRS): Advanced. Detailed proofs for optimal substructure properties.
+    \item S.\ Skiena, \emph{The Algorithm Design Manual} --- Practical chapter on discovering DP states and debugging recurrences. (Intermediate)
+    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- Concise catalog of classic DP patterns and constraint-budget heuristics. (Intermediate)
+    \item S.\ Dasgupta, C.\ Papadimitriou, and U.\ Vazirani, \emph{Algorithms} --- Chapter 6 frames DP cleanly through DAG shortest paths. (Intermediate)
+    \item T.\ H.\ Cormen et al., \emph{Introduction to Algorithms (CLRS)} --- Formal proofs of optimal substructure and Matrix Chain Multiplication. (Advanced)
 \end{itemize}
 
-\section*{Version History}
-\addcontentsline{toc}{section}{Version History}
+% ============================================================================
+\section*{Practice Sheet: Mixed Pen-and-Paper Drills}
+\addcontentsline{toc}{section}{Practice Sheet: Mixed Pen-and-Paper Drills}
+\markboth{Practice Sheet: Mixed Pen-and-Paper Drills}{}
+% ============================================================================
 
 \noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Date} & \textbf{Change} \\ \hline
-2026-10-03 & Document created. \\ \hline
+Solve these six mixed cold-start drills on scratch paper \emph{without} looking back at the chapter. Each exercise targets a distinct thinking mode with zero section hints.
+
+\begin{tryitbox}{Triage}{Choosing the DP State for Unseen Problems}{ex9}
+For each unseen problem below, define the minimal DP state (and complexity)---or state why DP is the wrong tool:
+\begin{enumerate}
+    \item Paint $N \le 10^5$ houses in a row using Red, Green, or Blue (given per-house color costs) so no two adjacent houses share a color; minimize total cost.
+    \item Find the minimum number of cuts to partition a string of length $N \le 500$ into palindromic pieces.
+    \item Print \textbf{every} simple Hamiltonian path in a graph with $N = 12$ vertices.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Trace}{Rolling 1D Grid Min Path Sum}{ex10}
+Trace \texttt{min\_path\_sum\_1d} row by row on the $3 \times 3$ grid \texttt{[[2, 1, 3], [6, 5, 4], [7, 8, 9]]}. Write the 3-element \texttt{dp} vector after each row, and explain in one sentence why column $j$ sweeps \textbf{left-to-right} here (unlike 0/1 Knapsack).
+\end{tryitbox}
+
+\begin{tryitbox}{Debug}{Swapped Loops in Coin Combinations}{ex11}
+A programmer wants the number of \textbf{distinct combinations} of coins $\{1, 2, 5\}$ summing to $4$, and writes \texttt{for (int a = 1; a <= 4; ++a) for (int c : coins) if (a >= c) dp[a] += dp[a - c];}. What number does this return vs.\ the true combination count, and which exact coin sequences get overcounted?
+\end{tryitbox}
+
+\begin{tryitbox}{Twist}{House Robber on a Circle}{ex12}
+Suppose the street in House Robber is a \textbf{circle}, so House $0$ and House $n - 1$ are adjacent and cannot both be robbed. How can you solve this in $O(N)$ time and $O(1)$ space using two calls to linear \texttt{house\_robber}? Verify your rule on \texttt{[2, 3, 2]} and \texttt{[1, 2, 3, 1]}.
+\end{tryitbox}
+
+\begin{tryitbox}{Edge Cases}{Empty, Impossible, and Single-Element Inputs}{ex13}
+State the exact expected output for each call and the runtime bug that occurs if the guard is omitted:
+\begin{enumerate}
+    \item \texttt{can\_reach\_sum(\{\}, 0)} (empty array, target $0$).
+    \item \texttt{get\_min\_coins(\{2, 4\}, 5)} (unreachable odd target).
+    \item \texttt{matrix\_chain(\{10, 20\})} (one matrix) and \texttt{matrix\_chain(\{\})} (empty input).
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Derive}{Why Bitmask TSP Takes $O(2^N \cdot N^2)$ and Stops at $N \le 20$}{ex14}
+Count the number of states $(\texttt{mask}, \texttt{last})$ and inner transitions per state in \texttt{shortest\_tour} to derive both its time and space complexity. Then estimate the rough operation count for $N = 15$, $N = 20$, and $N = 25$ to explain why $N \le 20$ is the practical cutoff.
+\end{tryitbox}
+
+% ============================================================================
+\section*{Solutions to Pen-and-Paper Exercises}
+\addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
+\markboth{Solutions to Pen-and-Paper Exercises}{}
+% ============================================================================
+
+\begin{enumerate}[itemsep=2pt]
+    \item \label{sol:ex1}\textbf{Exercise 1 (Derive) --- Discovering the Frog-Jump State:}
+    State: \texttt{dp[i]} = min energy to reach stone $i$. Base: $\texttt{dp[0]} = 0$, $\texttt{dp[1]} = |h_1 - h_0|$. Transition: $\texttt{dp[i]} = \min(\texttt{dp[i-1]} + |h_i - h_{i-1}|,\; \texttt{dp[i-2]} + |h_i - h_{i-2}|)$.
+    For \texttt{[10, 30, 40, 20]}: $\texttt{dp[0]} = 0$, $\texttt{dp[1]} = 20$, $\texttt{dp[2]} = \min(20 + 10,\; 0 + 30) = 30$, $\texttt{dp[3]} = \min(30 + 20,\; 20 + 10) = \mathbf{30}$.
+    \trapnote{Forgetting the base case \texttt{dp[1]} and reading \texttt{dp[-1]} out of bounds at $i = 1$.}
+
+    \item \label{sol:ex2}\textbf{Exercise 2 (Trace) --- Coin Change \texttt{\{1, 3, 4\}} for Target $6$:}
+    $\texttt{dp[0..6]} = [0, 1, 2, 1, 1, 2, \mathbf{2}]$; $\texttt{parent[0..6]} = [-1, 1, 1, 3, 4, 1, 3]$. Walk-back from $6$: \texttt{parent[6] = 3} ($6 \to 3$), \texttt{parent[3] = 3} ($3 \to 0$) $\implies \mathbf{[3, 3]}$ ($2$ coins). Greedy picks $4$ first and gets stuck paying $4 + 1 + 1$ ($3$ coins).
+    \trapnote{Assuming greedy largest-coin-first works for arbitrary coin sets---it only works for canonical systems like US currency.}
+
+    \item \label{sol:ex3}\textbf{Exercise 3 (Twist) --- Maximum Product Subarray:}
+    On \texttt{[-2, 3, -4]}, tracking only \texttt{max\_end} drops $-2 \times 3 = -6$ in favor of $3$, missing $(-6) \times (-4) = \mathbf{+24}$! Fix by tracking both \texttt{max\_end[i]} and \texttt{min\_end[i]} at every index, updating both from $\{x,\; \texttt{max\_end} \cdot x,\; \texttt{min\_end} \cdot x\}$.
+    \trapnote{Overwriting \texttt{max\_end} before using its old value to compute \texttt{min\_end}---save the previous \texttt{max\_end} in a temporary variable first.}
+
+    \item \label{sol:ex4}\textbf{Exercise 4 (Trace) --- Edit Distance \texttt{"cat"} $\to$ \texttt{"cut"}:}
+    Table rows ($i = 0 \dots 3$, cols $\emptyset, \texttt{c}, \texttt{u}, \texttt{t}$): Row $0 = [0, 1, 2, 3]$; Row $1 (\texttt{c}) = [1, 0, 1, 2]$; Row $2 (\texttt{a}) = [2, 1, 1, 2]$; Row $3 (\texttt{t}) = [3, 2, 2, \mathbf{1}]$. Walk-back: $(3,3) = 1$ [match \texttt{'t'}] $\to (2,2) = 1$ [\textbf{replace \texttt{'a'}$\to$\texttt{'u'}}] $\to (1,1) = 0$ [match \texttt{'c'}] $\to (0,0) = 0$. Total $= \mathbf{1}$ edit.
+    \trapnote{Forgetting the empty-prefix row $0$ and column $0$, making the table $3 \times 3$ instead of $4 \times 4$ and dropping insertion/deletion base cases.}
+
+    \item \label{sol:ex5}\textbf{Exercise 5 (Trace) --- 4-Item 1D Knapsack Forward vs.\ Backward:}
+    Items $(1, 2), (2, 5), (3, 6), (4, 7)$, $W = 5$:
+    \textbf{(1) Backward (0/1):} after $(1,2)$: $[0,2,2,2,2,2]$; after $(2,5)$: $[0,2,5,7,7,7]$; after $(3,6)$: $[0,2,5,7,8,11]$; after $(4,7)$: $[0,2,5,7,8,\mathbf{11}]$ (items $(2,5) + (3,6)$).
+    \textbf{(2) Forward (Unbounded):} after $(1,2)$: $[0,2,4,6,8,10]$; after $(2,5)$: $[0,2,5,7,10,12]$; after $(3,6)$ and $(4,7)$: $[0,2,5,7,10,\mathbf{12}]$.
+    Forward beats backward at $w = 5$ ($12$ vs.\ $11$) because it illegally reuses $(2, 5)$ \emph{twice} plus $(1, 2)$.
+    \trapnote{Sweeping forward on 0/1 Knapsack and mistaking the inflated unbounded score for a valid take-once solution.}
+
+    \item \label{sol:ex6}\textbf{Exercise 6 (Debug) --- Wrong Loop Order in Interval DP:}
+    On $n = 3$, the loop visits $(0, 1)$ (OK) and then immediately visits $\mathbf{(0, 2)}$. Evaluating split $k = 0$ reads $\mathbf{\texttt{dp[1][2]}}$, which has not been computed yet (still $0$), corrupting the minimization!
+    \trapnote{Testing only on $n = 2$ (where $(0, 1)$ has no interior splits) and missing the dependency violation that first appears at length $3$.}
+
+    \item \label{sol:ex7}\textbf{Exercise 7 (Edge Cases) --- Sentinel Overflow \& Negative Modulo:}
+    \textbf{(1)} \texttt{INT\_MAX + 5} causes signed integer overflow (UB; wraps to $-2{,}147{,}483{,}644$, fooling \texttt{std::min} into picking an impossible state!). Always use \texttt{INF = max() / 2} and skip states with \texttt{dp == INF}.
+    \textbf{(2)} \texttt{(3 - 5) \% 7} evaluates to $\mathbf{-2}$ in C++. Fix with \texttt{((a - b) \% MOD + MOD) \% MOD}.
+    \trapnote{Using \texttt{INT\_MAX} as \texttt{INF} or assuming C++'s \texttt{\%} operator always returns a non-negative remainder like Python.}
+
+    \item \label{sol:ex8}\textbf{Exercise 8 (Debug) --- Three Boundary Bugs in DP Code:}
+    \textbf{(1)} For $n = 1$, \texttt{for (last = 1; last < 1; ++last)} executes zero times, returning \texttt{INF} instead of $0$.
+    \textbf{(2)} Literal \texttt{1} is signed 32-bit \texttt{int}; \texttt{1 << 31} is signed overflow UB (and negative if cast to \texttt{std::size\_t}!). Use \texttt{std::size\_t\{1\} << n}.
+    \textbf{(3)} On an empty grid, \texttt{grid[0]} dereferences out-of-bounds memory (crash / UB).
+    \trapnote{Assuming $n \ge 2$ or non-empty grids without guarding trivial edge inputs at function entry.}
+
+    \item \label{sol:ex9}\textbf{Exercise 9 (Triage) --- Choosing the DP State for Unseen Problems:}
+    \textbf{(1)} 1D State-Machine DP: \texttt{dp[i][c]} = min cost to paint houses $0 \dots i$ ending with color $c \in \{0, 1, 2\}$ ($O(N)$ time, $O(1)$ rolling space).
+    \textbf{(2)} Interval + 1D DP: precompute \texttt{is\_pal[L][R]} in $O(N^2)$, then \texttt{cuts[i]} = min cuts for prefix $0 \dots i$ ($O(N^2)$ time).
+    \textbf{(3)} \textbf{Backtracking} (not DP): must enumerate \emph{all} paths, and $N = 12$ fits pruned DFS.
+    \trapnote{Trying to force DP when a problem asks to \emph{print every solution} instead of counting or optimizing.}
+
+    \item \label{sol:ex10}\textbf{Exercise 10 (Trace) --- Rolling 1D Grid Min Path Sum:}
+    Row $0$: $[2, 3, 6]$; Row $1$: $\texttt{dp[0]} = 8$, $\texttt{dp[1]} = 5 + \min(3, 8) = 8$, $\texttt{dp[2]} = 4 + \min(6, 8) = 10 \implies [8, 8, 10]$; Row $2$: $\texttt{dp[0]} = 15$, $\texttt{dp[1]} = 8 + \min(8, 15) = 16$, $\texttt{dp[2]} = 9 + \min(10, 16) = 19 \implies [15, 16, \mathbf{19}]$.
+    Column $j$ sweeps \textbf{left-to-right} because \texttt{dp[j - 1]} must hold the \emph{current} row (left neighbor) while \texttt{dp[j]} still holds the \emph{previous} row (top neighbor).
+    \trapnote{Blindly copying 0/1 Knapsack's backward loop into a 2D grid, which reads stale previous-row values for the left neighbor.}
+
+    \item \label{sol:ex11}\textbf{Exercise 11 (Debug) --- Swapped Loops in Coin Combinations:}
+    True combinations for $4$ using $\{1, 2, 5\}$: $\mathbf{3}$ (\texttt{1+1+1+1}, \texttt{1+1+2}, \texttt{2+2}). Outer-amount loop counts \textbf{permutations}: \texttt{dp = [1, 1, 2, 3, 5]}, returning $\mathbf{5}$ because \texttt{1+1+2}, \texttt{1+2+1}, and \texttt{2+1+1} are counted as $3$ separate sequences!
+    \trapnote{Writing the coin loop inside the amount loop when order is supposed to be ignored.}
+
+    \item \label{sol:ex12}\textbf{Exercise 12 (Twist) --- House Robber on a Circle:}
+    If $n = 1$, return \texttt{nums[0]}. Otherwise, house $0$ and house $n-1$ cannot both be picked, so return the larger of \texttt{house\_robber} on \texttt{nums[0..n-2]} and on \texttt{nums[1..n-1]}.
+    Checks: for \texttt{[2, 3, 2]}, $\max(\text{rob}([2,3]),\; \text{rob}([3,2])) = \max(3, 3) = \mathbf{3}$; for \texttt{[1, 2, 3, 1]}, $\max(\text{rob}([1,2,3]),\; \text{rob}([2,3,1])) = \max(4, 3) = \mathbf{4}$.
+    \trapnote{Forgetting the $n = 1$ special case---slicing off either endpoint turns a $1$-house circle into two empty slices and wrongly returns $0$.}
+
+    \item \label{sol:ex13}\textbf{Exercise 13 (Edge Cases) --- Empty, Impossible, and Single-Element Inputs:}
+    \textbf{(1)} \texttt{true} (empty subset sums to $0$; base case \texttt{dp[0] = true}).
+    \textbf{(2)} \texttt{\{\}} (empty vector; omitting the \texttt{dp[amount] == INF} check reads \texttt{parent[5] = -1}, incrementing \texttt{curr} to $6$ and reading out of bounds!).
+    \textbf{(3)} Both return $\mathbf{0}$ ($0$ multiplications needed; omitting \texttt{dims.size() < 2} underflows unsigned \texttt{dims.size() - 1} to \texttt{SIZE\_MAX} on empty input!).
+    \trapnote{Skipping reachability checks (\texttt{dp[target] == INF}) before entering a \texttt{while (curr > 0)} reconstruction loop.}
+
+    \item \label{sol:ex14}\textbf{Exercise 14 (Derive) --- Bitmask TSP Complexity \& $N \le 20$ Cutoff:}
+    There are $2^N$ masks and $N$ choices for \texttt{last} $\implies O(N \cdot 2^N)$ states (Space $O(2^N \cdot N)$). Each valid state scans up to $N$ candidate \texttt{nxt} cities $\implies$ Time $O(2^N \cdot N^2)$.
+    Rough operations: $N = 15 \to 2^{15} \cdot 225 \approx 7.4 \times 10^6$ (instant); $N = 20 \to 2^{20} \cdot 400 \approx 4.2 \times 10^8$ (borderline $\sim 1\text{ s}$, halved by skipping unset bits); $N = 25 \to 2^{25} \cdot 625 \approx 2.1 \times 10^{10}$ ops and $\sim 3.4\text{ GB}$ RAM (exceeds both time and memory limits).
+    \trapnote{Reporting Bitmask TSP time as $O(2^N \cdot N)$---that is only the number of states, forgetting the $O(N)$ transition loop inside each state!}
+\end{enumerate}
+
+% ============================================================================
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+\markboth{Version History}{}
+% ============================================================================
+
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\bfseries}l >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Date}} & \textcolor{primaryblue}{\textbf{Change}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+2026-10-03 & Document created. \\
+2026-11-26 & Overhauled to canonical print-first layout; stripped BOM and single backticks; rewrote broken Edit Distance example and restored all trace tables in example environments; fixed C++23 INF/limits, shortestTour n<=1 and unsigned shifts, empty-grid/negative guards, and std::ranges::reverse; fixed Bitmask DP complexity and duplicate House Robber row; embedded fixed Diagrams 13, 14, 33, 34 plus new Coin Change loop-order and Edit Distance diagrams; added 4-beat Origin Stories, local notation boxes, 8 inline drills, 6-drill Practice Sheet, and solutions with trap notes. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
+\endgroup
+\end{center}
 
 \end{document}
-

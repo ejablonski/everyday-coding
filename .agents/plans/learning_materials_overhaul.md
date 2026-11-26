@@ -27,6 +27,8 @@ To keep token usage predictable and reviews manageable, execute this plan in sho
   - Completed `learning_materials/03.number_theory.tex` across all applicable phases (Phase 1.5 bug fixes, overflow-safe `i <= n / i`, UB-free `gcd`/`lcm`, SPF Sieve rename/narrowing fix, Segmented Sieve C++23 implementation & complexity fix, deduplicated fresh-number worked examples + Phase 3 fixed & visually verified Diagrams 6, 7, and 39 + Phase 4.5 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
 - **Session 8 (Done — `2026-11-25`):**
   - Completed `learning_materials/05.recursion_and_backtracking.tex` across all applicable phases (Phase 1.7 bug fixes: restored generic backtracking template, fixed `solveNQueens(0)` crash, removed C-style casts, added `std::optional` factorial domain guard, added combination remaining-elements pruning, added `std::ranges::sort` Subsets II & Permutations II implementations, fixed terminology errors + Phase 3 fixed & visually verified Diagrams 10--12 plus 2 new `forest` trees for Subsets and 4-Queens + Phase 4.7 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
+- **Session 9 (Done — `2026-11-26`):**
+  - Completed `learning_materials/06.dynamic_programming.tex` across all applicable phases (Phase 1.8 bug fixes: stripped UTF-8 BOM and single backticks, wrapped Worked Examples in `\begin{example}`, rewrote broken Edit Distance `"kitten"` → `"sitting"` table and walk-back, restored all missing DP trace tables, fixed C++23 `INF`/`<limits>`/`shortestTour` `n<=1` and unsigned shifts/empty-grid and negative guards/`std::ranges::reverse`, fixed Bitmask DP complexity to $O(2^N \cdot N^2)$, removed duplicate House Robber row + Phase 3 fixed & visually verified Diagrams 13, 14, 33, 34 plus 2 new TikZ diagrams for Coin Change loop order and Edit Distance walk-back + Phase 4.8 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
 - **Ongoing Sessions (1 Module per Fresh Session):**
   - Follow the exact same single-module vertical slice (Phases 1/2 + 3 + 4 + verification + Progress Matrix update + commit) for whichever module the user selects next.
   - Suggested order: `11` → `12` → `00.problem_solving_guide.tex` → `10` → `09` → `06` → `07` → (`08`, `05`, `04`, `03`, `02`, `01`, `00.cpp_reference.tex` on demand) → delete `learning_materials/diagrams_review.tex` once all diagrams are migrated → Phase 5 (`13`–`16`) just-in-time.
@@ -144,12 +146,12 @@ Fix every confirmed factual error, C++23 compile/UB defect, formatting glitch, a
   - [x] Fix `solveNQueens(0)` crash (`std::bad_alloc` on `2 * n - 1`, L498–507); replace C-style casts (L391/417/444); guard `factorial` domain (`std::optional<std::int64_t>` for $0 \le n \le 20$); add remaining-elements pruning (`max_pick = n - need + 1`) to `backtrack_combinations`.
   - [x] Add the promised duplicate-handling backtracking C++23 implementations using `std::ranges::sort` (`subsets_with_dup` & `unique_permutations`, promised at L381).
   - [x] Fix terminology errors: L211 ("permutations with repetition"), L218 ("permutations"), L466 (`O(N)` space for `O(1)` lookup arrays).
-- [ ] **1.8 `learning_materials/06.dynamic_programming.tex`:**
-  - [ ] Strip UTF-8 BOM; fix single backticks (L178–199); wrap Worked Examples in `\begin{example}`.
-  - [ ] **Rewrite broken Example 4 (Edit Distance `"kitten"` → `"sitting"`, L333–340)** with accurate DP table and step-by-step walk-back.
-  - [ ] Restore missing Example 2 grid & DP table (L301–307) and other stripped trace tables (Coin Change, LCS, Knapsack, Subset-Sum, Interval DP, Parent reconstruction).
-  - [ ] Fix C++23 compile errors & bugs: define `INF` and `#include <limits>` in `shortestTour` (L723), `minPathMemo` (L771), and `getMinCoins` (L812); fix `shortestTour` `n <= 1` bug, signed bit shifts, and unused `visited_count`; guard empty grids in `minPathSum*` and negative inputs in `knapsack01`/`canPartition`/`CoinChange`; switch `std::reverse` to `std::ranges::reverse` (L563).
-  - [ ] Fix Bitmask DP time complexity ($O(2^N \cdot N^2)$, L909) and remove duplicate House Robber row (L878 vs L891).
+- [x] **1.8 `learning_materials/06.dynamic_programming.tex`:** *(Completed 2026-11-26)*
+  - [x] Strip UTF-8 BOM; fix single backticks (L178–199); wrap Worked Examples in `\begin{example}`.
+  - [x] **Rewrite broken Example 4 (Edit Distance `"kitten"` → `"sitting"`, L333–340)** with accurate DP table and step-by-step walk-back.
+  - [x] Restore missing Example 2 grid & DP table (L301–307) and other stripped trace tables (Coin Change, LCS, Knapsack, Subset-Sum, Interval DP, Parent reconstruction).
+  - [x] Fix C++23 compile errors & bugs: define `INF` and `#include <limits>` in `shortestTour` (L723), `minPathMemo` (L771), and `getMinCoins` (L812); fix `shortestTour` `n <= 1` bug, signed bit shifts, and unused `visited_count`; guard empty grids in `minPathSum*` and negative inputs in `knapsack01`/`canPartition`/`CoinChange`; switch `std::reverse` to `std::ranges::reverse` (L563).
+  - [x] Fix Bitmask DP time complexity ($O(2^N \cdot N^2)$, L909) and remove duplicate House Robber row (L878 vs L891).
 - [ ] **1.9 `learning_materials/07.graph_algorithms.tex`:**
   - [ ] Strip UTF-8 BOM; remove empty bullet (L256–257); fix non-canonical table headers (L993, L1095–1097) and notation consistency (`\deg^-(v)` vs `\text{in-deg}(u)`).
   - [ ] **Fix Dijkstra `INT_MAX` overflow UB (L841, L864, Glossary L1065):** switch to `std::int64_t` with `INF = std::numeric_limits<std::int64_t>::max() / 2`; add `#include <functional>` and `source` bounds checks; add `<cstddef>` in `shortestPathBinaryGrid` (L682).
@@ -231,7 +233,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 
 ### 3.3 Create Missing Promised & High-Value Diagrams
 - [x] **Module 05 (using `forest` package):** Subsets `{1, 2}` include/exclude decision tree (promised at L294) + N-Queens pruned backtracking tree with explicit `✗` pruned branches. *(Completed & visually verified 2026-11-25)*
-- [ ] **Module 06:** Coin Change combinations vs. permutations loop-order visual (promised at L168–173) + Edit Distance `"kitten"` → `"sitting"` 2D matrix with backtrack arrows.
+- [x] **Module 06:** Coin Change combinations vs. permutations loop-order visual (promised at L168–173) + Edit Distance `"kitten"` → `"sitting"` 2D matrix with backtrack arrows. *(Completed & visually verified 2026-11-26)*
 - [ ] **Module 07:** Add **Edge List** panel to D15 (promised at L178) + DFS 3-color cycle detection (White/Gray/Black) diagram.
 - [ ] **Module 08:** Lower Bound vs. Upper Bound on a sorted array with duplicates.
 - [ ] **Module 10:** Fractional Knapsack value/weight ratio bar + Greedy Failure Counterexample (`{1, 3, 4}` for target `6`) + Exchange Argument timeline swap diagram.
@@ -244,7 +246,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 - [x] Embed D6, D7, D39 → `03.number_theory.tex` *(replaces empty L390–394; redesigned D39 without double-scaling, touching circles, arc collisions, or ad-hoc red axis/pivot; scaled D7 cleanly with exact $252 \times 105$ ratio; visually verified 2026-11-25)*.
 - [x] Embed D8, D9, D32 → `04.sequences_and_series.tex` *(added Gauss Pairing diagram; fixed D8 arrow label routing, D9 title clearance, and D32 double-scaling, panel padding, and `c_2+1`/`r_2+1` prefix boundary labels; resolves orphaned `"region D"`; visually verified 2026-11-25)*.
 - [x] Embed D10, D11, D12 + Subsets/N-Queens `forest` trees → `05.recursion_and_backtracking.tex` *(fixed D10 `Returns` collision with Col 3, polished D11/D12 with canonical palette & `red!70!black` dashed pruning, added `forest` trees for Subsets `{1, 2}` and 4-Queens; visually verified 2026-11-25)*.
-- [ ] Embed D13, D14, D33, D34 + Coin Change & Edit Distance diagrams → `06.dynamic_programming.tex`.
+- [x] Embed D13, D14, D33, D34 + Coin Change & Edit Distance diagrams → `06.dynamic_programming.tex` *(fixed D14 arrow label spacing, removed D33/D34 double-scaling, fixed D33 title clearance & `--w` ligature, fixed D34 legend/arrow/panel collisions, and added Coin Change loop-order and Edit Distance `"kitten"`→`"sitting"` diagrams; visually verified 2026-11-26)*.
 - [ ] Embed D15 (3-way), D16, D17, D18, D35, D36 + DFS 3-color → `07.graph_algorithms.tex`.
 - [ ] Embed D19, D20, D37 + Lower/Upper Bound duplicates → `08.binary_search.tex`.
 - [x] Embed D29, D30, D31 → `09.string_algorithms.tex` *(fixed D29 `"car"` edge collision, D30 KMP fallback shift alignment & title clearance, D31 window `L` vs modulus `M`, birthday paradox `99.3%`, & double-scaling; visually verified 2026-11-25)*.
@@ -281,10 +283,10 @@ Apply the **Pedagogical Blueprint** (4-Beat Origin Stories, local `notationbox` 
   - *Origin Stories:* Why recursion is literally an implicit stack; how "Choose → Explore → Undo" avoids copying state; why pruning cuts exponential trees early; why sorting + `i > start && nums[i] == nums[i-1]` skips duplicate branches without a hash set.
   - *Local `notationbox`:* State tuple, Branching factor ($b$), Depth ($d$), Complexity ($O(b^d)$).
   - *Pen & Paper Drills (8 inline + 6 Practice Sheet):* Draw the pruned tree for Generate Parentheses $n = 2$ marking every `✗`; trace Subsets II on `[1, 2, 2]` and mark which branch is skipped; spot the bug in a missing-undo snippet; plus full 6-mode inline & Practice Sheet coverage with trap diagnostics.
-- [ ] **4.8 `06.dynamic_programming.tex`:**
+- [x] **4.8 `06.dynamic_programming.tex`:** *(Completed 2026-11-26)*
   - *Origin Stories:* How to *discover* the DP state ("what is the minimum info from the past I need to decide the future?"); why 0/1 Knapsack iterates capacity **backward** while Unbounded iterates **forward**; why Edit Distance / LCS form a 2D DAG; why Interval DP fills by length, not row-by-row.
   - *Local `notationbox`:* State $dp[\cdot]$, Transition, Base Case, Sentinel $\infty$.
-  - *Pen & Paper Drills (4):* Fill a 4-item 1D Knapsack row forward vs. backward and observe the difference; trace Coin Change `[1, 3, 4]` for target `6`; fill a tiny $3 \times 4$ Edit Distance table (`"cat"` → `"cut"`) and walk back; choose the DP state for a new unseen problem.
+  - *Pen & Paper Drills (8 inline + 6 Practice Sheet):* Fill a 4-item 1D Knapsack row forward vs. backward and observe the difference; trace Coin Change `[1, 3, 4]` for target `6`; fill a tiny $4 \times 4$ Edit Distance table (`"cat"` → `"cut"`) and walk back; choose the DP state for unseen problems; plus full 6-mode inline & Practice Sheet coverage with trap diagnostics.
 - [ ] **4.9 `07.graph_algorithms.tex`:**
   - *Origin Stories:* Why BFS guarantees unweighted shortest paths (FIFO monotonicity) while DFS does not; why Dijkstra greedily locks the closest node — and **exactly how a single negative edge breaks it**; why Kahn's algorithm detects cycles via leftover vertices; why DSU needs *both* path compression and union by rank.
   - *Local `notationbox`:* $G=(V,E)$, $\deg^-(v)$, $w(u,v)$, $d[u]$, $\alpha(V)$.
@@ -335,7 +337,7 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `03.number_theory.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `04.sequences_and_series.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `05.recursion_and_backtracking.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
-| `06.dynamic_programming.tex` | `[ ]` | N/A | `[ ]` (D13–14, D33–34 + 2) | `[ ]` | `[ ]` | `[ ]` |
+| `06.dynamic_programming.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
 | `07.graph_algorithms.tex` | `[ ]` | N/A | `[ ]` (D15–18, D35–36 + 1) | `[ ]` | `[ ]` | `[ ]` |
 | `08.binary_search.tex` | `[ ]` | N/A | `[ ]` (D19–20, D37 + 1) | `[ ]` | `[ ]` | `[ ]` |
 | `09.string_algorithms.tex` | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
