@@ -25,6 +25,8 @@ To keep token usage predictable and reviews manageable, execute this plan in sho
   - Completed `learning_materials/02.modular_arithmetic.tex` across all applicable phases (Phase 1.4 bug fixes & standalone C++23 `mod_pow`/`ext_gcd`/`solve_crt` implementations + Phase 3 fixed & visually verified Diagrams 5, 38, and new CRT periodic clocks alignment diagram + Phase 4.4 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
 - **Session 7 (Done — `2026-11-25`):**
   - Completed `learning_materials/03.number_theory.tex` across all applicable phases (Phase 1.5 bug fixes, overflow-safe `i <= n / i`, UB-free `gcd`/`lcm`, SPF Sieve rename/narrowing fix, Segmented Sieve C++23 implementation & complexity fix, deduplicated fresh-number worked examples + Phase 3 fixed & visually verified Diagrams 6, 7, and 39 + Phase 4.5 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
+- **Session 8 (Done — `2026-11-25`):**
+  - Completed `learning_materials/05.recursion_and_backtracking.tex` across all applicable phases (Phase 1.7 bug fixes: restored generic backtracking template, fixed `solveNQueens(0)` crash, removed C-style casts, added `std::optional` factorial domain guard, added combination remaining-elements pruning, added `std::ranges::sort` Subsets II & Permutations II implementations, fixed terminology errors + Phase 3 fixed & visually verified Diagrams 10--12 plus 2 new `forest` trees for Subsets and 4-Queens + Phase 4.7 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
 - **Ongoing Sessions (1 Module per Fresh Session):**
   - Follow the exact same single-module vertical slice (Phases 1/2 + 3 + 4 + verification + Progress Matrix update + commit) for whichever module the user selects next.
   - Suggested order: `11` → `12` → `00.problem_solving_guide.tex` → `10` → `09` → `06` → `07` → (`08`, `05`, `04`, `03`, `02`, `01`, `00.cpp_reference.tex` on demand) → delete `learning_materials/diagrams_review.tex` once all diagrams are migrated → Phase 5 (`13`–`16`) just-in-time.
@@ -137,11 +139,11 @@ Fix every confirmed factual error, C++23 compile/UB defect, formatting glitch, a
   - [x] Strip UTF-8 BOM; move `\begin{abstract}...\end{abstract}` **before** `\tableofcontents \newpage` (replaced with canonical Title Banner + `overviewbox` before `\tableofcontents`).
   - [x] Fix broken enumerate jump 8 → 10 (L244–250), missing `\\` line breaks (L128–131), `1x1` math formatting (L166), and orphaned `"region D"` text (L370 — resolved alongside D32 in Phase 3).
   - [x] Add missing `#include <functional>` in `sum_first_n_loop` (L450), fix `geometric_sum` comment/complexity mismatch (upgraded to $O(\log n)$ binary exponentiation with accurate `r == 1` comment and complexity row), and fix `r2 + 1` unsigned wrap risk in `PrefixSum2D::query` (L561).
-- [ ] **1.7 `learning_materials/05.recursion_and_backtracking.tex`:**
-  - [ ] Strip UTF-8 BOM; restore stripped generic backtracking template (L157–159).
-  - [ ] Fix `solveNQueens(0)` crash (`std::bad_alloc` on `2 * n - 1`, L498–507); replace C-style casts (L391/417/444); guard `factorial` domain (L333); add remaining-elements pruning to `backtrackCombinations` (L450).
-  - [ ] Add the promised duplicate-handling backtracking C++23 implementations using `std::ranges::sort` (Subsets II & Permutations II, promised at L381).
-  - [ ] Fix terminology errors: L211 ("permutations with repetition"), L218 ("permutations"), L466 (`O(N)` space for `O(1)` lookup arrays).
+- [x] **1.7 `learning_materials/05.recursion_and_backtracking.tex`:** *(Completed 2026-11-25)*
+  - [x] Strip UTF-8 BOM; restore stripped generic backtracking template (L157–159).
+  - [x] Fix `solveNQueens(0)` crash (`std::bad_alloc` on `2 * n - 1`, L498–507); replace C-style casts (L391/417/444); guard `factorial` domain (`std::optional<std::int64_t>` for $0 \le n \le 20$); add remaining-elements pruning (`max_pick = n - need + 1`) to `backtrack_combinations`.
+  - [x] Add the promised duplicate-handling backtracking C++23 implementations using `std::ranges::sort` (`subsets_with_dup` & `unique_permutations`, promised at L381).
+  - [x] Fix terminology errors: L211 ("permutations with repetition"), L218 ("permutations"), L466 (`O(N)` space for `O(1)` lookup arrays).
 - [ ] **1.8 `learning_materials/06.dynamic_programming.tex`:**
   - [ ] Strip UTF-8 BOM; fix single backticks (L178–199); wrap Worked Examples in `\begin{example}`.
   - [ ] **Rewrite broken Example 4 (Edit Distance `"kitten"` → `"sitting"`, L333–340)** with accurate DP table and step-by-step walk-back.
@@ -228,7 +230,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 - [ ] **Minor collisions & cleanups:** D1 (duplicate `font=`, `\hfill` without `text width`, arrow label width), D3 (column border overlap), D4 (`Slot 4`/`Slot 7` hitting BAR tops), D10 (`Returns` hitting Col 3), D14 (`from Left: 2` width), D18 (panel gap), D24 (blue frame touching Cell 4), D25 (MSB/LSB label overhang & sign arrow target), D32 (label padding & `c_2+1`/`r_2+1` boundary clarity).
 
 ### 3.3 Create Missing Promised & High-Value Diagrams
-- [ ] **Module 05 (using `forest` package):** Subsets `{1, 2}` include/exclude decision tree (promised at L294) + N-Queens pruned backtracking tree with explicit `✗` pruned branches.
+- [x] **Module 05 (using `forest` package):** Subsets `{1, 2}` include/exclude decision tree (promised at L294) + N-Queens pruned backtracking tree with explicit `✗` pruned branches. *(Completed & visually verified 2026-11-25)*
 - [ ] **Module 06:** Coin Change combinations vs. permutations loop-order visual (promised at L168–173) + Edit Distance `"kitten"` → `"sitting"` 2D matrix with backtrack arrows.
 - [ ] **Module 07:** Add **Edge List** panel to D15 (promised at L178) + DFS 3-color cycle detection (White/Gray/Black) diagram.
 - [ ] **Module 08:** Lower Bound vs. Upper Bound on a sorted array with duplicates.
@@ -241,7 +243,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 - [x] Embed D5, D38 → `02.modular_arithmetic.tex` *(replaces missing L110 figure; fixed D5 arc label collisions, fixed D38 double-scaling, `$$...$$` node overflow, and 3-vs-4 squaring count, and added CRT periodic clocks alignment diagram; visually verified 2026-11-25)*.
 - [x] Embed D6, D7, D39 → `03.number_theory.tex` *(replaces empty L390–394; redesigned D39 without double-scaling, touching circles, arc collisions, or ad-hoc red axis/pivot; scaled D7 cleanly with exact $252 \times 105$ ratio; visually verified 2026-11-25)*.
 - [x] Embed D8, D9, D32 → `04.sequences_and_series.tex` *(added Gauss Pairing diagram; fixed D8 arrow label routing, D9 title clearance, and D32 double-scaling, panel padding, and `c_2+1`/`r_2+1` prefix boundary labels; resolves orphaned `"region D"`; visually verified 2026-11-25)*.
-- [ ] Embed D10, D11, D12 + Subsets/N-Queens `forest` trees → `05.recursion_and_backtracking.tex`.
+- [x] Embed D10, D11, D12 + Subsets/N-Queens `forest` trees → `05.recursion_and_backtracking.tex` *(fixed D10 `Returns` collision with Col 3, polished D11/D12 with canonical palette & `red!70!black` dashed pruning, added `forest` trees for Subsets `{1, 2}` and 4-Queens; visually verified 2026-11-25)*.
 - [ ] Embed D13, D14, D33, D34 + Coin Change & Edit Distance diagrams → `06.dynamic_programming.tex`.
 - [ ] Embed D15 (3-way), D16, D17, D18, D35, D36 + DFS 3-color → `07.graph_algorithms.tex`.
 - [ ] Embed D19, D20, D37 + Lower/Upper Bound duplicates → `08.binary_search.tex`.
@@ -275,10 +277,10 @@ Apply the **Pedagogical Blueprint** (4-Beat Origin Stories, local `notationbox` 
   - *Origin Stories:* Gauss pairing intuition for arithmetic sums; shift-and-subtract derivation for geometric sums (no magic formula!); why prefix sums trade $O(N)$ build for $O(1)$ queries; why difference arrays are the discrete derivative (inverse of prefix sum).
   - *Local `notationbox`:* Summation ($\sum$), Arithmetic/Geometric params ($a_1, d, r$), Prefix/Diff arrays ($P[i], D[i]$).
   - *Pen & Paper Drills (8 inline + 6 Practice Sheet):* Apply 2 range updates to a 6-element difference array and reconstruct; compute a 2D submatrix sum using the 4-corner formula; collapse a step-2 telescoping sum; plus full 6-mode inline & Practice Sheet coverage with trap diagnostics.
-- [ ] **4.7 `05.recursion_and_backtracking.tex`:**
+- [x] **4.7 `05.recursion_and_backtracking.tex`:** *(Completed 2026-11-25)*
   - *Origin Stories:* Why recursion is literally an implicit stack; how "Choose → Explore → Undo" avoids copying state; why pruning cuts exponential trees early; why sorting + `i > start && nums[i] == nums[i-1]` skips duplicate branches without a hash set.
   - *Local `notationbox`:* State tuple, Branching factor ($b$), Depth ($d$), Complexity ($O(b^d)$).
-  - *Pen & Paper Drills (3):* Draw the pruned tree for Generate Parentheses $n = 2$ marking every `✗`; trace Subsets II on `[1, 2, 2]` and mark which branch is skipped; spot the bug in a missing-undo snippet.
+  - *Pen & Paper Drills (8 inline + 6 Practice Sheet):* Draw the pruned tree for Generate Parentheses $n = 2$ marking every `✗`; trace Subsets II on `[1, 2, 2]` and mark which branch is skipped; spot the bug in a missing-undo snippet; plus full 6-mode inline & Practice Sheet coverage with trap diagnostics.
 - [ ] **4.8 `06.dynamic_programming.tex`:**
   - *Origin Stories:* How to *discover* the DP state ("what is the minimum info from the past I need to decide the future?"); why 0/1 Knapsack iterates capacity **backward** while Unbounded iterates **forward**; why Edit Distance / LCS form a 2D DAG; why Interval DP fills by length, not row-by-row.
   - *Local `notationbox`:* State $dp[\cdot]$, Transition, Base Case, Sentinel $\infty$.
@@ -332,7 +334,7 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `02.modular_arithmetic.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `03.number_theory.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `04.sequences_and_series.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
-| `05.recursion_and_backtracking.tex` | `[ ]` | N/A | `[ ]` (D10–12 + 2 `forest`) | `[ ]` | `[ ]` | `[ ]` |
+| `05.recursion_and_backtracking.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `06.dynamic_programming.tex` | `[ ]` | N/A | `[ ]` (D13–14, D33–34 + 2) | `[ ]` | `[ ]` | `[ ]` |
 | `07.graph_algorithms.tex` | `[ ]` | N/A | `[ ]` (D15–18, D35–36 + 1) | `[ ]` | `[ ]` | `[ ]` |
 | `08.binary_search.tex` | `[ ]` | N/A | `[ ]` (D19–20, D37 + 1) | `[ ]` | `[ ]` | `[ ]` |

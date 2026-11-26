@@ -1,26 +1,115 @@
-﻿\documentclass[11pt,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 
 % --- Core LaTeX Packages ---
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\ttdefault}{txtt}
+\usepackage{upquote}
+\usepackage[margin=0.85in, headheight=15pt]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{xcolor}
+\usepackage[helvet]{sfmath}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[explicit]{titlesec}
+\usepackage[skins,breakable]{tcolorbox}
 \usepackage{listings}
 \usepackage{hyperref}
-\usepackage{tabularx}
 \usepackage{graphicx}
 
-% --- Optional Diagram Packages (include when needed) ---
+% --- Diagram Packages ---
 \usepackage{forest}
-% \usepackage{tikz}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,decorations.pathreplacing}
 
-% --- Unified Color Palette ---
+% --- Unified Print-Safe Color Palette ---
 \definecolor{primaryblue}{RGB}{24, 75, 140}
-\definecolor{codebg}{RGB}{248, 249, 250}
-\definecolor{codeframe}{RGB}{210, 215, 222}
-\definecolor{codegreen}{RGB}{40, 130, 60}
-\definecolor{codeblue}{RGB}{20, 90, 180}
-\definecolor{codegray}{RGB}{120, 120, 120}
+\definecolor{accentteal}{RGB}{15, 118, 110}
+\definecolor{accentamber}{RGB}{180, 83, 9}
+\definecolor{accentred}{RGB}{185, 28, 28}
+\definecolor{codebg}{RGB}{246, 248, 250}
+\definecolor{codeframe}{RGB}{204, 212, 220}
+\definecolor{codeink}{RGB}{24, 30, 38}
+\definecolor{codekw}{RGB}{126, 34, 206}
+\definecolor{codetype}{RGB}{0, 118, 138}
+\definecolor{codegreen}{RGB}{22, 138, 66}
+\definecolor{codeblue}{RGB}{15, 92, 212}
+\definecolor{codestr}{RGB}{194, 65, 12}
+\definecolor{codegray}{RGB}{105, 115, 125}
+
+% --- Global Typography & Spacing ---
+\linespread{1.08}
+\renewcommand{\arraystretch}{1.35}
+\setlength{\tabcolsep}{7pt}
+\setlist[itemize]{itemsep=3pt, topsep=4pt, leftmargin=1.5em}
+\setlist[enumerate]{itemsep=4pt, topsep=4pt, leftmargin=1.6em}
+
+% --- Running Header & Footer (Screen + Print Navigation) ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{codegray}\textbf{Recursion and Backtracking}}
+\fancyhead[R]{\footnotesize\color{codegray}\nouppercase{\leftmark}}
+\fancyfoot[C]{\footnotesize\color{codegray}Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{codeframe}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{}}
+
+% --- Section & Subsection Styling (High-Contrast + Per-Section Page Breaks) ---
+\newcommand{\sectionbreak}{}
+
+\titleformat{\section}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {\colorbox{primaryblue}{\color{white}\bfseries\Large\;\thesection\;}\hspace{0.55em}#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+\titlespacing*{\section}{0pt}{4pt}{14pt}
+
+\titleformat{name=\section,numberless}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{primaryblue!90!black}}
+  {}
+  {0pt}
+  {\begin{tcolorbox}[
+      enhanced, colback=primaryblue!6, colframe=primaryblue!6,
+      borderline west={3.5pt}{0pt}{primaryblue},
+      sharp corners=west, arc=2pt,
+      left=8pt, right=8pt, top=5pt, bottom=5pt,
+      boxsep=0pt, before skip=0pt, after skip=0pt
+  ]\large\bfseries\color{primaryblue!90!black}\thesubsection\hspace{0.55em}#1\end{tcolorbox}}
+\titlespacing*{\subsection}{0pt}{18pt}{8pt}
+
+\titleformat{name=\subsection,numberless}[block]
+  {\normalsize\bfseries\color{accentteal}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{2pt}{\color{accentteal!40}\titlerule[0.7pt]}]
+\titlespacing*{\subsection}{0pt}{14pt}{6pt}
+
+% --- Canonical Shared TikZ Styles ---
+\tikzset{
+    lmbox/.style={draw=codeframe, fill=codebg, thick, rounded corners=2pt, inner sep=4pt, font=\small},
+    lmactive/.style={draw=primaryblue, fill=primaryblue!8, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=primaryblue},
+    lmaccepted/.style={draw=codegreen, fill=codegreen!10, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=codegreen},
+    lmpruned/.style={draw=red!70!black, fill=red!70!black!6, thick, dashed, rounded corners=2pt, inner sep=4pt, font=\small, text=red!70!black},
+    lmarrow/.style={-{Stealth[length=5pt]}, thick, primaryblue},
+    lmmuted/.style={-{Stealth[length=5pt]}, thick, codegray},
+    lmprunedarrow/.style={-{Stealth[length=5pt]}, thick, dashed, red!70!black}
+}
 
 % --- Hyperref Setup ---
 \hypersetup{
@@ -32,40 +121,129 @@
     pdfauthor={Antigravity Engineering}
 }
 
-% --- Theorem & Definition Environments ---
+% --- Example Environment ---
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{example}{Example}[section]
 
-% --- Callout Box Environment ---
-\newenvironment{calloutbox}[1]{
-    \par\vspace{0.3cm}
-    \noindent\begin{tabular}{|p{0.96\textwidth}|}
-    \hline
-    \vspace{0.1cm}
-    \textbf{#1}\par\vspace{0.1cm}
-}{
-    \vspace{0.1cm}
-    \\ \hline
-    \end{tabular}
-    \vspace{0.3cm}\par
+% --- Semantic Narrative Beat Labels & Solution Trap Diagnostic ---
+\newcommand{\painbeat}{\textbf{\color{accentamber}The Problem:} }
+\newcommand{\ahabeat}{\textbf{\color{accentteal}The ``Aha!'' Insight:} }
+\newcommand{\examplebeat}{\textbf{\color{primaryblue}Mini-Example First:} }
+\newcommand{\breaksbeat}{\textbf{\color{accentred}When It Breaks:} }
+\newcommand{\invariantbeat}[1]{\par\noindent\textbf{\color{accentteal}Loop Invariant (#1):} }
+\newcommand{\trapnote}[1]{\par\smallskip\noindent{\footnotesize\textbf{\color{accentamber}Common trap:} #1}}
+
+% --- Modern Overview Card ---
+\newtcolorbox{overviewbox}[1][What You'll Learn]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
 }
 
-% --- Modern C++ Code Listing Setup ---
+% --- Key Takeaway / Core Rule Box ---
+\newtcolorbox{calloutbox}[1]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Plain-English Formula Card ---
+\newtcolorbox{formulabox}[1][Formula in Plain English]{
+    enhanced,
+    colback=primaryblue!4, colframe=primaryblue!22,
+    borderline west={3.5pt}{0pt}{primaryblue},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=6pt, bottom=6pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\small\bfseries\color{primaryblue},
+    title={#1},
+    attach title to upper={\par\vspace{2pt}}
+}
+
+% --- Watch-Out / Edge-Case Warning Box ---
+\newtcolorbox{watchoutbox}[1][Watch Out --- When It Breaks]{
+    enhanced,
+    colback=accentamber!6, colframe=accentamber!30,
+    borderline west={3.5pt}{0pt}{accentamber},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentamber},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Local Symbol Mini-Table Environment ---
+\newenvironment{notationbox}[1][Symbols Used Here]{
+    \par\vspace{0.15cm}
+    \noindent\textbf{\small\color{primaryblue}#1}\par\vspace{0.1cm}
+    \begingroup
+    \footnotesize
+    \rowcolors{2}{codebg}{white}
+    \noindent\tabularx{\textwidth}{>{\raggedright\arraybackslash\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.8cm}}
+    \arrayrulecolor{primaryblue}\toprule[1.1pt]
+    \rowcolor{primaryblue!10}
+    \textcolor{primaryblue}{\textbf{Symbol}} & \textcolor{primaryblue}{\textbf{Plain-English Meaning}} & \textcolor{primaryblue}{\textbf{Example / Type}} \\
+    \arrayrulecolor{codeframe}\midrule[0.6pt]
+}{
+    \arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+    \endtabularx
+    \endgroup
+    \vspace{0.2cm}\par
+}
+
+% --- Print-First Pen-and-Paper Exercise Environment ---
+\newcounter{exercise}
+\newtcolorbox{tryitbox}[3]{
+    enhanced,
+    step=exercise,
+    colback=codegreen!3, colframe=codegreen!45,
+    colbacktitle=codegreen!14, coltitle=codegreen!85!black,
+    borderline west={3.5pt}{0pt}{codegreen},
+    arc=3pt, boxrule=0.6pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    toptitle=4pt, bottomtitle=4pt,
+    before skip=9pt, after skip=9pt,
+    fonttitle=\bfseries,
+    title={Exercise \theexercise\hspace{0.5em}{\colorbox{codegreen!85!black}{\color{white}\scriptsize\bfseries\;#1\;}}\hspace{0.5em}#2 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#3}}}
+}
+
+% --- Modern C++23 Code Listing Setup ---
 \lstset{
     language=C++,
-    basicstyle=\footnotesize\ttfamily,
-    keywordstyle=\color{codeblue}\bfseries,
+    basicstyle=\small\ttfamily\color{codeink},
+    keywordstyle=\color{codekw}\bfseries,
+    morekeywords={constexpr,noexcept,nullptr,static_assert,auto,override,final,decltype,concept,requires},
+    keywordstyle=[2]\color{codetype}\bfseries,
+    morekeywords=[2]{std,vector,span,deque,string,string_view,size_t,int64_t,uint32_t,uint64_t,optional,nullopt,pair,tuple,array,priority_queue,unordered_map,unordered_set,map,set,ranges,views,nodiscard},
+    moredelim=[l][\color{codeblue}\bfseries]{\#},
+    deletestring=[b]',
     commentstyle=\color{codegreen}\itshape,
-    stringstyle=\color{orange!80!black},
+    stringstyle=\color{codestr},
     numberstyle=\tiny\color{codegray},
     numbers=left,
     numbersep=8pt,
+    xleftmargin=24pt,
+    framexleftmargin=22pt,
+    framexrightmargin=4pt,
+    framextopmargin=4pt,
+    framexbottommargin=4pt,
     backgroundcolor=\color{codebg},
     frame=single,
     rulecolor=\color{codeframe},
+    aboveskip=8pt,
+    belowskip=10pt,
     breaklines=true,
     breakatwhitespace=true,
     tabsize=4,
@@ -73,555 +251,1053 @@
     captionpos=b
 }
 
-% --- Title Block ---
-\title{\vspace{-1.5cm}\textbf{\Huge Recursion and Backtracking}\\[0.3cm]
-\Large Call Stacks, Recursive Trees, Pruning Strategies, and C++ Implementations}
-\author{Technical Monograph}
-\date{\today}
-
 \begin{document}
 
-\maketitle
+% --- Modern Title Banner ---
+\thispagestyle{plain}
+\begin{tcolorbox}[
+    enhanced,
+    colback=primaryblue!6, colframe=primaryblue!20,
+    borderline west={5pt}{0pt}{primaryblue},
+    arc=4pt, boxrule=0.6pt,
+    left=14pt, right=14pt, top=12pt, bottom=12pt,
+    before skip=0pt, after skip=10pt
+]
+    {\footnotesize\bfseries\color{accentteal}MODULE 05 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[5pt]
+    {\Huge\bfseries\color{primaryblue}Recursion and Backtracking}\\[5pt]
+    {\large\color{codegray}Call Stacks, Decision Trees, Early Pruning, Duplicate Elimination, and C++23 Templates}\\[6pt]
+    {\footnotesize\color{codegray}Updated \today}
+\end{tcolorbox}
 
-\begin{abstract}
-\noindent
-This document explains recursion and backtracking from the ground up. It starts with the absolute basics of function calls and the call stack, explaining how a function can call itself to solve a smaller piece of a problem. Then, it introduces backtracking as a way to systematically explore all possible choices to find valid solutions, like navigating a maze. Each concept has a plain-English explanation, step-by-step traces of how the algorithms explore choices, and practical C++ implementations. The final sections help you look at new problems and decide exactly when and how to apply these techniques.
-\end{abstract}
+\begin{overviewbox}[What You'll Learn]
+Recursion solves a big problem by delegating a smaller copy of itself to the computer's implicit call stack; backtracking turns that mechanism into a systematic depth-first search over choices, undoing each step as soon as a branch hits a dead end. This guide starts from stack frames and recursion trees, builds the universal \emph{Choose $\to$ Explore $\to$ Undo} template, visualizes early pruning and duplicate elimination across Subsets, Permutations, Combinations, and N-Queens, and equips you with bounds-safe modern C++23 code and pen-and-paper drills.
+\end{overviewbox}
 
-\tableofcontents
-\newpage
+\vspace{2pt}
+{\setlength{\parskip}{1pt}\small\tableofcontents}
 
+% Every major section starts cleanly on a new page
+\renewcommand{\sectionbreak}{\clearpage}
+
+% ============================================================================
 \section{Foundations: The Call Stack and Recursion}
+% ============================================================================
 
-\subsection{The Call Stack}
+Before writing a single recursive function, you need a crisp mental model of \emph{where} paused function calls live in memory and \emph{why} they resume in reverse order.
 
-Before you can understand recursion, you have to understand what happens when a function calls another function. Imagine your computer has a stack of blank sticky notes. Every time a function is called, the computer takes a new sticky note, writes down the function's variables and what line of code it is currently on, and pushes this note onto the top of the stack. This note is called a \textbf{stack frame}.
+\begin{notationbox}[Symbols Used in Section 1]
+    $n$ & Problem size passed to the current recursive call & \texttt{fac(4)} has $n = 4$ \\
+    $d$ & Peak recursion depth (maximum live frames on the stack) & $d = n$ for linear recursion \\
+    $f$ & Memory size of one stack frame (locals + return address) & Typically $32$--$128$ bytes \\
+    $O(b^d)$ & Tree size with branching factor $b$ and depth $d$ & $O(2^n)$ for naive \texttt{fib(n)} \\
+\end{notationbox}
 
-While that top function is running, all the other functions underneath it are paused. If the top function calls yet another function, a new sticky note is added on top. When a function finishes running, its sticky note is thrown away (popped off the stack), and the computer resumes whatever function is now on top, right where it left off.
+\subsection{The Call Stack: Recursion Is Literally an Implicit Stack}
 
-\begin{calloutbox}{Stack Overflow Warning}
-Every recursive call uses stack memory for its frame. The default stack size is typically 1--8 MB. For recursion depth $n$, if each frame uses $f$ bytes, you need $n \cdot f$ bytes of stack. For $n = 10,000$ with frames of 100 bytes, that is 1 MB --- borderline. For very deep recursion ($n > 10,000$), prefer an iterative solution with an explicit stack.
-\end{calloutbox}
+\painbeat When function $A$ calls function $B$ and $B$ calls $C$, the CPU must remember each paused function's local variables and exact line number so it can resume seamlessly once the inner call returns.
 
-\subsection{Recursion}
+\ahabeat Your program maintains a hardware-managed \textbf{call stack} of \textbf{stack frames} (think of sticky notes stacked vertically). Calling a function \emph{pushes} a fresh sticky note on top; returning \emph{pops} the top note and resumes the note immediately underneath (Last-In, First-Out).
 
-\textbf{Recursion} is simply what happens when a function calls itself. It is a way of solving a large problem by breaking it down into smaller and smaller pieces of the exact same problem, until the pieces are so small that they are easy to solve directly. 
+\examplebeat Tracing \texttt{fac(4)} (where $n! = n \times (n - 1)!$ and $1! = 1$): the CPU pushes four sticky notes downward (\texttt{fac(4)} $\to$ \texttt{fac(3)} $\to$ \texttt{fac(2)} $\to$ \texttt{fac(1)}), hits the base case $1$, and unwinds upward, multiplying $1 \to 2 \to 6 \to 24$ (Figure~\ref{fig:call-stack}).
 
-Every recursive process needs a \textbf{base case}. This is the sticky note that says ``stop.'' Without a base case, the function would keep calling itself forever until it runs out of sticky notes (a stack overflow).
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+    % Col 1: Descent (Pushing) x in 0.8 to 4.1
+    \node[font=\footnotesize\bfseries, text=primaryblue] at (2.45, 5.00) {1.\ Descent: Stack Growth};
 
-\textbf{Simplest Example: Factorial of 5}
-The factorial of 5 (written as $5!$) is $5 \times 4 \times 3 \times 2 \times 1$. 
-Observe that $5!$ is exactly the same as $5 \times 4!$. And $4!$ is exactly $4 \times 3!$. 
+    \draw[->, thick, primaryblue, -{Stealth[length=5pt]}] (0.35, 0.55) -- (0.35, 4.05)
+        node[midway, left=3pt, font=\scriptsize\bfseries, text=primaryblue] {Pushes};
 
-Here is how the computer computes $5!$ step by step using recursion:
-\begin{itemize}
-    \item \textbf{Call factorial(5):} Is 5 the base case? No. Return $5 \times \text{factorial}(4)$. (Pushes sticky note for 5).
-    \item \textbf{Call factorial(4):} Is 4 the base case? No. Return $4 \times \text{factorial}(3)$. (Pushes sticky note for 4).
-    \item \textbf{Call factorial(3):} Is 3 the base case? No. Return $3 \times \text{factorial}(2)$. (Pushes sticky note for 3).
-    \item \textbf{Call factorial(2):} Is 2 the base case? No. Return $2 \times \text{factorial}(1)$. (Pushes sticky note for 2).
-    \item \textbf{Call factorial(1):} 1 is the base case! Return 1. (No new sticky note. Start unwinding).
-\end{itemize}
-Now the stack unwinds, multiplying the returned values back up the chain: $1 \times 2 = 2$, $2 \times 3 = 6$, $6 \times 4 = 24$, $24 \times 5 = 120$.
+    \draw[thick, draw=codeframe, fill=codebg] (0.80, 0.20) rectangle (4.10, 1.05)
+        node[midway, font=\footnotesize] {\texttt{fac(4)} ($n=4$)};
+    \draw[thick, draw=codeframe, fill=codebg] (0.80, 1.28) rectangle (4.10, 2.13)
+        node[midway, font=\footnotesize] {\texttt{fac(3)} ($n=3$)};
+    \draw[thick, draw=codeframe, fill=codebg] (0.80, 2.36) rectangle (4.10, 3.21)
+        node[midway, font=\footnotesize] {\texttt{fac(2)} ($n=2$)};
+    \draw[line width=1.3pt, draw=primaryblue, fill=primaryblue!8] (0.80, 3.44) rectangle (4.10, 4.29)
+        node[midway, font=\footnotesize\bfseries, text=primaryblue] {\texttt{fac(1)} (Base Case!)};
 
-\subsection{Recursion Tree}
+    % Transition arrow between base case and unwinding
+    \draw[->, line width=1.4pt, primaryblue, -{Stealth[length=5pt]}] (4.25, 3.86) -- (5.35, 3.86)
+        node[midway, above=2pt, font=\scriptsize\bfseries, align=center, text=primaryblue] {Base hit\\ret $1$};
 
-A \textbf{recursion tree} is a visual representation of all the recursive calls made by an algorithm. When a function calls itself multiple times, the tree branches out. 
+    % Col 2: Ascent (Unwinding) x in 5.50 to 8.80
+    \node[font=\footnotesize\bfseries, text=primaryblue] at (7.15, 5.00) {2.\ Ascent: Frame Popping};
 
-\textbf{Worked Example: Fibonacci(4)}
-The Fibonacci sequence defines the $n$-th number as the sum of the previous two numbers: $\text{fib}(n) = \text{fib}(n-1) + \text{fib}(n-2)$, with base cases $\text{fib}(0) = 0$ and $\text{fib}(1) = 1$. Let us draw the recursion tree for $\text{fib}(4)$:
+    \draw[line width=1.3pt, draw=codegreen, fill=codegreen!10] (5.50, 0.20) rectangle (8.80, 1.05)
+        node[midway, font=\footnotesize\bfseries, text=codegreen] {\texttt{fac(4)} $\to \mathbf{24}$};
+    \draw[thick, draw=codeframe, fill=codebg] (5.50, 1.28) rectangle (8.80, 2.13)
+        node[midway, font=\footnotesize] {\texttt{fac(3)} $\to 6$};
+    \draw[thick, draw=codeframe, fill=codebg] (5.50, 2.36) rectangle (8.80, 3.21)
+        node[midway, font=\footnotesize] {\texttt{fac(2)} $\to 2$};
+    \draw[thick, dashed, draw=codegray, fill=white] (5.50, 3.44) rectangle (8.80, 4.29)
+        node[midway, font=\scriptsize, text=codegray] {Popped (ret $1$)};
 
-Observe how many times sub-problems are re-computed. The call \texttt{fib(2)} is computed entirely from scratch twice. \texttt{fib(1)} is computed three times. 
+    \draw[->, thick, codegreen, -{Stealth[length=5pt]}] (9.15, 4.05) -- (9.15, 0.55)
+        node[midway, right=2pt, font=\scriptsize\bfseries, text=codegreen] {Returns};
 
-\subsection{The Three Laws of Recursion}
-For a recursive algorithm to be correct, it must obey three rules:
+    % Col 3: Evaluation Cascade & Space Invariant Card (x in 10.65 to 15.25 -> 0.5cm clear of Returns!)
+    \node[anchor=west, draw=codeframe, fill=codebg, rounded corners=3pt, thick, align=left, font=\scriptsize, inner sep=7pt, text width=4.25cm] at (10.65, 2.30) {
+        {\footnotesize\bfseries\color{primaryblue}Return Cascade}\\[4pt]
+        \texttt{fac(1)} $= 1$\\
+        \texttt{fac(2)} $= 2 \times 1 = 2$\\
+        \texttt{fac(3)} $= 3 \times 2 = 6$\\
+        \texttt{fac(4)} $= 4 \times 6 = \mathbf{24}$\\[6pt]
+        {\footnotesize\bfseries\color{accentteal}Stack Space Invariant}\\[2pt]
+        Peak stack depth $= O(n)$ live frames. Frames are popped in exact LIFO order as calls return.
+    };
+\end{tikzpicture}
+\caption{Call stack activation-frame lifecycle for recursive \texttt{fac(4)}. Descent allocates $n$ live frames; reaching the base case triggers LIFO unwinding and return multiplication.}
+\label{fig:call-stack}
+\end{figure}
+
+\begin{watchoutbox}[Watch Out --- Stack Overflow on Deep Recursion]
+Default OS stack limits are typically $1$--$8$ MB. If each frame takes $f \approx 100$ bytes, depth $d = 10{,}000$ consumes $\approx 1$ MB---already near the crash limit! For linear recursion deeper than $\sim 10^4$, rewrite using an iterative loop or an explicit heap-allocated \texttt{std::vector} stack.
+\end{watchoutbox}
+
+\subsection{Recursion and the Three Laws}
+
+\textbf{Recursion} is simply a function calling itself on a strictly smaller subproblem. Every valid recursive function must satisfy three non-negotiable laws:
 \begin{enumerate}
-    \item A recursive algorithm must have a base case.
-    \item A recursive algorithm must change its state and move toward the base case.
-    \item A recursive algorithm must call itself, recursively.
+    \item \textbf{Base case:} A direct stopping condition that returns without recursing.
+    \item \textbf{Strict progress:} Every recursive call moves the state strictly closer to a base case.
+    \item \textbf{Self-delegation:} Combine the smaller subproblem's return value into the answer for the current call.
 \end{enumerate}
 
+\begin{tryitbox}{Trace}{Unwinding the Call Stack for power(2, 4)}{ex1}
+Trace \texttt{power(b, e)} defined by \texttt{power(b, 0) = 1} and \texttt{power(b, e) = b * power(b, e - 1)} for \texttt{power(2, 4)}. List every frame pushed during descent, state the peak stack depth, and list the return values as each frame pops.
+\end{tryitbox}
+
+\subsection{Recursion Trees and Redundant Work}
+
+\painbeat When a function makes \emph{two or more} recursive calls per invocation (branching factor $b \ge 2$), the call trace fans out into an exponential \textbf{recursion tree}.
+
+\ahabeat Drawing the tree immediately exposes whether subproblems are \emph{independent} (good for divide-and-conquer / backtracking) or \emph{repeated} (signals Dynamic Programming).
+
+\examplebeat For Fibonacci $\text{fib}(n) = \text{fib}(n-1) + \text{fib}(n-2)$ with $\text{fib}(0) = 0, \text{fib}(1) = 1$, Figure~\ref{fig:fib-tree} reveals that \texttt{fib(4)} computes \texttt{fib(2)} completely from scratch \emph{twice} and \texttt{fib(1)} \emph{three times}!
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    fibnode/.style={circle, draw=primaryblue, fill=primaryblue!8, thick, font=\footnotesize\bfseries, text=primaryblue, inner sep=1pt, minimum size=1.08cm},
+    basenode/.style={circle, draw=codeframe, fill=white, thick, font=\footnotesize, text=codeink, inner sep=1pt, minimum size=1.08cm}
+]
+    % Root fib(4)
+    \node[fibnode] (r) at (7.4, 5.0) {\texttt{fib(4)}};
+
+    % Level 1
+    \node[fibnode] (f3)   at (3.7, 3.45) {\texttt{fib(3)}};
+    \node[fibnode] (f2_r) at (11.1, 3.45) {\texttt{fib(2)}};
+    \draw[thick, draw=codeframe] (r) -- (f3);
+    \draw[thick, draw=codeframe] (r) -- (f2_r);
+
+    % Level 2
+    \node[fibnode]  (f2_l) at (2.0, 1.90) {\texttt{fib(2)}};
+    \node[basenode] (f1_m) at (5.4, 1.90) {\texttt{fib(1)}};
+    \draw[thick, draw=codeframe] (f3) -- (f2_l);
+    \draw[thick, draw=codeframe] (f3) -- (f1_m);
+
+    \node[basenode] (f1_r) at (9.4, 1.90) {\texttt{fib(1)}};
+    \node[basenode] (f0_r) at (12.8, 1.90) {\texttt{fib(0)}};
+    \draw[thick, draw=codeframe] (f2_r) -- (f1_r);
+    \draw[thick, draw=codeframe] (f2_r) -- (f0_r);
+
+    % Level 3
+    \node[basenode] (f1_l) at (1.0, 0.35) {\texttt{fib(1)}};
+    \node[basenode] (f0_l) at (3.0, 0.35) {\texttt{fib(0)}};
+    \draw[thick, draw=codeframe] (f2_l) -- (f1_l);
+    \draw[thick, draw=codeframe] (f2_l) -- (f0_l);
+
+    % Highlight duplicate subtrees in teal dashed boxes
+    \draw[thick, draw=accentteal, dashed, rounded corners=3pt] (0.20, -0.35) rectangle (3.80, 2.60);
+    \node[text=accentteal, font=\scriptsize\bfseries, below=2pt] at (2.0, -0.38) {Subtree A: \texttt{fib(2)}};
+
+    \draw[thick, draw=accentteal, dashed, rounded corners=3pt] (8.60, 1.15) rectangle (13.60, 4.15);
+    \node[text=accentteal, font=\scriptsize\bfseries, below=2pt] at (11.1, 1.12) {Identical Subtree B: \texttt{fib(2)}};
+
+    % Bottom summary card with crisp vertical clearance
+    \node[draw=codeframe, fill=codebg, rounded corners=3pt, thick, align=center, font=\footnotesize, inner sep=6pt, text width=14.6cm] at (7.4, -1.65) {
+        \textbf{\color{accentamber}Exponential Duplication:} \texttt{fib(2)} runs \textbf{twice} and \texttt{fib(1)} runs \textbf{three times} --- overall $O(2^n)$ calls.\\
+        Caching completed states (Memoization / DP) collapses this entire tree into an $O(n)$ chain.
+    };
+\end{tikzpicture}
+\caption{Fibonacci recursion tree for \texttt{fib(4)}. Dashed boxes highlight identical \texttt{fib(2)} subtrees recomputed from scratch.}
+\label{fig:fib-tree}
+\end{figure}
+
+\begin{tryitbox}{Edge Cases}{Stack Overflow Budget and Missing Base Case}{ex2}
+\begin{enumerate}
+    \item A recursive function uses $128$ bytes per stack frame on a system with a $2$ MB ($2{,}097{,}152$-byte) stack. Around what recursion depth does it overflow?
+    \item Suppose \texttt{factorial(int n)} only checks \texttt{if (n == 0) return 1;} and someone calls \texttt{factorial(-3)}. What happens, and how do you fix it?
+\end{enumerate}
+\end{tryitbox}
+
+% ============================================================================
 \section{Backtracking: Choose, Explore, Undo}
+% ============================================================================
 
-\subsection{Backtracking}
+When you must \emph{list every valid configuration} (or find one valid puzzle layout), recursion becomes \textbf{backtracking}: a depth-first walk through a decision tree that cuts off hopeless branches immediately.
 
-\textbf{Backtracking} is a systematic way to search for solutions to a problem by exploring all possible options, but abandoning a path as soon as you realize it cannot lead to a valid solution. 
+\begin{notationbox}[Symbols Used in Section 2]
+    State tuple & Minimal live state describing the current decision node & \texttt{(current, open, close)} \\
+    $b,\; d$ & Branching factor (choices per node) and maximum depth & $b = 2,\; d = 2n$ for brackets \\
+    $C_n$ & $n$-th Catalan number $\frac{1}{n+1}\binom{2n}{n}$ (valid bracket strings) & $C_2 = 2,\; C_3 = 5,\; C_8 = 1{,}430$ \\
+    $\times$ & Pruned branch aborted immediately upon violating a constraint & Dashed red node in trees \\
+\end{notationbox}
 
-Think of it as navigating a maze. You reach an intersection with three paths. You pick the first path and walk down it. If it leads to a dead end, you walk back to the intersection (\textbf{undo the choice}) and try the next path. You are doing a depth-first search through a \textbf{decision tree}.
+\subsection{Backtracking vs.\ Brute Force}
 
-\begin{calloutbox}{Backtracking vs. Brute Force}
-Brute force generates every possible configuration and then filters. Backtracking checks constraints incrementally and abandons a branch the moment it becomes invalid. For generate parentheses, brute force generates all $2^{2n}$ binary strings of length $2n$ and then checks validity --- for $n=8$ that is 65,536 strings. Backtracking explores only the $C_8 = 1430$ valid ones plus a few pruned branches.
-\end{calloutbox}
+\painbeat Naive brute force builds \emph{every} possible sequence to full length and filters at the end. For Generate Parentheses with $n = 8$, brute force constructs all $2^{16} = 65{,}536$ bracket strings even though only $C_8 = 1{,}430$ are valid!
 
-\subsection{The Backtracking Template}
+\ahabeat Check constraints \textbf{at every step} as you extend a partial candidate. The instant a partial prefix becomes impossible to complete (like starting with \texttt{')'}), abandon that entire subtree immediately (\textbf{pruning})!
 
-The standard pattern for all backtracking problems looks like this:
+\examplebeat Imagine exploring a maze: pick a corridor, walk down it, and the moment you hit a brick wall, step back to the junction (\textbf{undo}) and try the next corridor. You never walk past a dead end.
 
-\begin{calloutbox}{The One Pattern Behind All Backtracking}
-The make-a-choice $\rightarrow$ recurse $\rightarrow$ undo-the-choice structure is always the same. The only thing that changes between different backtracking problems is what ``choice'' means and what the constraints are.
-\end{calloutbox}
+\subsection{The Universal Backtracking Template}
 
-\subsection{Pruning}
+\painbeat Copying a partial array or string on every recursive call burns $O(d)$ memory per active frame ($O(d^2)$ total) and slows allocation dramatically.
 
-\textbf{Pruning} is the act of stopping the exploration of a branch early because you know it is hopeless. There are two types of rules for pruning:
-\begin{itemize}
-    \item \textbf{Constraint}: A hard rule. Violating it makes the path invalid. Pruning on hard constraints is always safe and always beneficial.
-    \item \textbf{Optimality Condition}: A soft rule. The path might be valid, but you already have a better solution, so it is suboptimal. 
-\end{itemize}
+\ahabeat Share \textbf{one mutable state buffer} (e.g., \texttt{current}) across the entire recursion! Before recursing into a child, mutate \texttt{current}; immediately after the call returns, undo that exact mutation so \texttt{current} is restored for the next sibling.
 
-\subsection{Generate Parentheses: Constraint-Based Pruning}
-
-Consider generating all valid combinations of $n$ pairs of parentheses. Let us use $n=2$. We have 4 slots to fill. At each slot, we can place a \texttt{(} or a \texttt{)}. 
-
-Our two hard constraints for pruning:
-\begin{enumerate}
-    \item The total number of open parentheses cannot exceed $n$.
-    \item The total number of close parentheses cannot exceed the number of open parentheses placed so far (otherwise, we have an unmatched closing bracket).
-\end{enumerate}
-
-Step-by-step trace for $n=2$:
-\begin{itemize}
-    \item Start: \texttt{""} (open: 0, close: 0).
-    \item \textbf{Choice \texttt{(}}: \texttt{(} (open: 1, close: 0). Valid.
-        \begin{itemize}
-            \item \textbf{Choice \texttt{(}}: \texttt{((} (open: 2, close: 0). Valid.
-                \begin{itemize}
-                    \item \textbf{Choice \texttt{(}}: Cannot place open, open == 2. \textbf{PRUNED}.
-                    \item \textbf{Choice \texttt{)}}: \texttt{(()} (open: 2, close: 1). Valid.
-                        \begin{itemize}
-                            \item \textbf{Choice \texttt{)}}: \texttt{(())} (open: 2, close: 2). Base case! Record solution.
-                        \end{itemize}
-                \end{itemize}
-            \item \textbf{Choice \texttt{)}}: \texttt{()} (open: 1, close: 1). Valid.
-                \begin{itemize}
-                    \item \textbf{Choice \texttt{(}}: \texttt{()(} (open: 2, close: 1). Valid.
-                        \begin{itemize}
-                            \item \textbf{Choice \texttt{)}}: \texttt{()()} (open: 2, close: 2). Base case! Record solution.
-                        \end{itemize}
-                    \item \textbf{Choice \texttt{)}}: Cannot place close, close == open. \textbf{PRUNED}.
-                \end{itemize}
-        \end{itemize}
-    \item \textbf{Choice \texttt{)}}: Cannot place close, close == open. \textbf{PRUNED}.
-\end{itemize}
-
-\subsection{Subsets, Permutations, and Combinations}
-
-\textbf{Subsets (Power Set):} Generating all subsets of $\{1, 2, 3\}$. The decision at each step is simply: do we include the current element, or exclude it?
-For 3 elements, we make 3 yes/no decisions, leading to $2^3 = 8$ subsets.
-
-\textbf{Permutations:} Generating all orderings of $[1, 2, 3]$. We want arrays of length 3 where each element appears exactly once. Our choice is picking which available number to place next. We use a \texttt{used} array to keep track of which numbers we have already chosen. Where does this come from? Intuition: If we do not track what is used, we might pick the exact same index twice, which would just give us length-3 combinations with replacement. The \texttt{used} array effectively shrinks the available pool without needing to resize the underlying container.
-
-\textbf{Combinations:} Choosing $k$ elements from $n$. To avoid generating duplicates (like picking [1,2] and then [2,1]), we enforce an order. We pass a \texttt{start} index into our recursive function so that we only pick elements that appear \textit{after} our last pick. Where does this come from? Intuition: Combinations do not care about order, so we can enforce that every valid combination is strictly sorted. The \texttt{start} index guarantees we never pick an element smaller than what we already picked.
-
-\section{Key Algorithmic Patterns}
-
-\textbf{Why the naive approach fails:}
-Imagine you want to find all valid permutations of 10 elements. The naive approach is to generate all sequences and filter the invalid ones. There are $10! = 3,628,800$ combinations. With 12 elements, it jumps to 479 million. If you have constraints, many branches can be pruned before they are ever completed. If you know the first element being \texttt{5} invalidates the puzzle, backtracking skips the $9! = 362,880$ permutations that start with \texttt{5}. Brute force generates all of them anyway.
-
-\textbf{The Efficient Technique:}
-The core pattern is treating the \textbf{search space as a tree, performing a depth-first traversal (DFS), and pruning early}. You maintain a single piece of state (like a string or an array). As you go deeper down the tree, you modify this state. When you return from the recursive call (backtrack), you revert the state to exactly how it was before. This allows you to explore massive search spaces with extremely minimal memory (just the call stack and one state variable).
-
-\textbf{Step-by-Step Trace: Generate Parentheses for n=2}
-\begin{enumerate}
-    \item State is empty string \texttt{""}.
-    \item Try adding \texttt{(}. State is \texttt{"("}. Recurse.
-    \item Try adding \texttt{(}. State is \texttt{"(("}. Recurse.
-    \item Try adding \texttt{)}. State is \texttt{"(()"}. Recurse.
-    \item Try adding \texttt{)}. State is \texttt{"(())"}. Length is 4. Add to results. Return.
-    \item Backtrack: undo \texttt{)} to get \texttt{"(()"}. 
-    \item Backtrack: undo \texttt{)} to get \texttt{"(("}. 
-    \item Backtrack: undo \texttt{(} to get \texttt{"("}.
-    \item Try adding \texttt{)}. State is \texttt{"()"}. Recurse.
-    \item Try adding \texttt{(}. State is \texttt{"()("}. Recurse.
-    \item Try adding \texttt{)}. State is \texttt{"()()"}. Length is 4. Add to results. Return.
-\end{enumerate}
-
-\subsection{The Make-a-Choice $\rightarrow$ Explore $\rightarrow$ Undo Template}
-
-Backtracking is elegant because you do not have to copy massive states. You share one global state (like a \texttt{current} list). You append to it, recursively explore, and then pop the last element off to restore it for the next choice.
-
-Where does this come from? The intuition is that each recursive function invocation conceptually represents a node in the decision tree. To visit its sibling node, you must reverse whatever side-effects the current node caused on the shared state, returning it to the exact condition it was in when the parent node handed it down.
-
-\subsection{Handling Duplicate Elements}
-When the input array contains duplicate elements (for example, \texttt{[1, 2, 2]}), standard backtracking will generate duplicate subsets or permutations.
-The efficient pattern to handle this is:
-\begin{enumerate}
-    \item \textbf{Sort the input} so that duplicate elements are adjacent.
-    \item \textbf{Skip equal siblings}: Before making a choice in your loop, check if the current element is equal to the previous element. If it is, and the previous element was skipped (or not used at this level), skip the current element too.
-\end{enumerate}
-
-For subsets of \texttt{[1, 2, 2]}:
-\begin{itemize}
-    \item Pick \texttt{1} $\rightarrow$ Pick first \texttt{2} $\rightarrow$ \texttt{[1, 2]}.
-    \item Backtrack to \texttt{1}. Next choice is the second \texttt{2}.
-    \item Since the second \texttt{2} is identical to the first \texttt{2} (which we just finished exploring), we skip it to avoid generating another \texttt{[1, 2]}.
-\end{itemize}
-
-\section{Worked Examples}
-
-\subsection{Example 1: Factorial}
-Compute $4!$.
-\begin{enumerate}
-    \item call \texttt{fac(4)}. Base case? No. Returns \texttt{4 * fac(3)}.
-    \item call \texttt{fac(3)}. Base case? No. Returns \texttt{3 * fac(2)}.
-    \item call \texttt{fac(2)}. Base case? No. Returns \texttt{2 * fac(1)}.
-    \item call \texttt{fac(1)}. Base case? Yes. Returns \texttt{1}.
-    \item \texttt{fac(2)} receives 1, computes $2 \times 1 = 2$, returns 2.
-    \item \texttt{fac(3)} receives 2, computes $3 \times 2 = 6$, returns 6.
-    \item \texttt{fac(4)} receives 6, computes $4 \times 6 = 24$, returns 24.
-\end{enumerate}
-
-\subsection{Example 2: Generate Parentheses (n=3)}
-The total number of valid strings for $n$ pairs is given by the $n$-th \textbf{Catalan number}, $C_n$. For $n=3$, $C_3 = 5$. The valid configurations are:
-1. \texttt{((()))} \\
-2. \texttt{(()())} \\
-3. \texttt{(())()} \\
-4. \texttt{()(())} \\
-5. \texttt{()()()}
-
-\vspace{0.5cm}
-\noindent\textbf{Decision Tree for n=2}:
-
-\subsection{Example 3: Subsets of \{1, 2\}}
-We start with an empty set. At each element, we can include or exclude. 
-\begin{enumerate}
-    \item Exclude 1 $\rightarrow$ Exclude 2 $\rightarrow$ \texttt{[]}
-    \item Exclude 1 $\rightarrow$ Include 2 $\rightarrow$ \texttt{[2]}
-    \item Include 1 $\rightarrow$ Exclude 2 $\rightarrow$ \texttt{[1]}
-    \item Include 1 $\rightarrow$ Include 2 $\rightarrow$ \texttt{[1, 2]}
-\end{enumerate}
-
-\vspace{0.5cm}
-\noindent\textbf{Decision Tree for Subsets of \{1, 2\}}:
-
-\subsection{Example 4: Permutations of [1, 2, 3]}
-We want all orderings.
-\begin{enumerate}
-    \item Start empty. Choose 1. Remaining: 2, 3.
-    \item Choose 2. Remaining: 3. Choose 3 $\rightarrow$ \texttt{[1, 2, 3]}.
-    \item Backtrack to when remaining was 2, 3. Choose 3. Remaining: 2. Choose 2 $\rightarrow$ \texttt{[1, 3, 2]}.
-    \item Backtrack to start. Choose 2. Remaining: 1, 3.
-    \item Choose 1 $\rightarrow$ \texttt{[2, 1, 3]}. Choose 3 $\rightarrow$ \texttt{[2, 3, 1]}.
-    \item Backtrack to start. Choose 3. Remaining: 1, 2.
-    \item Choose 1 $\rightarrow$ \texttt{[3, 1, 2]}. Choose 2 $\rightarrow$ \texttt{[3, 2, 1]}.
-\end{enumerate}
-
-\subsection{Example 5: N-Queens (N=4)}
-Place 4 queens on a $4 \times 4$ board so none attack each other (no two in the same row, column, or diagonal). Let us trace it and see pruning in action. We place row by row.
-\begin{enumerate}
-    \item Row 0: Place queen at column 0.
-    \item Row 1: Columns 0 and 1 are attacked. Place at column 2.
-    \item Row 2: Columns 0, 1, 2, 3 are all attacked! Dead end. \textbf{PRUNED}. Backtrack to Row 1.
-    \item Row 1: Move queen to column 3.
-    \item Row 2: Place at column 1.
-    \item Row 3: All columns attacked. Dead end. \textbf{PRUNED}. Backtrack.
-    \item Backtrack all the way to Row 0. Move queen to column 1.
-    \item Row 1: Place at column 3.
-    \item Row 2: Place at column 0.
-    \item Row 3: Place at column 2. Valid! (Solution 1)
-\end{enumerate}
-
-By checking constraints before diving into deeper rows, we avoid generating thousands of invalid boards. Total solutions for N=4 is 2. (For 8-Queens it is 92).
-
-\section{C++ Implementations}
-
-\subsection{Simple Recursion}
-This is a straightforward recursive function with no choices and no backtracking.
-
-\begin{lstlisting}[caption={Factorial using recursion}]
-#include <cstdint>
-
-[[nodiscard]] constexpr int64_t factorial(int n) noexcept {
-    // 1. Base case: 0! and 1! are 1
-    if (n <= 1) {
-        return 1;
+\begin{formulabox}[The Universal Choose $\to$ Explore $\to$ Undo Template]
+\begin{verbatim}
+void backtrack(State& state, ChoiceParams params, Results& results) {
+    if (is_complete(state)) {          // 1. Base case: valid full solution
+        results.push_back(state);
+        return;
     }
-    // 2. Recursive step: n * (n-1)!
-    return n * factorial(n - 1);
+    for (const auto& choice : candidates(params)) {
+        if (!is_feasible(state, choice)) continue;   // 2. Prune early!
+        apply(state, choice);                        // 3. Choose
+        backtrack(state, next_params(choice), results); // 4. Explore
+        undo(state, choice);                         // 5. Undo (rollback)
+    }
+}
+\end{verbatim}
+\textbf{Read this as:} ``Check if done; otherwise try each legal next move, recurse deeper, and cleanly roll back your move before trying the sibling move.''
+\end{formulabox}
+
+\invariantbeat{Backtracking Rollback} Upon returning from any call \texttt{backtrack(state, ...)}, the shared \texttt{state} buffer contains the \textbf{exact same elements} it held right before the call began.
+
+\subsection{Two Kinds of Pruning}
+
+\textbf{Pruning} stops a recursive branch before it reaches a leaf. Every pruning rule falls into one of two categories:
+\begin{itemize}
+    \item \textbf{Hard Feasibility Constraint:} Violating it makes every descendant invalid (e.g., \texttt{close > open}, or two queens on the same diagonal). Always safe and always speeds up search.
+    \item \textbf{Optimality Bound (Branch-and-Bound):} The partial path is legal, but even its best-case completion cannot beat the best solution already found (e.g., current path cost $\ge \text{best\_cost}$).
+\end{itemize}
+
+\subsection{Generate Parentheses: Constraint Pruning Visualized}
+
+Consider generating all balanced strings of $n = 2$ pairs of parentheses ($2n = 4$ slots). At any prefix with \texttt{open} left brackets and \texttt{close} right brackets placed so far:
+\begin{enumerate}
+    \item You may append \texttt{'('} only if $\text{open} < n$.
+    \item You may append \texttt{')'} only if $\text{close} < \text{open}$ (otherwise you create an unmatched closer).
+\end{enumerate}
+
+Figure~\ref{fig:parens-tree} shows how checking these two rules at every node cuts off invalid subtrees immediately while leaving only the $C_2 = 2$ valid leaves.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    tree_node/.style={rectangle, rounded corners=2pt, draw=codeframe, fill=codebg, thick, font=\scriptsize, align=center, inner sep=3.5pt},
+    pruned_node/.style={rectangle, rounded corners=2pt, draw=red!70!black, dashed, fill=red!70!black!6, thick, font=\scriptsize, text=red!70!black, align=center, inner sep=3pt},
+    leaf_node/.style={rectangle, rounded corners=2pt, draw=codegreen, fill=codegreen!10, line width=1.2pt, font=\scriptsize\bfseries, text=codegreen, align=center, inner sep=3.5pt}
+]
+    % Root
+    \node[tree_node, draw=primaryblue, fill=primaryblue!8, text=primaryblue] (root) at (4.4, 5.10) {\textbf{Root}\\``'' {\tiny(0,0)}};
+
+    % Level 1
+    \node[tree_node]   (n_open)         at (2.6, 3.65) {``(''\\{\tiny(1,0)}};
+    \node[pruned_node] (n_close_pruned) at (7.0, 3.65) {``)''\\$\times$ Pruned\\{\tiny close $>$ open}};
+    \draw[thick, draw=codeframe] (root) -- (n_open);
+    \draw[thick, draw=red!70!black, dashed] (root) -- (n_close_pruned);
+
+    % Level 2
+    \node[tree_node] (n_oo) at (1.5, 2.15) {``((''\\{\tiny(2,0)}};
+    \node[tree_node] (n_oc) at (4.5, 2.15) {``()''\\{\tiny(1,1)}};
+    \draw[thick, draw=codeframe] (n_open) -- (n_oo);
+    \draw[thick, draw=codeframe] (n_open) -- (n_oc);
+
+    % Level 3
+    \node[pruned_node] (n_ooo_pruned) at (0.6, 0.55) {``(((''\\$\times$ Pruned\\{\tiny open $> 2$}};
+    \node[tree_node]   (n_ooc)        at (2.5, 0.55) {``(()''\\{\tiny(2,1)}};
+    \draw[thick, draw=red!70!black, dashed] (n_oo) -- (n_ooo_pruned);
+    \draw[thick, draw=codeframe] (n_oo) -- (n_ooc);
+
+    \node[tree_node]   (n_oco)        at (4.5, 0.55) {``()(''\\{\tiny(2,1)}};
+    \node[pruned_node] (n_occ_pruned) at (6.6, 0.55) {``())''\\$\times$ Pruned\\{\tiny close $>$ open}};
+    \draw[thick, draw=codeframe] (n_oc) -- (n_oco);
+    \draw[thick, draw=red!70!black, dashed] (n_oc) -- (n_occ_pruned);
+
+    % Level 4 (Valid leaves)
+    \node[leaf_node] (leaf1) at (2.5, -0.95) {``(())''\\$\checkmark$ Valid};
+    \node[leaf_node] (leaf2) at (4.5, -0.95) {``()()''\\$\checkmark$ Valid};
+    \draw[thick, draw=codegreen] (n_ooc) -- (leaf1);
+    \draw[thick, draw=codegreen] (n_oco) -- (leaf2);
+
+    % Right Side Panel: Backtracking Invariants Card (x in 9.15 to 15.25)
+    \node[anchor=west, draw=codeframe, fill=codebg, rounded corners=3pt, thick, align=left, font=\scriptsize, inner sep=7pt, text width=5.75cm] at (9.15, 2.15) {
+        {\footnotesize\bfseries\color{primaryblue}Backtracking Invariants ($n = 2$)}\\[5pt]
+        \textbf{1.\ Feasibility Rules:}\\
+        Append \texttt{'('} iff $\text{open} < n$.\\
+        Append \texttt{')'} iff $\text{close} < \text{open}$.\\[5pt]
+        \textbf{2.\ Early Pruning ($\times$):}\\
+        Dashed red branches stop immediately before descending into invalid subtrees.\\[5pt]
+        \textbf{3.\ Rollback:}\\
+        After exploring a child, \texttt{pop\_back()} restores the shared string for its sibling.
+    };
+\end{tikzpicture}
+\caption{Pruned backtracking decision tree for Generate Parentheses ($n = 2$). Dashed red nodes mark branches cut off immediately upon violating feasibility.}
+\label{fig:parens-tree}
+\end{figure}
+
+\begin{tryitbox}{Trace}{Pruned Tree for Generate Parentheses (n = 2)}{ex3}
+Without looking above, reconstruct the pruned decision tree for Generate Parentheses ($n = 2$) from \texttt{""} tracking \texttt{(open, close)}. Label every pruned branch with $\times$ and the exact violated rule, and verify that the surviving leaf count equals $C_2 = 2$.
+\end{tryitbox}
+
+% ============================================================================
+\section{Key Algorithmic Patterns: Canonical Families \& Duplicates}
+% ============================================================================
+
+Almost every combinatorial search problem is a slight twist on one of four canonical backtracking skeletons: \textbf{Subsets}, \textbf{Combinations}, \textbf{Permutations}, or \textbf{Constraint Satisfaction (N-Queens)}.
+
+\begin{notationbox}[Symbols Used in Section 3]
+    \texttt{start} & Leftmost index still eligible to pick (enforces ascending order) & Prevents $[2,1]$ after $[1,2]$ \\
+    \texttt{used[i]} & Boolean flag marking whether \texttt{nums[i]} is on the current path & Used in Permutations \\
+    $d_1,\; d_2$ & N-Queens main ($r - c + n - 1$) and anti-diagonal ($r + c$) IDs & $d_1, d_2 \in [0, 2n - 2]$ \\
+\end{notationbox}
+
+\subsection{Why Naive Filtering Fails: Before vs.\ After}
+
+Imagine finding valid permutations of $n = 10$ elements where placing \texttt{5} first violates a rule. There are $10! = 3{,}628{,}800$ permutations (and $12! \approx 4.79 \times 10^8$). Naive generate-and-filter builds all $9! = 362{,}880$ doomed permutations starting with \texttt{5}, whereas backtracking discards that entire $362{,}880$-leaf subtree in $O(1)$ time!
+
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.6cm} >{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash\bfseries}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Family}} & \textcolor{primaryblue}{\textbf{Naive / Unpruned}} & \textcolor{primaryblue}{\textbf{Backtracking Trick}} & \textcolor{primaryblue}{\textbf{Key State}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Subsets (Power Set) & Copy arrays at every split & Shared buffer + \texttt{start} index & \texttt{(start, current)} \\
+Combinations ($\binom{n}{k}$) & Generate $n^k$ tuples \& deduplicate & Ascending \texttt{start} + tail bound & \texttt{i <= n - need + 1} \\
+Permutations ($n!$) & Generate $n^n$ tuples \& filter repeats & \texttt{used[i]} availability mask & \texttt{(used, current)} \\
+Unique Dupes & Store all results in a \texttt{std::set} & Sort + skip-equal-sibling check & \texttt{nums[i] == nums[i-1]} \\
+N-Queens & Scan $N \times N$ board per check & $O(N)$-space col/diag arrays & \texttt{cols, diag1, diag2} \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
+
+\begin{itemize}
+    \item \textbf{Subsets (Power Set):} For each element, either \emph{include} it or \emph{exclude} it ($2^n$ leaves, Figure~\ref{fig:subsets-tree}).
+    \item \textbf{Combinations ($\binom{n}{k}$):} Order does not matter, so passing \texttt{start = i + 1} guarantees strictly increasing picks (never generating both $[1, 2]$ and $[2, 1]$).
+    \item \textbf{Permutations ($n!$):} Order matters and every element is used once. Without a \texttt{used} array you would pick the same index twice and generate $n^n$ \textbf{permutations with repetition} instead of $n!$ permutations!
+\end{itemize}
+
+\begin{tryitbox}{Debug}{Spot the Missing-Undo Bug}{ex4}
+Suppose \texttt{backtrackSubsets} on \texttt{[1, 2]} executes \texttt{current.push\_back(nums[i]); backtrackSubsets(nums, i + 1, current, result);} but accidentally \textbf{omits \texttt{current.pop\_back();}}. Trace the exact 4 vectors pushed into \texttt{result} and explain why sibling branches get corrupted.
+\end{tryitbox}
+
+\subsection{Handling Duplicate Elements Without a Hash Set}
+
+\painbeat When the input has repeated values like \texttt{[1, 2, 2]}, standard backtracking treats the two \texttt{2}s at indices $1$ and $2$ as distinct and emits duplicate outputs like \texttt{[1, 2]} twice. Dumping outputs into a \texttt{std::set} wastes both time and memory.
+
+\ahabeat \textbf{Sort the input first} (\texttt{std::ranges::sort(nums)}) so identical values sit side-by-side. Then enforce one simple symmetry-breaking rule: \emph{never start a new sibling branch with a value identical to a sibling you already finished exploring at the same depth!}
+
+\begin{formulabox}[The Two Duplicate-Skipping Rules (After Sorting)]
+\begin{itemize}
+    \item \textbf{Subsets II / Combinations II (uses \texttt{start}):}
+    \quad \texttt{if (i > start \&\& nums[i] == nums[i - 1]) continue;}
+    \item \textbf{Permutations II (uses \texttt{used}):}
+    \quad \texttt{if (i > 0 \&\& nums[i] == nums[i - 1] \&\& !used[i - 1]) continue;}
+\end{itemize}
+\textbf{Read this as:} ``At any single loop level, if \texttt{nums[i]} equals the previous element \emph{and that previous element is not currently active above us}, skip \texttt{nums[i]} because its entire subtree was already explored!''
+\end{formulabox}
+
+\begin{watchoutbox}[Watch Out --- \texttt{i > start} vs.\ \texttt{i > 0} in Subsets II]
+Writing \texttt{if (i > 0 \&\& nums[i] == nums[i - 1])} inside Subsets II is a famous bug! When \texttt{i == start}, you are at a \emph{deeper} recursion level where the first \texttt{2} was \textbf{chosen}---you \emph{must} allow picking the second \texttt{2} to form \texttt{[1, 2, 2]} and \texttt{[2, 2]}. Only skip when \texttt{i > start} (sibling level)!
+\end{watchoutbox}
+
+\begin{tryitbox}{Trace}{Subsets II on Sorted Input}{ex5}
+Trace \texttt{subsets\_with\_dup} on \texttt{[1, 2, 2]} using \texttt{if (i > start \&\& nums[i] == nums[i - 1]) continue;}. List all $6$ unique subsets in exact visit order and name the two \texttt{(start, i)} loop iterations that get skipped.
+\end{tryitbox}
+
+% ============================================================================
+\section{Worked Examples}
+% ============================================================================
+
+Work through these five canonical examples step-by-step on paper. Notice how every decision tree mirrors the exact call order of our C++23 implementations in Section~5.
+
+\begin{example}[Recursive Factorial: Computing $4!$]
+Trace \texttt{factorial(4)} through descent and unwinding:
+\begin{enumerate}
+    \item \texttt{factorial(4)} $\to$ waits for \texttt{4 * factorial(3)}.
+    \item \texttt{factorial(3)} $\to$ waits for \texttt{3 * factorial(2)}.
+    \item \texttt{factorial(2)} $\to$ waits for \texttt{2 * factorial(1)}.
+    \item \texttt{factorial(1)} hits the base case and returns $1$.
+    \item Unwind: \texttt{factorial(2)} $= 2 \times 1 = 2 \to$ \texttt{factorial(3)} $= 3 \times 2 = 6 \to$ \texttt{factorial(4)} $= 4 \times 6 = \mathbf{24}$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Generate Parentheses for $n = 3$]
+The number of valid $n$-pair bracket strings equals the $n$-th Catalan number $C_n = \frac{1}{n+1}\binom{2n}{n}$. For $n = 3$, $C_3 = \frac{1}{4}\binom{6}{3} = \mathbf{5}$. Choosing \texttt{'('} before \texttt{')'} visits them in exact lexicographical order:
+\[
+    \texttt{((()))},\qquad \texttt{(()())},\qquad \texttt{(())()},\qquad \texttt{()(())},\qquad \texttt{()()()}.
+\]
+Notice that brute force would test all $2^6 = 64$ strings, whereas constraint pruning (\texttt{open < 3}, \texttt{close < open}) never generates a single unbalanced prefix.
+\end{example}
+
+\begin{example}[Subsets of $\{1, 2\}$: Include / Exclude Decision Tree]
+At each element, decide \emph{exclude} (left) or \emph{include} (right). For $n = 2$ elements, two binary decisions produce all $2^2 = 4$ subsets at the leaves (Figure~\ref{fig:subsets-tree}):
+\begin{enumerate}
+    \item Skip $1 \to$ Skip $2 \implies \texttt{[]}$.
+    \item Skip $1 \to$ Take $2 \implies \texttt{[2]}$.
+    \item Take $1 \to$ Skip $2 \implies \texttt{[1]}$.
+    \item Take $1 \to$ Take $2 \implies \texttt{[1, 2]}$.
+\end{enumerate}
+\end{example}
+
+\begin{figure}[htbp]
+\centering
+\begin{forest}
+for tree={
+    rectangle, rounded corners=2pt,
+    draw=codeframe, fill=codebg, thick,
+    font=\footnotesize, align=center, inner sep=4pt,
+    edge={-{Stealth[length=4.5pt]}, thick, codegray},
+    l sep=16pt, s sep=22pt
+}
+[{\textbf{Start:} \texttt{[]}\\{\scriptsize decide on $1$}}, draw=primaryblue, fill=primaryblue!8, text=primaryblue
+    [{\texttt{[]}\\{\scriptsize decide on $2$}}, edge label={node[midway, left=4pt, font=\scriptsize\color{codegray}]{skip $1$}}
+        [{\texttt{[]}\\{\scriptsize$\checkmark$}}, draw=codegreen, fill=codegreen!10, text=codegreen, font=\footnotesize\bfseries,
+            edge label={node[midway, left=3pt, font=\scriptsize\color{codegray}]{skip $2$}}]
+        [{\texttt{[2]}\\{\scriptsize$\checkmark$}}, draw=codegreen, fill=codegreen!10, text=codegreen, font=\footnotesize\bfseries,
+            edge label={node[midway, right=3pt, font=\scriptsize\color{primaryblue}]{take $2$}}]
+    ]
+    [{\texttt{[1]}\\{\scriptsize decide on $2$}}, edge label={node[midway, right=4pt, font=\scriptsize\color{primaryblue}]{take $1$}}
+        [{\texttt{[1]}\\{\scriptsize$\checkmark$}}, draw=codegreen, fill=codegreen!10, text=codegreen, font=\footnotesize\bfseries,
+            edge label={node[midway, left=3pt, font=\scriptsize\color{codegray}]{skip $2$}}]
+        [{\texttt{[1, 2]}\\{\scriptsize$\checkmark$}}, draw=codegreen, fill=codegreen!10, text=codegreen, font=\footnotesize\bfseries,
+            edge label={node[midway, right=3pt, font=\scriptsize\color{primaryblue}]{take $2$}}]
+    ]
+]
+\end{forest}
+\caption{Include/exclude binary decision tree for Subsets of $\{1, 2\}$ (rendered with \texttt{forest}). Every level makes one binary choice, producing $2^n = 4$ green leaves.}
+\label{fig:subsets-tree}
+\end{figure}
+
+\begin{example}[Permutations of {$[1, 2, 3]$}]
+Using \texttt{used[0..2]} to track placed numbers yields all $3! = 6$ orderings:
+\begin{enumerate}
+    \item Pick $1$ (\texttt{used=[T,F,F]}) $\to$ pick $2 \to$ pick $3 \implies \texttt{[1, 2, 3]}$.
+    \item Undo $3$, undo $2$ $\to$ pick $3 \to$ pick $2 \implies \texttt{[1, 3, 2]}$.
+    \item Undo back to root $\to$ pick $2$ $\to$ yields $\texttt{[2, 1, 3]}$ and $\texttt{[2, 3, 1]}$.
+    \item Undo back to root $\to$ pick $3$ $\to$ yields $\texttt{[3, 1, 2]}$ and $\texttt{[3, 2, 1]}$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[4-Queens: Row-by-Row Constraint Pruning]
+Place $4$ queens on a $4 \times 4$ board so no two share a row, column, or diagonal (Figure~\ref{fig:nqueens-tree}):
+\begin{enumerate}
+    \item \textbf{Row 0, col 0:} Row 1 cols $0, 1$ are attacked (col/diag). Try \textbf{Row 1, col 2}: now Row 2 cols $0, 1, 2, 3$ are \emph{all} attacked $\implies$ \textbf{PRUNED}!
+    \item Backtrack to Row 1, try \textbf{col 3}: Row 2 only allows \textbf{col 1}, leaving Row 3 with all four columns attacked $\implies$ \textbf{PRUNED}!
+    \item Backtrack to Row 0, try \textbf{col 1}: Row 1 only allows \textbf{col 3} $\to$ Row 2 only allows \textbf{col 0} $\to$ Row 3 allows \textbf{col 2} $\implies$ \textbf{Solution 1:} \texttt{[1, 3, 0, 2]}!
+    \item By left-right symmetry, Row 0 col 2 yields \textbf{Solution 2:} \texttt{[2, 0, 3, 1]} (and Row 0 col 3 prunes identically to col 0). Total for $N = 4$: $\mathbf{2}$ solutions (for $N = 8$: $92$).
+\end{enumerate}
+\end{example}
+
+\begin{figure}[htbp]
+\centering
+\begin{forest}
+for tree={
+    rectangle, rounded corners=2pt,
+    draw=codeframe, fill=codebg, thick,
+    font=\scriptsize, align=center, inner sep=3.5pt,
+    edge={-{Stealth[length=4pt]}, thick, codegray},
+    l sep=16pt, s sep=14pt
+}
+[{\textbf{Empty $4 \times 4$ Board}\\{\tiny Place one queen per row}}, draw=primaryblue, fill=primaryblue!8, text=primaryblue
+    [{\texttt{R0: c=0}}, edge label={node[midway, left=3pt, font=\tiny\color{codegray}]{try c0}}
+        [{$\times$ \texttt{R1: c=0,1}\\{\tiny col / diag}}, draw=red!70!black, dashed, fill=red!70!black!6, text=red!70!black,
+            edge={-{Stealth[length=4pt]}, thick, dashed, red!70!black}]
+        [{\texttt{R1: c=2}}
+            [{$\times$ \texttt{R2: all 4 cols}\\{\tiny dead end!}}, draw=red!70!black, dashed, fill=red!70!black!6, text=red!70!black,
+                edge={-{Stealth[length=4pt]}, thick, dashed, red!70!black}]
+        ]
+        [{\texttt{R1: c=3}}
+            [{\texttt{R2: c=1}}
+                [{$\times$ \texttt{R3: all 4 cols}\\{\tiny dead end!}}, draw=red!70!black, dashed, fill=red!70!black!6, text=red!70!black,
+                    edge={-{Stealth[length=4pt]}, thick, dashed, red!70!black}]
+            ]
+        ]
+    ]
+    [{\texttt{R0: c=1}}, draw=codegreen, fill=codegreen!6, text=codegreen,
+        edge={-{Stealth[length=4pt]}, thick, codegreen},
+        edge label={node[midway, left=2pt, font=\tiny\color{codegreen}]{try c1}}
+        [{$\times$ \texttt{R1: c=0,1,2}\\{\tiny attacked}}, draw=red!70!black, dashed, fill=red!70!black!6, text=red!70!black,
+            edge={-{Stealth[length=4pt]}, thick, dashed, red!70!black}]
+        [{\texttt{R1: c=3}}, draw=codegreen, fill=codegreen!6, text=codegreen,
+            edge={-{Stealth[length=4pt]}, thick, codegreen}
+            [{\texttt{R2: c=0}}, draw=codegreen, fill=codegreen!6, text=codegreen,
+                edge={-{Stealth[length=4pt]}, thick, codegreen}
+                [{\textbf{$\checkmark$ \texttt{R3: c=2}}\\{\tiny Sol.\ 1: \texttt{[1,3,0,2]}}}, draw=codegreen, fill=codegreen!14, text=codegreen, line width=1.2pt,
+                    edge={-{Stealth[length=4pt]}, thick, codegreen}]
+            ]
+        ]
+    ]
+    [{\texttt{R0: c=2, 3}\\{\tiny Mirror of c=1, 0}\\{\tiny yields \texttt{[2,0,3,1]}}}, draw=accentteal, fill=accentteal!6, text=accentteal,
+        edge={-{Stealth[length=4pt]}, thick, accentteal}]
+]
+\end{forest}
+\caption{Pruned backtracking tree for 4-Queens (rendered with \texttt{forest}). Dashed red nodes ($\times$) show immediate pruning before deeper rows are explored; the green path leads cleanly to Solution~1 \texttt{[1, 3, 0, 2]}.}
+\label{fig:nqueens-tree}
+\end{figure}
+
+\begin{tryitbox}{Twist}{Early-Exit Backtracking for One Solution}{ex6}
+Suppose an N-Queens problem asks for \textbf{any one} valid placement instead of all solutions. Describe the exact return-type and recursive-call changes to \texttt{backtrack\_queens} so the entire call stack unwinds immediately once the first solution is found.
+\end{tryitbox}
+
+% ============================================================================
+\section{C++23 Implementations}
+% ============================================================================
+
+All listings below are standalone modern \textbf{C++23}, avoid C-style casts, guard domain boundaries (such as $n = 0$ or negative inputs), use \texttt{std::ranges::sort} for duplicate elimination, and compile cleanly under \texttt{-std=c++23 -Wall -Wextra}.
+
+\subsection{Simple Recursion: Domain-Guarded Factorial}
+
+Because $21! > 2^{63} - 1$ overflows signed 64-bit integers and negative inputs lack a standard factorial, returning \texttt{std::optional<std::int64\_t>} makes invalid domains impossible to miss silently.
+
+\begin{lstlisting}[caption={Domain-Guarded Recursive Factorial in C++23}]
+#include <cstdint>
+#include <optional>
+
+[[nodiscard]] constexpr std::optional<std::int64_t> factorial(int n) noexcept {
+    if (n < 0 || n > 20) return std::nullopt; // Guard negative inputs and 64-bit overflow
+    if (n <= 1) return 1;
+    return static_cast<std::int64_t>(n) * (*factorial(n - 1));
 }
 \end{lstlisting}
 
-\subsection{Constraint-Based Backtracking}
-At each position in the string, our choice is simple: append an open parenthesis \texttt{(}, or append a close parenthesis \texttt{)}. We only make the choice if it obeys our hard constraints (open $<$ n, close $<$ open). A note on depth: the stack depth here is $2n$, which easily fits in memory.
+\subsection{Constraint-Based Backtracking: Generate Parentheses}
 
-\begin{lstlisting}[caption={Generate Parentheses using Backtracking}]
-#include <vector>
+At each recursion depth (at most $2n$), only branch into \texttt{'('} when \texttt{open < n} and into \texttt{')'} when \texttt{close < open}. Guard \texttt{n < 0} cleanly at entry.
+
+\begin{lstlisting}[caption={Generate Parentheses with Constraint Pruning}]
 #include <string>
+#include <vector>
 
-void backtrackParentheses(int n, int open, int close, std::string& current, std::vector<std::string>& result) {
-    // 1. Base case: If we have placed 2*n characters, the string is complete.
+void backtrack_parentheses(int n, int open, int close,
+                           std::string& current,
+                           std::vector<std::string>& result) {
     if (open == n && close == n) {
         result.push_back(current);
         return;
     }
-    
-    // 2. Make choice: Add an open parenthesis if we haven't reached the limit.
+
     if (open < n) {
-        current.push_back('('); // Make choice
-        backtrackParentheses(n, open + 1, close, current, result); // Recurse
-        current.pop_back(); // Undo choice
+        current.push_back('(');
+        backtrack_parentheses(n, open + 1, close, current, result);
+        current.pop_back();
     }
-    
-    // 3. Make choice: Add a close parenthesis if there are unmatched open ones.
+
     if (close < open) {
-        current.push_back(')'); // Make choice
-        backtrackParentheses(n, open, close + 1, current, result); // Recurse
-        current.pop_back(); // Undo choice
+        current.push_back(')');
+        backtrack_parentheses(n, open, close + 1, current, result);
+        current.pop_back();
     }
 }
 
-[[nodiscard]] std::vector<std::string> generateParenthesis(int n) {
+[[nodiscard]] std::vector<std::string> generate_parenthesis(int n) {
+    if (n < 0) return {};
     std::vector<std::string> result;
     std::string current;
-    backtrackParentheses(n, 0, 0, current, result);
+    current.reserve(static_cast<std::size_t>(2 * n));
+    backtrack_parentheses(n, 0, 0, current, result);
     return result;
 }
 \end{lstlisting}
 
-\subsection{Subsets, Permutations, and Combinations}
-Here are the core backtracking implementations for generating subsets, permutations, and combinations in modern C++23. Notice the use of \texttt{std::ranges::sort} to prepare data when needed.
+\subsection{Subsets (Unique Input) and Subsets II (With Duplicates)}
 
-\begin{lstlisting}[caption={Subsets (Power Set)}]
+Every prefix reached in the loop-based subset tree is itself a valid subset, so we push \texttt{current} on entry. For \textbf{Subsets II}, sorting with \texttt{std::ranges::sort} puts duplicates adjacent so \texttt{if (i > start \&\& nums[i] == nums[i - 1]) continue;} eliminates duplicate subsets with zero hash-set overhead.
+
+\begin{lstlisting}[caption={Subsets (Power Set) on Distinct Elements}]
+#include <cstddef>
+#include <span>
 #include <vector>
 
-void backtrackSubsets(const std::vector<int>& nums, int index, std::vector<int>& current, std::vector<std::vector<int>>& result) {
-    // 1. Every path in subsets is a valid combination, so record it immediately
+void backtrack_subsets(std::span<const int> nums, std::size_t start,
+                       std::vector<int>& current,
+                       std::vector<std::vector<int>>& result) {
     result.push_back(current);
-    
-    // 2. Iterate through all remaining elements to include
-    for (int i = index; i < (int)nums.size(); ++i) {
-        current.push_back(nums[i]); // Include nums[i]
-        backtrackSubsets(nums, i + 1, current, result); // Recurse moving forward
-        current.pop_back(); // Exclude nums[i] (undo)
+
+    for (std::size_t i = start; i < nums.size(); ++i) {
+        current.push_back(nums[i]);
+        backtrack_subsets(nums, i + 1, current, result);
+        current.pop_back();
     }
 }
 
-[[nodiscard]] std::vector<std::vector<int>> subsets(const std::vector<int>& nums) {
+[[nodiscard]] std::vector<std::vector<int>> subsets(std::span<const int> nums) {
     std::vector<std::vector<int>> result;
     std::vector<int> current;
-    backtrackSubsets(nums, 0, current, result);
+    backtrack_subsets(nums, 0, current, result);
     return result;
 }
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Permutations}]
+\begin{lstlisting}[caption={Subsets II: Deduplicating Repeated Elements via std::ranges::sort}]
+#include <algorithm>
+#include <cstddef>
+#include <span>
 #include <vector>
 
-void backtrackPermutations(const std::vector<int>& nums, std::vector<bool>& used, std::vector<int>& current, std::vector<std::vector<int>>& result) {
-    // 1. Base case: The permutation is complete when it has all elements
+void backtrack_subsets_dup(std::span<const int> nums, std::size_t start,
+                           std::vector<int>& current,
+                           std::vector<std::vector<int>>& result) {
+    result.push_back(current);
+
+    for (std::size_t i = start; i < nums.size(); ++i) {
+        if (i > start && nums[i] == nums[i - 1]) {
+            continue; // Skip equal sibling already explored at this depth
+        }
+        current.push_back(nums[i]);
+        backtrack_subsets_dup(nums, i + 1, current, result);
+        current.pop_back();
+    }
+}
+
+[[nodiscard]] std::vector<std::vector<int>> subsets_with_dup(std::vector<int> nums) {
+    std::ranges::sort(nums);
+    std::vector<std::vector<int>> result;
+    std::vector<int> current;
+    backtrack_subsets_dup(nums, 0, current, result);
+    return result;
+}
+\end{lstlisting}
+
+\subsection{Permutations (Unique Input) and Permutations II (With Duplicates)}
+
+Permutations use a \texttt{used} flag array (\texttt{std::vector<char>}) to prevent reusing an index. For \textbf{Permutations II}, sorting plus \texttt{!used[i - 1]} forces identical copies to be selected in strict left-to-right index order, eliminating every repeated permutation.
+
+\begin{lstlisting}[caption={Permutations on Distinct Elements}]
+#include <cstddef>
+#include <span>
+#include <vector>
+
+void backtrack_permutations(std::span<const int> nums,
+                            std::vector<char>& used,
+                            std::vector<int>& current,
+                            std::vector<std::vector<int>>& result) {
     if (current.size() == nums.size()) {
         result.push_back(current);
         return;
     }
-    
-    // 2. Try placing each available number in the current slot
-    for (int i = 0; i < (int)nums.size(); ++i) {
-        if (used[i]) continue; // Skip numbers already placed
-        
-        used[i] = true;
+
+    for (std::size_t i = 0; i < nums.size(); ++i) {
+        if (used[i]) continue;
+        used[i] = 1;
         current.push_back(nums[i]);
-        
-        backtrackPermutations(nums, used, current, result); // Recurse
-        
-        current.pop_back(); // Undo choice
-        used[i] = false; // Mark number as available again
+        backtrack_permutations(nums, used, current, result);
+        current.pop_back();
+        used[i] = 0;
     }
 }
 
-[[nodiscard]] std::vector<std::vector<int>> permutations(const std::vector<int>& nums) {
+[[nodiscard]] std::vector<std::vector<int>> permutations(std::span<const int> nums) {
     std::vector<std::vector<int>> result;
     std::vector<int> current;
-    std::vector<bool> used(nums.size(), false);
-    backtrackPermutations(nums, used, current, result);
+    std::vector<char> used(nums.size(), 0);
+    backtrack_permutations(nums, used, current, result);
     return result;
 }
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Combinations (n choose k)}]
+\begin{lstlisting}[caption={Permutations II: Unique Permutations with Duplicate Input Elements}]
+#include <algorithm>
+#include <cstddef>
+#include <span>
 #include <vector>
 
-void backtrackCombinations(int n, int k, int start, std::vector<int>& current, std::vector<std::vector<int>>& result) {
-    // 1. Base case: We have chosen exactly k elements
-    if ((int)current.size() == k) {
+void backtrack_unique_perms(std::span<const int> nums,
+                            std::vector<char>& used,
+                            std::vector<int>& current,
+                            std::vector<std::vector<int>>& result) {
+    if (current.size() == nums.size()) {
         result.push_back(current);
         return;
     }
-    
-    // 2. Pick elements from 'start' to 'n' to avoid order duplicates
-    for (int i = start; i <= n; ++i) {
+
+    for (std::size_t i = 0; i < nums.size(); ++i) {
+        if (used[i]) continue;
+        if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
+            continue; // Enforce left-to-right order among identical values
+        }
+        used[i] = 1;
+        current.push_back(nums[i]);
+        backtrack_unique_perms(nums, used, current, result);
+        current.pop_back();
+        used[i] = 0;
+    }
+}
+
+[[nodiscard]] std::vector<std::vector<int>> unique_permutations(std::vector<int> nums) {
+    std::ranges::sort(nums);
+    std::vector<std::vector<int>> result;
+    std::vector<int> current;
+    std::vector<char> used(nums.size(), 0);
+    backtrack_unique_perms(nums, used, current, result);
+    return result;
+}
+\end{lstlisting}
+
+\subsection{Combinations with Remaining-Elements Pruning}
+
+Instead of blindly looping \texttt{i} up to \texttt{n}, compute \texttt{need = k - current.size()}. Any pick larger than \texttt{n - need + 1} leaves too few numbers remaining to reach size $k$ and is pruned immediately.
+
+\begin{lstlisting}[caption={Combinations (n choose k) with Remaining-Elements Pruning}]
+#include <cstddef>
+#include <vector>
+
+void backtrack_combinations(int n, int k, int start,
+                            std::vector<int>& current,
+                            std::vector<std::vector<int>>& result) {
+    const int need = k - static_cast<int>(current.size());
+    if (need == 0) {
+        result.push_back(current);
+        return;
+    }
+
+    // Prune tail: at least 'need' elements must remain in [i, n]
+    const int max_pick = n - need + 1;
+    for (int i = start; i <= max_pick; ++i) {
         current.push_back(i);
-        backtrackCombinations(n, k, i + 1, current, result);
+        backtrack_combinations(n, k, i + 1, current, result);
         current.pop_back();
     }
 }
 
 [[nodiscard]] std::vector<std::vector<int>> combinations(int n, int k) {
+    if (n < 0 || k < 0 || k > n) return {};
     std::vector<std::vector<int>> result;
     std::vector<int> current;
-    backtrackCombinations(n, k, 1, current, result);
+    current.reserve(static_cast<std::size_t>(k));
+    backtrack_combinations(n, k, 1, current, result);
     return result;
 }
 \end{lstlisting}
 
+\begin{tryitbox}{Derive}{Remaining-Elements Pruning Bound}{ex7}
+In \texttt{combinations(n = 6, k = 4)}, suppose you have already picked $1$ element (\texttt{current.size() == 1}) and need $3$ more. What is the largest valid index \texttt{i} you can pick next, and what general upper bound on \texttt{i} (in terms of \texttt{n}, \texttt{k}, and \texttt{current.size()}) prunes every impossible tail?
+\end{tryitbox}
+
 \subsection{N-Queens Constraint Satisfaction}
-The N-Queens problem is a classic example of constraint satisfaction. By tracking used columns and diagonals in O(1) space arrays, we vastly speed up validation over a loop. Why do diagonal sets work? Intuition: on a grid, for any cell $(r, c)$, the difference $r - c$ is constant for all cells on its primary diagonal, and the sum $r + c$ is constant for its secondary diagonal.
 
-\begin{lstlisting}[caption={N-Queens Constraint Satisfaction with O(1) Checks}]
-#include <vector>
+Tracking used columns and both diagonals in \textbf{$O(N)$-space lookup arrays} delivers \textbf{$O(1)$-time} attack checks: all cells on a main diagonal share constant $r - c$ (shifted by $+(n - 1)$ into $[0, 2n - 2]$), and all cells on an anti-diagonal share constant $r + c$. Guarding \texttt{n <= 0} prevents \texttt{2 * n - 1} from underflowing to a negative size.
+
+\begin{lstlisting}[caption={N-Queens with O(1) Lookup Checks and Zero-Size Guard}]
+#include <cstddef>
 #include <string>
+#include <vector>
 
-void backtrackQueens(int row, int n, std::vector<std::string>& board, 
-                     std::vector<bool>& cols, std::vector<bool>& diag1, std::vector<bool>& diag2, 
-                     std::vector<std::vector<std::string>>& result) {
-    // 1. Base case: All queens placed on all rows successfully
+void backtrack_queens(int row, int n, std::vector<std::string>& board,
+                      std::vector<char>& cols,
+                      std::vector<char>& diag1,
+                      std::vector<char>& diag2,
+                      std::vector<std::vector<std::string>>& result) {
     if (row == n) {
         result.push_back(board);
         return;
     }
-    
-    // 2. Try placing a queen in each column of the current row
+
     for (int col = 0; col < n; ++col) {
-        int d1 = row - col + n - 1; // Primary diagonal index
-        int d2 = row + col;         // Secondary diagonal index
-        
-        if (!cols[col] && !diag1[d1] && !diag2[d2]) {
-            board[row][col] = 'Q'; // Make choice
-            cols[col] = diag1[d1] = diag2[d2] = true;
-            
-            backtrackQueens(row + 1, n, board, cols, diag1, diag2, result); // Recurse to next row
-            
-            board[row][col] = '.'; // Undo choice
-            cols[col] = diag1[d1] = diag2[d2] = false;
+        const auto c  = static_cast<std::size_t>(col);
+        const auto d1 = static_cast<std::size_t>(row - col + n - 1);
+        const auto d2 = static_cast<std::size_t>(row + col);
+
+        if (!cols[c] && !diag1[d1] && !diag2[d2]) {
+            board[static_cast<std::size_t>(row)][c] = 'Q';
+            cols[c] = diag1[d1] = diag2[d2] = 1;
+
+            backtrack_queens(row + 1, n, board, cols, diag1, diag2, result);
+
+            board[static_cast<std::size_t>(row)][c] = '.';
+            cols[c] = diag1[d1] = diag2[d2] = 0;
         }
     }
 }
 
-[[nodiscard]] std::vector<std::vector<std::string>> solveNQueens(int n) {
+[[nodiscard]] std::vector<std::vector<std::string>> solve_n_queens(int n) {
+    if (n <= 0) return {}; // Prevent 2 * n - 1 underflow!
+
+    const auto sz = static_cast<std::size_t>(n);
     std::vector<std::vector<std::string>> result;
-    std::vector<std::string> board(n, std::string(n, '.'));
-    std::vector<bool> cols(n, false);
-    std::vector<bool> diag1(2 * n - 1, false);
-    std::vector<bool> diag2(2 * n - 1, false);
-    
-    backtrackQueens(0, n, board, cols, diag1, diag2, result);
+    std::vector<std::string> board(sz, std::string(sz, '.'));
+    std::vector<char> cols(sz, 0);
+    std::vector<char> diag1(2 * sz - 1, 0);
+    std::vector<char> diag2(2 * sz - 1, 0);
+
+    backtrack_queens(0, n, board, cols, diag1, diag2, result);
     return result;
 }
 \end{lstlisting}
 
+\begin{tryitbox}{Debug}{Why solveNQueens(0) Crashes Without a Guard}{ex8}
+In \texttt{std::vector<bool> diag1(2 * n - 1, false);}, trace what happens in C++ when \texttt{n == 0}. Why does this immediately throw \texttt{std::bad\_alloc} or \texttt{std::length\_error}?
+\end{tryitbox}
+
+% ============================================================================
 \section{Problem Pattern Recognition}
+% ============================================================================
 
-\textbf{Step 1: What kind of answer does the problem ask for?}
-When faced with a combinatorics or configuration problem, your first job is to look at the required output:
+Use this three-step filter to decide whether a problem truly calls for backtracking or belongs in Dynamic Programming, Combinatorics, or an iterative stack.
+
+\subsection*{Step 1: What Kind of Answer Does the Problem Ask For?}
 \begin{itemize}
-    \item ``Generate ALL valid combinations/subsets/permutations'': You must use \textbf{backtracking}. You actually have to build the strings or arrays.
-    \item ``Count the number of valid configurations'': You can use backtracking to count, but \textbf{Dynamic Programming (DP)} is often vastly faster. Rule of thumb: if you need the actual configurations, use backtracking; if you only need the count, use DP or math.
-    \item ``Find ONE valid configuration'': Use \textbf{backtracking with an early return}. As soon as a solution is found, stop searching other branches.
+    \item \textbf{``Generate ALL valid subsets / permutations / boards''} $\implies$ \textbf{Backtracking} (you must construct every output).
+    \item \textbf{``Count how many ways'' (without listing them)} $\implies$ Prefer \textbf{Dynamic Programming} or \textbf{Combinatorics formulas} (Modules 01 and 06); enumerating every configuration is exponentially slower.
+    \item \textbf{``Find ANY ONE valid arrangement''} $\implies$ \textbf{Backtracking with early exit} (return \texttt{bool} and unwind immediately on first success).
 \end{itemize}
 
-\begin{calloutbox}{When to Use DP Instead}
-If the problem asks only ``how many ways?'' and not ``list all ways'', dynamic programming is almost always faster than backtracking. Backtracking enumerates every solution; DP counts them without listing them. For example, if you are asked to list all valid parenthesis strings, backtracking is correct. If you are asked only for the count, the Catalan number formula or DP would solve it much faster.
-\end{calloutbox}
-
-\textbf{Step 2: Identify the key constraint that selects the tool.}
-The size of $n$ tells you everything you need to know about feasibility:
+\subsection*{Step 2: What Is the Key Constraint?}
 \begin{itemize}
-    \item \textbf{$n \le 20$}: Standard backtracking (subsets or combinations) will usually pass without issue.
-    \item \textbf{$n > 20$ for permutations}: Likely impossible to generate them all. You must either find a way to prune massively, or the problem requires a completely different approach (greedy, math).
-    \item \textbf{Constraints that eliminate branches early}: If placing one piece incorrectly ruins all subsequent choices, pruning is highly effective (like N-Queens).
-    \item \textbf{No constraints / all combinations valid}: Backtracking degenerates to brute force. If you just need a count, use DP or combinatorics formulas.
-    \item \textbf{Input has repeated elements}: You need to sort and apply skip-equal-sibling logic to avoid duplicate outputs.
+    \item \textbf{Input size $n \le 20$:} $O(2^n)$ subsets/combinations pass easily.
+    \item \textbf{Input size $n \le 10$:} $O(n!)$ permutations ($10! \approx 3.6 \times 10^6$) or heavily pruned constraint puzzles ($N \le 13$ for N-Queens) are feasible.
+    \item \textbf{Repeated input elements:} Sort first (\texttt{std::ranges::sort}) and skip equal siblings (\texttt{i > start} or \texttt{!used[i - 1]}).
+    \item \textbf{Deep linear recursion ($d > 10^4$):} Switch to an iterative loop with an explicit \texttt{std::vector} stack to avoid stack overflow.
 \end{itemize}
 
-\textbf{Step 3: Is the input too large for a direct solution?}
-If $n = 100$, doing $O(2^n)$ backtracking means $2^{100}$ operations, which would take longer than the age of the universe. At $n > 25$, pure exponential backtracking starts to time out in modern systems unless pruning cuts off 99\% of the tree.
+\subsection*{Step 3: Is the Input Too Large for Exponential Search?}
+If $n \ge 30$ without severe constraint pruning (or $n = 100$ asking for subset sums), pure $O(2^n)$ backtracking will time out ($2^{100}$ exceeds the age of the universe). Pivot to Dynamic Programming, Meet-in-the-Middle, or Greedy.
 
-\textbf{Quick Reference Table}
+\subsection*{Quick Reference: Keyword-to-Tool Mapping}
 
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
-\hline
-\textbf{Keywords in the Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
-``Return all valid parenthesis...'' & Build all correct bracket strings & Backtracking \\ \hline
-``Find all subsets'', ``power set'' & For every element, yes or no & Backtracking (Subsets) \\ \hline
-``Return all possible permutations'' & Find all distinct orderings & Backtracking (with \texttt{used} array) \\ \hline
-``Return all combinations of k'' & Pick exactly $k$ out of $n$ without order & Backtracking (with \texttt{start} index) \\ \hline
-``Solve the constraint puzzle / N-Queens'' & Constraint satisfaction puzzle & Backtracking (Pruning) \\ \hline
-``How many distinct ways...'' & Return just the integer count & Dynamic Programming / Math \\ \hline
-``Find any valid ordering...'' & Stop when you find one success & Backtracking (Early exit) \\ \hline
-``Unique permutations'', ``contains duplicates'' & Find orderings without creating duplicates & Backtracking (Sort + skip identical elements) \\ \hline
-``Subsets with duplicates'' & Find subsets without creating duplicates & Backtracking (Sort + skip-equal-sibling) \\ \hline
-\end{tabularx}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.1cm}}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``Return all valid parentheses'' & Build every balanced bracket string & Backtracking (constraint pruning) \\
+``Find all subsets / power set'' & Include or exclude each element & Backtracking (Subsets + \texttt{start}) \\
+``Return all permutations'' & Build every distinct ordering & Backtracking (\texttt{used} array) \\
+``All combinations of size $k$'' & Pick $k$ of $n$ without order & Backtracking (\texttt{start} + tail prune) \\
+``N-Queens / Sudoku / board puzzle'' & Constraint satisfaction search & Backtracking (pruning + $O(1)$ checks) \\
+``Unique subsets / permutations'' & Input has repeated elements & Sort + skip-equal-sibling rule \\
+``Find any valid solution'' & Stop on the first success & Backtracking (\texttt{bool} early exit) \\
+``How many distinct ways\dots'' & Return integer count only & Dynamic Programming / Math \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
+% ============================================================================
 \section{Summary and Complexity Reference}
+% ============================================================================
+
+Space complexity below counts \textbf{auxiliary working space} (call stack + state buffer + lookup flags), excluding the output container holding all emitted solutions.
+
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.1cm} >{\centering\arraybackslash}p{2.3cm} >{\centering\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Task / Operation}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Space}} & \textcolor{primaryblue}{\textbf{Use When}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Recursive Factorial & $O(n)$ & $O(n)$ & Teaching call stack ($n \le 20$ in \texttt{int64\_t}) \\
+Naive Fibonacci & $O(2^n)$ & $O(n)$ & Never in production --- use DP ($O(n)$) \\
+Subsets / Subsets II & $O(n \cdot 2^n)$ & $O(n)$ & Emitting all subsets ($n \le 20$) \\
+Combinations ($\binom{n}{k}$) & $O(k \cdot \binom{n}{k})$ & $O(k)$ & Picking $k$ elements ($n \le 20$) \\
+Permutations / Permutations II & $O(n \cdot n!)$ & $O(n)$ & Emitting all orderings ($n \le 10$) \\
+Generate Parentheses & $O(n \cdot C_n)$ & $O(n)$ & Balanced brackets ($n \le 12$, $C_n$ Catalan) \\
+N-Queens (with $O(1)$ checks) & $O(n!)$ worst & $O(n)$ & Board constraint puzzles ($n \le 13$) \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
+
+% ============================================================================
+\section{Glossary}
+% ============================================================================
+
+\subsection*{Core Concepts}
+\begin{itemize}
+    \item \textbf{Backtracking:} Depth-first search over a decision tree that rolls back choices and abandons invalid branches early.
+    \item \textbf{Base Case:} Direct stopping condition that terminates recursive descent without further self-calls.
+    \item \textbf{Branching Factor ($b$):} Number of candidate choices generated from a single decision-tree node.
+    \item \textbf{Call Stack:} LIFO runtime memory structure holding active function frames during execution.
+    \item \textbf{Combination:} Unordered selection of $k$ distinct items from $n$ (order ignored: $\{1, 2\} = \{2, 1\}$).
+    \item \textbf{Constraint / Feasibility Check:} Rule tested before recursing to discard invalid partial states immediately.
+    \item \textbf{Decision Tree:} Tree diagram mapping every choice made along paths of a backtracking search.
+    \item \textbf{N-Queens:} Classic puzzle placing $N$ non-attacking queens on an $N \times N$ chessboard.
+    \item \textbf{Permutation:} Ordered arrangement of elements ($[1, 2] \neq [2, 1]$).
+    \item \textbf{Pruning:} Cutting off a recursive branch early once a feasibility constraint or optimality bound fails.
+    \item \textbf{Recursion:} A function solving a problem by calling itself on strictly smaller subproblems.
+    \item \textbf{Recursion Tree:} Diagram of every recursive call made (reveals overlapping subproblems like \texttt{fib(2)}).
+    \item \textbf{Search Space:} Full universe of candidate configurations explored (and pruned) by a search algorithm.
+    \item \textbf{Stack Frame:} Memory record on the call stack storing one call's parameters, locals, and return point.
+    \item \textbf{Stack Overflow:} Runtime crash triggered when live recursion depth exceeds the OS call-stack memory limit.
+    \item \textbf{Subset (Power Set):} Any selection of $0$ to $n$ elements from a set ($2^n$ subsets total).
+\end{itemize}
+
+\subsection*{Mathematical Symbols}
+\begin{itemize}
+    \item $n!$: Factorial, product $1 \times 2 \times \dots \times n$ (with $0! = 1$).
+    \item $\binom{n}{k}$ or $C(n, k)$: ``$n$ choose $k$'' --- number of $k$-element combinations from $n$ items.
+    \item $C_n$: $n$-th Catalan number $\frac{1}{n+1}\binom{2n}{n}$, counting valid $n$-pair bracket strings.
+    \item $2^n$: Total number of subsets (power set size) of an $n$-element set.
+    \item $b,\; d$: Branching factor and maximum depth of a recursion or decision tree ($O(b^d)$ nodes).
+\end{itemize}
+
+% ============================================================================
+\section{Further Reading}
+% ============================================================================
+
+\subsection*{Free Online Resources (Start Here)}
+\begin{itemize}
+    \item \textbf{CP-Algorithms: Combinatorics \& Search} (\url{https://cp-algorithms.com}) --- Practical C++ templates for combinatorial generation, gray codes, and recursive search.
+    \item \textbf{Art of Problem Solving (AoPS) Wiki} (\url{https://artofproblemsolving.com/wiki}) --- Clear mathematical background on recursion, Catalan numbers, and combinatorial counting.
+    \item \textbf{Brilliant.org: Computer Science Fundamentals} (\url{https://brilliant.org}) --- Interactive visual walkthroughs of call stacks, recursion trees, and backtracking puzzles.
+    \item \textbf{Project Euler} (\url{https://projecteuler.net}) --- Problems 15 (lattice paths --- compare backtracking vs.\ combinatorics/DP), 24 (lexicographic permutations), and 96 (Su Doku constraint-satisfaction backtracking).
+\end{itemize}
+
+\subsection*{Books (When You Are Ready to Go Deeper)}
+\begin{itemize}
+    \item G.\ Laakmann McDowell, \emph{Cracking the Coding Interview} --- Chapter~8 gives beginner-friendly recursion and backtracking walkthroughs. (Beginner)
+    \item S.\ Skiena, \emph{The Algorithm Design Manual} --- Chapter~7 is one of the clearest practical guides to combinatorial search, pruning, and heuristic ordering. (Intermediate)
+    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- Complete Search chapter covers recursive backtracking, bitmask pruning, and N-Queens optimizations. (Intermediate)
+    \item T.\ H.\ Cormen, C.\ E.\ Leiserson, R.\ L.\ Rivest, C.\ Stein, \emph{Introduction to Algorithms (CLRS)} --- Formal recursion-tree and Master Theorem analysis. (Advanced)
+\end{itemize}
+
+% ============================================================================
+\section*{Practice Sheet: Mixed Pen-and-Paper Drills}
+\addcontentsline{toc}{section}{Practice Sheet: Mixed Pen-and-Paper Drills}
+\markboth{Practice Sheet: Mixed Pen-and-Paper Drills}{}
+% ============================================================================
 
 \noindent
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
-\hline
-\textbf{Task / Operation} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
-Factorial & $O(n)$ & $O(n)$ (call stack) & Computing $n!$ directly \\ \hline
-Subsets & $O(n \cdot 2^n)$ & $O(n)$ (stack depth) & $n \le 20$ \\ \hline
-Permutations & $O(n \cdot n!)$ & $O(n)$ & $n \le 8$ ($8! = 40320$) \\ \hline
-Combinations ($n$ choose $k$) & $O(k \cdot C(n,k))$ & $O(k)$ & $n \le 20$ \\ \hline
-Generate Parentheses & $O(n \cdot C_n)$ & $O(n)$ & $n \le 8$, $C_n$ is $n$-th Catalan number \\ \hline
-N-Queens & $O(n!)$ worst case & $O(n)$ & $n \le 13$ practical \\ \hline
-\end{tabularx}
+Work through these six mixed cold-start drills on scratch paper \emph{without} looking back at the chapter. Each exercise tests a distinct thinking mode with zero section hints.
 
-\section{Glossary}
+\begin{tryitbox}{Triage}{Backtracking vs.\ DP vs.\ Early Exit}{ex9}
+Pick the right approach (Backtracking all, Backtracking early-exit, DP/Formula, or Iterative Stack) and explain in one sentence:
+\begin{enumerate}
+    \item Return \textbf{all} distinct subsets of $n = 15$ integers (containing duplicates) that sum to target $T$.
+    \item Count \textbf{how many} subsets of $n = 60$ positive integers sum to $T \le 10^4$ (modulo $10^9 + 7$).
+    \item Decide \textbf{whether any} valid Sudoku completion exists for a $9 \times 9$ grid.
+\end{enumerate}
+\end{tryitbox}
 
-\subsection{Core Concepts}
-\begin{itemize}
-    \item \textbf{Recursion}: A function calling itself to solve a smaller piece of the same problem.
-    \item \textbf{Base Case}: The condition that stops the recursion. Without it, the function calls itself forever.
-    \item \textbf{Recursive Case}: The part of the function that breaks the problem down and makes the recursive call.
-    \item \textbf{Call Stack}: The computer's internal memory structure (like a stack of sticky notes) that keeps track of active functions.
-    \item \textbf{Stack Frame}: A single ``sticky note'' on the call stack containing a function's local variables.
-    \item \textbf{Stack Overflow}: A fatal error that happens when recursion goes too deep and the computer runs out of stack frames.
-    \item \textbf{Backtracking}: Exploring all possible options for a problem by trying a path and ``undoing'' the choice if it fails.
-    \item \textbf{Decision Tree}: A visual way to map out all the choices made during a backtracking algorithm.
-    \item \textbf{Search Space}: The total universe of all possible solutions you have to look through.
-    \item \textbf{Pruning}: Stopping the exploration of a path early because you realize it cannot possibly lead to a valid answer.
-    \item \textbf{Constraint}: A hard rule that a valid solution must follow.
-    \item \textbf{Feasibility Check}: Code that tests whether making a choice violates a constraint.
-    \item \textbf{Permutation}: An arrangement of items where the order matters (for example, [1,2] is different from [2,1]).
-    \item \textbf{Combination}: A selection of items where the order does not matter.
-    \item \textbf{Subset (Power Set)}: A set formed by taking any number of elements from the original set.
-    \item \textbf{N-Queens}: A classic backtracking puzzle requiring you to place $N$ queens on an $N \times N$ chessboard safely.
-\end{itemize}
+\begin{tryitbox}{Trace}{Unique Permutations of 1, 1, 2}{ex10}
+Trace \texttt{unique\_permutations} on sorted input \texttt{[1, 1, 2]} using \texttt{if (i > 0 \&\& nums[i] == nums[i - 1] \&\& !used[i - 1]) continue;}. Write all $3$ unique permutations in exact visit order and explain what \texttt{!used[i - 1]} enforces.
+\end{tryitbox}
 
-\subsection{Mathematical Symbols}
-\begin{itemize}
-    \item \textbf{$n!$}: Factorial. The product of all positive integers up to $n$.
-    \item \textbf{$C(n,k)$ or $\binom{n}{k}$}: ``N choose K''. The number of ways to pick $k$ items from a set of $n$ items.
-    \item \textbf{$C_n$}: The $n$-th Catalan number. It represents the number of valid arrangements of brackets, among other things.
-    \item \textbf{$2^n$}: 2 raised to the power of $n$. Represents the total number of subsets of an $n$-element set.
-\end{itemize}
+\begin{tryitbox}{Debug}{Broken Diagonal Indexing in N-Queens}{ex11}
+A programmer tracks N-Queens diagonals using \texttt{diag1[row - col]} and \texttt{diag2[row + col]} on a $4 \times 4$ board. Give a concrete \texttt{(row, col)} cell that triggers an out-of-bounds access, and state the exact index shift and array length needed to fix it.
+\end{tryitbox}
 
-\section{Further Reading}
+\begin{tryitbox}{Twist}{Combination Sum with Unlimited Element Reuse}{ex12}
+Standard \texttt{combinations} passes \texttt{i + 1} to the recursive call so each element is used once. What single argument change lets you reuse an element \textbf{unlimited times} without generating order duplicates (like both \texttt{[2, 2, 3]} and \texttt{[2, 3, 2]})? What new stopping/pruning rule becomes mandatory so recursion terminates?
+\end{tryitbox}
 
-\subsection{Free Online Resources (Start Here)}
-\begin{itemize}
-    \item \textbf{cp-algorithms.com}: Excellent code-focused articles on combinatorial search and backtracking.
-    \item \textbf{Art of Problem Solving (AoPS) Wiki}: Beginner-friendly math explanations on combinatorics and recursion.
-    \item \textbf{Project Euler (projecteuler.net)}: Try solving problems that involve counting or generation (for example, Problem 15: lattice paths, Problem 24: lexicographic permutations).
-    \item \textbf{Brilliant.org}: Offers interactive and visual courses on Recursion and Combinatorics.
-\end{itemize}
+\begin{tryitbox}{Edge Cases}{Boundary Cases Across Templates}{ex13}
+State the exact return value (size and contents) for each boundary call:
+\begin{enumerate}
+    \item \texttt{subsets(\{\})} (empty input array).
+    \item \texttt{combinations(3, 0)} and \texttt{combinations(3, 5)}.
+    \item \texttt{solve\_n\_queens(2)} and \texttt{solve\_n\_queens(3)}.
+\end{enumerate}
+\end{tryitbox}
 
-\subsection{Books (When You Are Ready to Go Deeper)}
-\begin{itemize}
-    \item \textit{Competitive Programming 3} by Steven Halim. Covers recursive backtracking, pruning, and problem-solving strategies. (Intermediate difficulty, read when comfortable with basic implementations).
-    \item \textit{Cracking the Coding Interview} by Gayle Laakmann McDowell. Chapter 8 covers recursion and dynamic programming. (Beginner-friendly, excellent for interview prep).
-    \item \textit{The Algorithm Design Manual} by Steven Skiena. Chapter 7 covers combinatorial search and backtracking in depth. (Intermediate difficulty, strong practical insights).
-    \item \textit{Introduction to Algorithms (CLRS)}. Contains rigorous chapters on recursive algorithms and the master theorem. (Advanced, graduate-level mathematical reference, read when formal analysis is required).
-\end{itemize}
+\begin{tryitbox}{Derive}{Why Subsets Takes $O(n \cdot 2^n)$ Time}{ex14}
+For $n = 3$ (\texttt{[1, 2, 3]}), list all $2^3 = 8$ subsets and sum their lengths. Now pair each subset $S$ with its complement $U \setminus S$ to derive the exact total number of elements copied into \texttt{result} across all $2^n$ subsets, proving the $O(n \cdot 2^n)$ bound.
+\end{tryitbox}
 
+% ============================================================================
+\section*{Solutions to Pen-and-Paper Exercises}
+\addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
+\markboth{Solutions to Pen-and-Paper Exercises}{}
+% ============================================================================
+
+\begin{enumerate}
+    \item \label{sol:ex1}\textbf{Exercise 1 (Trace) --- Unwinding \texttt{power(2, 4)}:}
+    Pushes: \texttt{power(2,4)} $\to$ \texttt{power(2,3)} $\to$ \texttt{power(2,2)} $\to$ \texttt{power(2,1)} $\to$ \texttt{power(2,0)} (peak stack depth $= \mathbf{5}$ frames).
+    Pops/returns: $1 \to 2 \to 4 \to 8 \to \mathbf{16}$.
+    \trapnote{Reporting peak depth as $4$ instead of $5$---the base-case frame \texttt{e = 0} still occupies a stack slot before returning.}
+
+    \item \label{sol:ex2}\textbf{Exercise 2 (Edge Cases) --- Stack Overflow Budget \& Missing Base Case:}
+    \textbf{(1)} $2{,}097{,}152 / 128 = \mathbf{16{,}384}$ frames (depth $\gtrsim 16{,}000$ overflows).
+    \textbf{(2)} \texttt{factorial(-3)} skips $0$ and recurses $-4, -5, -6, \dots$ until stack overflow! Fix by guarding \texttt{if (n < 0) return std::nullopt;} before recursing.
+    \trapnote{Checking only \texttt{n == 0} and assuming \texttt{n - 1} always approaches the base case even for negative inputs.}
+
+    \item \label{sol:ex3}\textbf{Exercise 3 (Trace) --- Pruned Tree for Generate Parentheses ($n = 2$):}
+    Root \texttt{"" (0,0)} $\to$ right \texttt{")"} ($\times$ \texttt{close > open}); left \texttt{"(" (1,0)} $\to$ \texttt{"((" (2,0)} [left \texttt{"((("} $\times$ \texttt{open > 2}; right \texttt{"(()" (2,1)} $\to$ \texttt{"(())"} $\checkmark$] and \texttt{"()" (1,1)} [left \texttt{"()(" (2,1)} $\to$ \texttt{"()()"} $\checkmark$; right \texttt{"())"} $\times$ \texttt{close > open}]. Surviving leaves: \texttt{"(())"} and \texttt{"()()"} ($C_2 = \mathbf{2}$).
+    \trapnote{Checking \texttt{close < n} instead of \texttt{close < open}, which permits invalid strings like \texttt{")("} and \texttt{"())("}.}
+
+    \item \label{sol:ex4}\textbf{Exercise 4 (Debug) --- Missing-Undo Bug:}
+    \texttt{result} receives \texttt{[]}, \texttt{[1]}, \texttt{[1, 2]}, and then (because $2$ and $1$ were never popped) the root's $i = 1$ step appends $2$ onto \texttt{[1, 2]}, emitting \textbf{\texttt{[1, 2, 2]}} instead of \texttt{[2]}!
+    \trapnote{Forgetting that \texttt{current} is passed by reference across all frames---every \texttt{push\_back} must be paired with a matching \texttt{pop\_back} after recursion returns.}
+
+    \item \label{sol:ex5}\textbf{Exercise 5 (Trace) --- Subsets II on \texttt{[1, 2, 2]}:}
+    Visit order ($6$ unique subsets): \texttt{[]}, \texttt{[1]}, \texttt{[1, 2]}, \texttt{[1, 2, 2]}, \texttt{[2]}, \texttt{[2, 2]}.
+    Skipped iterations: \textbf{(1)} inside \texttt{[1]} (\texttt{start = 1}) at \texttt{i = 2} (avoids second \texttt{[1, 2]}), and \textbf{(2)} at root (\texttt{start = 0}) at \texttt{i = 2} (avoids second \texttt{[2]}).
+    \trapnote{Writing \texttt{i > 0} instead of \texttt{i > start}---that blocks the second $2$ at deeper calls and wrongly drops \texttt{[1, 2, 2]} and \texttt{[2, 2]}.}
+
+    \item \label{sol:ex6}\textbf{Exercise 6 (Twist) --- Early-Exit Backtracking:}
+    Change return type to \texttt{bool}. Return \texttt{true} at \texttt{row == n}. Inside the loop: \texttt{if (backtrack\_queens(row + 1, ...)) return true;} (leaving \texttt{board} intact with the solution). Return \texttt{false} if all columns fail.
+    \trapnote{Writing \texttt{return;} inside a \texttt{void} function---that only exits one frame and keeps searching sibling columns instead of halting the whole tree.}
+
+    \item \label{sol:ex7}\textbf{Exercise 7 (Derive) --- Remaining-Elements Pruning Bound:}
+    With \texttt{need = 4 - 1 = 3} remaining picks from $[i, 6]$, we need $6 - i + 1 \ge 3 \implies i \le \mathbf{4}$ (so $\{4, 5, 6\}$ still fits). General bound: \texttt{max\_pick = n - (k - current.size()) + 1}.
+    \trapnote{Using \texttt{n - k + 1} without subtracting \texttt{current.size()}, which over-prunes deeper levels and misses valid combinations like \texttt{[1, 2, 5, 6]}.}
+
+    \item \label{sol:ex8}\textbf{Exercise 8 (Debug) --- Why \texttt{solveNQueens(0)} Crashes:}
+    For $n = 0$, \texttt{2 * n - 1 = -1} (signed \texttt{int}), which implicitly converts to unsigned \texttt{std::size\_t} $= 2^{64} - 1 \approx 1.8 \times 10^{19}$! Trying to allocate $1.8 \times 10^{19}$ bits immediately throws \texttt{std::length\_error} / \texttt{std::bad\_alloc}. Fix: \texttt{if (n <= 0) return \{\};}.
+    \trapnote{Assuming a negative \texttt{std::vector} size constructor argument produces an empty vector instead of wrapping to a huge unsigned \texttt{std::size\_t}.}
+
+    \item \label{sol:ex9}\textbf{Exercise 9 (Triage) --- Backtracking vs.\ DP vs.\ Early Exit:}
+    \textbf{(1)} \textbf{Backtracking} (sort + skip-equal-sibling + sum pruning): must emit actual subsets and $2^{15} = 32{,}768$ is tiny.
+    \textbf{(2)} \textbf{0/1 Knapsack DP} in $O(nT)$: $2^{60}$ backtracking is impossible and only a count is needed.
+    \textbf{(3)} \textbf{Backtracking with \texttt{bool} early exit} + row/col/box pruning: stops on first valid board.
+    \trapnote{Reaching for backtracking on (2) because it says ``subsets''---whenever $n > 25$ and only a count is requested, use DP or math.}
+
+    \item \label{sol:ex10}\textbf{Exercise 10 (Trace) --- Unique Permutations of \texttt{[1, 1, 2]}:}
+    Visit order: \texttt{[1, 1, 2]}, \texttt{[1, 2, 1]}, \texttt{[2, 1, 1]} ($3! / 2! = \mathbf{3}$). The check \texttt{!used[i - 1]} forbids placing the second \texttt{1} while the first \texttt{1} is still unused, locking identical elements into left-to-right index order.
+    \trapnote{Forgetting \texttt{std::ranges::sort(nums)} beforehand---\texttt{nums[i] == nums[i - 1]} misses non-adjacent duplicates!}
+
+    \item \label{sol:ex11}\textbf{Exercise 11 (Debug) --- Broken N-Queens Diagonal Indexing:}
+    At \texttt{(row = 0, col = 3)}, \texttt{row - col = -3} (negative out-of-bounds UB!). Shift by $+(n - 1)$: \texttt{d1 = row - col + (n - 1)} $\in [0, 2n - 2]$, with array length $\mathbf{2n - 1}$ ($7$ for $n = 4$).
+    \trapnote{Allocating diagonal arrays of size $n$ instead of $2n - 1$---there are $2n - 1$ diagonals in each direction.}
+
+    \item \label{sol:ex12}\textbf{Exercise 12 (Twist) --- Combination Sum with Unlimited Reuse:}
+    Pass \texttt{i} instead of \texttt{i + 1} to the recursive call (permits reusing \texttt{nums[i]} while keeping picks non-decreasing). Mandatory termination: track \texttt{remaining} target, prune whenever \texttt{nums[i] > remaining} (positive candidates), and stop at \texttt{remaining == 0}.
+    \trapnote{Passing \texttt{0} instead of \texttt{i}---that generates order duplicates like \texttt{[2, 2, 3]}, \texttt{[2, 3, 2]}, and \texttt{[3, 2, 2]}.}
+
+    \item \label{sol:ex13}\textbf{Exercise 13 (Edge Cases) --- Boundary Cases Across Templates:}
+    \textbf{(1)} \texttt{subsets(\{\})} returns \texttt{\{ \{\} \}} (size \textbf{1}: contains the empty subset, $2^0 = 1$).
+    \textbf{(2)} \texttt{combinations(3, 0)} returns \texttt{\{ \{\} \}} (size \textbf{1}); \texttt{combinations(3, 5)} returns \texttt{\{\}} (size \textbf{0}).
+    \textbf{(3)} \texttt{solve\_n\_queens(2)} and \texttt{solve\_n\_queens(3)} both return \texttt{\{\}} (size \textbf{0}: no valid placements exist).
+    \trapnote{Returning an empty outer vector \texttt{\{\}} instead of \texttt{\{ \{\} \}} for $n = 0$ subsets or $k = 0$ combinations.}
+
+    \item \label{sol:ex14}\textbf{Exercise 14 (Derive) --- Why Subsets Takes $O(n \cdot 2^n)$ Time:}
+    For $n = 3$, lengths are $0, 1, 1, 1, 2, 2, 2, 3$ (sum $= 12 = 3 \cdot 2^2$). Pairing every subset $S$ with its complement $U \setminus S$ creates $2^{n-1}$ pairs, each of combined size $|S| + |U \setminus S| = n$. Total elements copied into \texttt{result} $= \mathbf{n \cdot 2^{n-1}} = \Theta(n \cdot 2^n)$.
+    \trapnote{Counting only the $2^n$ recursive calls and forgetting the $O(|S|)$ vector copy performed by \texttt{result.push\_back(current)}.}
+\end{enumerate}
+
+% ============================================================================
 \section*{Version History}
 \addcontentsline{toc}{section}{Version History}
+\markboth{Version History}{}
+% ============================================================================
 
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Date} & \textbf{Change} \\ \hline
-2026-10-03 & Document created. \\ \hline
-2026-10-03 & Expanded backtracking traces, diagram trees, code standards, duplicate logic, and pattern rules. \\ \hline
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\bfseries}l >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Date}} & \textcolor{primaryblue}{\textbf{Change}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+2026-10-03 & Document created. \\
+2026-10-03 & Expanded backtracking traces, diagram trees, code standards, duplicate logic, and pattern rules. \\
+2026-11-25 & Overhauled to canonical print-first layout; stripped BOM; restored generic backtracking template; fixed solveNQueens(0) crash, C-style casts, factorial domain guard, combination tail pruning, and terminology errors; added Subsets II and Permutations II C++23 code; embedded fixed Diagrams 10--12 plus new forest trees for Subsets and 4-Queens; added 4-beat Origin Stories, local notation boxes, 8 inline drills, 6-drill Practice Sheet, and solutions with trap notes. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
+\endgroup
+\end{center}
 
 \end{document}
