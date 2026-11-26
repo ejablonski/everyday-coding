@@ -2,25 +2,113 @@
 
 % --- Core LaTeX Packages ---
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\ttdefault}{txtt}
+\usepackage{upquote}
+\usepackage[margin=0.85in, headheight=15pt]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{xcolor}
+\usepackage[helvet]{sfmath}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[explicit]{titlesec}
+\usepackage[skins,breakable]{tcolorbox}
 \usepackage{listings}
 \usepackage{hyperref}
-\usepackage{tabularx}
 \usepackage{graphicx}
 
-% --- Optional Diagram Packages (include when needed) ---
-% \usepackage{forest}
-% \usepackage{tikz}
+% --- Diagram Packages ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,decorations.pathreplacing}
 
-% --- Unified Color Palette ---
+% --- Unified Print-Safe Color Palette ---
 \definecolor{primaryblue}{RGB}{24, 75, 140}
-\definecolor{codebg}{RGB}{248, 249, 250}
-\definecolor{codeframe}{RGB}{210, 215, 222}
-\definecolor{codegreen}{RGB}{40, 130, 60}
-\definecolor{codeblue}{RGB}{20, 90, 180}
-\definecolor{codegray}{RGB}{120, 120, 120}
+\definecolor{accentteal}{RGB}{15, 118, 110}
+\definecolor{accentamber}{RGB}{180, 83, 9}
+\definecolor{accentred}{RGB}{185, 28, 28}
+\definecolor{codebg}{RGB}{246, 248, 250}
+\definecolor{codeframe}{RGB}{204, 212, 220}
+\definecolor{codeink}{RGB}{24, 30, 38}
+\definecolor{codekw}{RGB}{126, 34, 206}
+\definecolor{codetype}{RGB}{0, 118, 138}
+\definecolor{codegreen}{RGB}{22, 138, 66}
+\definecolor{codeblue}{RGB}{15, 92, 212}
+\definecolor{codestr}{RGB}{194, 65, 12}
+\definecolor{codegray}{RGB}{105, 115, 125}
+
+% --- Global Typography & Spacing ---
+\linespread{1.08}
+\renewcommand{\arraystretch}{1.35}
+\setlength{\tabcolsep}{7pt}
+\setlist[itemize]{itemsep=3pt, topsep=4pt, leftmargin=1.5em}
+\setlist[enumerate]{itemsep=4pt, topsep=4pt, leftmargin=1.6em}
+
+% --- Running Header & Footer (Screen + Print Navigation) ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{codegray}\textbf{Greedy Algorithms}}
+\fancyhead[R]{\footnotesize\color{codegray}\nouppercase{\leftmark}}
+\fancyfoot[C]{\footnotesize\color{codegray}Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{codeframe}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{}}
+
+% --- Section & Subsection Styling (High-Contrast + Per-Section Page Breaks) ---
+\newcommand{\sectionbreak}{}
+
+\titleformat{\section}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {\colorbox{primaryblue}{\color{white}\bfseries\Large\;\thesection\;}\hspace{0.55em}#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+\titlespacing*{\section}{0pt}{4pt}{14pt}
+
+\titleformat{name=\section,numberless}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{primaryblue!90!black}}
+  {}
+  {0pt}
+  {\begin{tcolorbox}[
+      enhanced, colback=primaryblue!6, colframe=primaryblue!6,
+      borderline west={3.5pt}{0pt}{primaryblue},
+      sharp corners=west, arc=2pt,
+      left=8pt, right=8pt, top=5pt, bottom=5pt,
+      boxsep=0pt, before skip=0pt, after skip=0pt
+  ]\large\bfseries\color{primaryblue!90!black}\thesubsection\hspace{0.55em}#1\end{tcolorbox}}
+\titlespacing*{\subsection}{0pt}{18pt}{8pt}
+
+\titleformat{name=\subsection,numberless}[block]
+  {\normalsize\bfseries\color{accentteal}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{2pt}{\color{accentteal!40}\titlerule[0.7pt]}]
+\titlespacing*{\subsection}{0pt}{14pt}{6pt}
+
+% --- Canonical Shared TikZ Styles ---
+\tikzset{
+    lmbox/.style={draw=codeframe, fill=codebg, thick, rounded corners=2pt, inner sep=4pt, font=\small},
+    lmactive/.style={draw=primaryblue, fill=primaryblue!8, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=primaryblue},
+    lmaccepted/.style={draw=codegreen, fill=codegreen!10, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=codegreen},
+    lmpruned/.style={draw=red!70!black, fill=red!70!black!6, thick, dashed, rounded corners=2pt, inner sep=4pt, font=\small, text=red!70!black},
+    lmarrow/.style={-{Stealth[length=5pt]}, thick, primaryblue},
+    lmmuted/.style={-{Stealth[length=5pt]}, thick, codegray},
+    lmprunedarrow/.style={-{Stealth[length=5pt]}, thick, dashed, red!70!black}
+}
 
 % --- Hyperref Setup ---
 \hypersetup{
@@ -32,40 +120,129 @@
     pdfauthor={Antigravity Engineering}
 }
 
-% --- Theorem & Definition Environments ---
+% --- Example Environment ---
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{example}{Example}[section]
 
-% --- Callout Box Environment ---
-\newenvironment{calloutbox}[1]{
-    \par\vspace{0.3cm}
-    \noindent\begin{tabular}{|p{0.96\textwidth}|}
-    \hline
-    \vspace{0.1cm}
-    \textbf{#1}\par\vspace{0.1cm}
-}{
-    \vspace{0.1cm}
-    \\ \hline
-    \end{tabular}
-    \vspace{0.3cm}\par
+% --- Semantic Narrative Beat Labels & Solution Trap Diagnostic ---
+\newcommand{\painbeat}{\textbf{\color{accentamber}The Problem:} }
+\newcommand{\ahabeat}{\textbf{\color{accentteal}The ``Aha!'' Insight:} }
+\newcommand{\examplebeat}{\textbf{\color{primaryblue}Mini-Example First:} }
+\newcommand{\breaksbeat}{\textbf{\color{accentred}When It Breaks:} }
+\newcommand{\invariantbeat}[1]{\par\noindent\textbf{\color{accentteal}Loop Invariant (#1):} }
+\newcommand{\trapnote}[1]{\par\smallskip\noindent{\footnotesize\textbf{\color{accentamber}Common trap:} #1}}
+
+% --- Modern Overview Card ---
+\newtcolorbox{overviewbox}[1][What You'll Learn]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
 }
 
-% --- Modern C++ Code Listing Setup ---
+% --- Key Takeaway / Core Rule Box ---
+\newtcolorbox{calloutbox}[1]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Plain-English Formula Card ---
+\newtcolorbox{formulabox}[1][Formula in Plain English]{
+    enhanced,
+    colback=primaryblue!4, colframe=primaryblue!22,
+    borderline west={3.5pt}{0pt}{primaryblue},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=6pt, bottom=6pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\small\bfseries\color{primaryblue},
+    title={#1},
+    attach title to upper={\par\vspace{2pt}}
+}
+
+% --- Watch-Out / Edge-Case Warning Box ---
+\newtcolorbox{watchoutbox}[1][Watch Out --- When It Breaks]{
+    enhanced,
+    colback=accentamber!6, colframe=accentamber!30,
+    borderline west={3.5pt}{0pt}{accentamber},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentamber},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Local Symbol Mini-Table Environment ---
+\newenvironment{notationbox}[1][Symbols Used Here]{
+    \par\vspace{0.15cm}
+    \noindent\textbf{\small\color{primaryblue}#1}\par\vspace{0.1cm}
+    \begingroup
+    \footnotesize
+    \rowcolors{2}{codebg}{white}
+    \noindent\tabularx{\textwidth}{>{\raggedright\arraybackslash\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.8cm}}
+    \arrayrulecolor{primaryblue}\toprule[1.1pt]
+    \rowcolor{primaryblue!10}
+    \textcolor{primaryblue}{\textbf{Symbol}} & \textcolor{primaryblue}{\textbf{Plain-English Meaning}} & \textcolor{primaryblue}{\textbf{Example / Type}} \\
+    \arrayrulecolor{codeframe}\midrule[0.6pt]
+}{
+    \arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+    \endtabularx
+    \endgroup
+    \vspace{0.2cm}\par
+}
+
+% --- Print-First Pen-and-Paper Exercise Environment ---
+\newcounter{exercise}
+\newtcolorbox{tryitbox}[3]{
+    enhanced,
+    step=exercise,
+    colback=codegreen!3, colframe=codegreen!45,
+    colbacktitle=codegreen!14, coltitle=codegreen!85!black,
+    borderline west={3.5pt}{0pt}{codegreen},
+    arc=3pt, boxrule=0.6pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    toptitle=4pt, bottomtitle=4pt,
+    before skip=9pt, after skip=9pt,
+    fonttitle=\bfseries,
+    title={Exercise \theexercise\hspace{0.5em}{\colorbox{codegreen!85!black}{\color{white}\scriptsize\bfseries\;#1\;}}\hspace{0.5em}#2 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#3}}}
+}
+
+% --- Modern C++23 Code Listing Setup ---
 \lstset{
     language=C++,
-    basicstyle=\footnotesize\ttfamily,
-    keywordstyle=\color{codeblue}\bfseries,
+    basicstyle=\small\ttfamily\color{codeink},
+    keywordstyle=\color{codekw}\bfseries,
+    morekeywords={constexpr,noexcept,nullptr,static_assert,auto,override,final,decltype,concept,requires},
+    keywordstyle=[2]\color{codetype}\bfseries,
+    morekeywords=[2]{std,vector,span,deque,string,string_view,size_t,int64_t,uint32_t,uint64_t,optional,pair,tuple,array,priority_queue,unordered_map,unordered_set,map,set,ranges,views,nodiscard,greater,numeric_limits,nullopt},
+    moredelim=[l][\color{codeblue}\bfseries]{\#},
+    deletestring=[b]',
     commentstyle=\color{codegreen}\itshape,
-    stringstyle=\color{orange!80!black},
+    stringstyle=\color{codestr},
     numberstyle=\tiny\color{codegray},
     numbers=left,
     numbersep=8pt,
+    xleftmargin=24pt,
+    framexleftmargin=22pt,
+    framexrightmargin=4pt,
+    framextopmargin=4pt,
+    framexbottommargin=4pt,
     backgroundcolor=\color{codebg},
     frame=single,
     rulecolor=\color{codeframe},
+    aboveskip=8pt,
+    belowskip=10pt,
     breaklines=true,
     breakatwhitespace=true,
     tabsize=4,
@@ -73,103 +250,662 @@
     captionpos=b
 }
 
-% --- Title Block ---
-\title{\vspace{-1.5cm}\textbf{\Huge Greedy Algorithms}\\[0.3cm]
-\Large Making the Best Local Choice}
-\author{Technical Monograph}
-\date{\today}
-
 \begin{document}
 
-\maketitle
+% --- Modern Title Banner ---
+\thispagestyle{plain}
+\begin{tcolorbox}[
+    enhanced,
+    colback=primaryblue!6, colframe=primaryblue!20,
+    borderline west={5pt}{0pt}{primaryblue},
+    arc=4pt, boxrule=0.6pt,
+    left=14pt, right=14pt, top=8pt, bottom=8pt,
+    before skip=0pt, after skip=6pt
+]
+    {\footnotesize\bfseries\color{accentteal}MODULE 10 \quad|\quad ALGORITHMS \& DATA STRUCTURES STUDY GUIDE}\\[4pt]
+    {\Huge\bfseries\color{primaryblue}Greedy Algorithms}\\[4pt]
+    {\large\color{codegray}Making Locally Optimal Choices That Stay Globally Optimal}\\[5pt]
+    {\footnotesize\color{codegray}Updated \today}
+\end{tcolorbox}
 
-\begin{abstract}
-\noindent
-This document covers greedy algorithms, a problem-solving strategy that builds a solution step by step, always choosing the immediate best option without looking ahead or revisiting past choices. It is designed for programmers learning to identify when making local, shortsighted decisions is mathematically guaranteed to result in a global, overall best solution. We explore the greedy choice property, optimal substructure, and trace through classic applications like interval scheduling and fractional resource allocation.
-\end{abstract}
+\begin{overviewbox}[What You'll Learn]
+Greedy algorithms build a solution one irreversible step at a time, always picking whatever looks best right now without backtracking or exploring all branches. When a problem supports it, this drops exponential $O(2^N)$ or quadratic $O(N^2)$ searches down to a blazing $O(N \log N)$ sort or $O(N)$ linear pass---but when the structure does not support it, greedy silently returns the wrong answer. You will learn how to \emph{prove} a greedy rule works (Exchange Argument and Greedy Stays Ahead), spot Dynamic Programming traps, and master five patterns: Interval Scheduling/Partitioning, Fractional Knapsack, Huffman/Rope Merging, Two-Pointer Matching, and Furthest-Reach Horizon Tracking.
+\end{overviewbox}
 
-\tableofcontents
-\newpage
+\vspace{-4pt}
+{\setlength{\parskip}{0pt}\small\tableofcontents}
 
-\section{Foundations / Core Concepts}
+% Every major section starts cleanly on a new page
+\renewcommand{\sectionbreak}{\clearpage}
 
-Imagine you are driving and want to find the lowest-cost gas station along your route. A greedy approach would simply pull into the very first station you see that is cheaper than the ones before it, or perhaps stop at the cheapest one in your immediate view. You never check the stations 100 miles ahead, and you never turn back. 
+% ============================================================================
+\section{Foundations and Core Concepts}
+% ============================================================================
 
-In algorithmic terms, a greedy algorithm constructs a solution step by step. At each step, it makes the choice that looks best right now. 
-It operates on two core concepts:
+Imagine you are a cashier handing back $41$ cents in US coins ($1, 5, 10, 25$). You do not build a search tree of every coin combination. You immediately grab the largest coin that fits ($25$), then $10$, then $5$, then $1$, and never reconsider an earlier coin.
+
+A \textbf{greedy algorithm} works the exact same way. It builds an answer piece by piece, always committing to the single choice that looks best at the current step. Once a decision is made, it is never undone.
+
+\begin{notationbox}[Symbols Used in Foundations]
+$N$ & Number of input items, intervals, or elements & $N = 10^5$ (\texttt{std::size\_t}) \\
+$G$ & The sequence of choices produced by our greedy rule & $G = (g_1, g_2, \dots, g_k)$ \\
+$O^*$ & Any valid globally optimal solution (used in proofs) & $O^* = (o_1, o_2, \dots, o_m)$ \\
+$O(N \log N)$ & Typical runtime when dominated by sorting or a heap & $\approx 1.7 \times 10^6$ ops at $N = 10^5$ \\
+\end{notationbox}
+
+For a shortsighted rule to guarantee a globally best answer, a problem must satisfy two structural properties:
 \begin{enumerate}
-    \item \textbf{Greedy Choice}: At each step, you can make a local, immediate optimal choice. You don't need to consider all future consequences or all possible scenarios.
-    \item \textbf{Optimal Substructure}: An optimal solution to the entire problem contains optimal solutions to the sub-problems. If you make a greedy choice, what remains is a smaller version of the exact same problem.
+    \item \textbf{Greedy Choice Property}: There exists at least one globally optimal solution that begins with your locally best choice. You never have to ``sacrifice'' the current step to unlock a better future.
+    \item \textbf{Optimal Substructure}: After you commit to that greedy choice, the leftover problem is a smaller, independent instance of the exact same problem.
 \end{enumerate}
 
-Unlike Dynamic Programming or Backtracking, which explore or store multiple possibilities to guarantee the best outcome, a greedy algorithm commits to a single path. If the problem structure supports it, the greedy path leads to the optimal result much faster. If not, the greedy algorithm produces a sub-optimal result.
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.0cm} >{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{2.3cm} >{\raggedright\arraybackslash}p{4.3cm}}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Paradigm}} & \textcolor{primaryblue}{\textbf{Decision Strategy}} & \textcolor{primaryblue}{\textbf{Typical Time}} & \textcolor{primaryblue}{\textbf{Use When}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Backtracking & Try every choice; undo and branch if suboptimal. & $O(2^N)$ or $O(N!)$ & Must enumerate all valid configurations ($N \le 25$). \\
+Dynamic Prog. & Solve all overlapping subproblems; combine best results. & $O(N^2)$ or $O(N W)$ & Local choices conflict; need global lookahead. \\
+Greedy & Commit to one locally best choice; never look back. & $O(N)$ or $O(N \log N)$ & Proven Exchange Argument or Stays-Ahead property. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
-\section{Main Topic Sections}
+\subsection{But Why Does Greedy Work? --- Two Proof Recipes}
 
-\subsection{Interval Scheduling (Activity Selection)}
-You are given a set of events, each with a start time and an end time. You want to attend as many non-overlapping events as possible. 
+\painbeat The hardest part of greedy algorithms is not writing the code---the code is often 10 lines long. The danger is inventing a plausible-sounding sorting rule that passes your first two test cases and silently fails on the third.
 
-A natural thought might be to pick the shortest events, or the events that start the earliest. However, an event that starts early might take up the whole day, preventing you from attending others. The greedy strategy that works is: \textbf{always pick the event that ends earliest}. 
+\ahabeat You do not need formal academic math to trust a greedy rule. Almost every greedy algorithm in programming is proven by one of two concrete, mechanical recipes: the \textbf{Exchange Argument} or \textbf{Greedy Stays Ahead}.
 
-By picking the event that finishes first, you free up your schedule as early as possible to fit in more events.
+\textbf{Recipe 1: The Exchange Argument (The ``Swap Test'').}
+\begin{enumerate}
+    \item Assume some globally optimal solution $O^*$ exists, and compare it with your greedy solution $G$.
+    \item Find the \emph{first} step where $O^*$ picked a different choice ($o_1$) instead of your greedy choice ($g_1$).
+    \item \textbf{Swap} $o_1$ out of $O^*$ and plug $g_1$ in, creating a modified solution $O'$.
+    \item Show two things: (a) $O'$ is still \emph{valid} (no new conflicts or constraint violations), and (b) $O'$ is \emph{at least as good} as $O^*$ (same or better value/count/cost).
+\end{enumerate}
+
+If every difference can be swapped away without hurting optimality, then $G$ is guaranteed to be just as good as $O^*$!
+
+\textbf{Recipe 2: Greedy Stays Ahead.}
+Track a single scoreboard metric after step $k$ (for example, the finish time of the $k$-th chosen interval, or the furthest index reached after $k$ jumps). Prove by induction that after every step $k$, your greedy solution's scoreboard is \emph{at least as favorable} as any optimal solution's scoreboard at step $k$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    optcell/.style={draw=accentamber, fill=accentamber!12, thick, rounded corners=2pt, font=\scriptsize\bfseries, text=accentamber, align=center},
+    keepcell/.style={draw=primaryblue, fill=primaryblue!10, thick, rounded corners=2pt, font=\scriptsize\bfseries, text=primaryblue, align=center},
+    gcell/.style={draw=codegreen, fill=codegreen!14, thick, rounded corners=2pt, font=\scriptsize\bfseries, text=codegreen, align=center},
+    slackcell/.style={draw=codegreen!70, fill=codegreen!5, thick, dashed, rounded corners=2pt, font=\scriptsize, text=codegreen!80!black, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Axis: t = 0..12 mapped to x = 3.0..15.0 (1.0 cm per unit)
+    \draw[->, line width=1.1pt, color=codeink] (2.8, 0.0) -- (15.3, 0.0) node[right, font=\scriptsize\bfseries] {$t$};
+    \foreach \t in {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12} {
+        \pgfmathsetmacro{\tx}{3.0 + \t * 1.0}
+        \draw[thick, color=codeink] (\tx, 0.08) -- (\tx, -0.08) node[below, font=\tiny\bfseries, color=codeink] {\t};
+    }
+
+    % Row labels inside [0.0, 2.7]
+    \node[anchor=west, font=\scriptsize\bfseries, text=accentamber] at (0.0, 3.05) {Optimal $O^*$ (before):};
+    \node[anchor=west, font=\scriptsize\bfseries, text=codegreen] at (0.0, 1.15) {Swapped $O'$ (after):};
+
+    % Top Row: O* = o1 [2, 6], o2 [6, 9], o3 [9, 12]
+    \draw[optcell] (5.0, 2.65) rectangle (9.0, 3.45) node[midway] {$o_1 = [2, 6]$\\[-1pt]\tiny finishes at $6$};
+    \draw[keepcell] (9.0, 2.65) rectangle (12.0, 3.45) node[midway] {$o_2 = [6, 9]$};
+    \draw[keepcell] (12.0, 2.65) rectangle (15.0, 3.45) node[midway] {$o_3 = [9, 12]$};
+
+    % Bottom Row: O' = g1 [1, 4], slack [4, 6], o2 [6, 9], o3 [9, 12]
+    \draw[gcell] (4.0, 0.75) rectangle (7.0, 1.55) node[midway] {$g_1 = [1, 4]$\\[-1pt]\tiny finishes at $4$};
+    \draw[slackcell] (7.0, 0.75) rectangle (9.0, 1.55) node[midway] {\tiny $+2$ free\\[-1pt]\tiny slack};
+    \draw[keepcell] (9.0, 0.75) rectangle (12.0, 1.55) node[midway] {$o_2 = [6, 9]$};
+    \draw[keepcell] (12.0, 0.75) rectangle (15.0, 1.55) node[midway] {$o_3 = [9, 12]$};
+
+    % Swap Arrow & vertical boundary check
+    \draw[lmarrow, bend right=16] (6.8, 2.60) to node[pos=0.45, left=5pt, font=\scriptsize\bfseries, text=primaryblue, align=right] {Swap $o_1 \to g_1$\\[-1pt]\tiny $f(g_1) \le f(o_1)$} (5.7, 1.60);
+    \draw[dotted, thick, primaryblue] (9.0, 2.60) -- (9.0, 0.05);
+
+    % Bottom summary card
+    \draw[card] (0.0, -2.95) rectangle (15.3, -0.75);
+    \node[anchor=north west, font=\bfseries\small, text=primaryblue] at (0.3, -0.90) {Why the Exchange Argument Guarantees Optimality:};
+    \node[anchor=north west, font=\scriptsize, align=left, text width=14.7cm] at (0.3, -1.32) {
+        $\bullet$ \textbf{No new conflicts:} Because $g_1$ has the earliest finish time, $f(g_1) = 4 \le 6 = f(o_1) \le s(o_2)$, so $o_2$ and $o_3$ remain untouched.\\
+        $\bullet$ \textbf{Same or better size:} Swapping $o_1 \to g_1$ keeps $|O'| = |O^*| = 3$ while only \emph{increasing} free space for remaining events.\\
+        $\bullet$ \textbf{Repeat by induction:} Transforming every mismatch one by one turns $O^*$ into $G$ with zero loss in quality.
+    };
+\end{tikzpicture}
+\caption{The Exchange Argument visualized on a timeline: replacing $O^*$'s first interval $o_1 = [2, 6]$ with the earliest-finishing greedy choice $g_1 = [1, 4]$ creates $+2$ units of extra slack and cannot break any downstream interval.}
+\label{fig:exchange_argument}
+\end{figure}
+
+\subsection{When Greedy Fails: Greedy vs. Dynamic Programming}
+
+Never assume greedy works just because a problem asks for a minimum or maximum! Before coding a greedy rule, spend 30 seconds actively trying to \textbf{break it with a 3-element counterexample}.
+
+\examplebeat Consider two famous greedy traps:
+\begin{itemize}
+    \item \textbf{Non-Canonical Coin Change}: Given coin denominations $\{1, 3, 4\}$ and target amount $6$, the largest-coin-first greedy rule takes $4$, leaving $2$, forcing $1 + 1$ ($3$ coins total). Dynamic Programming tests every coin and finds $3 + 3$ ($2$ coins).
+    \item \textbf{0/1 Knapsack (Indivisible Items)}: With capacity $W = 50$ and items $A(v{=}60, w{=}10)$, $B(v{=}100, w{=}20)$, $C(v{=}120, w{=}30)$, sorting by value/weight density ($6, 5, 4$) greedily picks $A + B$ for value $160$ and wastes $20\text{ kg}$ of capacity. Picking $B + C$ fills all $50\text{ kg}$ for value $220$!
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    badcard/.style={draw=red!70!black!50, fill=red!70!black!3, rounded corners=4pt, thick},
+    goodcard/.style={draw=codegreen!55, fill=codegreen!4, rounded corners=4pt, thick},
+    notecard/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Left Panel: Greedy (Suboptimal) x: 0.0 .. 7.4, y: 0.0 .. 3.4
+    \draw[badcard] (0.0, 0.0) rectangle (7.4, 3.4);
+    \node[anchor=north west, font=\small\bfseries, text=red!70!black] at (0.25, 3.22) {Greedy (Largest First)};
+    \node[anchor=north east, draw=red!70!black, fill=red!70!black!12, rounded corners=2pt, inner sep=2.5pt, font=\scriptsize\bfseries, text=red!70!black] at (7.15, 3.22) {3 coins --- WRONG};
+
+    % Target 6 bar: width 6.6 cm (1.1 cm per unit) from x=0.4 to 7.0
+    \draw[draw=primaryblue, fill=primaryblue!14, thick, rounded corners=2pt] (0.4, 1.55) rectangle (4.8, 2.35) node[midway, font=\small\bfseries, text=primaryblue] {Coin $4$};
+    \draw[draw=red!70!black, fill=red!70!black!12, thick, dashed, rounded corners=2pt] (4.85, 1.55) rectangle (5.90, 2.35) node[midway, font=\small\bfseries, text=red!70!black] {$1$};
+    \draw[draw=red!70!black, fill=red!70!black!12, thick, dashed, rounded corners=2pt] (5.95, 1.55) rectangle (7.00, 2.35) node[midway, font=\small\bfseries, text=red!70!black] {$1$};
+
+    \node[anchor=west, font=\scriptsize, text=codeink, align=left, text width=6.8cm] at (0.3, 0.72) {
+        Step 1: Take $4$ (rem $= 2$). Now coin $3$ no longer fits!\\
+        Step 2--3: Forced into $1 + 1 \implies 4 + 1 + 1 = 6$ ($3$ coins).
+    };
+
+    % Right Panel: Optimal DP x: 7.9 .. 15.3, y: 0.0 .. 3.4
+    \draw[goodcard] (7.9, 0.0) rectangle (15.3, 3.4);
+    \node[anchor=north west, font=\small\bfseries, text=codegreen] at (8.15, 3.22) {Optimal DP (All Choices)};
+    \node[anchor=north east, draw=codegreen, fill=codegreen!14, rounded corners=2pt, inner sep=2.5pt, font=\scriptsize\bfseries, text=codegreen] at (15.05, 3.22) {2 coins --- OPTIMAL};
+
+    % Target 6 bar: x=8.3 to 14.9 (each 3 is 3.25 cm)
+    \draw[draw=codegreen, fill=codegreen!16, thick, rounded corners=2pt] (8.3, 1.55) rectangle (11.55, 2.35) node[midway, font=\small\bfseries, text=codegreen] {Coin $3$};
+    \draw[draw=codegreen, fill=codegreen!16, thick, rounded corners=2pt] (11.65, 1.55) rectangle (14.90, 2.35) node[midway, font=\small\bfseries, text=codegreen] {Coin $3$};
+
+    \node[anchor=west, font=\scriptsize, text=codeink, align=left, text width=6.8cm] at (8.2, 0.72) {
+        Skips $4$ and tests $dp[6-3] + 1 = dp[3] + 1 = 2$.\\
+        Result: $3 + 3 = 6$ (strictly fewer coins than greedy).
+    };
+
+    % Bottom Lesson Bar
+    \draw[notecard] (0.0, -1.55) rectangle (15.3, -0.25);
+    \node[anchor=west, font=\scriptsize, align=left, text width=14.8cm] at (0.25, -0.90) {
+        \textbf{\color{primaryblue}Diagnostic Lesson:} With coins $\{1, 3, 4\}$ and target $6$, you \emph{cannot} swap a $3$ out of $\{3, 3\}$ and plug in $4$ without leaving an awkward remainder of $2$. Whenever the Exchange Argument fails to preserve validity or cost, switch from Greedy to Dynamic Programming.
+    };
+\end{tikzpicture}
+\caption{Greedy failure counterexample on coin set $\{1, 3, 4\}$ for target $6$: locally grabbing the largest coin ($4$) blocks the globally optimal pair ($3 + 3$).}
+\label{fig:greedy_failure}
+\end{figure}
+
+\begin{tryitbox}{Debug}{Break Two Plausible Interval Rules}{ex1}
+Suppose you want to select the maximum number of non-overlapping intervals on a timeline. Construct a \textbf{3-interval counterexample} that breaks each of these plausible-sounding greedy rules:
+\begin{enumerate}[itemsep=1pt, topsep=2pt]
+    \item \emph{Rule A}: Always pick the interval with the \textbf{earliest start time} $s_i$.
+    \item \emph{Rule B}: Always pick the interval with the \textbf{shortest duration} $f_i - s_i$.
+\end{enumerate}
+\end{tryitbox}
+
+% ============================================================================
+\section{Core Greedy Techniques}
+% ============================================================================
+
+Every major greedy problem falls into one of five core templates. Read each subsection's 4-beat origin story to see \emph{why} the specific sorting key or heap rule works---and exactly where edge cases bite.
+
+\subsection{Interval Scheduling and Interval Partitioning}
+
+\begin{notationbox}[Symbols Used in Interval Problems]
+$[s_i, f_i)$ & Half-open event starting at $s_i$ and ending at $f_i$ & $[1, 4)$ and $[4, 7)$ do \emph{not} overlap \\
+$f_{\text{last}}$ & Finish time of the most recently accepted event & Initialized to $-\infty$ (\texttt{INT\_MIN}) \\
+$K$ & Minimum rooms (partitions) needed to host \emph{all} events & Equals peak overlap depth \\
+\end{notationbox}
+
+\textbf{Part A: Interval Scheduling (Maximum Non-Overlapping Events).}
+
+\painbeat Given $N$ events $[s_i, f_i)$ competing for a single conference room, trying every compatible subset takes $O(2^N)$ time. Worse, intuitive rules like ``earliest start'' or ``shortest meeting'' fail on simple 3-event inputs (as you saw in Exercise~1).
+
+\ahabeat Only one thing determines how much room is left for future events: \textbf{how soon the room becomes free again}. Picking the event with the \textbf{earliest finish time} $f_i$ leaves the largest possible suffix of the timeline open for everything else.
+
+\examplebeat Consider four events: $A=[1, 4)$, $B=[2, 6)$, $C=[4, 7)$, $D=[5, 9)$. Sorting by finish time gives $A, B, C, D$. Pick $A$ ($f_{\text{last}} = 4$). Skip $B$ because $2 < 4$. Pick $C$ because $4 \ge 4$ ($f_{\text{last}} = 7$). Skip $D$ because $5 < 7$. Maximum events: $2$ ($\{A, C\}$).
+
+\invariantbeat{Interval Scheduling} After picking $k$ intervals by earliest finish time, our $k$-th finish time is $\le$ the $k$-th finish time of \emph{any} valid schedule of size $k$ (Greedy Stays Ahead).
+
+\begin{watchoutbox}[Watch Out --- Touching Endpoints and Negative Timestamps]
+\begin{itemize}[itemsep=2pt, topsep=2pt]
+    \item \textbf{Touching endpoints}: Clarify whether $[1, 4]$ and $[4, 7]$ overlap. For standard half-open events (a meeting ending at 4:00 frees the room for a 4:00 meeting), check \texttt{ev.start >= current\_end}. If closed endpoints conflict, use \texttt{ev.start > current\_end}.
+    \item \textbf{Sentinel bug}: Initializing \texttt{current\_end = -1} breaks if coordinates can be negative (e.g., $[-10, -5]$). Always initialize to \texttt{std::numeric\_limits<int>::min()} (or track a \texttt{std::optional<int>}).
+\end{itemize}
+\end{watchoutbox}
+
+\textbf{Part B: Interval Partitioning (Minimum Meeting Rooms).}
+
+\painbeat Now flip the goal: you must host \emph{every} event simultaneously using as few rooms $K$ as possible. Sorting by finish time no longer tells you which room is free when a new meeting starts!
+
+\ahabeat Process events in chronological order of \textbf{start time} $s_i$, and keep a \textbf{min-heap} of the finish times of all currently active rooms. When event $i$ arrives, look only at the room that finishes \emph{earliest} (the heap top): if $\text{top} \le s_i$, reuse that room (pop old finish, push $f_i$); otherwise, every active room is busy, so you are forced to open a new room (push $f_i$).
+
+\begin{formulabox}[Minimum Meeting Rooms Formula]
+$$K_{\min} = \max_{t \in \mathbb{R}} \big|\{\, i : s_i \le t < f_i \,\}\big|$$
+\textbf{Read this as:} The minimum number of rooms equals the \emph{maximum number of meetings overlapping at the same instant} (the peak depth). Because our algorithm opens a new room only when all existing rooms overlap with the incoming meeting at time $s_i$, it never allocates more rooms than this unavoidable lower bound.
+\end{formulabox}
+
+\examplebeat Meetings $[0, 30), [5, 10), [15, 20)$ sorted by start time:
+\begin{enumerate}[itemsep=2pt, topsep=2pt]
+    \item $[0, 30)$: heap empty $\to$ open Room 1. Heap: $\{30\}$.
+    \item $[5, 10)$: earliest free is $30 > 5$ $\to$ open Room 2. Heap: $\{10, 30\}$.
+    \item $[15, 20)$: earliest free is $10 \le 15$ $\to$ reuse Room 2! Pop $10$, push $20$. Heap: $\{20, 30\}$.
+\end{enumerate}
+Final heap size is $2$, so $K_{\min} = 2$ rooms suffice.
+
+\begin{tryitbox}{Trace}{Earliest Finish vs. Minimum Rooms}{ex2}
+Given five half-open events $[1, 5), [2, 3), [3, 6), [5, 8), [6, 7)$:
+\begin{enumerate}[itemsep=1pt, topsep=2pt]
+    \item What is the \textbf{maximum number of non-overlapping events} you can attend in one room? List your chosen set.
+    \item What is the \textbf{minimum number of rooms} required to host all five events?
+\end{enumerate}
+\end{tryitbox}
 
 \subsection{Fractional Knapsack}
-You have a backpack that can hold a maximum weight $W$. You have a set of items, each with a weight and a total value. You can take fractions of an item (like gold dust or liquid).
 
-The greedy strategy is straightforward: calculate the value-to-weight ratio for each item. Sort items from highest ratio to lowest. Take as much of the most valuable item per pound as possible, then move to the next.
+\begin{notationbox}[Symbols Used in Fractional Knapsack]
+$W$ & Total weight capacity of the knapsack & $W = 50.0$ (\texttt{double}) \\
+$v_i, w_i$ & Total value and total weight of item $i$ & $v_i \ge 0,\; w_i \ge 0$ \\
+$\rho_i$ & Value density (value per single unit of weight) & $\rho_i = v_i / w_i$ \\
+$x_i$ & Fraction of item $i$ taken into the knapsack & $x_i \in [0, 1]$ \\
+\end{notationbox}
 
-\subsection{Minimum Coins (Canonical Systems)}
-Given standard US coin denominations $(1, 5, 10, 25)$, you want to make change for a specific amount using the fewest coins possible.
+\painbeat When you pack indivisible bars into a backpack (0/1 Knapsack), greedy fails because awkward gaps waste capacity. What if the goods are \textbf{divisible}---like gold dust, coffee beans, or fuel---so you can pour any fraction $x_i \in [0, 1]$?
 
-The greedy approach is to repeatedly take the largest coin denomination that does not exceed the remaining amount. This works perfectly for canonical coin systems (like US currency) but fails for arbitrary systems (e.g., denominations of $1, 3, 4$ where $6$ is best made of $3+3$ rather than $4+1+1$).
+\ahabeat Think of the knapsack as $W$ tiny $1$-gram slots. Every gram you put into the bag should earn as much value as possible! Therefore, greedily filling slots in descending order of \textbf{value density} $\rho_i = v_i / w_i$ is provably optimal: if any optimal bag left behind even $1\text{ gram}$ of a denser item while carrying $1\text{ gram}$ of a cheaper item, swapping those two grams strictly increases total value (Exchange Argument).
 
+\begin{formulabox}[Fractional Contribution Formula]
+$$\rho_i = \frac{v_i}{w_i}, \qquad \Delta V = \begin{cases} v_i & \text{if } w_i \le W_{\text{rem}} \\ v_i \cdot \dfrac{W_{\text{rem}}}{w_i} & \text{if } w_i > W_{\text{rem}} \end{cases}$$
+\textbf{Read this as:} Sort items by value-per-kilogram $\rho_i$ from highest to lowest. Take whole items while they fit; for the first item that exceeds remaining capacity $W_{\text{rem}}$, slice off the exact fraction $W_{\text{rem}} / w_i$ to fill the bag to $100\%$, then stop.
+\end{formulabox}
+
+\examplebeat Suppose $W = 50\text{ kg}$ with three items: $A(v{=}60, w{=}10, \rho{=}6)$, $B(v{=}100, w{=}20, \rho{=}5)$, and $C(v{=}120, w{=}30, \rho{=}4)$. Take all of $A$ ($+60$, rem $=40$), all of $B$ ($+100$, rem $=20$), and $\frac{20}{30} = \frac{2}{3}$ of $C$ ($+80$, rem $=0$). Total value: $240$ (see Figure~\ref{fig:fractional_knapsack}).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    itemcard/.style={draw=codeframe, fill=codebg, thick, rounded corners=3pt, align=center, font=\scriptsize},
+    badge/.style={draw=primaryblue, fill=primaryblue, text=white, rounded corners=2pt, inner sep=2pt, font=\tiny\bfseries}
+]
+    % Top Sorted Item Cards across x: 0.0 .. 15.2
+    \node[itemcard, minimum width=4.6cm, minimum height=1.25cm] (cA) at (2.4, 3.35) {\textbf{\color{codegreen}Item A}: $v = 60,\; w = 10\text{ kg}$\\[2pt]\textbf{Density $\rho_A = 6.0 / \text{kg}$}};
+    \node[badge] at (0.45, 3.82) {\#1};
+
+    \node[itemcard, minimum width=4.6cm, minimum height=1.25cm] (cB) at (7.6, 3.35) {\textbf{\color{primaryblue}Item B}: $v = 100,\; w = 20\text{ kg}$\\[2pt]\textbf{Density $\rho_B = 5.0 / \text{kg}$}};
+    \node[badge] at (5.65, 3.82) {\#2};
+
+    \node[itemcard, minimum width=4.6cm, minimum height=1.25cm] (cC) at (12.8, 3.35) {\textbf{\color{accentteal}Item C}: $v = 120,\; w = 30\text{ kg}$\\[2pt]\textbf{Density $\rho_C = 4.0 / \text{kg}$}};
+    \node[badge] at (10.85, 3.82) {\#3};
+
+    % Knapsack Capacity Bar: 1 kg = 0.25 cm, 0..60 kg maps to x = 0.2 .. 15.2
+    % Capacity W = 50 kg is at x = 12.7
+    \draw[draw=codegreen, fill=codegreen!14, thick] (0.2, 0.75) rectangle (2.7, 1.75) node[midway, align=center, font=\scriptsize\bfseries, text=codegreen] {Item A (100\%)\\[-1pt]\tiny $10\text{ kg} \to +60$};
+    \draw[draw=primaryblue, fill=primaryblue!12, thick] (2.7, 0.75) rectangle (7.7, 1.75) node[midway, align=center, font=\scriptsize\bfseries, text=primaryblue] {Item B (100\%)\\[-1pt]\tiny $20\text{ kg} \to +100$};
+    \draw[draw=accentteal, fill=accentteal!14, thick] (7.7, 0.75) rectangle (12.7, 1.75) node[midway, align=center, font=\scriptsize\bfseries, text=accentteal] {Item C ($\tfrac{2}{3}$ taken)\\[-1pt]\tiny $20\text{ kg} \to +80$};
+    \draw[draw=red!70!black, fill=red!70!black!6, thick, dashed] (12.7, 0.75) rectangle (15.2, 1.75) node[midway, align=center, font=\scriptsize, text=red!70!black] {Left behind\\[-1pt]\tiny $10\text{ kg}$ of C};
+
+    % Connecting arrows from cards down to bar (clear of Cap W = 50 kg label)
+    \draw[lmmuted] (cA.south) -- (1.45, 1.82);
+    \draw[lmmuted] (cB.south) -- (5.20, 1.82);
+    \draw[lmmuted] ([xshift=-1.6cm]cC.south) -- (10.20, 1.82);
+
+    % Weight ticks & capacity wall
+    \foreach \w/\wx in {0/0.2, 10/2.7, 30/7.7, 50/12.7, 60/15.2} {
+        \draw[thick, codegray] (\wx, 0.72) -- (\wx, 0.52) node[below, font=\tiny\bfseries, text=codegray] {\w\ kg};
+    }
+    \draw[very thick, dashed, accentamber] (12.7, 0.50) -- (12.7, 2.08);
+    \node[anchor=south, font=\scriptsize\bfseries, text=accentamber] at (13.35, 2.08) {Cap $W = 50\text{ kg}$};
+
+    % Bottom Comparison Strip
+    \draw[draw=codeframe, fill=codebg, thick, rounded corners=4pt] (0.2, -0.95) rectangle (15.2, -0.10);
+    \node[anchor=center, font=\scriptsize, align=center, text width=14.6cm] at (7.7, -0.52) {
+        \textbf{\color{codegreen}Fractional:} $60 + 100 + \tfrac{20}{30}(120) = \mathbf{240}$ (0\,kg wasted) \;\,$|$\;\,
+        \textbf{\color{red!70!black}0/1 Greedy:} $A{+}B = \mathbf{160}$ (20\,kg wasted) \;\,$|$\;\,
+        \textbf{\color{primaryblue}0/1 DP:} $B{+}C = \mathbf{220}$.
+    };
+\end{tikzpicture}
+\caption{Fractional Knapsack density fill for $W = 50\text{ kg}$: sorting by value per kilogram ($\rho_i = v_i / w_i$) and slicing Item~C achieves the optimal value $240$ with zero wasted capacity.}
+\label{fig:fractional_knapsack}
+\end{figure}
+
+\begin{watchoutbox}[Watch Out --- Zero-Weight \texttt{0.0 / 0.0} NaN Comparator UB]
+Never blindly sort with \texttt{(a.value / a.weight) > (b.value / b.weight)}! If an item has \texttt{value == 0.0} and \texttt{weight == 0.0}, IEEE~754 produces \texttt{NaN}. Every comparison involving \texttt{NaN} evaluates to \texttt{false}, violating \textbf{strict weak ordering} and triggering Undefined Behavior (or crashes) inside \texttt{std::ranges::sort}. Always peel off zero-weight items \emph{before} sorting strictly positive-weight items.
+\end{watchoutbox}
+
+\begin{tryitbox}{Edge Cases}{Zero-Weight and NaN Trap}{ex3}
+Suppose capacity $W = 10$ and you receive four items: $(v{=}15, w{=}0)$, $(v{=}0, w{=}0)$, $(v{=}20, w{=}5)$, and $(v{=}30, w{=}10)$.
+\begin{enumerate}[itemsep=1pt, topsep=2pt]
+    \item What is the true maximum value you can collect?
+    \item Which item causes a naive \texttt{a.value / a.weight > b.value / b.weight} comparator to violate strict weak ordering, and why?
+\end{enumerate}
+\end{tryitbox}
+
+\clearpage
+\subsection{Huffman Coding and Minimum-Cost Rope Merging}
+
+\begin{notationbox}[Symbols Used in Rope Merging / Huffman]
+$L_i$ & Initial length of rope $i$ (or frequency of symbol $i$) & $L_i > 0$ (\texttt{std::int64\_t}) \\
+$d_i$ & Merge depth of item $i$ (number of merges it participates in) & Leaf depth in merge tree \\
+$H$ & Min-heap storing all active rope lengths / subtree weights & \texttt{std::priority\_queue} \\
+\end{notationbox}
+
+\painbeat You have $N$ ropes of lengths $L_1, \dots, L_N$. Connecting two ropes of lengths $a$ and $b$ costs $a + b$ and produces one new rope of length $a + b$. What if you just sort once and merge left-to-right? On $[3, 4, 5, 6]$, linear merging computes $(3{+}4){=}7$, then $(7{+}5){=}12$, then $(12{+}6){=}18$, for total cost $7 + 12 + 18 = 37$---which is \emph{not} optimal!
+
+\ahabeat Every time a rope is part of a merge, its original length gets paid \emph{again}. If original rope $L_i$ sits at depth $d_i$ in the binary merge tree, it contributes $L_i \cdot d_i$ to the total cost. By the Exchange Argument, the two \textbf{smallest} remaining pieces must be merged deepest (first)---and because a newly merged rope can be \emph{larger} than other unmerged ropes, we re-insert it into a \textbf{min-heap} so we always extract the two smallest \emph{current} pieces.
+
+\begin{formulabox}[Weighted Path Length Identity (Huffman / Rope Cost)]
+$$\text{Total Merge Cost} = \sum_{\text{all merges}} (a + b) = \sum_{i=1}^{N} L_i \cdot d_i$$
+\textbf{Read this as:} Summing every internal merge cost gives the exact same number as multiplying each original rope length (or character frequency in Huffman compression) by how many merges it lived through. Minimizing cost means pushing heavy items toward the top (small $d_i$) and light items to the bottom (large $d_i$).
+\end{formulabox}
+
+\examplebeat Re-run $[3, 4, 5, 6]$ with a min-heap:
+\begin{enumerate}[itemsep=2pt, topsep=2pt]
+    \item Pop $3, 4 \implies$ merge cost $7$, push $7$. Heap: $\{5, 6, 7\}$.
+    \item Pop $5, 6 \implies$ merge cost $11$, push $11$. Heap: $\{7, 11\}$.
+    \item Pop $7, 11 \implies$ merge cost $18$, push $18$. Heap: $\{18\}$ (done!).
+\end{enumerate}
+Total cost $= 7 + 11 + 18 = \mathbf{36}$ (beating linear merging's $37$!). Notice that every single leaf sat at depth $2$, so $3(2) + 4(2) + 5(2) + 6(2) = 36$.
+
+\begin{watchoutbox}[Watch Out --- Single Rope and 32-Bit Overflow]
+If $N \le 1$, zero merges are needed, so the cost is \textbf{0} (not $L_0$!). Also, merging $N = 10^5$ ropes of length $10^5$ produces sums up to $10^{10}$, overflowing 32-bit \texttt{int}. Always accumulate both heap elements and total cost in \texttt{std::int64\_t}.
+\end{watchoutbox}
+
+\begin{tryitbox}{Trace}{Min-Heap Rope Merging}{ex4}
+Hand-trace minimum-cost rope merging on $[2, 4, 7, 9, 10]$. Record the two popped values, the pushed sum, and the updated min-heap after each merge, then compute the total cost.
+\end{tryitbox}
+
+\subsection{Two-Pointer Greedy Matching}
+
+\begin{notationbox}[Symbols Used in Two-Pointer Matching]
+$D[0 \dots m{-}1]$ & Sorted array of demands (e.g., task difficulties or hunger) & Ascending order \\
+$S[0 \dots n{-}1]$ & Sorted array of supplies (e.g., worker strengths or cookies) & Ascending order \\
+$i, j$ & Current demand pointer ($i$) and supply pointer ($j$) & Each advances $O(1)$ per step \\
+\end{notationbox}
+
+\painbeat Suppose you have $m$ tasks requiring minimum skill $D[i]$ and $n$ workers with skill $S[j]$, where each worker can take at most one task. Checking every worker-task assignment is a bipartite matching problem; even naive greedy matching without sorting wastes a level-$10$ worker on a level-$1$ task.
+
+\ahabeat Sort both arrays in ascending order. Try to satisfy the \emph{easiest remaining task} $D[i]$ using the \emph{weakest worker} $S[j]$ who can handle it ($S[j] \ge D[i]$). If $S[j] < D[i]$, worker $j$ cannot handle task $i$---nor any harder task $D[k > i]$---so discarding worker $j$ loses nothing.
+
+\examplebeat Let tasks be $D = [2, 4, 6]$ and workers be $S = [1, 3, 5]$ (already sorted):
+\begin{enumerate}[itemsep=2pt, topsep=2pt]
+    \item $i{=}0, j{=}0$: $S[0]{=}1 < D[0]{=}2$ $\to$ worker $1$ is too weak for everyone; advance $j \to 1$.
+    \item $i{=}0, j{=}1$: $S[1]{=}3 \ge D[0]{=}2$ $\to$ match! Advance both: $i \to 1, j \to 2$.
+    \item $i{=}1, j{=}2$: $S[2]{=}5 \ge D[1]{=}4$ $\to$ match! Advance both: $i \to 2, j \to 3$ (out of workers).
+\end{enumerate}
+Total matched tasks: $\mathbf{2}$.
+
+\invariantbeat{Two-Pointer Matching} Every worker before index $j$ is either already matched to a task before $i$, or too weak for task $i$ (and therefore too weak for all remaining tasks).
+
+\begin{watchoutbox}[Watch Out --- Advancing the Wrong Pointer]
+When $S[j] < D[i]$, advance \textbf{only} the supply pointer $j$---never advance the demand pointer $i$! A stronger worker later in $S$ may still satisfy task $D[i]$. Also remember that both arrays must be sorted before scanning.
+\end{watchoutbox}
+
+\begin{tryitbox}{Twist}{Boats to Save People}{ex5}
+People with weights $[3, 2, 2, 1]$ must cross a river in boats of weight limit $3$. Each boat carries \textbf{at most two people}. If you sort weights ascending, should you pair the heaviest person with the lightest person (opposite-direction two pointers) or pair adjacent light people? Trace $[1, 2, 2, 3]$ to find the minimum number of boats.
+\end{tryitbox}
+
+\subsection{Furthest-Reach Greedy (Jump Horizon Tracking)}
+
+\begin{notationbox}[Symbols Used in Horizon Tracking]
+$A[i]$ & Maximum forward jump length allowed from index $i$ & $A[i] \ge 0$ \\
+$R_{\max}$ & Furthest index reachable from any position scanned so far & $R_{\max} = \max_{k \le i}(k + A[k])$ \\
+$E_{\text{cur}}$ & Right boundary of the current jump layer (for min jumps) & Triggers \texttt{jumps++} when $i = E_{\text{cur}}$ \\
+\end{notationbox}
+
+\painbeat Given an array $A$ where $A[i]$ is the maximum jump length from index $i$, can you reach index $N - 1$---and in how few jumps? Dynamic Programming checks every previous index $j < i$ that can reach $i$, taking $O(N^2)$ time and timing out when $N = 10^5$.
+
+\ahabeat You never need to decide \emph{which} landing square inside your current jump range you picked until you reach the edge of that range! Think of each jump as expanding a BFS wave across the array: while scanning $i$ from $0$ up to the current wave boundary $E_{\text{cur}}$, simply track the single furthest horizon $R_{\max} = \max(R_{\max}, i + A[i])$ reachable in the \emph{next} jump.
+
+\begin{formulabox}[Horizon Expansion Invariant]
+$$\text{Reachable if } i \le R_{\max} \text{ for all } i, \quad \text{updating } R_{\max} \leftarrow \max(R_{\max},\; i + A[i]).$$
+\textbf{Read this as:} As long as your walking index $i$ never steps past the furthest horizon $R_{\max}$ unlocked by earlier squares, square $i$ is guaranteed to be reachable. Every time $i$ reaches the edge $E_{\text{cur}}$ of the current jump, spend $+1$ jump and push the edge out to $E_{\text{cur}} \leftarrow R_{\max}$.
+\end{formulabox}
+
+\examplebeat On $A = [2, 3, 1, 1, 4]$ (target index $4$), start with $E_{\text{cur}} = 0$, $R_{\max} = 0$, $\text{jumps} = 0$:
+\begin{itemize}[itemsep=2pt, topsep=2pt]
+    \item $i = 0$: $R_{\max} = \max(0, 0{+}2) = 2$. Hit $i == E_{\text{cur}}$ $\to$ $\text{jumps} = 1$, $E_{\text{cur}} = 2$.
+    \item $i = 1$: $R_{\max} = \max(2, 1{+}3) = 4$. (Still inside jump~1's boundary $E_{\text{cur}} = 2$.)
+    \item $i = 2$: $R_{\max} = \max(4, 2{+}1) = 4$. Hit $i == E_{\text{cur}}$ $\to$ $\text{jumps} = 2$, $E_{\text{cur}} = 4 \ge N{-}1$ (done!).
+\end{itemize}
+Contrast with $A = [3, 2, 1, 0, 4]$: at $i = 0, 1, 2, 3$, $R_{\max}$ stays stuck at $3$. When $i = 4 > R_{\max} = 3$, we immediately know index $4$ is unreachable.
+
+\begin{watchoutbox}[Watch Out --- Looping to the Final Index]
+In the minimum-jumps loop, stop at $i < N - 1$ (not $i < N$)! If $E_{\text{cur}}$ lands \emph{exactly} on $N - 1$, visiting $i = N - 1$ would falsely trigger one extra \texttt{jumps++} after you have already arrived.
+\end{watchoutbox}
+
+\begin{tryitbox}{Trace}{Minimum Jumps Horizon}{ex6}
+Trace the minimum-jumps horizon algorithm on $A = [2, 3, 0, 1, 4]$ for $i = 0, 1, 2, 3$. Write down the values of $R_{\max}$, $E_{\text{cur}}$, and \texttt{jumps} after each step.
+\end{tryitbox}
+
+% ============================================================================
 \section{Key Algorithmic Patterns}
+% ============================================================================
 
-Why do naive brute-force approaches fail? Trying every possible subset of activities or items requires exponential time, $O(2^N)$. This is impossible for $N \ge 30$.
+Why do brute-force and generic DP lose so badly on greedy-friendly problems? Because they repeatedly re-evaluate choices that are already \emph{dominated} by a single extreme element.
 
-The efficient technique relies on \textbf{sorting}. By sorting the input data according to a specific greedy criterion (like end time or value ratio), we can construct the answer in a single linear pass $O(N)$. The total time becomes bounded by the sort: $O(N \log N)$.
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.4cm} >{\raggedright\arraybackslash}p{3.5cm} >{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{2.3cm}}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Problem Family}} & \textcolor{primaryblue}{\textbf{Naive / DP Approach}} & \textcolor{primaryblue}{\textbf{Greedy Shortcut}} & \textcolor{primaryblue}{\textbf{Speedup}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Interval Scheduling & Subsets $O(2^N)$ / DP $O(N^2)$ & Sort by earliest finish time $f_i$, linear scan & $O(N \log N)$ \\
+Min Meeting Rooms & Check all pairs $O(N^2)$ & Sort by start $s_i$ + min-heap of room ends & $O(N \log N)$ \\
+Fractional Knapsack & Discretized DP $O(N W)$ & Sort by density $v_i / w_i$, fill until $W = 0$ & $O(N \log N)$ \\
+Rope Merging / Huffman & Interval DP $O(N^3)$ & Min-heap: pop smallest two, push sum & $O(N \log N)$ \\
+Jump Horizon & Reachability DP $O(N^2)$ & Track single furthest index $R_{\max}$ & $O(N)$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
-\begin{calloutbox}{The Sorting Signal}
-Most greedy algorithms begin by sorting the input. If you find yourself asking, ``In what order should I process these items to maximize my advantage?'', you are likely looking for a greedy sorting criterion.
+Across all competitive and engineering problems, greedy implementations fall into \textbf{three structural archetypes}:
+\begin{enumerate}
+    \item \textbf{Static Sort + Linear Scan} ($O(N \log N)$): Item priorities never change while you scan. Sort once by the greedy key (finish time, density, or size), then scan in a single $O(N)$ pass.
+    \item \textbf{Dynamic Extremum via Min-Heap} ($O(N \log N)$): Each step creates new items or updates active resources (merged ropes, freed meeting rooms). A \texttt{std::priority\_queue} keeps the current minimum at the top in $O(\log N)$ per update.
+    \item \textbf{Online Horizon / Prefix Surplus} ($O(N)$): Items already arrive in a fixed array order (Jump Game, circular Gas Station tour). Maintain one running invariant ($R_{\max}$ or running tank balance) in $O(1)$ space.
+\end{enumerate}
+
+\begin{calloutbox}{The Sorting vs. Heap vs. Horizon Signal}
+Ask yourself one question when designing a greedy pass: \textbf{``Does my next best choice ever change after I act?''}
+\begin{itemize}[itemsep=2pt, topsep=2pt]
+    \item \textbf{No, fixed order up front} $\implies$ Sort once (\texttt{std::ranges::sort}), scan linearly.
+    \item \textbf{Yes, new/modified candidates appear} $\implies$ Maintain a min-heap (\texttt{std::priority\_queue}).
+    \item \textbf{Input order is already fixed by index} $\implies$ Track a single $O(1)$ horizon or running balance.
+\end{itemize}
 \end{calloutbox}
 
 \begin{figure}[htbp]
 \centering
-\noindent\emph{Figure: Interval scheduling greedy choice timeline. (See Diagram~21 in \texttt{diagrams\_review.pdf} for the full visual diagram.)}
-\caption{Interval Scheduling greedy choice: picking A (ends at 4), C (ends at 7), and E (ends at 10). Conflicting branches B and D are skipped.}
+\begin{tikzpicture}[
+    pickcell/.style={draw=codegreen, fill=codegreen!14, thick, rounded corners=2pt, font=\scriptsize\bfseries, text=codegreen, align=center},
+    rejcell/.style={draw=red!70!black, fill=red!70!black!6, thick, dashed, rounded corners=2pt, font=\scriptsize, text=red!70!black, align=center},
+    card/.style={draw=codeframe, fill=codebg, rounded corners=4pt, thick}
+]
+    % Timeline axis: t = 0..12 mapped to x = 3.1 .. 14.5 (0.95 cm per unit time)
+    \draw[->, line width=1.1pt, color=codeink] (2.9, 0.0) -- (14.85, 0.0) node[right, font=\scriptsize\bfseries] {$t$};
+    \foreach \t in {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12} {
+        \pgfmathsetmacro{\tx}{3.1 + \t * 0.95}
+        \draw[thick, color=codeink] (\tx, 0.08) -- (\tx, -0.08) node[below, font=\tiny\bfseries, color=codeink] {\t};
+    }
+
+    % Row Labels inside [0.0, 2.8]
+    \node[anchor=west, font=\scriptsize\bfseries, text=red!70!black] at (0.0, 2.75) {Rejected Conflicts:};
+    \node[anchor=west, font=\scriptsize\bfseries, text=codegreen] at (0.0, 1.25) {Greedy Selections:};
+
+    % Finish-time guide lines from accepted intervals
+    % f1 = 4 -> x = 3.1 + 4*0.95 = 6.90
+    % f2 = 7.2 -> x = 3.1 + 7.2*0.95 = 9.94
+    % f3 = 11.2 -> x = 3.1 + 11.2*0.95 = 13.74
+    \draw[dotted, thick, codegreen] (6.90, 3.20) -- (6.90, 0.08);
+    \draw[dotted, thick, codegreen] (9.94, 3.20) -- (9.94, 0.08);
+    \draw[dotted, thick, codegreen] (13.74, 1.70) -- (13.74, 0.08);
+
+    % Rejected Activities (y = 2.35 .. 3.15)
+    % A2 = [3, 5.5] -> x = 5.95 .. 8.325
+    \draw[rejcell] (5.95, 2.35) rectangle (8.33, 3.15) node[midway] {\bfseries $A_2\,[3, 5.5]$\\[-1pt]\tiny $\times$ overlaps $A_1$};
+    % A4 = [6, 9.0] -> x = 8.80 .. 11.65
+    \draw[rejcell] (8.80, 2.35) rectangle (11.65, 3.15) node[midway] {\bfseries $A_4\,[6, 9.0]$\\[-1pt]\tiny $\times$ overlaps $A_3$};
+
+    % Selected Activities (y = 0.85 .. 1.65)
+    % A1 = [1, 4] -> x = 4.05 .. 6.90
+    \draw[pickcell] (4.05, 0.85) rectangle (6.90, 1.65) node[midway] {$\checkmark\; A_1\,[1, 4]$\\[-1pt]\tiny $f_1 = 4$};
+    % A3 = [4.5, 7.2] -> x = 7.375 .. 9.94
+    \draw[pickcell] (7.38, 0.85) rectangle (9.94, 1.65) node[midway] {$\checkmark\; A_3\,[4.5, 7.2]$\\[-1pt]\tiny $f_2 = 7.2$};
+    % A5 = [8.0, 11.2] -> x = 10.70 .. 13.74
+    \draw[pickcell] (10.70, 0.85) rectangle (13.74, 1.65) node[midway] {$\checkmark\; A_5\,[8, 11.2]$\\[-1pt]\tiny $f_3 = 11.2$};
+
+    % Bottom Greedy Choice Principle Card
+    \draw[card] (0.0, -2.55) rectangle (15.3, -0.75);
+    \node[anchor=north west, font=\bfseries\small, text=primaryblue] at (0.3, -0.90) {Greedy Earliest Finish Time Criterion:};
+    \node[anchor=north west, font=\scriptsize, align=left, text width=14.7cm] at (0.3, -1.32) {
+        $\bullet$ \textbf{Decision Strategy:} Sort activities by finish time $f_i$. Pick the next interval whose start time satisfies $s_k \ge f_{\text{last}}$.\\
+        $\bullet$ \textbf{Greedy Choice Invariant:} Vertical green lines show $f_{\text{last}}$; $A_2$ and $A_4$ start left of the line and are discarded in $O(1)$.\\
+        $\bullet$ \textbf{Complexity:} Sorting takes $O(N \log N)$ and the linear scan takes $O(N)$, yielding total time $O(N \log N)$.
+    };
+\end{tikzpicture}
+\caption{Interval Scheduling greedy choice across a timeline. Selecting non-overlapping intervals with earliest finish times ($A_1 \to A_3 \to A_5$) skips conflicting intervals ($A_2, A_4$) and provably maximizes scheduled activities.}
 \label{fig:interval_scheduling}
 \end{figure}
 
+\begin{tryitbox}{Derive}{Total Merge Cost as Weighted Leaf Depth}{ex7}
+Merge the four ropes $[1, 2, 3, 4]$ using the min-heap greedy rule. Draw the resulting binary merge tree on paper, record the depth $d_i$ of each leaf ($1, 2, 3, 4$), and verify directly that:
+$$\sum_{\text{internal merges}} (\text{merge cost}) = \sum_{i=1}^{4} L_i \cdot d_i.$$
+\end{tryitbox}
+
+% ============================================================================
 \section{Worked Examples}
+% ============================================================================
 
-\subsection{Example 1: Activity Selection Trace}
-Given events $(\text{start}, \text{end})$: $(1,4)$, $(3,5)$, $(0,6)$, $(5,7)$, $(3,9)$, $(5,9)$, $(6,10)$, $(8,11)$, $(8,12)$, $(2,14)$, $(12,16)$.
+Work through these five complete traces step by step. Every number is computed explicitly so you can reproduce each table on paper.
 
-\textbf{Step 1: Sort by end time.}
-1. $(1, 4)$
-2. $(3, 5)$
-3. $(0, 6)$
-4. $(5, 7)$
-5. $(3, 9)$
-... and so on.
+\begin{example}[Activity Selection --- Complete 11-Event Trace]
+Find the maximum number of non-overlapping half-open events from:
+$$(1,4),\;(3,5),\;(0,6),\;(5,7),\;(3,9),\;(5,9),\;(6,10),\;(8,11),\;(8,12),\;(2,14),\;(12,16).$$
 
-\textbf{Step 2: Initialize.}
-Select the first event in the sorted list: $(1,4)$. Current end time = $4$. Count = $1$.
+\textbf{Step 1: Sort by finish time $f_i$.} The list above is already sorted in non-decreasing order of $f_i$.
 
-\textbf{Step 3: Iterate.}
-- Next event $(3,5)$: starts at $3$. $3 < 4$, overlapping. Skip.
-- Next event $(0,6)$: starts at $0$. $0 < 4$, overlapping. Skip.
-- Next event $(5,7)$: starts at $5$. $5 \ge 4$. Accept! New end time = $7$. Count = $2$.
-- Continue in a single pass.
+\textbf{Step 2: Scan once, tracking $f_{\text{last}} = -\infty$ and \texttt{count} $= 0$.}
 
-\section{C++ Implementations}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{0.8cm} >{\centering\arraybackslash}p{1.6cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{2.3cm} >{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.1cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{\#}} & \textcolor{primaryblue}{\textbf{Event}} & \textcolor{primaryblue}{\textbf{Old $f_{\text{last}}$}} & \textcolor{primaryblue}{\textbf{Check $s_i \ge f_{\text{last}}$}} & \textcolor{primaryblue}{\textbf{Decision}} & \textcolor{primaryblue}{\textbf{New $f_{\text{last}}$}} & \textcolor{primaryblue}{\textbf{Count}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+1 & $[1, 4)$ & $-\infty$ & $1 \ge -\infty$ (True) & \textbf{\color{codegreen}Accept} $[1, 4)$ & $4$ & $1$ \\
+2 & $[3, 5)$ & $4$ & $3 \ge 4$ (False) & Skip (overlap) & $4$ & $1$ \\
+3 & $[0, 6)$ & $4$ & $0 \ge 4$ (False) & Skip (overlap) & $4$ & $1$ \\
+4 & $[5, 7)$ & $4$ & $5 \ge 4$ (True) & \textbf{\color{codegreen}Accept} $[5, 7)$ & $7$ & $2$ \\
+5 & $[3, 9)$ & $7$ & $3 \ge 7$ (False) & Skip (overlap) & $7$ & $2$ \\
+6 & $[5, 9)$ & $7$ & $5 \ge 7$ (False) & Skip (overlap) & $7$ & $2$ \\
+7 & $[6, 10)$ & $7$ & $6 \ge 7$ (False) & Skip (overlap) & $7$ & $2$ \\
+8 & $[8, 11)$ & $7$ & $8 \ge 7$ (True) & \textbf{\color{codegreen}Accept} $[8, 11)$ & $11$ & $3$ \\
+9 & $[8, 12)$ & $11$ & $8 \ge 11$ (False) & Skip (overlap) & $11$ & $3$ \\
+10 & $[2, 14)$ & $11$ & $2 \ge 11$ (False) & Skip (overlap) & $11$ & $3$ \\
+11 & $[12, 16)$ & $11$ & $12 \ge 11$ (True) & \textbf{\color{codegreen}Accept} $[12, 16)$ & $16$ & $4$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
-We use C++23 \texttt{std::ranges::sort} to express our greedy criterion clearly.
+\textbf{Result:} Maximum non-overlapping events $= \mathbf{4}$: $\{[1,4),\; [5,7),\; [8,11),\; [12,16)\}$.
+\end{example}
 
-\begin{lstlisting}[caption=Interval Scheduling / Activity Selection]
-#include <vector>
+\begin{example}[Interval Partitioning --- Minimum Meeting Rooms]
+Find the minimum number of rooms needed for five meetings: $[0, 30), [5, 10), [10, 25), [15, 20), [22, 35)$.
+
+\textbf{Step 1: Sort by start time $s_i$.} Already sorted: $[0,30), [5,10), [10,25), [15,20), [22,35)$.
+
+\textbf{Step 2: Maintain a min-heap $H$ of active room finish times.}
+
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{1.6cm} >{\centering\arraybackslash}p{2.0cm} >{\centering\arraybackslash}p{2.6cm} >{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{2.2cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Meeting}} & \textcolor{primaryblue}{\textbf{Heap Top}} & \textcolor{primaryblue}{\textbf{Check $\text{top} \le s_i$}} & \textcolor{primaryblue}{\textbf{Action}} & \textcolor{primaryblue}{\textbf{Heap After}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+$[0, 30)$ & empty & --- & Open Room 1; push $30$ & $\{30\}$ \\
+$[5, 10)$ & $30$ & $30 \le 5$ (False) & Open Room 2; push $10$ & $\{10, 30\}$ \\
+$[10, 25)$ & $10$ & $10 \le 10$ (True) & Reuse Room 2; pop $10$, push $25$ & $\{25, 30\}$ \\
+$[15, 20)$ & $25$ & $25 \le 15$ (False) & Open Room 3; push $20$ & $\{20, 25, 30\}$ \\
+$[22, 35)$ & $20$ & $20 \le 22$ (True) & Reuse Room 3; pop $20$, push $35$ & $\{25, 30, 35\}$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
+
+\textbf{Result:} Final heap size $= \mathbf{3}$ rooms (peak overlap occurs at $t = 15$, when $[0,30)$, $[10,25)$, and $[15,20)$ all run concurrently).
+\end{example}
+
+\begin{example}[Fractional Knapsack Trace]
+Pack a knapsack of capacity $W = 35\text{ kg}$ with four items:
+$I_1(v{=}45, w{=}15)$, $I_2(v{=}60, w{=}12)$, $I_3(v{=}40, w{=}20)$, and $I_4(v{=}24, w{=}6)$.
+
+\textbf{Step 1: Compute densities $\rho_i = v_i / w_i$ and sort descending.}
+\begin{itemize}[itemsep=1pt, topsep=2pt]
+    \item $I_2$: $60 / 12 = 5.0$, \quad $I_4$: $24 / 6 = 4.0$, \quad $I_1$: $45 / 15 = 3.0$, \quad $I_3$: $40 / 20 = 2.0$.
+\end{itemize}
+
+\textbf{Step 2: Fill greedily until $W_{\text{rem}} = 0$.}
+\begin{enumerate}[itemsep=2pt, topsep=2pt]
+    \item Take \textbf{100\% of $I_2$} ($w = 12 \le 35$): value $= 60.0$, $W_{\text{rem}} = 23$.
+    \item Take \textbf{100\% of $I_4$} ($w = 6 \le 23$): value $= 60.0 + 24.0 = 84.0$, $W_{\text{rem}} = 17$.
+    \item Take \textbf{100\% of $I_1$} ($w = 15 \le 17$): value $= 84.0 + 45.0 = 129.0$, $W_{\text{rem}} = 2$.
+    \item Take \textbf{$\tfrac{2}{20} = 10\%$ of $I_3$}: add $40 \times \tfrac{2}{20} = 4.0$. Total value $= \mathbf{133.0}$, $W_{\text{rem}} = 0$. Stop!
+\end{enumerate}
+\end{example}
+
+\begin{example}[Minimum-Cost Rope Merging (Huffman Tree)]
+Connect five ropes of lengths $[4, 3, 2, 6, 8]$ at minimum total cost.
+
+\textbf{Step 1: Build min-heap $H = \{2, 3, 4, 6, 8\}$ and set \texttt{total\_cost} $= 0$.}
+
+\textbf{Step 2: Repeat $N - 1 = 4$ merges until one rope remains.}
+
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{1.0cm} >{\centering\arraybackslash}p{2.2cm} >{\centering\arraybackslash}p{2.0cm} >{\centering\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Step}} & \textcolor{primaryblue}{\textbf{Pop Smallest 2}} & \textcolor{primaryblue}{\textbf{Merge Cost}} & \textcolor{primaryblue}{\textbf{Running Total}} & \textcolor{primaryblue}{\textbf{Min-Heap After Push}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+1 & $2,\; 3$ & $2 + 3 = 5$ & $5$ & $\{4, 5, 6, 8\}$ \\
+2 & $4,\; 5$ & $4 + 5 = 9$ & $14$ & $\{6, 8, 9\}$ \\
+3 & $6,\; 8$ & $6 + 8 = 14$ & $28$ & $\{9, 14\}$ \\
+4 & $9,\; 14$ & $9 + 14 = 23$ & $51$ & $\{23\}$ (single rope left) \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
+
+\textbf{Verification via leaf depths:} Leaves $2, 3$ have depth $3$; leaves $4, 6, 8$ have depth $2$. Weighted sum: $2(3) + 3(3) + 4(2) + 6(2) + 8(2) = 6 + 9 + 8 + 12 + 16 = \mathbf{51}$.
+\end{example}
+
+\begin{example}[Minimum Jumps via Horizon Tracking]
+Find the minimum number of jumps to reach the last index of $A = [2, 3, 1, 1, 4]$ ($N = 5$, target index $= 4$).
+
+\textbf{Initialize:} $R_{\max} = 0$, $E_{\text{cur}} = 0$, $\text{jumps} = 0$. Loop $i$ from $0$ to $N - 2 = 3$.
+
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{0.8cm} >{\centering\arraybackslash}p{1.2cm} >{\centering\arraybackslash}p{2.2cm} >{\centering\arraybackslash}p{2.3cm} >{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{1.3cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{$i$}} & \textcolor{primaryblue}{\textbf{$A[i]$}} & \textcolor{primaryblue}{\textbf{New $R_{\max}$}} & \textcolor{primaryblue}{\textbf{Hit $i == E_{\text{cur}}$?}} & \textcolor{primaryblue}{\textbf{Horizon Update}} & \textcolor{primaryblue}{\textbf{Jumps}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+$0$ & $2$ & $\max(0, 0{+}2) = 2$ & Yes ($0 == 0$) & Spend jump 1; $E_{\text{cur}} \leftarrow 2$ & $1$ \\
+$1$ & $3$ & $\max(2, 1{+}3) = 4$ & No ($1 < 2$) & Still inside jump 1's window & $1$ \\
+$2$ & $1$ & $\max(4, 2{+}1) = 4$ & Yes ($2 == 2$) & Spend jump 2; $E_{\text{cur}} \leftarrow 4 \ge 4$ (break!) & $2$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
+
+\textbf{Result:} Minimum jumps $= \mathbf{2}$ (index $0 \to 1 \to 4$). Notice we stopped early as soon as $E_{\text{cur}} \ge N - 1$.
+\end{example}
+
+% ============================================================================
+\section{C++23 Implementations}
+% ============================================================================
+
+Every listing below is standalone C++23 with explicit headers, \texttt{[[nodiscard]]}, zero \texttt{using namespace std;}, and defensive guards for empty inputs, negative values, overflow, and floating-point NaN edge cases.
+
+\subsection{Interval Scheduling (Earliest Finish Time)}
+
+Using C++20/23 \texttt{std::ranges::sort} with a pointer-to-member \textbf{projection} (\texttt{\&Event::end}) eliminates verbose boilerplate lambdas. Initializing \texttt{current\_end} to \texttt{std::numeric\_limits<int>::min()} handles negative timestamps cleanly; invalid intervals where \texttt{start > end} are skipped.
+
+\begin{lstlisting}[caption={Interval Scheduling in $O(N \log N)$ time using C++23 projection sorting}]
 #include <algorithm>
-#include <iostream>
+#include <limits>
+#include <vector>
 
 struct Event {
     int start;
@@ -177,18 +913,16 @@ struct Event {
 };
 
 [[nodiscard]] int max_events(std::vector<Event> events) {
-    // Greedy choice: sort by earliest finish time
-    std::ranges::sort(events, [](const Event& a, const Event& b) {
-        return a.end < b.end;
-    });
+    // Greedy choice: sort ascending by earliest finish time via projection
+    std::ranges::sort(events, {}, &Event::end);
 
     int count = 0;
-    int current_end = -1;
+    int current_end = std::numeric_limits<int>::min();
 
     for (const auto& ev : events) {
+        if (ev.start > ev.end) continue; // Ignore malformed intervals
         if (ev.start >= current_end) {
-            // No overlap, we can attend this event
-            count++;
+            ++count;
             current_end = ev.end;
         }
     }
@@ -196,116 +930,456 @@ struct Event {
 }
 \end{lstlisting}
 
-Before writing the fraction knapsack, note that we calculate a double-precision ratio to avoid integer division truncation.
+\subsection{Interval Partitioning (Minimum Meeting Rooms)}
 
-\begin{lstlisting}[caption=Fractional Knapsack]
-#include <vector>
+Here we sort by \emph{start time} (\texttt{\&Event::start}) and keep a min-heap of currently occupied room finish times. Whenever the earliest-finishing room frees up at or before \texttt{ev.start}, we pop it and reuse that room for \texttt{ev.end}.
+
+\begin{lstlisting}[caption={Minimum Meeting Rooms in $O(N \log N)$ time and $O(N)$ space}]
 #include <algorithm>
+#include <functional>
+#include <queue>
+#include <vector>
+
+struct Meeting {
+    int start;
+    int end;
+};
+
+[[nodiscard]] int min_meeting_rooms(std::vector<Meeting> meetings) {
+    if (meetings.empty()) return 0;
+
+    std::ranges::sort(meetings, {}, &Meeting::start);
+
+    // Min-heap of finish times of currently occupied rooms
+    std::priority_queue<int, std::vector<int>, std::greater<>> room_ends;
+
+    for (const auto& m : meetings) {
+        if (m.start >= m.end) continue; // Ignore zero-length or invalid intervals
+        if (!room_ends.empty() && room_ends.top() <= m.start) {
+            room_ends.pop(); // Reuse the room that finished earliest
+        }
+        room_ends.push(m.end);
+    }
+    return static_cast<int>(room_ends.size());
+}
+\end{lstlisting}
+
+\subsection{Fractional Knapsack (NaN-Safe Comparator)}
+
+To eliminate the \texttt{0.0 / 0.0} NaN strict-weak-ordering UB, we first partition out non-positive weights: zero-weight items with positive value are collected immediately for free, while non-positive values or negative weights are ignored. Every remaining item has strictly positive weight, making density ratios finite and safe to sort.
+
+\begin{lstlisting}[caption={NaN-safe Fractional Knapsack in $O(N \log N)$ time}]
+#include <algorithm>
+#include <span>
+#include <vector>
 
 struct Item {
     double value;
     double weight;
 };
 
-[[nodiscard]] double max_knapsack_value(double capacity, std::vector<Item> items) {
-    // Greedy choice: highest value per unit of weight
-    // Note: If item.weight is 0.0, division yields +Inf (under IEEE 754),
-    // properly sorting zero-weight (infinite density) items to the front.
-    std::ranges::sort(items, [](const Item& a, const Item& b) {
+[[nodiscard]] double max_knapsack_value(double capacity, std::span<const Item> input) {
+    if (capacity <= 0.0) return 0.0;
+
+    double total_value = 0.0;
+    std::vector<Item> positive_items;
+    positive_items.reserve(input.size());
+
+    // Handle zero-weight items first so division never produces NaN or +Inf
+    for (const auto& item : input) {
+        if (item.value <= 0.0 || item.weight < 0.0) continue;
+        if (item.weight == 0.0) {
+            total_value += item.value; // Free value with zero weight cost
+        } else {
+            positive_items.push_back(item);
+        }
+    }
+
+    // Strict weak ordering is guaranteed because every weight is strictly > 0
+    std::ranges::sort(positive_items, [](const Item& a, const Item& b) {
         return (a.value / a.weight) > (b.value / b.weight);
     });
 
-    double total_value = 0.0;
-
-    for (const auto& item : items) {
+    for (const auto& item : positive_items) {
         if (capacity >= item.weight) {
-            // Take the whole item
             total_value += item.value;
             capacity -= item.weight;
         } else {
-            // Take a fraction to fill the remaining capacity
             total_value += item.value * (capacity / item.weight);
-            break; // Backpack is full
+            break; // Bag is now 100% full
         }
     }
     return total_value;
 }
 \end{lstlisting}
 
+\subsection{Huffman / Minimum-Cost Rope Merging}
+
+Constructing the min-heap directly from a \texttt{std::vector} runs bottom-up \texttt{std::make\_heap} in $O(N)$ time, followed by $N - 1$ pairs of pops and one push ($O(N \log N)$ total). All sums use \texttt{std::int64\_t} to prevent overflow.
+
+\begin{lstlisting}[caption={Minimum-Cost Rope Merging (Huffman Cost) in $O(N \log N)$ time}]
+#include <cstdint>
+#include <functional>
+#include <queue>
+#include <span>
+#include <vector>
+
+[[nodiscard]] std::int64_t min_rope_merge_cost(std::span<const std::int64_t> ropes) {
+    if (ropes.size() <= 1) return 0; // Zero merges needed for 0 or 1 rope
+
+    std::priority_queue<std::int64_t, std::vector<std::int64_t>, std::greater<>> min_heap(
+        std::greater<>{}, std::vector<std::int64_t>(ropes.begin(), ropes.end())
+    );
+
+    std::int64_t total_cost = 0;
+    while (min_heap.size() > 1) {
+        const std::int64_t first = min_heap.top();
+        min_heap.pop();
+        const std::int64_t second = min_heap.top();
+        min_heap.pop();
+
+        const std::int64_t merged = first + second;
+        total_cost += merged;
+        min_heap.push(merged);
+    }
+    return total_cost;
+}
+\end{lstlisting}
+
+\subsection{Two-Pointer Greedy Matching}
+
+Sorting both arrays ascending lets two indices march linearly in $O(m + n)$ after the $O(m \log m + n \log n)$ sort. Whenever \texttt{supplies[j] >= demands[i]}, we lock in a match and advance both; otherwise we discard the weak supply and advance only \texttt{j}.
+
+\begin{lstlisting}[caption={Two-Pointer Greedy Matching in $O(m \log m + n \log n)$ time}]
+#include <algorithm>
+#include <cstddef>
+#include <vector>
+
+[[nodiscard]] std::size_t max_matched_tasks(std::vector<int> demands,
+                                            std::vector<int> supplies) {
+    std::ranges::sort(demands);
+    std::ranges::sort(supplies);
+
+    std::size_t i = 0; // Demand pointer
+    std::size_t j = 0; // Supply pointer
+
+    while (i < demands.size() && j < supplies.size()) {
+        if (supplies[j] >= demands[i]) {
+            ++i; // Demand satisfied!
+        }
+        ++j; // Supply either matched or too small for all remaining demands
+    }
+    return i;
+}
+\end{lstlisting}
+
+\subsection{Furthest-Reach Jump Game (Reachability and Minimum Jumps)}
+
+Both functions run in $O(N)$ time and $O(1)$ space. Notice that \texttt{min\_jumps} returns \texttt{std::optional<int>} so unreachable targets return \texttt{std::nullopt} instead of \texttt{-1}, and checks \texttt{i > max\_reach} to catch stalls immediately.
+
+\begin{lstlisting}[caption={Jump Game reachability and minimum jumps in $O(N)$ time and $O(1)$ space}]
+#include <algorithm>
+#include <cstddef>
+#include <optional>
+#include <span>
+
+[[nodiscard]] bool can_reach_end(std::span<const int> jumps) {
+    std::size_t max_reach = 0;
+    for (std::size_t i = 0; i < jumps.size(); ++i) {
+        if (i > max_reach) return false; // Stranded before reaching index i
+        if (jumps[i] > 0) {
+            max_reach = std::max(max_reach, i + static_cast<std::size_t>(jumps[i]));
+        }
+        if (max_reach + 1 >= jumps.size()) return true;
+    }
+    return true;
+}
+
+[[nodiscard]] std::optional<int> min_jumps(std::span<const int> jumps) {
+    if (jumps.size() <= 1) return 0;
+
+    int count = 0;
+    std::size_t current_end = 0;
+    std::size_t max_reach = 0;
+
+    for (std::size_t i = 0; i + 1 < jumps.size(); ++i) {
+        if (i > max_reach) return std::nullopt; // Cannot reach index i
+        if (jumps[i] > 0) {
+            max_reach = std::max(max_reach, i + static_cast<std::size_t>(jumps[i]));
+        }
+        if (i == current_end) {
+            if (max_reach <= current_end) return std::nullopt; // Horizon stalled
+            ++count;
+            current_end = max_reach;
+            if (current_end + 1 >= jumps.size()) return count;
+        }
+    }
+    return std::nullopt;
+}
+\end{lstlisting}
+
+\begin{tryitbox}{Debug}{Spot Two Bugs in Broken Jump Code}{ex8}
+A teammate wrote this loop for \texttt{min\_jumps(jumps)}:
+\begin{verbatim}
+int count = 0, current_end = 0, max_reach = 0;
+for (int i = 0; i < static_cast<int>(jumps.size()); ++i) {
+    max_reach = std::max(max_reach, i + jumps[i]);
+    if (i == current_end) { ++count; current_end = max_reach; }
+}
+return count;
+\end{verbatim}
+Give \textbf{two tiny inputs} (each length $\le 4$) that expose two distinct bugs in this code, and state what it wrongly returns on each.
+\end{tryitbox}
+
+% ============================================================================
 \section{Problem Pattern Recognition}
+% ============================================================================
 
-When reading a problem, check for these signals. The three-step process is:
-1. Does the problem ask for an extreme value (max/min count or cost)?
-2. Can I define a simple sorting rule?
-3. Does taking the local best choice prevent me from reaching the global best? If no, it's greedy.
+When an unfamiliar problem lands in front of you, run this three-step triage before writing any code:
+\begin{enumerate}
+    \item \textbf{What does the problem ask for?} Extreme value (maximum count, minimum cost, minimum rooms/jumps/boats)---not counting all ways or enumerating every configuration.
+    \item \textbf{What is the key ordering or priority?} Can you pick one sorting key (finish time, start time, value/weight ratio, size) or a dynamic min-heap priority?
+    \item \textbf{Can you break it in 30 seconds?} Try a 3-element counterexample (like $\{1, 3, 4\}$ coins or indivisible items). If you cannot break it and an Exchange Argument swap holds, Greedy wins; if a counterexample breaks it, switch to Dynamic Programming.
+\end{enumerate}
 
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{4cm}|}
-\hline
-\textbf{Keywords in the Problem} & \textbf{Plain English Meaning} & \textbf{Tool to Use} \\ \hline
-``maximum number of non-overlapping'', ``attend most events'' & Fit as many independent segments on a timeline as possible. & Sort by end time, pick earliest finish. \\ \hline
-``fractional amounts allowed'', ``divisible goods'' & You can slice items to perfectly fill capacity. & Sort by value-to-weight ratio. \\ \hline
-``minimum cost to connect cables/ropes'' & Merging items pairwise where cost is sum of parts. & Min-heap (Priority Queue), take smallest two. \\ \hline
-``assign tasks to workers'', ``maximize pairs'' & Match items from two groups efficiently. & Sort both groups, use two pointers. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``maximum non-overlapping'', ``minimum removals/arrows'' & Pack as many independent timeline intervals as possible. & Sort by earliest finish time $f_i$, linear scan. \\
+``minimum meeting rooms'', ``minimum platforms/machines'' & Host \emph{all} overlapping intervals simultaneously. & Sort by start time $s_i$ + min-heap of ends. \\
+``fractional amounts allowed'', ``divisible goods/fuel'' & Slice items freely to fill every unit of capacity. & Sort by density $v_i / w_i$ descending. \\
+``minimum cost to merge ropes/files'', ``optimal prefix code'' & Pairwise merges where cost equals sum of merged parts. & Min-heap: pop smallest two, push sum. \\
+``assign tasks to workers'', ``maximize matched pairs'' & Pair elements across two groups under $\ge$ or $\le$ constraints. & Sort both arrays + two pointers. \\
+``can reach the end'', ``minimum jumps / intervals to cover $[0, L]$'' & Extend a continuous reachability boundary rightward. & Furthest-reach horizon $R_{\max}$ in $O(N)$. \\
+``circular tour / gas station'', ``start index with non-negative sum'' & Find a valid start around a ring where total surplus $\ge 0$. & Reset start after negative prefix balance. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
+% ============================================================================
 \section{Summary and Complexity Reference}
+% ============================================================================
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
-\hline
-\textbf{Task / Operation} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
-Interval Scheduling & $O(N \log N)$ & $O(1)$ & Maximize non-overlapping timeline events. \\ \hline
-Fractional Knapsack & $O(N \log N)$ & $O(1)$ & Divisible items with values and weights. \\ \hline
-Huffman/Rope Merging & $O(N \log N)$ & $O(N)$ & Combining items with cost equal to their sum. \\ \hline
-Two-Pointer Greedy Match & $O(N \log N)$ & $O(1)$ & Matching pairs across two sorted arrays. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+Space complexity below counts auxiliary workspace beyond the input array itself (sorting in place uses $O(\log N)$ stack space; copying input by value adds $O(N)$).
 
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.2cm} >{\centering\arraybackslash}p{2.0cm} >{\centering\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Task / Operation}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Space}} & \textcolor{primaryblue}{\textbf{Use When}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+Interval Scheduling & $O(N \log N)$ & $O(1)^*$ & Maximize non-overlapping timeline events. \\
+Interval Partitioning & $O(N \log N)$ & $O(N)$ & Find minimum rooms/machines for all events. \\
+Fractional Knapsack & $O(N \log N)$ & $O(N)$ & Divisible items maximizing value under capacity $W$. \\
+Huffman / Rope Merging & $O(N \log N)$ & $O(N)$ & Repeatedly merge smallest items with additive cost. \\
+Two-Pointer Matching & $O(M \log M + N \log N)$ & $O(1)^*$ & Match demands and supplies across two sorted lists. \\
+Jump Game (Reach / Min) & $O(N)$ & $O(1)$ & Track furthest reachable horizon across an array. \\
+Circular Gas Station Tour & $O(N)$ & $O(1)$ & Find valid circular start when total net surplus $\ge 0$. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
+
+{\footnotesize\color{codegray}$^*$In-place sorting uses $O(\log N)$ internal stack space; passing a \texttt{std::vector} by value copies $O(N)$ elements.}
+
+% ============================================================================
 \section{Glossary}
+% ============================================================================
 
-\subsection{Core Concepts}
+\subsection*{Core Concepts}
 \begin{itemize}
-    \item \textbf{Greedy algorithm}: An algorithm that builds a solution step by step by always making the locally optimal choice.
-    \item \textbf{Local optimum}: The best immediate choice available at the current step.
-    \item \textbf{Global optimum}: The best possible overall solution to the problem.
-    \item \textbf{Greedy choice property}: The mathematical guarantee that making a local optimum choice will lead to a global optimum.
-    \item \textbf{Optimal substructure}: A problem where the optimal solution contains optimal solutions to its sub-problems.
+    \item \textbf{Greedy algorithm}: An algorithm that constructs a solution step by step, irreversibly picking the locally best option at every step.
+    \item \textbf{Local optimum}: The single best immediate choice available at the current step.
+    \item \textbf{Global optimum}: The best possible overall solution across the entire problem.
+    \item \textbf{Greedy choice property}: The guarantee that some globally optimal solution starts with the locally optimal greedy choice.
+    \item \textbf{Optimal substructure}: The property that removing a greedy choice leaves a smaller, independent instance of the same optimization problem.
+    \item \textbf{Exchange argument}: A proof technique that transforms any optimal solution $O^*$ into the greedy solution $G$ via validity-preserving swaps that never worsen the objective.
+    \item \textbf{Greedy stays ahead}: A proof technique showing by induction that after every step $k$, the greedy solution's progress metric is at least as good as any optimal solution's.
+    \item \textbf{Canonical coin system}: A set of denominations (such as US coins $\{1, 5, 10, 25\}$) where largest-coin-first greedy always yields the minimum coin count.
+    \item \textbf{Min-heap (priority queue)}: A binary-heap container supporting $O(1)$ inspection of the smallest element and $O(\log N)$ insertion/removal.
+    \item \textbf{Horizon (furthest reach)}: The rightmost index $R_{\max}$ reachable from any position scanned so far in a linear jump or interval-cover pass.
 \end{itemize}
 
-\subsection{Mathematical Symbols}
+\subsection*{Mathematical Symbols}
 \begin{itemize}
-    \item $O(N \log N)$: Typical time complexity of a greedy algorithm dominated by the initial sorting step.
-    \item $W$: The maximum weight capacity of a knapsack.
+    \item $N$: Number of elements, intervals, items, or ropes in the input.
+    \item $G,\; O^*$: The greedy solution and an arbitrary globally optimal solution.
+    \item $[s_i, f_i)$: Half-open interval starting at $s_i$ and ending at $f_i$ (touching endpoints do not overlap).
+    \item $f_{\text{last}}$: Finish time of the most recently accepted interval.
+    \item $K_{\min}$: Minimum number of partitions (rooms) needed to schedule all overlapping intervals.
+    \item $W,\; v_i,\; w_i,\; \rho_i$: Knapsack weight capacity, item value, item weight, and value density $\rho_i = v_i / w_i$.
+    \item $L_i,\; d_i$: Initial rope length (or symbol frequency) and its leaf depth in the merge/Huffman tree.
+    \item $R_{\max},\; E_{\text{cur}}$: Furthest reachable index so far and boundary of the current jump layer.
 \end{itemize}
 
+% ============================================================================
 \section{Further Reading}
+% ============================================================================
 
 \subsection*{Free Online Resources (Start Here)}
 \begin{itemize}
-    \item \textbf{CP-Algorithms} (\texttt{cp-algorithms.com}) --- Detailed explanations on greedy scheduling and priority queue applications.
-    \item \textbf{Brilliant.org} (\texttt{brilliant.org}) --- Interactive logic puzzles that build intuition for when greedy strategies fail versus when they succeed.
+    \item \textbf{CP-Algorithms} (\texttt{cp-algorithms.com}) --- Clear guides on greedy scheduling, Huffman coding, and priority-queue optimizations.
+    \item \textbf{Brilliant.org} (\texttt{brilliant.org}) --- Interactive puzzles building intuition for spotting greedy counterexamples versus valid exchange arguments.
+    \item \textbf{MIT OpenCourseWare 6.046J} (\texttt{ocw.mit.edu}) --- Accessible lecture notes covering Interval Scheduling, Matroids, and Huffman coding proofs.
 \end{itemize}
 
 \subsection*{Books (When You Are Ready to Go Deeper)}
 \begin{itemize}
-    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- Dedicated chapter on Greedy algorithms with categorizations of classical variants.
-    \item J.\ Kleinberg and E.\ Tardos, \emph{Algorithm Design} --- Excellent rigorous proofs on why specific greedy algorithms produce optimal results, highly recommended for the mathematical foundation.
+    \item \textbf{J.\ Kleinberg and E.\ Tardos, \emph{Algorithm Design} (Chapter 4)} --- \emph{Intermediate.} The gold-standard reference for Exchange Argument and Greedy Stays Ahead proofs (Interval Scheduling, Partitioning, Minimizing Lateness, Caching, Huffman).
+    \item \textbf{T.\ H.\ Cormen et al., \emph{Introduction to Algorithms} (CLRS, Chapter 15/16)} --- \emph{Intermediate to Advanced.} Rigorous coverage of Activity Selection, Huffman codes, and why matroid structure guarantees greedy optimality.
+    \item \textbf{S.\ Halim and F.\ Halim, \emph{Competitive Programming}} --- \emph{Beginner to Intermediate.} Categorizes classic greedy patterns (sorting, load balancing, interval covering, priority queues) with concise traces.
 \end{itemize}
 
+% ============================================================================
+\section*{Practice Sheet: Mixed Pen-and-Paper Drills}
+\addcontentsline{toc}{section}{Practice Sheet: Mixed Pen-and-Paper Drills}
+\markboth{Practice Sheet: Mixed Pen-and-Paper Drills}{}
+% ============================================================================
+
+These six cold-start drills mix all six thinking modes with zero hints about which subsection applies. Work through them on scratch paper, then check the Solutions section.
+
+\begin{tryitbox}{Triage}{Greedy or Dynamic Programming}{ex9}
+For each disguised scenario below, state whether \textbf{Greedy} or \textbf{Dynamic Programming} applies, and name the exact sorting key or counterexample:
+\begin{enumerate}[itemsep=1pt, topsep=2pt]
+    \item \emph{Scenario A}: Balloons span horizontal segments $[x_{\text{start}}, x_{\text{end}}]$. A vertical arrow shot at $x$ bursts every balloon with $x_{\text{start}} \le x \le x_{\text{end}}$. Find the \textbf{minimum arrows} to burst all balloons.
+    \item \emph{Scenario B}: Postage stamps come in values $\{1, 5, 7\}$. Find the minimum stamps summing to $10$.
+    \item \emph{Scenario C}: You have a $100\text{ L}$ fuel tank and five divisible fuel canisters of varying energy-per-liter. Maximize total energy loaded.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Trace}{Circular Gas Station Tour}{ex10}
+Five stations sit on a circular track with \texttt{gas = [1, 2, 3, 4, 5]} and travel costs \texttt{cost = [3, 4, 5, 1, 2]} to reach the next station. Compute the net delta $g_i - c_i$ at each station, run the prefix-surplus reset greedy rule, and identify the unique valid starting index.
+\end{tryitbox}
+
+\begin{tryitbox}{Debug}{Two Subtle Heap and Sorting Bugs}{ex11}
+Identify the exact flaw in each snippet:
+\begin{enumerate}[itemsep=1pt, topsep=2pt]
+    \item \emph{Snippet 1 (Rope Merging)}: Sorts \texttt{ropes} ascending once, then loops \texttt{acc += ropes[i]; total += acc;} for \texttt{i = 1 .. n - 1}. Give the smallest array where this returns the wrong cost.
+    \item \emph{Snippet 2 (Min Meeting Rooms)}: Sorts meetings by \textbf{end time} instead of start time before pushing into the min-heap. Give a 4-meeting input where this miscounts rooms.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Twist}{Weighted Interval Scheduling}{ex12}
+Now suppose every interval also has a \textbf{profit} $p_i$: $A = [1, 3)$ with $p_A = 2$, $B = [2, 5)$ with $p_B = 10$, and $C = [4, 6)$ with $p_C = 2$. You want to maximize \emph{total profit} of non-overlapping intervals. What does earliest-finish greedy pick, what is the true optimum, and which paradigm is needed now?
+\end{tryitbox}
+
+\begin{tryitbox}{Edge Cases}{Stress-Test Three Greedy Functions}{ex13}
+Predict the exact output of \texttt{max\_events}, \texttt{min\_meeting\_rooms}, and \texttt{min\_jumps} on these killer edge cases:
+\begin{enumerate}[itemsep=1pt, topsep=2pt]
+    \item \texttt{max\_events} on negative touching intervals $\{[-10, -5],\; [-5, 0],\; [-7, -2]\}$.
+    \item \texttt{min\_meeting\_rooms} on identical intervals $\{[2, 5],\; [2, 5],\; [2, 5]\}$ and on an empty list $\{\}$.
+    \item \texttt{min\_jumps} on a single-element array $\{0\}$ and on $\{0, 2, 3\}$.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Derive}{Shortest Processing Time First}{ex14}
+A single server must execute $N$ jobs with durations $t_1, \dots, t_N$ back-to-back. If job $k$ finishes at completion time $C_k = \sum_{j=1}^{k} t_j$, we want to minimize total completion time $\sum_{k=1}^{N} C_k$.
+\begin{enumerate}[itemsep=1pt, topsep=2pt]
+    \item Test all $3! = 6$ orderings (or the two extremes) for durations $[5, 2, 3]$ to spot the optimal order.
+    \item Use a 2-element \textbf{Exchange Argument}: suppose an ordering has an adjacent inverted pair with $t_a > t_b$. Compute how much $\sum C_k$ changes when you swap $a$ and $b$.
+\end{enumerate}
+\end{tryitbox}
+
+% ============================================================================
+\section*{Solutions to Pen-and-Paper Exercises}
+\addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
+\markboth{Solutions to Pen-and-Paper Exercises}{}
+% ============================================================================
+
+\begin{enumerate}[itemsep=1pt, parsep=1pt]
+    \item \label{sol:ex1}\textbf{Exercise 1 (Debug) --- Break Two Plausible Interval Rules:}
+    \emph{Rule A (earliest start)} fails on $[0, 10)$, $[1, 3)$, $[4, 6)$: picks $[0, 10)$ ($1$ event) instead of $[1, 3)$, $[4, 6)$ ($2$ events).
+    \emph{Rule B (shortest duration)} fails on $[1, 5)$, $[4, 6)$, $[5, 9)$: picks $[4, 6)$ ($1$ event) instead of $[1, 5)$, $[5, 9)$ ($2$ events).
+    \trapnote{A greedy rule that works on 90\% of random tests is still wrong---always hunt for a 3-element bridge interval that blocks two neighbors.}
+
+    \item \label{sol:ex2}\textbf{Exercise 2 (Trace) --- Earliest Finish vs. Minimum Rooms:}
+    (1) Sorted by finish: $[2, 3)$, $[1, 5)$, $[3, 6)$, $[6, 7)$, $[5, 8)$. Picks $[2, 3) \to [3, 6) \to [6, 7)$: \textbf{3 events}.
+    (2) Sorted by start: $[1, 5)$, $[2, 3)$, $[3, 6)$, $[5, 8)$, $[6, 7)$. Heap states: $\{5\} \to \{3, 5\} \to \{5, 6\} \to \{6, 8\} \to \{7, 8\}$. Final size: \textbf{2 rooms}.
+    \trapnote{Confusing the two interval sorting keys: max non-overlapping sorts by \emph{finish} time; minimum rooms sorts by \emph{start} time.}
+
+    \item \label{sol:ex3}\textbf{Exercise 3 (Edge Cases) --- Zero-Weight and NaN Trap:}
+    (1) Take $(15, 0)$ for free ($+15$, $W_{\text{rem}} = 10$), ignore $(0, 0)$, take $(20, 5)$ ($\rho = 4$, $+20$, $W_{\text{rem}} = 5$), take half of $(30, 10)$ ($\rho = 3$, $+15$, $W_{\text{rem}} = 0$). Total $= \mathbf{50.0}$.
+    (2) Item $(0, 0)$ computes $0.0 / 0.0 = \texttt{NaN}$; comparing \texttt{NaN} against any ratio is always \texttt{false}, breaking transitivity of equivalence in \texttt{std::ranges::sort}.
+    \trapnote{Assuming IEEE~754 \texttt{+Inf} handles all zero weights---it handles \texttt{positive / 0.0}, but \texttt{0.0 / 0.0} silently yields \texttt{NaN} and Undefined Behavior.}
+
+    \item \label{sol:ex4}\textbf{Exercise 4 (Trace) --- Min-Heap Rope Merging:}
+    Start $\{2, 4, 7, 9, 10\}$. (1) Pop $2, 4 \to +6$, push $6$: $\{6, 7, 9, 10\}$. (2) Pop $6, 7 \to +13$, push $13$: $\{9, 10, 13\}$. (3) Pop $9, 10 \to +19$, push $19$: $\{13, 19\}$. (4) Pop $13, 19 \to +32$, push $32$: $\{32\}$. Total cost $= 6 + 13 + 19 + 32 = \mathbf{70}$.
+    \trapnote{Forgetting to compare the newly pushed $13$ against $9$ and $10$---if you merged $13 + 9$ next instead of $9 + 10$, total cost jumps to $73$.}
+
+    \item \label{sol:ex5}\textbf{Exercise 5 (Twist) --- Boats to Save People:}
+    Use \textbf{opposite-direction two pointers} ($l = 0, r = n - 1$): always seat the heaviest person $w[r]$ and pair them with the lightest person $w[l]$ if $w[l] + w[r] \le 3$. On $[1, 2, 2, 3]$: $(3)$ alone ($r \to 2$), $(1, 2)$ together ($l \to 1, r \to 1$), $(2)$ alone $\implies \mathbf{3}$ boats.
+    \trapnote{Pairing the two lightest people $(1, 2)$ first can leave heavier people stranded alone in larger inputs (e.g., limit $5$ with $[1, 2, 3, 4]$: pairing $(1, 4)$ and $(2, 3)$ takes $2$ boats, whereas pairing $(1, 2)$ first forces $3$ boats!).}
+
+    \item \label{sol:ex6}\textbf{Exercise 6 (Trace) --- Minimum Jumps Horizon:}
+    $i=0$: $R_{\max} = 2$, hit $E_{\text{cur}} = 0 \to \text{jumps} = 1, E_{\text{cur}} = 2$.
+    $i=1$: $R_{\max} = \max(2, 1{+}3) = 4$.
+    $i=2$: $R_{\max} = \max(4, 2{+}0) = 4$, hit $E_{\text{cur}} = 2 \to \text{jumps} = 2, E_{\text{cur}} = 4 \ge 4$ (done!). Answer: \textbf{2 jumps}.
+    \trapnote{Panicking at $A[2] = 0$: you never had to land on index $2$; index $1$ inside jump~1's window already pushed $R_{\max}$ past the zero.}
+
+    \item \label{sol:ex7}\textbf{Exercise 7 (Derive) --- Total Merge Cost as Weighted Leaf Depth:}
+    Merges on $[1, 2, 3, 4]$: $1{+}2=3$ ($\{3,3,4\}$), $3{+}3=6$ ($\{4,6\}$), $4{+}6=10$. Sum of merges $= 3 + 6 + 10 = \mathbf{19}$.
+    Tree leaf depths: $d(1) = 3$, $d(2) = 3$, $d(3) = 2$, $d(4) = 1$. Weighted sum $= 1(3) + 2(3) + 3(2) + 4(1) = 3 + 6 + 6 + 4 = \mathbf{19}$. Exact match!
+    \trapnote{Counting edges vs. nodes when measuring depth: the root has depth $0$, its children have depth $1$, etc.---depth equals the exact number of merges an item survives.}
+
+    \item \label{sol:ex8}\textbf{Exercise 8 (Debug) --- Spot Two Bugs in Broken Jump Code:}
+    Bug 1 (loops through last index): on $\{2, 1, 1\}$ ($N = 3$), at $i=0$ sets $E_{\text{cur}}=2$, $\text{count}=1$; then at $i=2$ triggers $i == E_{\text{cur}}$ again and returns \textbf{2} instead of \textbf{1} (even on $\{0\}$ it returns $1$ instead of $0$!).
+    Bug 2 (ignores stalled horizon): on $\{1, 0, 5\}$, at $i=1$ $R_{\max}$ stays $1$, then $i=2 > 1$ illegally reads $A[2] = 5$ as if reachable and returns \textbf{2} instead of unreachable (\texttt{std::nullopt}).
+    \trapnote{Forgetting both loop bounds: stop at \texttt{i + 1 < n}, and always verify \texttt{i <= max\_reach} (and \texttt{max\_reach > current\_end}) before taking a jump.}
+
+    \item \label{sol:ex9}\textbf{Exercise 9 (Triage) --- Greedy or Dynamic Programming:}
+    \emph{Scenario A}: \textbf{Greedy} (sort balloons by $x_{\text{end}}$ ascending and shoot at the earliest $x_{\text{end}}$---identical to Interval Scheduling!).
+    \emph{Scenario B}: \textbf{Dynamic Programming} (greedy picks $7 + 1 + 1 + 1 = 4$ stamps; optimal DP picks $5 + 5 = 2$ stamps).
+    \emph{Scenario C}: \textbf{Greedy} (Fractional Knapsack: sort canisters descending by energy per liter).
+    \trapnote{Misclassifying ``minimum arrows'' as minimum rooms: shooting one arrow through overlapping balloons is the dual of picking maximum disjoint intervals (sort by \emph{end} coordinate).}
+
+    \item \label{sol:ex10}\textbf{Exercise 10 (Trace) --- Circular Gas Station Tour:}
+    Deltas $g_i - c_i = [-2, -2, -2, +3, +3]$. Total sum $= 0 \ge 0$, so a solution exists.
+    Start at $s = 0$: tank $= -2 < 0 \to$ reset $s = 1$, tank $= 0$. At $i = 1$: $-2 < 0 \to s = 2$. At $i = 2$: $-2 < 0 \to s = 3$. At $i = 3$: $+3 \ge 0$. At $i = 4$: $+6 \ge 0$. Unique valid start: \textbf{index 3}.
+    \trapnote{Forgetting to check that total $\sum (g_i - c_i) \ge 0$: if the total net surplus is negative, no starting station works even if the final suffix is positive.}
+
+    \item \label{sol:ex11}\textbf{Exercise 11 (Debug) --- Two Subtle Heap and Sorting Bugs:}
+    (1) Fails on $[2, 2, 3, 3]$ (or $[3, 4, 5, 6]$): static linear merging gives $4 + 7 + 10 = 21$, whereas a min-heap merges $2{+}2=4$, $3{+}3=6$, $4{+}6=10 \implies \mathbf{20}$.
+    (2) Fails on $[0, 1), [0, 2), [2, 4), [1, 5)$ (already sorted by end time): $[0, 1) \to \{1\}$, $[0, 2) \to \{1, 2\}$, then $[2, 4)$ steals room $1$ ($\{2, 4\}$), forcing $[1, 5)$ (which sees $2 > 1$) to open a \textbf{3rd room} $\{2, 4, 5\}$---even though true peak overlap is \textbf{2} (Room~1: $[0, 1) \to [1, 5)$; Room~2: $[0, 2) \to [2, 4)$).
+    \trapnote{Both bugs stem from processing items out of dynamic priority order: rope sums change relative order after merging, and min-heap room reuse requires chronological start-time arrivals so a later meeting never steals an earlier room.}
+
+    \item \label{sol:ex12}\textbf{Exercise 12 (Twist) --- Weighted Interval Scheduling:}
+    Earliest-finish greedy picks $A = [1, 3)$ and $C = [4, 6)$ for profit $2 + 2 = \mathbf{4}$, missing $B = [2, 5)$ with profit $\mathbf{10}$. Because profits break the unweighted swap test, you must use \textbf{Dynamic Programming} (sort by finish time + binary search for the latest non-overlapping predecessor: $O(N \log N)$).
+    \trapnote{Assuming a greedy rule survives adding arbitrary weights---weighted intervals require DP (or a max-weight path on a DAG).}
+
+    \item \label{sol:ex13}\textbf{Exercise 13 (Edge Cases) --- Stress-Test Three Greedy Functions:}
+    (1) \texttt{max\_events} sorts $[-10, -5], [-7, -2], [-5, 0]$ and accepts $[-10, -5]$ and $[-5, 0] \implies \mathbf{2}$ (fails if \texttt{current\_end} starts at \texttt{-1}!).
+    (2) \texttt{min\_meeting\_rooms} returns \textbf{3} on three identical intervals and \textbf{0} on $\{\}$.
+    (3) \texttt{min\_jumps} returns \textbf{0} on $\{0\}$ (already at index $N-1$) and \textbf{\texttt{std::nullopt}} (unreachable) on $\{0, 2, 3\}$.
+    \trapnote{Forgetting the trivial size-1 base case in Jump Game: an array of length $1$ with value $0$ is already at the finish line ($0$ jumps).}
+
+    \item \label{sol:ex14}\textbf{Exercise 14 (Derive) --- Shortest Processing Time First:}
+    (1) On $[5, 2, 3]$: sorted ascending $[2, 3, 5]$ gives completion times $2 + 5 + 10 = \mathbf{17}$ (minimum); descending $[5, 3, 2]$ gives $5 + 8 + 10 = 23$.
+    (2) Swapping an adjacent inverted pair $(t_a, t_b)$ with $t_a > t_b$ leaves all jobs before and after unchanged, while changing the pair's combined completion contribution by $(t_b - t_a) < 0$ (strictly smaller!). Repeating swaps transforms any schedule into ascending order.
+    \trapnote{Adding job durations instead of cumulative completion times---each job's duration is paid once for itself and once for every job waiting behind it.}
+\end{enumerate}
+
+% ============================================================================
 \section*{Version History}
 \addcontentsline{toc}{section}{Version History}
+\markboth{Version History}{}
+% ============================================================================
 
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Date} & \textbf{Change} \\ \hline
-2026-10-10 & Document created. \\ \hline
-2026-10-10 & Extended review: improved diagram clarity, added edge-case comment in Fractional Knapsack, and enforced inline LaTeX formatting. \\ \hline
-2026-10-12 & Moved embedded TikZ diagram to central review document (Diagram 21 in diagrams\_review.pdf) and preserved figure placeholder. \\ \hline
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\bfseries}l >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Date}} & \textcolor{primaryblue}{\textbf{Change}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+2026-10-10 & Document created. \\
+2026-10-10 & Extended review: improved diagram clarity, added edge-case comment in Fractional Knapsack, and enforced inline LaTeX formatting. \\
+2026-10-12 & Moved embedded TikZ diagram to central review document (Diagram 21 in diagrams\_review.pdf) and preserved figure placeholder. \\
+2026-11-26 & Expanded stub into canonical print-first monograph with proof recipes, 5 greedy patterns, 4 embedded TikZ diagrams, 6 C++23 listings, 14 drills, and solutions. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
+\endgroup
+\end{center}
 
 \end{document}

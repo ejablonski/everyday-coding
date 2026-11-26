@@ -33,6 +33,8 @@ To keep token usage predictable and reviews manageable, execute this plan in sho
   - Completed `learning_materials/07.graph_algorithms.tex` across all applicable phases (Phase 1.9 bug fixes: stripped UTF-8 BOM, filled empty grid-offsets bullet, fixed non-canonical table headers and degree notation consistency, fixed Dijkstra `INT_MAX` overflow UB to 64-bit `INF = max() / 2` with `<functional>` and bounds guards, fixed broken negative-edge Dijkstra counterexample so $d[B] < d[C]$ initially, added `<cstddef>` in grid BFS, restored all 8 worked traces, added C++23 implementations for Kruskal MST, Bipartite 2-coloring, 3-color DFS cycle detection, Bellman-Ford, and Floyd-Warshall + Phase 3 fixed & visually verified Diagrams 15--18, 35, 36 with Edge List panel, rank+compression note, and canonical palette plus new 3-color DFS diagram + Phase 4.9 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
 - **Session 11 (Done — `2026-11-26`):**
   - Completed `learning_materials/08.binary_search.tex` across all applicable phases (Phase 1.10 bug fixes: stripped UTF-8 BOM, fixed non-canonical headers, math-mode words, and orphaned citation; reconciled lower/upper bound prose with half-open `[L, R)` invariant; upgraded all C++23 listings to `std::midpoint`, `std::ranges::fold_left`, `k <= 0` guard, `std::optional` peak return, and `std::invocable` continuous search with accurate IEEE 754 comment; restored all 6 worked traces, fixed Example 4, and added 2D row-sorted matrix search coverage + Phase 3 fixed & visually verified Diagrams 19, 20, 37 plus new Lower/Upper Bound duplicates diagram + Phase 4.10 canonical print-first layout, 4-beat Origin Stories, local `notationbox` table, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
+- **Session 12 (Done — `2026-11-26`):**
+  - Completed `learning_materials/10.greedy_algorithms.tex` full stub expansion and overhaul across all applicable phases (Phase 2.2 rewrite & expansion: added Exchange Argument and Greedy Stays Ahead proof recipes, Greedy-vs-DP counterexamples for `{1, 3, 4}` coins and 0/1 Knapsack, full subsections for Interval Scheduling/Partitioning, NaN-safe Fractional Knapsack, Huffman/Rope Merging, Two-Pointer Matching, and Furthest-Reach Jump Game, 5 complete worked traces, and 6 standalone C++23 listings using `&Event::end` projections, `INT_MIN` sentinel, NaN-safe partitioning, 64-bit min-heap, and `std::optional` jump returns + Phase 3 fixed & visually verified Diagram 21 plus 3 new TikZ diagrams for Exchange Argument swap, `{1, 3, 4}` Greedy failure, and Fractional Knapsack density bar + Phase 4.12 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes including "Break Two Plausible Interval Rules" + Solutions with 1-line **Common trap** diagnostics).
 - **Ongoing Sessions (1 Module per Fresh Session):**
   - Follow the exact same single-module vertical slice (Phases 1/2 + 3 + 4 + verification + Progress Matrix update + commit) for whichever module the user selects next.
   - Suggested order: `11` → `12` → `00.problem_solving_guide.tex` → `10` → `09` → `06` → `07` → (`08`, `05`, `04`, `03`, `02`, `01`, `00.cpp_reference.tex` on demand) → delete `learning_materials/diagrams_review.tex` once all diagrams are migrated → Phase 5 (`13`–`16`) just-in-time.
@@ -201,20 +203,20 @@ Both files are ~310–375 lines (vs. 850–1,100 lines for full modules) and nee
   - [x] Fix & expand C++23 implementations: fix `computePi` `noexcept` & signed/unsigned warnings; add `Trie::starts_with` & bounds safety; add **Rabin-Karp Double Hash**, **Z-Algorithm**, and **Manacher's** implementations.
   - [x] Add 8 inline + 6 Practice Sheet pen-and-paper `tryitbox` exercises + Solutions appendix with trap diagnostics.
   - [x] **Sync `09.string_algorithms.tex` into `00.problem_solving_guide.tex`** (move from Under Construction to Available, add Pattern Recognition rows, Complexity rows, and Glossary entries).
-- [ ] **2.2 Rewrite & Expand `learning_materials/10.greedy_algorithms.tex` (~800+ lines):**
-  - [ ] Add the core **"But Why Does Greedy Work?"** methodology:
+- [x] **2.2 Rewrite & Expand `learning_materials/10.greedy_algorithms.tex` (~800+ lines):** *(Completed 2026-11-26 — expanded to 29-page canonical print-first monograph)*
+  - [x] Add the core **"But Why Does Greedy Work?"** methodology:
     - **Exchange Argument** (step-by-step recipe: take an optimal solution, swap one choice with the greedy choice, prove it cannot get worse).
     - **Greedy Stays Ahead** intuition (applied to Interval Scheduling).
     - **When Greedy Fails (Greedy vs. DP):** Side-by-side counterexamples (0/1 Knapsack vs. Fractional Knapsack; canonical vs. `{1, 3, 4}` coin change for target `6`).
-  - [ ] Add full subsections (with concrete mini-examples & local notation boxes) for:
+  - [x] Add full subsections (with concrete mini-examples & local notation boxes) for:
     - Interval Scheduling & Interval Partitioning (minimum meeting rooms).
     - Fractional Knapsack (fix `0.0/0.0` NaN comparator UB).
     - **Huffman Coding / Rope Merging (Min-Heap Greedy)** (already promised in tables & `00.problem_solving_guide.tex`).
     - **Two-Pointer Greedy Matching** (assigning tasks/cookies, already promised in tables).
     - **Jump Game / Furthest-Reach Greedy** (linear horizon tracking).
-  - [ ] Replace the single unfinished example (`... and so on`) with **5 complete worked examples** reproducible on paper.
-  - [ ] Fix `max_events` (`current_end = INT_MIN`, C++20 projection `&Event::end`), fix `max_knapsack_value`, and add C++23 implementations for Rope Merging (`std::priority_queue`), Two-Pointer Matching, and Furthest-Reach Jump Game.
-  - [ ] Add 3–4 pen-and-paper `tryitbox` exercises (including a "Break This Greedy Rule" challenge!) + Solutions appendix.
+  - [x] Replace the single unfinished example (`... and so on`) with **5 complete worked examples** reproducible on paper.
+  - [x] Fix `max_events` (`current_end = INT_MIN`, C++20 projection `&Event::end`), fix `max_knapsack_value`, and add C++23 implementations for Rope Merging (`std::priority_queue`), Two-Pointer Matching, and Furthest-Reach Jump Game.
+  - [x] Add 8 inline + 6 Practice Sheet pen-and-paper `tryitbox` exercises (including "Break Two Plausible Interval Rules") + Solutions appendix with trap diagnostics.
 
 ---
 
@@ -240,7 +242,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 - [x] **Module 06:** Coin Change combinations vs. permutations loop-order visual (promised at L168–173) + Edit Distance `"kitten"` → `"sitting"` 2D matrix with backtrack arrows. *(Completed & visually verified 2026-11-26)*
 - [x] **Module 07:** Add **Edge List** panel to D15 (promised at L178) + DFS 3-color cycle detection (White/Gray/Black) diagram. *(Completed & visually verified 2026-11-26)*
 - [x] **Module 08:** Lower Bound vs. Upper Bound on a sorted array with duplicates. *(Completed & visually verified 2026-11-26)*
-- [ ] **Module 10:** Fractional Knapsack value/weight ratio bar + Greedy Failure Counterexample (`{1, 3, 4}` for target `6`) + Exchange Argument timeline swap diagram.
+- [x] **Module 10:** Fractional Knapsack value/weight ratio bar + Greedy Failure Counterexample (`{1, 3, 4}` for target `6`) + Exchange Argument timeline swap diagram. *(Completed & visually verified 2026-11-26)*
 
 ### 3.4 Embed Into Monographs, Visually Verify & Clean Up
 - [ ] Embed D1, D2 → `00.cpp_reference.tex` (and visually inspect rendered PNGs).
@@ -254,7 +256,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 - [x] Embed D15 (3-way), D16, D17, D18, D35, D36 + DFS 3-color → `07.graph_algorithms.tex` *(added Edge List panel in 2x2 D15, fixed D17 margin & card overflow, fixed D18 panel gap & rank+compression note, removed D35/D36 double-scaling and fixed D35 trace/title overlap and D36 ad-hoc red & banner collision, plus added 3-color DFS diagram; visually verified 2026-11-26)*.
 - [x] Embed D19, D20, D37 + Lower/Upper Bound duplicates → `08.binary_search.tex` *(removed D19/D20/D37 double-scaling, fixed D37 ramp/label/drop collisions & ad-hoc red shades, and added Lower/Upper Bound duplicates diagram; visually verified 2026-11-26)*.
 - [x] Embed D29, D30, D31 → `09.string_algorithms.tex` *(fixed D29 `"car"` edge collision, D30 KMP fallback shift alignment & title clearance, D31 window `L` vs modulus `M`, birthday paradox `99.3%`, & double-scaling; visually verified 2026-11-25)*.
-- [ ] Embed D21 + Fractional Knapsack / Counterexample / Exchange Argument → `10.greedy_algorithms.tex`.
+- [x] Embed D21 + Fractional Knapsack / Counterexample / Exchange Argument → `10.greedy_algorithms.tex` *(removed D21 `scale=0.93`, standardized canonical palette with vertical finish-time guide lines, added Exchange Argument timeline swap, `{1, 3, 4}` Greedy failure comparison, and Fractional Knapsack density bar; visually verified 2026-11-26)*.
 - [x] Embed D22, D23, D24 → `11.monotonic_stacks_and_queues.tex` (replaces 3 text stubs; fixed D24 blue frame collision and D22 label/card spacing). *(Completed 2026-11-24)*
 - [ ] Embed D25, D26, D27, D28, D41 → `12.bit_manipulation_and_bitmasks.tex` (replaces 4 text stubs).
 - [ ] **Delete `learning_materials/diagrams_review.tex`** once every diagram is embedded and verified, restoring the Clean Directory Policy.
@@ -300,7 +302,7 @@ Apply the **Pedagogical Blueprint** (4-Beat Origin Stories, local `notationbox` 
   - *Local `notationbox`:* Search interval $[L, R)$, Predicate $P(x) \in \{F, T\}$, Monotonic boundary $x^*$.
   - *Pen & Paper Drills (8 inline + 6 Practice Sheet):* Hand-trace `lower_bound` vs. `upper_bound` on `[2, 4, 4, 4, 7]`; design the feasibility predicate $P(x)$ for shipping packages in $D$ days; trace rotated search on `[6, 7, 1, 2, 3, 4, 5]` for target `2` (and `7`); plus full 6-mode inline & Practice Sheet coverage with trap diagnostics.
 - [x] **4.11 `09.string_algorithms.tex`:** *(Completed 2026-11-25 alongside Phase 2.1 rewrite.)*
-- [ ] **4.12 `10.greedy_algorithms.tex`:** *(Fold into Phase 2.2 rewrite.)*
+- [x] **4.12 `10.greedy_algorithms.tex`:** *(Completed 2026-11-26 alongside Phase 2.2 rewrite.)*
 - [x] **4.13 `11.monotonic_stacks_and_queues.tex`:** *(Completed 2026-11-24)*
   - *Origin Stories:* Why dominated elements can *never* be the answer again (skyline shadow proof); why `while` inside `for` is still $O(N)$ (each element pays 1 push + at most 1 pop); why strict/non-strict tie-breaking partitions duplicate subarrays cleanly.
   - *Local `notationbox`:* `NGE`/`PGE`/`NSE`/`PSE`, `PLE`/`NLE`, Histogram bounds $L, R$, Window $[i-K+1, i]$.
@@ -345,7 +347,7 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `07.graph_algorithms.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
 | `08.binary_search.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
 | `09.string_algorithms.tex` | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
-| `10.greedy_algorithms.tex` | `[ ]` | `[ ]` | `[ ]` (D21 + 3) | `[ ]` | `[ ]` | `[ ]` |
+| `10.greedy_algorithms.tex` | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
 | `11.monotonic_stacks_and_queues.tex` | DONE (2026-11-24) | N/A | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) |
 | `12.bit_manipulation_and_bitmasks.tex` | `[ ]` | N/A | `[ ]` (D25–28, D41) | `[ ]` | `[ ]` | `[ ]` |
 | Retire `diagrams_review.tex` | N/A | N/A | `[ ]` | N/A | N/A | N/A |
