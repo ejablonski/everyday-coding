@@ -325,8 +325,8 @@ Apply the **Pedagogical Blueprint** (4-Beat Origin Stories, local `notationbox` 
 
 High-value topics directly aligned with problems actively practiced in this repository:
 
-- [ ] **5.1 `learning_materials/13.two_pointers_and_sliding_window.tex`:**
-  - Opposite-direction pointers (sorted pair sum, 3-sum, container with most water), fast/slow pointers (cycle detection, in-place deduplication), fixed & variable sliding windows (monotonic expand/shrink invariant, "at most K" → "exactly K" trick), TikZ diagrams, C++23 implementations, pen-and-paper drills, and sync to `00.problem_solving_guide.tex`.
+- [x] **5.1 `learning_materials/13.two_pointers_and_sliding_window.tex`:** *(Completed 2026-11-26 — 33-page canonical print-first monograph)*
+  - Opposite-direction pointers (sorted pair sum, 3-sum, container with most water), fast/slow pointers (cycle detection, in-place deduplication, Dutch National Flag), fixed & variable sliding windows (monotonic expand/shrink invariant, negative-number breakdown counterexamples, "at most K" → "exactly K" trick), 4 native visually verified TikZ diagrams, 5 standalone C++23 listings, 8 inline + 6 Practice Sheet pen-and-paper drills + Solutions with trap diagnostics, and synced to `00.problem_solving_guide.tex` and `SKILL.md`.
 - [ ] **5.2 `learning_materials/14.heaps_and_priority_queues.tex`:**
   - Binary heap array layout ($2i+1, 2i+2$), heapify $O(N)$ proof intuition, Top-K pattern, K-way merge, Two-Heap Running Median, Lazy Deletion heap, `std::priority_queue` custom comparators & `std::ranges::make_heap`, TikZ heap diagrams, pen-and-paper drills, and sync to `00.problem_solving_guide.tex`.
 - [ ] **5.3 `learning_materials/15.trees_and_bsts.tex`:**
@@ -393,7 +393,7 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `11.monotonic_stacks_and_queues.tex` | DONE (2026-11-24) | N/A | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) | `[ ]` |
 | `12.bit_manipulation_and_bitmasks.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | `[ ]` |
 | Retire `diagrams_review.tex` | N/A | N/A | DONE (2026-11-26) | N/A | N/A | N/A | N/A |
-| `13.two_pointers_and_sliding_window.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
+| `13.two_pointers_and_sliding_window.tex` | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | `[ ]` |
 | `14.heaps_and_priority_queues.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
 | `15.trees_and_bsts.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
 | `16.fenwick_and_segment_trees.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |

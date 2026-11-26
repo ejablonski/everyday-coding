@@ -177,7 +177,7 @@
 \end{tcolorbox}
 
 \begin{overviewbox}[What You'll Learn]
-This is the single document you open when facing an unfamiliar algorithmic problem. Instead of teaching one technique deeply, it teaches you how to \emph{diagnose}: classify the output goal via a 5-branch triage tree, read input-size constraints backward to rule out slow complexities, match problem keywords across all 12 finished modules in one unified index, and practice cold-start triage on paper.
+This is the single document you open when facing an unfamiliar algorithmic problem. Instead of teaching one technique deeply, it teaches you how to \emph{diagnose}: classify the output goal via a 5-branch triage tree, read input-size constraints backward to rule out slow complexities, match problem keywords across all 13 finished modules in one unified index, and practice cold-start triage on paper.
 \end{overviewbox}
 
 \vspace{-5pt}
@@ -489,12 +489,27 @@ Scan the grouped tables below by the phrasing or symptom in your problem, then o
 \arrayrulecolor{primaryblue}\bottomrule[1.1pt]
 \end{tabularx}\endgroup
 
+\subsection{Linear Scans, Pairs, Cycles, and Windows (Module 13: Two Pointers \& Window)}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``sorted pair/triplet sum'', ``max water container'' & Converge $L, R$ inward; discard dominated row/col/wall. & Opposite-Direction 2-Pointers \\
+``deduplicate / 3-way partition in-place ($O(1)$)'' & Fast read cursor compacts into slow write prefix. & Read/Write or Dutch Flag \\
+``cycle entry'', ``duplicate in $1..N$ ($O(1)$ RAM)'' & Functional graph $i \mapsto A[i]$ tail $\mu$ + loop $\lambda$. & Floyd's Tortoise \& Hare \\
+``subarray of size $K$'', ``longest/shortest valid slice'' & Monotonic expand/shrink ($A[i] \ge 0$ for sums) or deficit. & Fixed / Variable Sliding Window \\
+``count subarrays with \emph{exactly} $K$ distinct/odds'' & Subtract two monotonic suffix counts. & $\text{atMost}(K) - \text{atMost}(K{-}1)$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
+
 % ============================================================================
 \section{Module Registry}
 \label{sec:registry}
 % ============================================================================
 
-All 12 core topic modules and both \texttt{00.*} meta guides are complete and print-ready.
+All 13 core topic modules and both \texttt{00.*} meta guides are complete and print-ready.
 
 \begingroup\footnotesize\rowcolors{2}{codebg}{white}
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.2cm} >{\centering\arraybackslash}p{1.9cm} >{\raggedright\arraybackslash}X}
@@ -515,18 +530,19 @@ All 12 core topic modules and both \texttt{00.*} meta guides are complete and pr
 10. Greedy Algorithms & \color{codegreen}$\checkmark$ Available & Exchange Argument, Greedy vs.\ DP, Intervals/Min Rooms, Fractional Knapsack, Huffman, 2-Ptr, Jump Game. \\
 11. Monotonic Stacks/Queues & \color{codegreen}$\checkmark$ Available & NGE/PGE/NSE/PSE, Stock Span, Histogram, Sliding Window Deque, Subarray Mins, Remove $K$ Digits. \\
 12. Bit Manipulation & \color{codegreen}$\checkmark$ Available & Two's complement, $x \mathbin{\&} (-x)$, Kernighan, \texttt{<bit>}, Prefix XOR, Column Ledger, $O(3^N)$ submasks, Gosper, TSP. \\
+13. Two Pointers \& Window & \color{codegreen}$\checkmark$ Available & Converging pairs/3-Sum/water, fast/slow dedup \& Floyd's cycle entry, fixed/variable/exact-$K$ windows. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}\endgroup
 
-\begin{calloutbox}{Upcoming Planned Modules (Phase 5: Modules 13--16)}
-\textbf{Status:} Planned. \textbf{Expected scope:} 13.\ Two Pointers \& Sliding Window; 14.\ Heaps \& Priority Queues; 15.\ Trees \& BSTs; 16.\ Fenwick \& Segment Trees.
+\begin{calloutbox}{Upcoming Planned Modules (Phase 5: Modules 14--16)}
+\textbf{Status:} Planned. \textbf{Expected scope:} 14.\ Heaps \& Priority Queues; 15.\ Trees \& BSTs; 16.\ Fenwick \& Segment Trees.
 \end{calloutbox}
 
 % ============================================================================
 \section{Master Summary and Complexity Reference}
 % ============================================================================
 
-This multi-page table summarizes the time and space complexity of every core technique across Modules~01--12.
+This multi-page table summarizes the time and space complexity of every core technique across Modules~01--13.
 
 \begingroup\footnotesize\rowcolors{2}{codebg}{white}
 \begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.8cm} >{\centering\arraybackslash}p{2.6cm} >{\centering\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}X}
@@ -571,6 +587,9 @@ Monotonic Stack / Deque (11) & $O(N)$ & $O(N)$ / $O(K)$ & NGE/NSE, Histogram, Sl
 Prefix XOR Range Query (12) & $O(N)$ build, $O(1)$ query & $O(N)$ & Static subarray XOR queries. \\
 All-Submasks Loop (12) & $O(3^N)$ & $O(1)$ iter / $O(2^N)$ DP & Sub-partition DP over all subsets ($N \le 15$). \\
 Column Ledger Accounting (12) & $O(B \cdot N)$ & $O(B)$ & Carry-free per-bit counting ($B \in \{32, 64\}$). \\
+Converging 2-Ptr / 3-Sum (13) & $O(N)$ / $O(N^2)$ & $O(1)^*$ & Sorted pair/triplet sum, max water container. \\
+Fast/Slow \& Floyd Cycle (13) & $O(N)$ / $O(\mu{+}\lambda)$ & $O(1)$ & In-place dedup, 3-way partition, cycle entry. \\
+Sliding Window / Exact-$K$ (13) & $O(N)$ & $O(1)$ / $O(\Sigma)$ & Fixed/variable monotonic windows, $\text{atMost}(K)$ diff. \\
 \end{xltabular}\endgroup
 {\footnotesize\color{codegray}$^*$In-place sorting uses $O(\log N)$ auxiliary stack space.}
 
@@ -588,6 +607,7 @@ Column Ledger Accounting (12) & $O(B \cdot N)$ & $O(B)$ & Carry-free per-bit cou
     \item \textbf{Monotonic Stack / Deque}: Sorted stack or double-ended queue maintaining nearest extrema in $O(N)$ amortized time.
     \item \textbf{Trie / Double Rolling Hash / Border}: Core string primitives for $O(L)$ prefix lookup, $O(1)$ slice equality, and KMP search.
     \item \textbf{Bitmask / Two's Complement / Self-Inverse}: Subset integer encoding, negative-MSB signed arithmetic, and $x \oplus x = 0$.
+    \item \textbf{Two Pointers / Sliding Window / Floyd's Cycle}: Monotonic linear scans ($O(N)$), $\text{atMost}(K) - \text{atMost}(K{-}1)$ counting, and $O(1)$-space cycle entry.
 \end{itemize}
 
 \subsection*{Mathematical Symbols}
@@ -597,7 +617,7 @@ Column Ledger Accounting (12) & $O(B \cdot N)$ & $O(B)$ & Carry-free per-bit cou
     \item $\sum,\; \prod,\; \lfloor \cdot \rfloor,\; \lceil \cdot \rceil$: Summation, product, floor, and ceiling functions.
     \item $N!,\; \binom{n}{k},\; D_n,\; C_n,\; S(n,k)$: Factorial, binomial coefficient, derangements, Catalan numbers, and Stirling numbers of the second kind.
     \item $\bmod,\; \gcd,\; \operatorname{lcm},\; \phi(N)$: Remainder, greatest common divisor, least common multiple, and Euler's totient.
-    \item $\oplus,\; \mathbin{\&},\; \pi[i],\; Z[i],\; \Sigma$: Bitwise XOR, bitwise AND, KMP prefix function, Z-array, and alphabet size.
+    \item $\oplus,\; \mathbin{\&},\; \pi[i],\; Z[i],\; \Sigma,\; \mu,\; \lambda$: Bitwise XOR/AND, KMP $\pi$-array, Z-array, alphabet size, and Floyd's tail/cycle lengths.
 \end{itemize}
 
 % ============================================================================
@@ -704,6 +724,7 @@ For each disguised problem below, identify on paper: (a) \textbf{Output Category
 2026-11-25 & Promoted 09. String Algorithms to Available registry and synced its pattern recognition rows, complexity entries, and glossary definitions. \\
 2026-11-26 & Overhauled to canonical print-first guide: embedded fixed Diagram 3, deduplicated House Robber, switched Complexity Table to \texttt{xltabular} with fixes/syncs for Modules 03--12, synced Glossary symbols, and added 3 Triage Practice drills with solutions. \\
 2026-11-26 & Adjusted Master Complexity column widths and Exercise 2 solution header to eliminate overfull horizontal lines. \\
+2026-11-26 & Promoted 13. Two Pointers and Sliding Window to Available registry and synced its pattern recognition rows, complexity entries, and glossary definitions. \\
 \arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
 \endgroup
