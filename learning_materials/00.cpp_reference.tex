@@ -1,842 +1,864 @@
-﻿\documentclass[11pt,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 
-% --- Core LaTeX Packages (Standard in all base TeX installations) ---
+% --- Core LaTeX Packages ---
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[margin=1in]{geometry}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\ttdefault}{txtt}
+\usepackage{upquote}
+\usepackage[margin=0.85in, headheight=15pt]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{xcolor}
+\usepackage[helvet]{sfmath}
+\usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
+\usepackage{parskip}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[explicit]{titlesec}
+\usepackage[skins,breakable]{tcolorbox}
 \usepackage{listings}
 \usepackage{hyperref}
-\usepackage{tabularx}
 \usepackage{graphicx}
 
-% --- Color Palette ---
-\definecolor{primaryblue}{RGB}{24, 75, 140}
-\definecolor{codebg}{RGB}{248, 249, 250}
-\definecolor{codeframe}{RGB}{210, 215, 222}
-\definecolor{codegreen}{RGB}{40, 130, 60}
-\definecolor{codeblue}{RGB}{20, 90, 180}
-\definecolor{codegray}{RGB}{120, 120, 120}
+% --- Diagram Packages ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,decorations.pathreplacing}
 
+% --- Unified Print-Safe Color Palette ---
+\definecolor{primaryblue}{RGB}{24, 75, 140}
+\definecolor{accentteal}{RGB}{15, 118, 110}
+\definecolor{accentamber}{RGB}{180, 83, 9}
+\definecolor{accentred}{RGB}{185, 28, 28}
+\definecolor{codebg}{RGB}{246, 248, 250}
+\definecolor{codeframe}{RGB}{204, 212, 220}
+\definecolor{codeink}{RGB}{24, 30, 38}
+\definecolor{codekw}{RGB}{126, 34, 206}
+\definecolor{codetype}{RGB}{0, 118, 138}
+\definecolor{codegreen}{RGB}{22, 138, 66}
+\definecolor{codeblue}{RGB}{15, 92, 212}
+\definecolor{codestr}{RGB}{194, 65, 12}
+\definecolor{codegray}{RGB}{105, 115, 125}
+
+% --- Global Typography & Spacing ---
+\linespread{1.08}
+\renewcommand{\arraystretch}{1.32}
+\setlength{\tabcolsep}{7pt}
+\setlist[itemize]{itemsep=3pt, topsep=4pt, leftmargin=1.5em}
+\setlist[enumerate]{itemsep=4pt, topsep=4pt, leftmargin=1.6em}
+
+% --- Running Header & Footer ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{codegray}\textbf{Modern C++23 Quick Reference}}
+\fancyhead[R]{\footnotesize\color{codegray}\nouppercase{\leftmark}}
+\fancyfoot[C]{\footnotesize\color{codegray}Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{codeframe}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{}}
+
+% --- Section & Subsection Styling ---
+\newcommand{\sectionbreak}{}
+
+\titleformat{\section}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {\colorbox{primaryblue}{\color{white}\bfseries\Large\;\thesection\;}\hspace{0.55em}#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+\titlespacing*{\section}{0pt}{4pt}{12pt}
+
+\titleformat{name=\section,numberless}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{primaryblue!90!black}}
+  {}
+  {0pt}
+  {\begin{tcolorbox}[
+      enhanced, colback=primaryblue!6, colframe=primaryblue!6,
+      borderline west={3.5pt}{0pt}{primaryblue},
+      sharp corners=west, arc=2pt,
+      left=8pt, right=8pt, top=5pt, bottom=5pt,
+      boxsep=0pt, before skip=0pt, after skip=0pt
+  ]\large\bfseries\color{primaryblue!90!black}\thesubsection\hspace{0.55em}#1\end{tcolorbox}}
+\titlespacing*{\subsection}{0pt}{14pt}{6pt}
+
+\titleformat{name=\subsection,numberless}[block]
+  {\normalsize\bfseries\color{accentteal}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{2pt}{\color{accentteal!40}\titlerule[0.7pt]}]
+\titlespacing*{\subsection}{0pt}{12pt}{5pt}
+
+% --- Canonical Shared TikZ Styles ---
+\tikzset{
+    lmbox/.style={draw=codeframe, fill=codebg, thick, rounded corners=2pt, inner sep=4pt, font=\small},
+    lmactive/.style={draw=primaryblue, fill=primaryblue!8, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=primaryblue},
+    lmaccepted/.style={draw=codegreen, fill=codegreen!10, thick, rounded corners=2pt, inner sep=4pt, font=\small\bfseries, text=codegreen},
+    lmpruned/.style={draw=red!70!black, fill=red!70!black!6, thick, dashed, rounded corners=2pt, inner sep=4pt, font=\small, text=red!70!black},
+    lmarrow/.style={-{Stealth[length=5pt]}, thick, primaryblue},
+    lmmuted/.style={-{Stealth[length=5pt]}, thick, codegray},
+    lmprunedarrow/.style={-{Stealth[length=5pt]}, thick, dashed, red!70!black}
+}
+
+% --- Hyperref Setup ---
 \hypersetup{
     colorlinks=true,
     linkcolor=primaryblue,
     citecolor=primaryblue,
     urlcolor=primaryblue,
-    pdftitle={Ultimate Modern C++ Cheat Sheet},
-    pdfauthor={Technical Reference}
+    pdftitle={Modern C++23 Quick Reference},
+    pdfauthor={Antigravity Engineering}
 }
 
-% --- Simple Box Environment using standard LaTeX ---
-\newenvironment{calloutbox}[1]{
-    \par\vspace{0.3cm}
-    \noindent\begin{tabular}{|p{0.96\textwidth}|}
-    \hline
-    \vspace{0.1cm}
-    \textbf{#1}\par\vspace{0.1cm}
-}{
-    \vspace{0.1cm}
-    \\ \hline
-    \end{tabular}
-    \vspace{0.3cm}\par
+% --- Semantic Lead-In Labels ---
+\newcommand{\whybeat}{\textbf{\color{accentteal}Why This Exists:} }
+\newcommand{\trapnote}[1]{\par\smallskip\noindent{\footnotesize\textbf{\color{accentamber}Common trap:} #1}}
+
+% --- Cards ---
+\newtcolorbox{overviewbox}[1][What You'll Learn]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=6pt, bottom=6pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{2pt}}
 }
 
-% --- Code Listing Setup for C++ ---
+\newtcolorbox{calloutbox}[1]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+\newtcolorbox{watchoutbox}[1][Watch Out --- Common UB Traps]{
+    enhanced,
+    colback=accentamber!6, colframe=accentamber!30,
+    borderline west={3.5pt}{0pt}{accentamber},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentamber},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
+}
+
+% --- Print-First Pen-and-Paper Exercise Environment ---
+\newcounter{exercise}
+\newtcolorbox{tryitbox}[3]{
+    enhanced,
+    step=exercise,
+    colback=codegreen!3, colframe=codegreen!45,
+    colbacktitle=codegreen!14, coltitle=codegreen!85!black,
+    borderline west={3.5pt}{0pt}{codegreen},
+    arc=3pt, boxrule=0.6pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    toptitle=4pt, bottomtitle=4pt,
+    before skip=9pt, after skip=9pt,
+    fonttitle=\bfseries,
+    title={Exercise \theexercise\hspace{0.5em}{\colorbox{codegreen!85!black}{\color{white}\scriptsize\bfseries\;#1\;}}\hspace{0.5em}#2 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#3}}}
+}
+
+% --- Modern C++23 Code Listing Setup ---
 \lstset{
     language=C++,
-    basicstyle=\footnotesize\ttfamily,
-    keywordstyle=\color{codeblue}\bfseries,
+    basicstyle=\small\ttfamily\color{codeink},
+    keywordstyle=\color{codekw}\bfseries,
+    morekeywords={constexpr,noexcept,nullptr,static_assert,auto,override,final,decltype,concept,requires,consteval,constinit},
+    keywordstyle=[2]\color{codetype}\bfseries,
+    morekeywords=[2]{std,vector,span,deque,stack,queue,string,string_view,size_t,int64_t,uint32_t,uint64_t,optional,pair,tuple,array,bitset,priority_queue,unordered_map,unordered_set,map,set,ranges,views,nodiscard,greater,less,plus,multiplies,numeric_limits,hash,popcount,has_single_bit,countr_zero,bit_width,bit_ceil},
+    moredelim=[l][\color{codeblue}\bfseries]{\#},
+    deletestring=[b]',
     commentstyle=\color{codegreen}\itshape,
-    stringstyle=\color{orange!80!black},
+    stringstyle=\color{codestr},
     numberstyle=\tiny\color{codegray},
     numbers=left,
     numbersep=8pt,
+    xleftmargin=24pt,
+    framexleftmargin=22pt,
+    framexrightmargin=4pt,
+    framextopmargin=4pt,
+    framexbottommargin=4pt,
     backgroundcolor=\color{codebg},
     frame=single,
     rulecolor=\color{codeframe},
+    aboveskip=8pt,
+    belowskip=10pt,
     breaklines=true,
     breakatwhitespace=true,
     tabsize=4,
     showstringspaces=false,
-    captionpos=b,
-    morekeywords={co_await,co_return,co_yield,requires,concept,consteval,constinit}
+    captionpos=b
 }
-
-% --- Document Information ---
-\title{\vspace{-1.5cm}\textbf{\Huge Ultimate Modern C++ Cheat Sheet}\\[0.3cm]
-\Large Standard Library Algorithms, Ranges, Containers, Utilities, and Best Practices (C++17/20/23)}
-\author{Technical Reference}
-\date{\today}
 
 \begin{document}
 
-\maketitle
+% --- Modern Title Banner ---
+\thispagestyle{plain}
+\begin{tcolorbox}[
+    enhanced,
+    colback=primaryblue!6, colframe=primaryblue!20,
+    borderline west={5pt}{0pt}{primaryblue},
+    arc=4pt, boxrule=0.6pt,
+    left=14pt, right=14pt, top=7pt, bottom=7pt,
+    before skip=0pt, after skip=5pt
+]
+    {\footnotesize\bfseries\color{accentteal}MODULE 00 \quad|\quad MODERN C++23 QUICK REFERENCE}\\[3pt]
+    {\Huge\bfseries\color{primaryblue}Ultimate Modern C++ Cheat Sheet}\\[3pt]
+    {\large\color{codegray}Containers, Ranges, Views, \texttt{<bit>}, Non-Owning Views, and Algorithmic Idioms (C++17/20/23)}\\[4pt]
+    {\footnotesize\color{codegray}Updated \today}
+\end{tcolorbox}
 
-\begin{abstract}
-\noindent
-This document is an exhaustive, self-contained quick reference for modern C++ (C++17, C++20, and C++23). Designed for rapid lookup during competitive programming, algorithm implementation, and high-performance software development, it covers essential containers and performance trade-offs, standard algorithms (both classic and constrained \texttt{std::ranges}), the C++20/23 Ranges library with view adaptors and lazy pipelines, bit manipulation from \texttt{<bit>}, modern formatting (\texttt{std::format}, \texttt{std::print}), non-owning views (\texttt{std::span}, \texttt{std::string\_view}), lambda syntax matrices, structured bindings, and priority queue custom comparators.
-\end{abstract}
+\begin{overviewbox}[What You'll Learn]
+This quick reference collects the exact modern C++17/20/23 containers, algorithms, lazy range pipelines, \texttt{<bit>} utilities, memory models, and safety idioms used across Modules~01--12. Keep it open while implementing algorithms to pick the right container, avoid silent Undefined Behavior (dangling views, signed shifts, \texttt{INF} overflow), and write clean, zero-overhead C++23 code.
+\end{overviewbox}
 
-\tableofcontents
-\vspace{0.5cm}
-\hrule
-\vspace{0.5cm}
+\vspace{-5pt}
+{\setlength{\parskip}{0pt}\footnotesize\tableofcontents}
+
+\renewcommand{\sectionbreak}{\clearpage}
 
 % ============================================================================
-\section{Containers}
+\section{Containers and Memory Growth}
 % ============================================================================
 
-\subsection{Sequence Containers}
+\subsection{Sequence Containers and \texttt{std::vector} Reallocation}
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|l|}
-\hline
-\textbf{Container} & \textbf{Description} & \textbf{Access} & \textbf{Insert/Erase} \\ \hline
-\texttt{std::vector} & Dynamic array, contiguous memory. The default choice. & $O(1)$ & Back: $O(1)^*$, Mid: $O(N)$ \\ \hline
-\texttt{std::deque} & Double-ended queue. Fast push/pop at both ends. & $O(1)$ & Ends: $O(1)^*$, Mid: $O(N)$ \\ \hline
-\texttt{std::list} & Doubly-linked list. Fast insert/erase anywhere with iterator. & $O(N)$ & $O(1)$ with iterator \\ \hline
-\texttt{std::forward\_list} & Singly-linked list. Minimal memory overhead. & $O(N)$ & $O(1)$ with iterator \\ \hline
-\texttt{std::array<T,N>} & Fixed-size array on the stack. No heap allocation. & $O(1)$ & N/A (fixed size) \\ \hline
-\end{tabularx}
-\vspace{0.1cm}
-\noindent{\footnotesize $^*$Amortized. Occasional reallocation causes $O(N)$.}
-\vspace{0.3cm}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\ttfamily}p{3.0cm} >{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}p{3.5cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\normalfont\bfseries Container} & \textcolor{primaryblue}{\textbf{Description}} & \textcolor{primaryblue}{\textbf{Access}} & \textcolor{primaryblue}{\textbf{Insert / Erase}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+std::vector & Contiguous dynamic array. Default choice for cache speed. & $O(1)$ & Back: $O(1)^*$, Mid: $O(N)$ \\
+std::deque & Double-ended chunked array; fast push/pop at both ends. & $O(1)$ & Ends: $O(1)^*$, Mid: $O(N)$ \\
+std::list & Doubly-linked list; stable iterators on mid-edit. & $O(N)$ & $O(1)$ with iterator \\
+std::forward\_list & Singly-linked list; minimal per-node overhead. & $O(N)$ & $O(1)$ with iterator \\
+std::array<T,N> & Fixed-size stack array; zero heap allocation. & $O(1)$ & N/A (fixed size) \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
-\subsection{Associative Containers (Ordered, Tree-Based)}
+\noindent{\footnotesize\color{codegray}$^*$Amortized: occasional capacity doubling copies $N$ elements in $O(N)$ time, averaging $O(1)$ per push.}
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Container} & \textbf{Description} & \textbf{Lookup / Insert} \\ \hline
-\texttt{std::set} & Sorted unique keys. Balanced binary search tree (Red-Black). & $O(\log N)$ \\ \hline
-\texttt{std::multiset} & Sorted keys, duplicates allowed. & $O(\log N)$ \\ \hline
-\texttt{std::map} & Sorted key-value pairs, unique keys. & $O(\log N)$ \\ \hline
-\texttt{std::multimap} & Sorted key-value pairs, duplicate keys allowed. & $O(\log N)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    slot/.style={draw=primaryblue, fill=codebg, thick, minimum width=1.18cm, minimum height=0.90cm, font=\normalsize\bfseries, text=primaryblue, align=center},
+    copied/.style={draw=codeframe, fill=white, thick, minimum width=1.18cm, minimum height=0.90cm, font=\normalsize\bfseries, text=primaryblue, align=center},
+    fresh/.style={draw=codegreen, fill=codegreen!14, line width=1.3pt, minimum width=1.18cm, minimum height=0.90cm, font=\normalsize\bfseries, text=codegreen, align=center},
+    spare/.style={draw=codeframe, fill=white, thick, dashed, minimum width=1.18cm, minimum height=0.90cm, font=\scriptsize, text=codegray, align=center}
+]
+    % Stage 1 Box (x: 0.0..3.6)
+    \node[draw=codeframe, fill=codebg, rounded corners=3pt, thick, align=left, font=\scriptsize, text width=3.2cm, inner sep=6pt, anchor=west] (s1) at (0.0, 4.35) {
+        \textbf{\color{primaryblue}Stage 1: Capacity Full}\\
+        $\text{size} = 2,\; \text{cap} = 2$\\
+        \color{codegray}Addr: \texttt{0x1000}
+    };
 
-\subsection{Unordered Containers (Hash-Based)}
+    % Old buffer slots (x: 4.5..7.1)
+    \node[slot] (A1) at (4.85, 4.35) {A};
+    \node[slot] (B1) at (6.20, 4.35) {B};
+    \node[below=2pt of A1, font=\tiny, text=codegray] {Slot 0};
+    \node[below=2pt of B1, font=\tiny, text=codegray] {Slot 1};
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Container} & \textbf{Description} & \textbf{Avg / Worst} \\ \hline
-\texttt{std::unordered\_set} & Hash set, unique keys. & $O(1)$ / $O(N)$ \\ \hline
-\texttt{std::unordered\_map} & Hash map, unique keys. & $O(1)$ / $O(N)$ \\ \hline
-\texttt{std::unordered\_multiset} & Hash set, duplicates allowed. & $O(1)$ / $O(N)$ \\ \hline
-\texttt{std::unordered\_multimap} & Hash map, duplicate keys allowed. & $O(1)$ / $O(N)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+    % Danger box on right (x: 8.1..15.3)
+    \node[draw=red!70!black, fill=red!70!black!5, thick, dashed, rounded corners=3pt, font=\scriptsize, align=left, text width=6.6cm, inner sep=6pt, anchor=west] (inval) at (8.2, 4.35) {
+        \textbf{\color{red!70!black}Pointer / Iterator Invalidation Hazard:}\\
+        Reallocation frees \texttt{0x1000}. Any raw pointer, reference, \texttt{std::span}, or iterator into the old buffer becomes \textbf{dangling}!
+    };
+    \draw[lmprunedarrow] (B1.east) -- (inval.west);
 
-\subsection{Container Adaptors}
+    % Transition Banner across 0.0..15.3
+    \draw[draw=primaryblue!40, fill=primaryblue!6, rounded corners=3pt, thick] (0.0, 2.35) rectangle (15.3, 3.05);
+    \node[font=\scriptsize\bfseries, text=primaryblue] at (7.65, 2.70) {
+        \texttt{vec.push\_back(C)} $\implies$ Full! Allocate $2\times$ block ($C_{\text{new}} = 4$), move/copy $A, B$, append $C$, free \texttt{0x1000}.
+    };
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Adaptor} & \textbf{Description} & \textbf{Top/Push/Pop} \\ \hline
-\texttt{std::stack} & LIFO. Wraps \texttt{deque} by default. & $O(1)$ \\ \hline
-\texttt{std::queue} & FIFO. Wraps \texttt{deque} by default. & $O(1)$ \\ \hline
-\texttt{std::priority\_queue} & Max-heap by default. Wraps \texttt{vector}. & Top: $O(1)$, Push/Pop: $O(\log N)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+    % Stage 2 Box
+    \node[draw=codeframe, fill=codebg, rounded corners=3pt, thick, align=left, font=\scriptsize, text width=3.2cm, inner sep=6pt, anchor=west] (s2) at (0.0, 0.75) {
+        \textbf{\color{codegreen}Stage 2: Fresh Buffer}\\
+        $\text{size} = 3,\; \text{cap} = 4$\\
+        \color{codegray}Addr: \texttt{0x2500}
+    };
+
+    % New buffer slots (x: 4.5..9.9)
+    \node[copied] (A2) at (4.85, 0.75) {A};
+    \node[copied] (B2) at (6.15, 0.75) {B};
+    \node[fresh]  (C2) at (7.45, 0.75) {C};
+    \node[spare]  (D2) at (8.75, 0.75) {Spare};
+    \node[above=1pt of A2, font=\tiny, text=codegray] {Moved};
+    \node[above=1pt of B2, font=\tiny, text=codegray] {Moved};
+    \node[above=1pt of C2, font=\tiny\bfseries, text=codegreen] {Inserted};
+    \node[above=1pt of D2, font=\tiny, text=codegray] {Reserved};
+    \node[below=2pt of A2, font=\tiny, text=codegray] {Slot 0};
+    \node[below=2pt of B2, font=\tiny, text=codegray] {Slot 1};
+    \node[below=2pt of C2, font=\tiny, text=codegray] {Slot 2};
+    \node[below=2pt of D2, font=\tiny, text=codegray] {Slot 3};
+
+    % Amortized card (x: 9.8..15.3)
+    \node[draw=codeframe, fill=codebg, rounded corners=3pt, thick, font=\scriptsize, align=left, text width=5.1cm, inner sep=5pt, anchor=west] at (9.85, 0.75) {
+        \textbf{\color{primaryblue}Amortized $O(1)$ Guarantee:}\\
+        Doubling keeps total copies across $N$ pushes $\le 2N$. Call \texttt{vec.reserve(N)} up front to prevent reallocations entirely.
+    };
+\end{tikzpicture}
+\caption{Geometric reallocation of \texttt{std::vector}: doubling capacity guarantees amortized $O(1)$ \texttt{push\_back} while invalidating pointers/iterators to the old block.}
+\label{fig:vector_reallocation}
+\end{figure}
+
+\subsection{Associative, Unordered, and Adaptor Containers}
+
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\ttfamily}p{4.1cm} >{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{3.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\normalfont\bfseries Container} & \textcolor{primaryblue}{\textbf{Backing Structure \& Behavior}} & \textcolor{primaryblue}{\textbf{Lookup / Update}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+std::set / std::map & Red-Black BST; keys always sorted; supports \texttt{lower\_bound}. & $O(\log N)$ \\
+std::multiset / multimap & Sorted BST allowing duplicate keys. & $O(\log N)$ \\
+std::unordered\_set / map & Hash table; fastest average key lookup ($O(N)$ worst-case). & $O(1)$ avg / $O(N)$ \\
+std::stack / std::queue & LIFO / FIFO adaptors (default backing: \texttt{std::deque}). & $O(1)$ ends \\
+std::priority\_queue & Binary max-heap by default (backing: \texttt{std::vector}). & Top $O(1)$, Push/Pop $O(\log N)$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
+
+\whybeat \textbf{\texttt{std::deque} vs. \texttt{std::stack<int, std::vector<int>>} (Module~11):} Monotonic sliding-window queues need $O(1)$ pops from \emph{both} ends, making \texttt{std::deque} ideal. For LIFO monotonic stacks, overriding the backing container to \texttt{std::stack<int, std::vector<int>>} (or using a plain \texttt{std::vector}) eliminates chunk indirection for better cache locality.
 
 \subsection{Priority Queue: Min-Heaps and Custom Comparators}
-By default, \texttt{std::priority\_queue<T>} is a \textbf{max-heap}. Here are the standard ways to configure min-heaps and custom orderings:
 
-\begin{lstlisting}[caption={Priority Queue Configurations: Min-Heap and Custom Comparators}]
+By default, \texttt{std::priority\_queue<T>} puts the \emph{largest} element on top (comparator returns \texttt{true} when the first argument has \emph{lower} priority than the second). Since C++20, stateless lambdas are default-constructible, so you no longer need to pass \texttt{(cmp)} to the constructor unless the lambda captures variables.
+
+\begin{lstlisting}[caption={Min-heap and custom comparator patterns for \texttt{std::priority\_queue}}]
+#include <functional>
 #include <queue>
+#include <utility>
 #include <vector>
 
-// 1. Min-Heap for primitive types (uses std::greater<T>)
-std::priority_queue<int, std::vector<int>, std::greater<int>> min_pq;
-
-// 2. Custom struct with overloaded operator< (natural max-heap)
 struct Edge {
-    int to, weight;
-    // Overloading < so that smaller weight has HIGHER priority (min-heap behavior)
-    bool operator<(const Edge& other) const noexcept {
-        return weight > other.weight; // Reversed: > makes it a min-heap
-    }
+    int to;
+    int weight;
 };
-std::priority_queue<Edge> edge_min_pq;
 
-// 3. Custom functor struct (recommended for Dijkstra / pair tracking)
 struct ComparePair {
-    bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const noexcept {
-        return a.second > b.second; // Min-heap based on distance (second element)
+    bool operator()(const std::pair<int, int>& a,
+                    const std::pair<int, int>& b) const noexcept {
+        return a.second > b.second; // Smaller distance has higher priority
     }
 };
-std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, ComparePair> dijkstra_pq;
 
-// 4. Modern Lambda comparator with decltype (C++20)
-auto cmp = [](const Edge& a, const Edge& b) { return a.weight > b.weight; };
-std::priority_queue<Edge, std::vector<Edge>, decltype(cmp)> lambda_pq(cmp);
+void priority_queue_examples() {
+    // 1. Standard min-heap for primitives (transparent std::greater<>)
+    std::priority_queue<int, std::vector<int>, std::greater<>> min_pq;
+
+    // 2. Custom functor struct (classic Dijkstra pattern)
+    std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, ComparePair> dij_pq;
+
+    // 3. C++20 stateless lambda comparator (default-constructible; no "(cmp)" needed)
+    auto cmp = [](const Edge& a, const Edge& b) noexcept { return a.weight > b.weight; };
+    std::priority_queue<Edge, std::vector<Edge>, decltype(cmp)> lambda_pq;
+
+    min_pq.push(10);
+    dij_pq.emplace(0, 0);
+    lambda_pq.push(Edge{1, 5});
+}
 \end{lstlisting}
 
-\begin{calloutbox}{When to Choose Which Container?}
-\begin{itemize}
-    \item \textbf{Default choice:} \texttt{std::vector}. Contiguous memory is cache-friendly and beats node-based structures for most access patterns.
-    \item \textbf{Need sorted order or range queries:} \texttt{std::set} / \texttt{std::map}.
-    \item \textbf{Need fastest lookup by key:} \texttt{std::unordered\_map} (average $O(1)$).
-    \item \textbf{Need fast push/pop at both ends:} \texttt{std::deque}.
-    \item \textbf{Need stable iterators during middle insertions/deletions:} \texttt{std::list}.
-\end{itemize}
-\end{calloutbox}
-
 % ============================================================================
-\section{Classic vs. Constrained Algorithms}
+\section{Constrained Algorithms (\texttt{std::ranges}) and Projections}
 % ============================================================================
 
-C++20 introduced \textbf{Constrained Algorithms} (under the \texttt{std::ranges} namespace). These are modernized versions of the classic algorithms from the \texttt{std} namespace.
+\whybeat Classic \texttt{std::sort(v.begin(), v.end())} is verbose and allows mismatched iterator pairs from two different containers. C++20 \textbf{constrained algorithms} (\texttt{std::ranges::*}) accept whole ranges, validate Concepts for readable error messages, and accept \textbf{projections} so you can sort by struct members (\texttt{\&Player::score}) without writing comparator lambdas.
 
-\begin{calloutbox}{Why Prefer \texttt{std::ranges::} over \texttt{std::}?}
-\begin{enumerate}
-    \item \textbf{Range-based interfaces:} Pass the entire container directly: \texttt{std::ranges::sort(vec)} instead of \texttt{std::sort(vec.begin(), vec.end())}.
-    \item \textbf{Projections:} Apply algorithms based on member variables or transformed values without writing boilerplate comparators.
-    \item \textbf{Concepts validation:} Constrained algorithms use C++20 Concepts to provide human-readable compiler diagnostics rather than pages of template errors.
-\end{enumerate}
-\end{calloutbox}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash\ttfamily}p{4.3cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.1cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\normalfont\bfseries Algorithm (\texttt{<algorithm>})} & \textcolor{primaryblue}{\textbf{Plain-English Behavior}} & \textcolor{primaryblue}{\textbf{Complexity}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+\endhead
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\endfoot
+ranges::any\_of / all\_of / none\_of & Check if any, all, or no elements satisfy predicate. & $O(N)$ \\
+ranges::count / count\_if & Count elements matching value or predicate. & $O(N)$ \\
+ranges::find / find\_if / contains & Find first match (\texttt{contains} is C++23). & $O(N)$ \\
+ranges::mismatch / equal & Compare two ranges element-by-element. & $O(N)$ \\
+ranges::copy\_if / transform & Filter or map elements into an output range. & $O(N)$ \\
+ranges::fill / generate / reverse & Fill, generate, or reverse elements in-place. & $O(N)$ \\
+ranges::rotate / shuffle & Cyclically shift or randomly permute elements. & $O(N)$ \\
+ranges::unique & Collapse adjacent duplicates (sort first, then \texttt{erase}). & $O(N)$ \\
+ranges::sort & Unstable introsort (default sorting tool). & $O(N \log N)$ \\
+ranges::stable\_sort & Preserves equal-element order ($O(N)$ aux buffer). & $O(N \log N)$ ($O(N \log^2 N)$ low-RAM) \\
+ranges::partial\_sort & Sorts only the smallest $k$ elements into prefix. & $O(N \log k)$ \\
+ranges::nth\_element & Places the $k$-th smallest element in final slot. & $O(N)$ avg \\
+ranges::partition & Moves matching elements before non-matching. & $O(N)$ \\
+ranges::stable\_partition & Preserves relative order within both groups. & $O(N)$ ($O(N \log N)$ low-RAM) \\
+ranges::lower\_bound / upper\_bound & First element $\ge v$ / $> v$ on sorted range. & $O(\log N)$ \\
+ranges::binary\_search / equal\_range & Presence test / subrange of all matches for $v$. & $O(\log N)$ \\
+ranges::min / max / minmax / clamp & Extrema and $[\text{lo}, \text{hi}]$ clamping. & $O(1)$ / $O(N)$ \\
+ranges::make\_heap / push\_heap / pop\_heap & Build ($O(N)$) and maintain in-place max-heap. & $O(N)$ / $O(\log N)$ \\
+ranges::merge / set\_union / set\_intersection & Linear set algebra on two sorted ranges. & $O(N + M)$ \\
+ranges::next\_permutation & Advance to next lexicographic permutation. & $O(N)$ \\
+ranges::fold\_left / fold\_left\_first & (C++23, in \texttt{<algorithm>}) Modern range reduction. & $O(N)$ \\
+\end{xltabular}\endgroup
 
-% ============================================================================
-\section{Standard Algorithms Reference}
-% ============================================================================
-
-\subsection{Non-Modifying Sequence Operations}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Algorithm} & \textbf{Description} & \textbf{Complexity} \\ \hline
-\texttt{ranges::for\_each} & Applies a function to every element. & $O(N)$ \\ \hline
-\texttt{ranges::any\_of} & Returns \texttt{true} if any element satisfies a predicate. & $O(N)$ \\ \hline
-\texttt{ranges::all\_of} & Returns \texttt{true} if all elements satisfy a predicate. & $O(N)$ \\ \hline
-\texttt{ranges::none\_of} & Returns \texttt{true} if no element satisfies a predicate. & $O(N)$ \\ \hline
-\texttt{ranges::count / count\_if} & Counts elements matching a value or predicate. & $O(N)$ \\ \hline
-\texttt{ranges::find / find\_if} & Finds the first matching element. & $O(N)$ \\ \hline
-\texttt{ranges::find\_if\_not} & Finds the first element \emph{not} satisfying a predicate. & $O(N)$ \\ \hline
-\texttt{ranges::adjacent\_find} & Finds the first pair of adjacent equal elements. & $O(N)$ \\ \hline
-\texttt{ranges::mismatch} & Finds the first position where two ranges differ. & $O(N)$ \\ \hline
-\texttt{ranges::equal} & Returns \texttt{true} if two ranges are element-wise equal. & $O(N)$ \\ \hline
-\texttt{ranges::contains} & (C++23) Returns \texttt{true} if a value exists in a range. & $O(N)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Modifying Sequence Operations}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Algorithm} & \textbf{Description} & \textbf{Complexity} \\ \hline
-\texttt{ranges::copy / copy\_if} & Copies elements (optionally filtered) to an output range. & $O(N)$ \\ \hline
-\texttt{ranges::move} & Moves elements to an output range. & $O(N)$ \\ \hline
-\texttt{ranges::fill} & Fills a range with a specific value. & $O(N)$ \\ \hline
-\texttt{ranges::generate} & Fills a range with values produced by a callable. & $O(N)$ \\ \hline
-\texttt{ranges::transform} & Applies a function and stores the result. & $O(N)$ \\ \hline
-\texttt{ranges::replace / replace\_if} & Replaces matching elements with a new value. & $O(N)$ \\ \hline
-\texttt{ranges::remove / remove\_if} & Logically removes elements (use with \texttt{erase}). & $O(N)$ \\ \hline
-\texttt{ranges::unique} & Removes consecutive duplicates (range must be sorted first). & $O(N)$ \\ \hline
-\texttt{ranges::reverse} & Reverses elements in-place. & $O(N)$ \\ \hline
-\texttt{ranges::rotate} & Rotates elements so a given iterator becomes the first. & $O(N)$ \\ \hline
-\texttt{ranges::shuffle} & Randomly reorders elements using a URNG. & $O(N)$ \\ \hline
-\texttt{ranges::swap\_ranges} & Swaps elements between two ranges. & $O(N)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Sorting and Ordering}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Algorithm} & \textbf{Description} & \textbf{Complexity} \\ \hline
-\texttt{ranges::sort} & Sorts elements (unstable). & $O(N \log N)$ \\ \hline
-\texttt{ranges::stable\_sort} & Sorts while preserving order of equal elements. & $O(N \log^2 N)$ \\ \hline
-\texttt{ranges::partial\_sort} & Sorts only the first $k$ elements. & $O(N \log k)$ \\ \hline
-\texttt{ranges::nth\_element} & Rearranges so the $n$-th element is in sorted position. & $O(N)$ avg \\ \hline
-\texttt{ranges::is\_sorted} & Checks if a range is sorted. & $O(N)$ \\ \hline
-\texttt{ranges::partition} & Reorders so elements satisfying a predicate come first. & $O(N)$ \\ \hline
-\texttt{ranges::stable\_partition} & Partition preserving relative order within groups. & $O(N \log N)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Binary Search (Requires Sorted Range)}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Algorithm} & \textbf{Description} & \textbf{Complexity} \\ \hline
-\texttt{ranges::lower\_bound} & Iterator to first element $\ge$ value. & $O(\log N)$ \\ \hline
-\texttt{ranges::upper\_bound} & Iterator to first element $>$ value. & $O(\log N)$ \\ \hline
-\texttt{ranges::binary\_search} & Returns \texttt{true} if value exists. & $O(\log N)$ \\ \hline
-\texttt{ranges::equal\_range} & Returns subrange of all elements equal to value. & $O(\log N)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Min / Max / Comparison}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Algorithm} & \textbf{Description} & \textbf{Complexity} \\ \hline
-\texttt{ranges::min / max} & Returns the smaller / larger of two values or a range. & $O(1)$ / $O(N)$ \\ \hline
-\texttt{ranges::minmax} & Returns both min and max in a single pass. & $O(N)$ \\ \hline
-\texttt{ranges::min\_element} & Iterator to the smallest element. & $O(N)$ \\ \hline
-\texttt{ranges::max\_element} & Iterator to the largest element. & $O(N)$ \\ \hline
-\texttt{ranges::clamp} & Constrains a value within $[\text{lo}, \text{hi}]$. & $O(1)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Heap Operations}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Algorithm} & \textbf{Description} & \textbf{Complexity} \\ \hline
-\texttt{ranges::make\_heap} & Rearranges a range into a max-heap. & $O(N)$ \\ \hline
-\texttt{ranges::push\_heap} & Inserts the last element into a valid heap. & $O(\log N)$ \\ \hline
-\texttt{ranges::pop\_heap} & Moves the top element to the end and restores the heap. & $O(\log N)$ \\ \hline
-\texttt{ranges::sort\_heap} & Sorts a heap into ascending order. & $O(N \log N)$ \\ \hline
-\texttt{ranges::is\_heap} & Checks if a range is a valid heap. & $O(N)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Set Operations (On Sorted Ranges)}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Algorithm} & \textbf{Description} & \textbf{Complexity} \\ \hline
-\texttt{ranges::merge} & Merges two sorted ranges into one. & $O(N+M)$ \\ \hline
-\texttt{ranges::set\_union} & Elements in either range. & $O(N+M)$ \\ \hline
-\texttt{ranges::set\_intersection} & Elements in both ranges. & $O(N+M)$ \\ \hline
-\texttt{ranges::set\_difference} & Elements in the first but not the second. & $O(N+M)$ \\ \hline
-\texttt{ranges::includes} & Checks if one sorted range is a subset of another. & $O(N+M)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Permutation Operations}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Algorithm} & \textbf{Description} & \textbf{Complexity} \\ \hline
-\texttt{next\_permutation} & Rearranges to the next lexicographic permutation. & $O(N)$ \\ \hline
-\texttt{prev\_permutation} & Rearranges to the previous lexicographic permutation. & $O(N)$ \\ \hline
-\texttt{ranges::is\_permutation} & Checks if one range is a permutation of another. & $O(N^2)$ worst \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-% ============================================================================
-\section{Numeric Algorithms and Bit Manipulation}
-% ============================================================================
-
-\subsection{Numeric Algorithms (\texttt{<numeric>} and C++23 Range Folds)}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Algorithm} & \textbf{Description} & \textbf{Complexity} \\ \hline
-\texttt{std::accumulate} & Classic fold/reduction (default: sum). & $O(N)$ \\ \hline
-\texttt{ranges::fold\_left} & (C++23) Left-to-right range fold with init value (modern \texttt{accumulate}). & $O(N)$ \\ \hline
-\texttt{ranges::fold\_left\_first} & (C++23) Range fold using first element as init (returns \texttt{optional}). & $O(N)$ \\ \hline
-\texttt{ranges::fold\_right} & (C++23) Right-to-left range fold. & $O(N)$ \\ \hline
-\texttt{std::reduce} & Like \texttt{accumulate} but out-of-order execution (parallelizable). & $O(N)$ \\ \hline
-\texttt{std::inner\_product} & Dot product of two ranges. & $O(N)$ \\ \hline
-\texttt{std::partial\_sum} & Running cumulative sum (prefix sums). & $O(N)$ \\ \hline
-\texttt{std::inclusive\_scan} & Generalized prefix sum (associative op, parallelizable). & $O(N)$ \\ \hline
-\texttt{std::exclusive\_scan} & Like \texttt{inclusive\_scan} but excludes current element. & $O(N)$ \\ \hline
-\texttt{std::iota} & Fills a range with sequentially increasing values. & $O(N)$ \\ \hline
-\texttt{std::gcd / std::lcm} & Greatest common divisor / least common multiple. & $O(\log \min)$ \\ \hline
-\texttt{std::midpoint} & (C++20) Computes midpoint without overflow: $(a+b)/2$. & $O(1)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\begin{lstlisting}[caption={Modern Reductions with C++23 fold\_left}]
-#include <vector>
+\begin{lstlisting}[caption={Projections (\texttt{\&Player::score}) and C++23 \texttt{std::ranges::fold\_left} (\texttt{<algorithm>})}]
 #include <algorithm>
-#include <numeric>
+#include <functional>
+#include <string>
+#include <vector>
 
-std::vector<int> numbers = {1, 2, 3, 4, 5};
-
-// C++23 Range Fold: clean, works directly on containers and views
-int sum = std::ranges::fold_left(numbers, 0, std::plus<>{});       // 15
-int product = std::ranges::fold_left(numbers, 1, std::multiplies<>{}); // 120
-
-// Optional-returning fold without explicit initial value
-auto max_val = std::ranges::fold_left_first(numbers, [](int a, int b) {
-    return std::max(a, b);
-}); // returns std::optional<int>{5}
-\end{lstlisting}
-
-\subsection{Bit Manipulation (\texttt{<bit>}, C++20)}
-Standardized, constexpr, compiler-intrinsics-backed bitwise operations. Replaces GCC builtins like \texttt{\_\_builtin\_popcount}.
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Function} & \textbf{Description} & \textbf{Example} \\ \hline
-\texttt{std::popcount(x)} & Counts number of set bits (population count). & \texttt{popcount(0b1011u) == 3} \\ \hline
-\texttt{std::has\_single\_bit(x)} & Checks if $x > 0$ and is an exact power of 2. & \texttt{has\_single\_bit(16u) == true} \\ \hline
-\texttt{std::countl\_zero(x)} & Counts consecutive zero bits from MSB (left). & \texttt{countl\_zero(1u) == 31} (32-bit) \\ \hline
-\texttt{std::countr\_zero(x)} & Counts consecutive zero bits from LSB (right). & \texttt{countr\_zero(8u) == 3} \\ \hline
-\texttt{std::countl\_one(x)} & Counts consecutive one bits from MSB. & Leading ones count \\ \hline
-\texttt{std::countr\_one(x)} & Counts consecutive one bits from LSB. & Trailing ones count \\ \hline
-\texttt{std::bit\_width(x)} & Minimum bits to represent $x$ ($\lfloor\log_2 x\rfloor + 1$). & \texttt{bit\_width(5u) == 3} \\ \hline
-\texttt{std::bit\_floor(x)} & Largest power of 2 less than or equal to $x$. & \texttt{bit\_floor(13u) == 8} \\ \hline
-\texttt{std::bit\_ceil(x)} & Smallest power of 2 greater than or equal to $x$. & \texttt{bit\_ceil(13u) == 16} \\ \hline
-\texttt{std::rotl / std::rotr} & Bitwise left / right rotation. & Circular shifts \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\begin{lstlisting}[caption={Practical Bit Manipulation in Modern C++20}]
-#include <bit>
-#include <cstdint>
-
-uint32_t mask = 0b0010'1000;
-
-int ones = std::popcount(mask);              // 2
-bool is_pow2 = std::has_single_bit(mask);    // false
-int trailing_zeros = std::countr_zero(mask); // 3 (lowest set bit is at index 3)
-int bits_needed = std::bit_width(32u);       // 6 (values 0..32 fit in 6 bits)
-uint32_t upper_pow2 = std::bit_ceil(25u);    // 32
-\end{lstlisting}
-
-% ============================================================================
-\section{The Power of Projections (C++20)}
-% ============================================================================
-
-Projections are unary invocables applied to every element before the algorithm compares or processes them. They eliminate the need for verbose custom comparators.
-
-\begin{lstlisting}[caption={Sorting objects by a specific member using Projections}]
 struct Player {
     std::string name;
     int score;
 };
 
-std::vector<Player> players = {{"Alice", 50}, {"Bob", 80}, {"Charlie", 40}};
+void ranges_and_folds() {
+    std::vector<Player> players = {{"Alice", 50}, {"Bob", 80}, {"Charlie", 40}};
 
-// Classic approach (Verbose):
-std::sort(players.begin(), players.end(), [](const Player& a, const Player& b) {
-    return a.score < b.score;
-});
+    // Projection sorts by Player::score without a lambda
+    std::ranges::sort(players, std::less<>{}, &Player::score);
+    auto best = std::ranges::max_element(players, {}, &Player::score);
 
-// C++20 Ranges approach using a Projection (Clean):
-std::ranges::sort(players, std::less<>{}, &Player::score);
-
-// Finding the player with the highest score:
-auto best = std::ranges::max_element(players, {}, &Player::score);
-\end{lstlisting}
-
-% ============================================================================
-\section{Ranges and View Adaptors}
-% ============================================================================
-
-A \textbf{View} is a lightweight, non-owning range that evaluates lazily and guarantees $O(1)$ copy, move, and assignment operations. No data is computed until you iterate over it.
-
-\subsection{Range Factories (Generating Sequences)}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Factory} & \textbf{Description} \\ \hline
-\texttt{views::iota(a)} & Infinite sequence: $a, a+1, a+2, \ldots$ \\ \hline
-\texttt{views::iota(a, b)} & Finite sequence from \texttt{a} to \texttt{b-1}. \\ \hline
-\texttt{views::single(x)} & A view containing exactly one element \texttt{x}. \\ \hline
-\texttt{views::empty<T>} & An empty view of type \texttt{T}. \\ \hline
-\texttt{views::repeat(x)} & (C++23) Infinite sequence of copies of \texttt{x}. \\ \hline
-\texttt{views::repeat(x, n)} & (C++23) Exactly \texttt{n} copies of \texttt{x}. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Filtering and Selecting}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Adaptor} & \textbf{Description} \\ \hline
-\texttt{views::filter(pred)} & Yields only elements satisfying the predicate. \\ \hline
-\texttt{views::take(n)} & Yields the first \texttt{n} elements. \\ \hline
-\texttt{views::take\_while(pred)} & Yields elements from the front while \texttt{pred} is true. \\ \hline
-\texttt{views::drop(n)} & Skips the first \texttt{n} elements. \\ \hline
-\texttt{views::drop\_while(pred)} & Skips elements from the front while \texttt{pred} is true. \\ \hline
-\texttt{views::stride(n)} & (C++23) Yields every $n$-th element. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Transforming}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Adaptor} & \textbf{Description} \\ \hline
-\texttt{views::transform(fn)} & Yields elements transformed by the function \texttt{fn}. \\ \hline
-\texttt{views::reverse} & Yields elements in reverse order. \\ \hline
-\texttt{views::enumerate} & (C++23) Yields pairs of \texttt{(index, element)}. \\ \hline
-\texttt{views::as\_rvalue} & (C++23) Yields elements as rvalue references. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Splitting and Joining}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Adaptor} & \textbf{Description} \\ \hline
-\texttt{views::split(delim)} & Splits a range into subranges by a delimiter. \\ \hline
-\texttt{views::lazy\_split(delim)} & Lazier version of split, works with input ranges. \\ \hline
-\texttt{views::join} & Flattens a range of ranges into a single range. \\ \hline
-\texttt{views::join\_with(delim)} & (C++23) Flattens with a delimiter between subranges. \\ \hline
-\texttt{views::chunk(n)} & (C++23) Splits into non-overlapping chunks of size \texttt{n}. \\ \hline
-\texttt{views::slide(n)} & (C++23) Sliding window of size \texttt{n}. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Tuple-Like and Element Access}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Adaptor} & \textbf{Description} \\ \hline
-\texttt{views::keys} & Yields \texttt{.first} of pair/tuple-like elements (e.g., from \texttt{std::map}). \\ \hline
-\texttt{views::values} & Yields \texttt{.second} of pair/tuple-like elements. \\ \hline
-\texttt{views::elements<N>} & Yields the $N$-th element of tuple-like elements. \\ \hline
-\texttt{views::zip} & (C++23) Combines multiple ranges into a range of tuples. \\ \hline
-\texttt{views::zip\_transform(fn, ...)} & (C++23) Zips and transforms in one step. \\ \hline
-\texttt{views::adjacent<N>} & (C++23) Yields tuples of $N$ consecutive elements. \\ \hline
-\texttt{views::pairwise} & (C++23) Shorthand for \texttt{adjacent<2>}. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Other Adaptors}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Adaptor} & \textbf{Description} \\ \hline
-\texttt{views::common} & Converts a view to a common range (same begin/end type), for legacy algorithms. \\ \hline
-\texttt{views::counted(it, n)} & Creates a view of \texttt{n} elements starting at iterator \texttt{it}. \\ \hline
-\texttt{views::all} & Wraps any range into a view. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-% ============================================================================
-\section{Composing Views with the Pipe Operator}
-% ============================================================================
-
-View adaptors can be chained using the pipe \texttt{|} operator, resembling Unix pipelines. Because views are lazy, no intermediate copies or allocations occur. Computation only happens when elements are actually iterated.
-
-\begin{lstlisting}[caption={Sum of squares of the first 5 even numbers from an infinite sequence}]
-#include <iostream>
-#include <ranges>
-
-int main() {
-    auto even_squares = std::views::iota(1)               // 1, 2, 3, 4, ... (Infinite)
-                      | std::views::filter([](int x) {    // Keep even numbers
-                            return x % 2 == 0; 
-                        })
-                      | std::views::transform([](int x) { // Square them
-                            return x * x; 
-                        })
-                      | std::views::take(5);               // Take first 5
-
-    int sum = 0;
-    for (int val : even_squares) sum += val;
-    
-    std::cout << sum << "\n"; // Output: 220
+    // C++23 fold_left lives in <algorithm> (not <numeric>!)
+    int total = std::ranges::fold_left(players, 0, [](int acc, const Player& p) {
+        return acc + p.score;
+    });
+    (void)best;
+    (void)total;
 }
 \end{lstlisting}
 
-\subsection{Converting Views to Containers (C++23)}
-Views do not own memory. To materialize results into a container, use \texttt{std::ranges::to}:
+% ============================================================================
+\section{Numeric Utilities, \texttt{<bit>}, and Modules 09--12 Idioms}
+% ============================================================================
 
-\begin{lstlisting}[caption={Materializing a View Pipeline into a Vector}]
-auto result = std::views::iota(1, 100)
-            | std::views::filter([](int x) { return x % 3 == 0; })
-            | std::ranges::to<std::vector<int>>();
+\subsection{Numeric Helpers (\texttt{<numeric>}) and Safe Sentinels}
+
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\ttfamily}p{4.0cm} >{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{2.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\normalfont\bfseries Function (\texttt{<numeric>})} & \textcolor{primaryblue}{\textbf{Plain-English Behavior}} & \textcolor{primaryblue}{\textbf{Complexity}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+std::accumulate / reduce & Classic fold (note: \texttt{ranges::fold\_left} is in \texttt{<algorithm>}). & $O(N)$ \\
+std::partial\_sum / inclusive\_scan & Running prefix sums / associative prefix scan. & $O(N)$ \\
+std::iota(begin, end, val) & Fill range with $v, v+1, v+2, \dots$ & $O(N)$ \\
+std::gcd(a, b) / std::lcm(a, b) & Greatest common divisor / least common multiple. & $O(\log \min)$ \\
+std::midpoint(a, b) & (C++20) Overflow-safe midpoint for Binary Search. & $O(1)$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
+
+\subsection{\texttt{<bit>} Operations, \texttt{std::bitset}, and Safe Infinity}
+
+Every function in \texttt{<bit>} requires an \textbf{unsigned integer} (\texttt{std::unsigned\_integral})---passing a signed \texttt{int} will not compile! Note carefully that \texttt{std::bit\_width(0u) == 0} (the $\lfloor \log_2 x \rfloor + 1$ formula applies only for $x > 0$).
+
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\ttfamily}p{3.9cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{4.3cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\normalfont\bfseries Function (\texttt{<bit>})} & \textcolor{primaryblue}{\textbf{Description (Unsigned Only)}} & \textcolor{primaryblue}{\textbf{Example}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+std::popcount(x) & Count of set ($1$) bits. & \texttt{popcount(0b1011u) == 3} \\
+std::has\_single\_bit(x) & True iff $x > 0$ and exact power of two. & \texttt{has\_single\_bit(0u) == false} \\
+std::countl\_zero / countr\_zero & Leading / trailing zero bits. & \texttt{countr\_zero(8u) == 3} \\
+std::bit\_width(x) & Min bits to store $x$ ($0 \to 0$; else $\lfloor \log_2 x \rfloor + 1$). & \texttt{bit\_width(0u) == 0} \\
+std::bit\_floor / bit\_ceil & Largest power of $2 \le x$ / smallest $\ge x$. & \texttt{bit\_ceil(13u) == 16} \\
+std::rotl / std::rotr & Circular left / right bit rotation. & \texttt{rotl(x, k)} \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
+
+\begin{lstlisting}[caption={Modules 09--12 idioms: \texttt{<bit>}, \texttt{std::bitset}, safe \texttt{INF}, and C++23 deducing \texttt{this}}]
+#include <bit>
+#include <bitset>
+#include <cstdint>
+#include <limits>
+#include <vector>
+
+void modern_module_idioms() {
+    // 1. Safe sentinel infinity (prevents INF + INF signed overflow UB in DP / Dijkstra)
+    constexpr std::int64_t INF = std::numeric_limits<std::int64_t>::max() / 2;
+
+    // 2. <bit> + 64-bit shift safety (always 1ULL << k for k < 64)
+    std::uint64_t mask = (1ULL << 40) | (1ULL << 3);
+    int lowest_idx = std::countr_zero(mask); // 3
+    int bits_used = std::bit_width(0U);      // 0 (not -1!)
+
+    // 3. std::bitset for fixed-size >64-bit DP / Subset-Sum acceleration (64x speedup)
+    std::bitset<256> reachable;
+    reachable.set(0);
+    reachable |= (reachable << 7); // Add item of weight 7 in O(W / 64)
+
+    // 4. C++23 Deducing 'this' for zero-overhead recursive lambdas (replaces std::function)
+    std::vector<std::vector<int>> adj(4);
+    std::vector<bool> vis(4, false);
+    auto dfs = [&](this auto&& self, int u) -> void {
+        vis[u] = true;
+        for (int v : adj[u]) {
+            if (!vis[v]) self(v);
+        }
+    };
+    dfs(0);
+    (void)INF; (void)lowest_idx; (void)bits_used;
+}
 \end{lstlisting}
 
 % ============================================================================
-\section{Strings and Text Formatting}
+\section{Lazy Ranges and View Pipelines (\texttt{std::views})}
 % ============================================================================
 
-\subsection{String Operations and Views}
+\whybeat \textbf{Lazy views vs. eager copies:} Chaining filter $\to$ transform $\to$ take with eager \texttt{std::vector} helpers allocates two temporary heap buffers and scans every element even if you only want the first $5$. A \texttt{std::views} pipeline owns zero memory, copies in $O(1)$, and computes each element strictly on demand!
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Operation} & \textbf{Description} \\ \hline
-\texttt{s.substr(pos, len)} & Returns a substring starting at \texttt{pos} of length \texttt{len}. \\ \hline
-\texttt{s.find(str)} & Returns position of first occurrence, or \texttt{npos}. \\ \hline
-\texttt{s.rfind(str)} & Returns position of last occurrence. \\ \hline
-\texttt{s.starts\_with(str)} & (C++20) Checks if string starts with a prefix. \\ \hline
-\texttt{s.ends\_with(str)} & (C++20) Checks if string ends with a suffix. \\ \hline
-\texttt{s.contains(str)} & (C++23) Checks if string contains a substring. \\ \hline
-\texttt{std::to\_string(n)} & Converts a numeric value to \texttt{std::string}. \\ \hline
-\texttt{std::stoi / stol / stod} & Converts \texttt{std::string} to \texttt{int} / \texttt{long} / \texttt{double}. \\ \hline
-\texttt{std::string\_view} & (C++17) Non-owning, read-only view of a string. Zero allocation. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\ttfamily}p{4.3cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\normalfont\bfseries View / Factory (\texttt{<ranges>})} & \textcolor{primaryblue}{\textbf{Plain-English Behavior}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+views::iota(a) / iota(a, b) & Infinite sequence $a, a+1, \dots$ or finite $[a, b)$. \\
+views::repeat(x, n) & (C++23) Yields \texttt{n} copies of \texttt{x} (or infinite if \texttt{n} omitted). \\
+views::filter(pred) / transform(fn) & Lazily keep matching elements / map each element. \\
+views::take(n) / drop(n) / stride(n) & First \texttt{n}, skip \texttt{n}, or every \texttt{n}-th (\texttt{stride} is C++23). \\
+views::reverse / enumerate & Reverse order / (C++23) yield \texttt{(index, element)} pairs. \\
+views::split(d) / join / chunk(n) / slide(n) & Split, flatten, chunk, or sliding window (\texttt{chunk}/\texttt{slide} C++23). \\
+views::keys / values / zip / pairwise & Pair projections; (C++23) lockstep \texttt{zip} and adjacent pairs. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
-\subsection{Modern Formatting and Output (\texttt{std::format} and \texttt{std::print})}
-C++20 introduced \texttt{std::format} (Python-like formatting), and C++23 added \texttt{std::print} / \texttt{std::println} (replaces both \texttt{printf} and verbose \texttt{std::cout}).
+\begin{lstlisting}[caption={Lazy pipe composition with \texttt{std::views} (zero intermediate allocations)}]
+#include <iostream>
+#include <ranges>
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|l|}
-\hline
-\textbf{Format Specifier} & \textbf{Description} & \textbf{Result for 42 or 3.14159} \\ \hline
-\texttt{\{\}} & Default format & \texttt{"42"}, \texttt{"3.14159"} \\ \hline
-\texttt{\{:05d\}} & Zero-padded integer to width 5 & \texttt{"00042"} \\ \hline
-\texttt{\{:.2f\}} & Floating point fixed 2 decimals & \texttt{"3.14"} \\ \hline
-\texttt{\{:>10\}} & Right-aligned within 10 spaces & \texttt{"        42"} \\ \hline
-\texttt{\{:<10\}} & Left-aligned within 10 spaces & \texttt{"42        "} \\ \hline
-\texttt{\{:b\} / \{:x\}} & Binary / Hexadecimal format & \texttt{"101010"} / \texttt{"2a"} \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+int sum_first_five_even_squares() {
+    auto even_squares = std::views::iota(1)
+                      | std::views::filter([](int x) { return x % 2 == 0; })
+                      | std::views::transform([](int x) { return x * x; })
+                      | std::views::take(5);
 
-\begin{lstlisting}[caption={Modern Formatting and Output Examples}]
-#include <format> // C++20
-#include <print>  // C++23
+    int sum = 0;
+    for (int val : even_squares) sum += val;
+    return sum; // 4 + 16 + 36 + 64 + 100 = 220
+}
+\end{lstlisting}
+
+To materialize a lazy view into an owning container in C++23, pipe into \texttt{std::ranges::to<std::vector<int>>()} (or construct from iterators under C++20).
+
+% ============================================================================
+\section{Strings, \texttt{std::string\_view}, and Formatting}
+% ============================================================================
+
+\whybeat \textbf{\texttt{std::string\_view} (Module~09):} Calling \texttt{s.substr(pos, len)} on a \texttt{std::string} copies bytes and allocates on the heap ($O(L)$). \texttt{std::string\_view} is just a \texttt{(const char*, size\_t)} pair: slicing with \texttt{substr}, \texttt{remove\_prefix}, and \texttt{remove\_suffix} runs in $O(1)$ with zero heap allocations!
+
+\begin{watchoutbox}[Watch Out --- Dangling \texttt{std::string\_view} Lifetime]
+Because \texttt{std::string\_view} does \textbf{not} own its characters, never store or return a \texttt{string\_view} pointing to a temporary \texttt{std::string} (e.g., \texttt{std::string\_view sv = get\_temp\_string();}). Once the temporary dies at the semicolon, reading \texttt{sv} is instant Undefined Behavior!
+\end{watchoutbox}
+
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\ttfamily}p{4.3cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\normalfont\bfseries String / View Operation} & \textcolor{primaryblue}{\textbf{Plain-English Behavior}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+s.starts\_with / ends\_with / contains & Prefix/suffix (C++20) and substring check (C++23). \\
+sv.remove\_prefix(k) / remove\_suffix(k) & Shrink a \texttt{string\_view} in $O(1)$ without touching memory. \\
+std::format("Score: \{:04d\}", 75) & (C++20, \texttt{<format>}) Type-safe Python-style string formatting. \\
+std::println("Item \{\} of \{\}", 5, 10) & (C++23, \texttt{<print>}) Fast formatted output with newline. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
+
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\ttfamily}p{2.8cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{4.6cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\normalfont\bfseries Specifier} & \textcolor{primaryblue}{\textbf{Meaning}} & \textcolor{primaryblue}{\textbf{Example (\texttt{42} or \texttt{3.14159})}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+\{:05d\} / \{:.2f\} & Zero-pad width 5 / Fixed 2 decimals & \texttt{"00042"} / \texttt{"3.14"} \\
+\{:>10\} / \{:<10\} & Right-align / Left-align in width 10 & \texttt{"\ \ \ \ \ \ \ \ 42"} / \texttt{"42\ \ \ \ \ \ \ \ "} \\
+\{:b\} / \{:x\} & Binary / Hexadecimal integer & \texttt{"101010"} / \texttt{"2a"} \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
+
+\begin{lstlisting}[caption={Zero-copy \texttt{std::string\_view} trimming and \texttt{std::format} (C++20)}]
+#include <format>
 #include <string>
+#include <string_view>
 
-// 1. Constructing formatted strings
-std::string msg = std::format("User: {}, Score: {:04d}, Ratio: {:.2f}", "Alice", 75, 0.9876);
-// Result: "User: Alice, Score: 0075, Ratio: 0.99"
-
-// 2. Direct output without std::cout boilerplate (C++23)
-std::println("Processing item {} of {}", 5, 100);
-std::print("Binary representation of 42 is: {:b}\n", 42);
+std::string format_trimmed_tag(std::string_view sv) {
+    while (!sv.empty() && sv.front() == ' ') sv.remove_prefix(1); // O(1)
+    while (!sv.empty() && sv.back() == ' ')  sv.remove_suffix(1); // O(1)
+    return std::format("[{}] (len={:02d})", sv, sv.size());
+}
 \end{lstlisting}
 
 % ============================================================================
-\section{Memory, Non-Owning Views (\texorpdfstring{\texttt{std::span}}{std::span}), and Smart Pointers}
+\section{Memory Layout, \texttt{std::span}, and Smart Pointers}
 % ============================================================================
 
-\subsection{Non-Owning Contiguous Views: \texttt{std::span} (C++20)}
-\texttt{std::span<T>} is a non-owning view over any contiguous sequence of objects (\texttt{std::vector}, \texttt{std::array}, C-style arrays). It passes memory without copying and without heap allocation.
+\whybeat \textbf{\texttt{std::span<const T>} (C++20):} Historically, taking \texttt{const std::vector<int>\&} rejected \texttt{std::array}, raw C arrays, and sub-slices without copying. \texttt{std::span} is a zero-copy \texttt{(T*, size\_t)} view over \emph{any} contiguous memory block!
 
-\begin{lstlisting}[caption={Using std::span for Zero-Copy Function Interfaces}]
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    panel/.style={draw=codeframe, fill=codebg, thick, rounded corners=4pt},
+    framebox/.style={draw=codeframe, fill=white, thick, rounded corners=3pt},
+    varbox/.style={draw=codeframe, fill=codebg, thick, rounded corners=2pt}
+]
+    % Left Stack Panel: x = 0.8 .. 6.7 (leaves 0.0..0.75 for Stack Grows Down arrow)
+    \draw[panel] (0.85, -0.45) rectangle (6.75, 6.75);
+    \node[font=\bfseries\small, text=primaryblue] at (3.80, 6.35) {Call Stack (Automatic --- LIFO)};
+
+    \draw[framebox] (1.10, -0.15) rectangle (6.50, 5.95);
+    \node[font=\bfseries\scriptsize, text=primaryblue] at (3.80, 5.65) {Stack Frame: \texttt{main()}};
+
+    % Stack grows DOWN: addresses DECREASE top-to-bottom (0x7ffef8 -> 0x7ffef0 -> 0x7ffed8)
+    \draw[varbox] (1.35, 4.35) rectangle (6.25, 5.25);
+    \node[font=\scriptsize, align=left, text width=4.6cm] at (3.80, 4.80) {
+        \texttt{int val = 42;}\\[2pt]
+        \color{codegray}Addr: \texttt{0x7ffef8} \hfill Size: 4B
+    };
+
+    \draw[varbox] (1.35, 3.05) rectangle (6.25, 3.95);
+    \node[font=\scriptsize, align=left, text width=4.6cm] at (3.80, 3.50) {
+        \texttt{int* ptr = new int(99);}\\[2pt]
+        \color{codegray}Addr: \texttt{0x7ffef0} \hfill Holds: \texttt{0x55aa10}
+    };
+
+    \draw[varbox] (1.35, 0.25) rectangle (6.25, 2.65);
+    \node[font=\scriptsize\bfseries, text=primaryblue] at (3.80, 2.35) {\texttt{std::vector<int> vec;}};
+    \node[font=\scriptsize, align=left, text width=4.6cm] at (3.80, 1.25) {
+        \texttt{data:     0x55aa40} \hfill (8B)\\
+        \texttt{size:     3} \hfill (8B)\\
+        \texttt{capacity: 4} \hfill (8B)\\[2pt]
+        \color{codegray}Addr: \texttt{0x7ffed8} \hfill Total: 24B
+    };
+
+    % Stack Growth Arrow on far left (0.0 .. 0.8)
+    \draw[-{Stealth[length=4pt]}, thick, codegray] (0.55, 5.45) -- (0.55, 0.55);
+    \node[font=\tiny\bfseries, text=codegray, align=center, anchor=east] at (0.48, 3.00) {Stack\\Grows\\Down\\($-$addr)};
+
+    % Right Heap Panel: x = 9.25 .. 15.25 (2.5 cm gap for arrow labels)
+    \draw[panel] (9.25, -0.45) rectangle (15.25, 6.75);
+    \node[font=\bfseries\small, text=primaryblue] at (12.25, 6.35) {Free Store / Heap (Dynamic)};
+
+    \draw[framebox] (9.50, 3.05) rectangle (15.00, 3.95);
+    \node[font=\scriptsize, align=left, text width=5.1cm] at (12.25, 3.50) {
+        \textbf{Heap Object} (\texttt{new int(99)})\\[2pt]
+        Value: \texttt{99} \hfill \color{codegray}Addr: \texttt{0x55aa10}
+    };
+
+    \draw[framebox] (9.50, 0.25) rectangle (15.00, 2.65);
+    \node[font=\scriptsize\bfseries, text=primaryblue, align=left, text width=5.1cm] at (12.25, 2.32) {Contiguous Buffer \hfill \normalfont\color{codegray}\texttt{0x55aa40}};
+
+    \foreach \i/\val in {0/10, 1/20, 2/30} {
+        \draw[thick, draw=primaryblue, fill=codebg] (9.75 + \i*1.25, 0.82) rectangle (10.80 + \i*1.25, 1.72)
+            node[midway, font=\small\bfseries, text=primaryblue] {\val};
+        \node[font=\tiny, text=codegray] at (10.275 + \i*1.25, 0.56) {[\i]};
+    }
+    \draw[thick, dashed, draw=codeframe, fill=white] (13.50, 0.82) rectangle (14.55, 1.72)
+        node[midway, font=\tiny, text=codegray, align=center] {Spare\\Cap};
+    \node[font=\tiny, text=codegray] at (14.025, 0.56) {[3]};
+
+    % Pointer Arrows cleanly inside [6.25, 9.50]
+    \draw[lmarrow] (6.25, 3.50) -- (9.50, 3.50)
+        node[midway, above=3pt, font=\scriptsize\bfseries, text=primaryblue] {points to};
+    \draw[lmarrow] (6.25, 1.45) -- (9.50, 1.45)
+        node[midway, above=3pt, font=\scriptsize\bfseries, text=primaryblue, align=center] {owns heap\\[-1pt]buffer};
+\end{tikzpicture}
+\caption{Stack vs. Heap layout: stack addresses decrease downward as variables are pushed (\texttt{0x7ffef8} $\to$ \texttt{0x7ffed8}), while \texttt{std::vector}'s 24-byte stack header owns a contiguous buffer on the heap.}
+\label{fig:memory_layout}
+\end{figure}
+
+\begin{lstlisting}[caption={Zero-copy function interfaces with \texttt{std::span} and \texttt{subspan}}]
+#include <array>
 #include <span>
 #include <vector>
-#include <array>
-#include <numeric>
-#include <iostream>
 
-// Takes any contiguous collection of ints without copying or allocating
-int computeSum(std::span<const int> data) {
+[[nodiscard]] int compute_sum(std::span<const int> data) noexcept {
     int total = 0;
     for (int x : data) total += x;
     return total;
 }
 
-std::vector<int> vec = {1, 2, 3, 4};
-std::array<int, 3> arr = {5, 6, 7};
-int raw_arr[] = {8, 9, 10};
+void span_examples() {
+    std::vector<int> vec = {1, 2, 3, 4};
+    std::array<int, 3> arr = {5, 6, 7};
+    int raw_arr[] = {8, 9, 10};
 
-int s1 = computeSum(vec);     // Works with vector
-int s2 = computeSum(arr);     // Works with std::array
-int s3 = computeSum(raw_arr); // Works with raw C array
-
-// Subspans without allocation: first 2 elements
-int s4 = computeSum(vec | std::views::take(2)); // or: vec.subspan(0, 2)
-\end{lstlisting}
-
-\subsection{Smart Pointers}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Type} & \textbf{Description} \\ \hline
-\texttt{std::unique\_ptr<T>} & Exclusive ownership. Cannot be copied, only moved. Zero overhead. \\ \hline
-\texttt{std::shared\_ptr<T>} & Shared ownership via reference counting. Thread-safe ref count. \\ \hline
-\texttt{std::weak\_ptr<T>} & Non-owning observer of a \texttt{shared\_ptr}. Breaks circular references. \\ \hline
-\texttt{std::make\_unique<T>(...)} & Creates a \texttt{unique\_ptr}. Preferred over raw \texttt{new}. \\ \hline
-\texttt{std::make\_shared<T>(...)} & Creates a \texttt{shared\_ptr}. Single allocation for object + control block. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-% ============================================================================
-\section{Modern Language Syntax Micro-Cheatsheet}
-% ============================================================================
-
-\subsection{Structured Bindings (C++17)}
-Unpack tuples, pairs, arrays, and structs into named local variables:
-
-\begin{lstlisting}[caption={Structured Binding Idioms}]
-// 1. Unpacking map iterations
-for (const auto& [key, value] : score_map) {
-    std::println("Key: {}, Value: {}", key, value);
+    int s1 = compute_sum(vec);                           // std::vector
+    int s2 = compute_sum(arr);                           // std::array
+    int s3 = compute_sum(raw_arr);                       // raw C array
+    int s4 = compute_sum(std::span{vec}.subspan(0, 2));  // zero-copy first 2 elements
+    (void)s1; (void)s2; (void)s3; (void)s4;
 }
-
-// 2. Unpacking pair returns (e.g. insert result)
-auto [it, inserted] = my_set.insert(42);
-if (!inserted) { /* 42 was already present */ }
-
-// 3. Unpacking tuples / custom structs
-struct Point3D { double x, y, z; };
-Point3D p{1.0, 2.0, 3.0};
-auto [px, py, pz] = p;
 \end{lstlisting}
 
-\subsection{Lambda Capture Matrix}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Capture Syntax} & \textbf{Meaning} \\ \hline
-\texttt{[]} & No variables captured from enclosing scope. \\ \hline
-\texttt{[\&]} & Capture all referenced variables by reference. \\ \hline
-\texttt{[=]} & Capture all referenced variables by value (copy). \\ \hline
-\texttt{[this]} & Capture current class instance pointer by value. \\ \hline
-\texttt{[\&x, y]} & Capture \texttt{x} by reference, \texttt{y} by value. \\ \hline
-\texttt{[p = std::move(ptr)]} & (C++14) Init-capture: moves a move-only object into the lambda. \\ \hline
-\texttt{[](auto\&\& x)} & (C++14) Generic lambda: accepts any type. \\ \hline
-\texttt{[]<typename T>(T x)} & (C++20) Template lambda: explicit template parameter. \\ \hline
-\texttt{[x]() mutable} & Allows modifying by-value captured variables inside the lambda body. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Move Semantics: \texttt{std::move} vs. \texttt{std::forward}}
-\begin{itemize}
-    \item \textbf{\texttt{std::move(x)}}: Unconditionally casts \texttt{x} to an rvalue reference (\texttt{T\&\&}). Tells the compiler: ``I no longer need this value in its current state; take its internal resources.''
-    \item \textbf{\texttt{std::forward<T>(x)}}: Conditional cast used inside template functions with forwarding references (\texttt{auto\&\&} or \texttt{T\&\&}). Preserves the original value category: lvalues stay lvalues, rvalues stay rvalues.
-\end{itemize}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\ttfamily}p{4.3cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\normalfont\bfseries Smart Pointer / Wrapper} & \textcolor{primaryblue}{\textbf{Ownership \& Use Case}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+std::unique\_ptr / make\_unique & Exclusive heap ownership; move-only; zero overhead. \\
+std::shared\_ptr / make\_shared & Reference-counted shared ownership (single allocation). \\
+std::weak\_ptr<T> & Non-owning observer breaking cyclic \texttt{shared\_ptr} graphs. \\
+std::optional<T> / expected<T,E> & Value-or-empty (C++17) / value-or-error (C++23); replaces \texttt{-1}. \\
+std::variant<Ts...> & Type-safe tagged union holding one of the listed types. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
 % ============================================================================
-\section{Utilities}
+\section{Modern Syntax, Fast I/O, and Pair Hashing}
 % ============================================================================
 
-\subsection{Type Wrappers}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\ttfamily}p{4.3cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\normalfont\bfseries Syntax Idiom} & \textcolor{primaryblue}{\textbf{Meaning}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+for (const auto\& [k, v] : m) & Structured bindings unpacking pairs, tuples, or structs. \\
+{[]} / [\&] / [=] / [\&x, y] & Lambda captures: none / all by ref / all by value / mixed. \\
+{[p = std::move(ptr)]} & Init-capture moving a move-only object into a lambda. \\
+{[]<typename T>(T x)} & C++20 explicit template lambda parameter. \\
+std::move(x) / std::forward<T>(x) & Unconditional rvalue cast / conditional perfect forwarding. \\
+std::jthread / std::scoped\_lock & Auto-joining thread (C++20) / deadlock-free multi-mutex lock. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Type} & \textbf{Description} \\ \hline
-\texttt{std::optional<T>} & (C++17) May or may not hold a value. Replaces sentinel values. \\ \hline
-\texttt{std::variant<Ts...>} & (C++17) Type-safe union. Holds exactly one of the listed types. \\ \hline
-\texttt{std::any} & (C++17) Type-erased container for any single value. \\ \hline
-\texttt{std::expected<T,E>} & (C++23) Holds either a value of type T or an error of type E. \\ \hline
-\texttt{std::pair<A,B>} & Holds two values. \\ \hline
-\texttt{std::tuple<Ts...>} & Holds $N$ values of different types. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+By default, \texttt{std::cin} synchronizes with C stdio (\texttt{printf}/\texttt{scanf}) and flushes \texttt{std::cout} before every read; disabling sync speeds up large I/O by up to $10\times$. Also, \texttt{std::unordered\_map} has no built-in hash for \texttt{std::pair}, so supply a custom hash-combiner:
 
-\subsection{Functional Utilities}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Utility} & \textbf{Description} \\ \hline
-\texttt{std::function<R(Args...)>} & Type-erased callable wrapper (lambdas, function pointers, functors). \\ \hline
-\texttt{std::invoke(f, args...)} & (C++17) Uniform call syntax for any callable (including member pointers). \\ \hline
-\texttt{std::bind\_front(f, args...)} & (C++20) Partial application: binds the first arguments of a callable. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-% ============================================================================
-\section{Concurrency Primitives}
-% ============================================================================
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Type} & \textbf{Description} \\ \hline
-\texttt{std::thread} & Runs a callable in a new OS thread. Must \texttt{join()} or \texttt{detach()}. \\ \hline
-\texttt{std::jthread} & (C++20) Like \texttt{thread} but auto-joins on destruction and supports stop tokens. \\ \hline
-\texttt{std::mutex} & Mutual exclusion lock. Use with \texttt{std::lock\_guard} or \texttt{std::unique\_lock}. \\ \hline
-\texttt{std::lock\_guard<M>} & RAII lock that automatically unlocks on scope exit. \\ \hline
-\texttt{std::scoped\_lock<Ms...>} & (C++17) Locks multiple mutexes simultaneously without deadlock. \\ \hline
-\texttt{std::atomic<T>} & Lock-free thread-safe operations on fundamental types. \\ \hline
-\texttt{std::future<T>} & Retrieves the result of an asynchronous operation. \\ \hline
-\texttt{std::async(policy, f, ...)} & Launches a callable asynchronously and returns a \texttt{future}. \\ \hline
-\texttt{std::condition\_variable} & Allows threads to wait for a condition and be notified. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-% ============================================================================
-\section{Competitive Programming and High-Performance Snippets}
-% ============================================================================
-
-\subsection{Fast I/O Boilerplate}
-By default, \texttt{std::cin} synchronizes with C stdio (`printf`/`scanf`) and flushes \texttt{std::cout} before every read. Disabling this yields up to $10\times$ faster I/O:
-
-\begin{lstlisting}[caption={Fast I/O Configuration for Contests}]
+\begin{lstlisting}[caption={Fast I/O boilerplate and custom \texttt{std::pair} hash for \texttt{std::unordered\_map}}]
+#include <cstddef>
+#include <cstdint>
+#include <functional>
 #include <iostream>
+#include <unordered_map>
+#include <utility>
 
-void enableFastIO() {
+void enable_fast_io() {
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(nullptr);
 }
-\end{lstlisting}
-
-\subsection{Custom Hash for \texttt{std::unordered\_map} with Pairs}
-The C++ standard library does not provide a default \texttt{std::hash} for \texttt{std::pair} or \texttt{std::tuple}. Here is the production hash-combiner:
-
-\begin{lstlisting}[caption={Custom Pair Hash for Hash Sets and Hash Maps}]
-#include <unordered_map>
-#include <utility>
-#include <cstdint>
 
 struct PairHash {
     template <typename T1, typename T2>
-    std::size_t operator()(const std::pair<T1, T2>& p) const noexcept {
-        auto h1 = std::hash<T1>{}(p.first);
-        auto h2 = std::hash<T2>{}(p.second);
-        // Golden ratio hash-combine constant (0x9e3779b97f4a7c15ULL)
+    [[nodiscard]] std::size_t operator()(const std::pair<T1, T2>& p) const noexcept {
+        const std::size_t h1 = std::hash<T1>{}(p.first);
+        const std::size_t h2 = std::hash<T2>{}(p.second);
         return h1 ^ (h2 + 0x9e3779b97f4a7c15ULL + (h1 << 6) + (h1 >> 2));
     }
 };
 
-// Usage:
-std::unordered_map<std::pair<int, int>, int, PairHash> grid_weights;
+void pair_hash_usage() {
+    std::unordered_map<std::pair<int, int>, int, PairHash> grid_weights;
+    grid_weights[{1, 2}] = 42;
+}
 \end{lstlisting}
 
 % ============================================================================
-\section{Summary: When to Use What?}
+\section{Quick Decision Guide and Pen-and-Paper Checks}
 % ============================================================================
 
-\begin{calloutbox}{Quick Decision Guide}
-\begin{itemize}
-    \item \textbf{Mutate / sort / search a container in-place} $\implies$ \texttt{std::ranges::} algorithms.
-    \item \textbf{Select, skip, or transform elements lazily} $\implies$ \texttt{std::views::} adaptors with pipe \texttt{|}.
-    \item \textbf{Materialize a view pipeline into a container} $\implies$ \texttt{std::ranges::to<Container>()}.
-    \item \textbf{Accumulate / reduce ranges without boilerplate} $\implies$ \texttt{std::ranges::fold\_left}.
-    \item \textbf{Inspect or manipulate individual bits} $\implies$ \texttt{<bit>} functions (\texttt{popcount}, \texttt{countr\_zero}, \texttt{has\_single\_bit}).
-    \item \textbf{Format strings or print to console} $\implies$ \texttt{std::format} (C++20) / \texttt{std::println} (C++23).
-    \item \textbf{Pass contiguous arrays or buffers without copying} $\implies$ \texttt{std::span} (C++20).
-    \item \textbf{Need min-heap or custom priority} $\implies$ \texttt{std::priority\_queue} with \texttt{std::greater} or custom functor.
-    \item \textbf{Need a dynamic array (default container)} $\implies$ \texttt{std::vector}.
-    \item \textbf{Need fast $O(1)$ key lookup} $\implies$ \texttt{std::unordered\_map}.
-    \item \textbf{Need sorted keys or range queries} $\implies$ \texttt{std::map} / \texttt{std::set}.
-    \item \textbf{Need exclusive ownership of heap objects} $\implies$ \texttt{std::unique\_ptr}.
-    \item \textbf{Need shared ownership} $\implies$ \texttt{std::shared\_ptr}.
+\begin{calloutbox}{When to Use What? (Rapid Triage)}
+\begin{itemize}[itemsep=2pt]
+    \item \textbf{Default contiguous array}: \texttt{std::vector} (call \texttt{reserve(N)} when final size is known).
+    \item \textbf{Zero-copy function parameter}: \texttt{std::span<const T>} for arrays; \texttt{std::string\_view} for read-only text.
+    \item \textbf{Mutate / sort / search in place}: \texttt{std::ranges::*} with member projections (\texttt{\&Item::key}).
+    \item \textbf{Lazy filter / transform / take pipeline}: \texttt{std::views::*} chained with \texttt{|}.
+    \item \textbf{Min-heap / custom priority}: \texttt{std::priority\_queue<T, std::vector<T>, std::greater<>>}.
+    \item \textbf{Bit counts, shifts, powers of two}: \texttt{<bit>} on unsigned types + \texttt{1ULL << k}.
 \end{itemize}
 \end{calloutbox}
+
+\begin{tryitbox}{Triage}{Pick the Right C++23 Container or View}{ex1}
+Choose the best C++23 type for each task and explain why in one line:
+\begin{enumerate}[itemsep=1pt, topsep=2pt]
+    \item A function parameter that sums any contiguous block of \texttt{int}s (whether \texttt{vector}, \texttt{array}, or sub-slice) with zero copying.
+    \item A sliding-window monotonic queue that pops from \emph{both} the front and back in $O(1)$.
+    \item A read-only recursive DFS lambda inside a function without \texttt{std::function} heap overhead.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Debug}{Spot Three Silent C++23 UB Traps}{ex2}
+Identify the exact Undefined Behavior or bug in each line:
+\begin{enumerate}[itemsep=1pt, topsep=2pt]
+    \item \texttt{std::string\_view name = std::string("hello") + " world";}
+    \item \texttt{std::vector<int> v = \{1, 2\}; int* p = \&v[0]; v.push\_back(3); return *p;}
+    \item \texttt{uint64\_t bit = 1 << 40;}
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Edge Cases}{Header and Boundary Checks}{ex3}
+Answer these three rapid-fire standard-library checks:
+\begin{enumerate}[itemsep=1pt, topsep=2pt]
+    \item Which header defines \texttt{std::ranges::fold\_left}: \texttt{<numeric>} or \texttt{<algorithm>}?
+    \item What does \texttt{std::bit\_width(0u)} return, and why does \texttt{std::popcount(-1)} fail to compile?
+    \item Why is \texttt{vec.subspan(0, 2)} a compile error on a \texttt{std::vector<int>}, and how do you fix it?
+\end{enumerate}
+\end{tryitbox}
+
+% ============================================================================
+\section*{Solutions to Pen-and-Paper Exercises}
+\addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
+\markboth{Solutions to Pen-and-Paper Exercises}{}
+% ============================================================================
+
+\begin{enumerate}[itemsep=3pt]
+    \item \label{sol:ex1}\textbf{Exercise 1 (Triage) --- Pick the Right C++23 Container or View:}
+    (1) \texttt{std::span<const int>} (non-owning contiguous view).
+    (2) \texttt{std::deque<int>} ($O(1)$ push/pop at both front and back).
+    (3) C++23 \textbf{deducing \texttt{this}} lambda: \texttt{auto dfs = [\&](this auto\&\& self, int u) -> void \{ ... \};}.
+    \trapnote{Defaulting to \texttt{const std::vector<int>\&} forces callers holding a \texttt{std::array} or sub-slice to copy data onto the heap.}
+
+    \item \label{sol:ex2}\textbf{Exercise 2 (Debug) --- Spot Three Silent C++23 UB Traps:}
+    (1) Dangling \texttt{string\_view}: the temporary \texttt{std::string} is destroyed at the semicolon, leaving \texttt{name} pointing at freed memory.
+    (2) Pointer invalidation: \texttt{v.push\_back(3)} doubles capacity and frees the old buffer, making \texttt{p} dangle!
+    (3) Signed 32-bit shift UB: \texttt{1} is a 32-bit \texttt{int}, so \texttt{1 << 40} is UB before assignment to \texttt{uint64\_t}. Fix: \texttt{1ULL << 40}.
+    \trapnote{All three bugs compile cleanly without warnings on default compiler flags and may even appear to work on small tests!}
+
+    \item \label{sol:ex3}\textbf{Exercise 3 (Edge Cases) --- Header and Boundary Checks:}
+    (1) \texttt{<algorithm>} (unlike classic \texttt{std::accumulate} in \texttt{<numeric>}).
+    (2) \texttt{std::bit\_width(0u)} returns \textbf{0}; \texttt{std::popcount(-1)} fails because \texttt{<bit>} functions require \texttt{std::unsigned\_integral} arguments.
+    (3) \texttt{std::vector} has no \texttt{.subspan()} member function; wrap it first: \texttt{std::span\{vec\}.subspan(0, 2)}.
+    \trapnote{Subtracting $1$ from \texttt{std::bit\_width(0u)} in an unsigned variable wraps to \texttt{UINT\_MAX}---always check $x == 0$ first.}
+\end{enumerate}
+
+% ============================================================================
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+\markboth{Version History}{}
+% ============================================================================
+
+\begin{center}
+\begingroup
+\small
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\bfseries}l >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Date}} & \textcolor{primaryblue}{\textbf{Change}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+2026-10-03 & Document created covering modern C++17/20/23 containers, algorithms, ranges, views, formatting, and smart pointers. \\
+2026-11-26 & Overhauled to canonical print-first guide: fixed headers/subspan/complexity notes, added Modules 09--12 idioms, embedded fixed Diagrams 1--2, and added 3 quick checks with solutions. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}
+\endgroup
+\end{center}
 
 \end{document}

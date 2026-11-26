@@ -2,21 +2,108 @@
 
 % --- Core LaTeX Packages ---
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\ttdefault}{txtt}
+\usepackage{upquote}
+\usepackage[margin=0.85in, headheight=15pt]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{xcolor}
+\usepackage[helvet]{sfmath}
+\usepackage{microtype}
+\DisableLigatures{encoding = *, family = tt*}
+\usepackage{parskip}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[explicit]{titlesec}
+\usepackage[skins,breakable]{tcolorbox}
 \usepackage{listings}
 \usepackage{hyperref}
-\usepackage{tabularx}
 \usepackage{graphicx}
 
-% --- Unified Color Palette ---
+% --- Diagram Packages ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,decorations.pathreplacing}
+
+% --- Unified Print-Safe Color Palette ---
 \definecolor{primaryblue}{RGB}{24, 75, 140}
-\definecolor{codebg}{RGB}{248, 249, 250}
-\definecolor{codeframe}{RGB}{210, 215, 222}
-\definecolor{codegreen}{RGB}{40, 130, 60}
-\definecolor{codeblue}{RGB}{20, 90, 180}
-\definecolor{codegray}{RGB}{120, 120, 120}
+\definecolor{accentteal}{RGB}{15, 118, 110}
+\definecolor{accentamber}{RGB}{180, 83, 9}
+\definecolor{accentred}{RGB}{185, 28, 28}
+\definecolor{codebg}{RGB}{246, 248, 250}
+\definecolor{codeframe}{RGB}{204, 212, 220}
+\definecolor{codeink}{RGB}{24, 30, 38}
+\definecolor{codekw}{RGB}{126, 34, 206}
+\definecolor{codetype}{RGB}{0, 118, 138}
+\definecolor{codegreen}{RGB}{22, 138, 66}
+\definecolor{codeblue}{RGB}{15, 92, 212}
+\definecolor{codestr}{RGB}{194, 65, 12}
+\definecolor{codegray}{RGB}{105, 115, 125}
+
+% --- Global Typography & Spacing ---
+\linespread{1.08}
+\renewcommand{\arraystretch}{1.32}
+\setlength{\tabcolsep}{7pt}
+\setlist[itemize]{itemsep=3pt, topsep=4pt, leftmargin=1.5em}
+\setlist[enumerate]{itemsep=4pt, topsep=4pt, leftmargin=1.6em}
+
+% --- Running Header & Footer ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{codegray}\textbf{Problem-Solving Decision Guide}}
+\fancyhead[R]{\footnotesize\color{codegray}\nouppercase{\leftmark}}
+\fancyfoot[C]{\footnotesize\color{codegray}Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{codeframe}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{}}
+
+% --- Section & Subsection Styling ---
+\newcommand{\sectionbreak}{}
+
+\titleformat{\section}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {\colorbox{primaryblue}{\color{white}\bfseries\Large\;\thesection\;}\hspace{0.55em}#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+\titlespacing*{\section}{0pt}{4pt}{12pt}
+
+\titleformat{name=\section,numberless}[block]
+  {\Large\bfseries\color{primaryblue}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{4pt}{\color{primaryblue}\titlerule[1.4pt]}]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{primaryblue!90!black}}
+  {}
+  {0pt}
+  {\begin{tcolorbox}[
+      enhanced, colback=primaryblue!6, colframe=primaryblue!6,
+      borderline west={3.5pt}{0pt}{primaryblue},
+      sharp corners=west, arc=2pt,
+      left=8pt, right=8pt, top=5pt, bottom=5pt,
+      boxsep=0pt, before skip=0pt, after skip=0pt
+  ]\large\bfseries\color{primaryblue!90!black}\thesubsection\hspace{0.55em}#1\end{tcolorbox}}
+\titlespacing*{\subsection}{0pt}{14pt}{6pt}
+
+\titleformat{name=\subsection,numberless}[block]
+  {\normalsize\bfseries\color{accentteal}}
+  {}
+  {0pt}
+  {#1}
+  [\vspace{2pt}{\color{accentteal!40}\titlerule[0.7pt]}]
+\titlespacing*{\subsection}{0pt}{12pt}{5pt}
+
+% --- Canonical Shared TikZ Styles ---
+\tikzset{
+    lmarrow/.style={-{Stealth[length=5pt]}, thick, primaryblue}
+}
 
 % --- Hyperref Setup ---
 \hypersetup{
@@ -28,98 +115,156 @@
     pdfauthor={Antigravity Engineering}
 }
 
-% --- Theorem & Definition Environments ---
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{example}{Example}[section]
+% --- Trap Diagnostic Macro ---
+\newcommand{\trapnote}[1]{\par\smallskip\noindent{\footnotesize\textbf{\color{accentamber}Common trap:} #1}}
 
-% --- Callout Box Environment ---
-\newenvironment{calloutbox}[1]{
-    \par\vspace{0.3cm}
-    \noindent\begin{tabular}{|p{0.96\textwidth}|}
-    \hline
-    \vspace{0.1cm}
-    \textbf{#1}\par\vspace{0.1cm}
-}{
-    \vspace{0.1cm}
-    \\ \hline
-    \end{tabular}
-    \vspace{0.3cm}\par
+% --- Semantic Cards ---
+\newtcolorbox{overviewbox}[1][What You'll Learn]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=6pt, bottom=6pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{2pt}}
 }
 
-% --- Modern C++ Code Listing Setup ---
-\lstset{
-    language=C++,
-    basicstyle=\footnotesize\ttfamily,
-    keywordstyle=\color{codeblue}\bfseries,
-    commentstyle=\color{codegreen}\itshape,
-    stringstyle=\color{orange!80!black},
-    numberstyle=\tiny\color{codegray},
-    numbers=left,
-    numbersep=8pt,
-    backgroundcolor=\color{codebg},
-    frame=single,
-    rulecolor=\color{codeframe},
-    breaklines=true,
-    breakatwhitespace=true,
-    tabsize=4,
-    showstringspaces=false,
-    captionpos=b
+\newtcolorbox{calloutbox}[1]{
+    enhanced,
+    colback=accentteal!5, colframe=accentteal!25,
+    borderline west={3.5pt}{0pt}{accentteal},
+    arc=3pt, boxrule=0.5pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=8pt, after skip=8pt,
+    fonttitle=\bfseries\color{accentteal},
+    title={#1},
+    attach title to upper={\par\vspace{3pt}}
 }
 
-% --- Title Block ---
-\title{\vspace{-1.5cm}\textbf{\Huge Problem-Solving Decision Guide}\\[0.3cm]
-\Large From ``What Is This Problem Asking?'' to ``Which Technique Do I Open?''}
-\author{Technical Monograph}
-\date{\today}
+% --- Print-First Pen-and-Paper Exercise Environment ---
+\newcounter{exercise}
+\newtcolorbox{tryitbox}[3]{
+    enhanced,
+    step=exercise,
+    colback=codegreen!3, colframe=codegreen!45,
+    colbacktitle=codegreen!14, coltitle=codegreen!85!black,
+    borderline west={3.5pt}{0pt}{codegreen},
+    arc=3pt, boxrule=0.6pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    toptitle=4pt, bottomtitle=4pt,
+    before skip=9pt, after skip=9pt,
+    fonttitle=\bfseries,
+    title={Exercise \theexercise\hspace{0.5em}{\colorbox{codegreen!85!black}{\color{white}\scriptsize\bfseries\;#1\;}}\hspace{0.5em}#2 \hfill {\normalfont\footnotesize\color{codegray}Answer: p.~\pageref*{sol:#3}}}
+}
 
 \begin{document}
 
-\maketitle
+% --- Modern Title Banner ---
+\thispagestyle{plain}
+\begin{tcolorbox}[
+    enhanced,
+    colback=primaryblue!6, colframe=primaryblue!20,
+    borderline west={5pt}{0pt}{primaryblue},
+    arc=4pt, boxrule=0.6pt,
+    left=14pt, right=14pt, top=7pt, bottom=7pt,
+    before skip=0pt, after skip=5pt
+]
+    {\footnotesize\bfseries\color{accentteal}MODULE 00 \quad|\quad MASTER PROBLEM-SOLVING DECISION GUIDE}\\[3pt]
+    {\Huge\bfseries\color{primaryblue}Problem-Solving Decision Guide}\\[3pt]
+    {\large\color{codegray}From ``What Is This Problem Asking?'' to ``Which Module Do I Open?''}\\[4pt]
+    {\footnotesize\color{codegray}Updated \today}
+\end{tcolorbox}
 
-\begin{abstract}
-\noindent
-This is the one document you open when you face a problem and do not know where to start. It does not teach any technique in depth. Instead, it helps you diagnose the problem: what kind of answer is being asked for, how large the input is, and which topic document contains the tool you need. It contains a decision tree, a single lookup table that merges the pattern recognition rules of every topic document, a table that maps input size to feasible algorithms, and a registry of all topic documents (finished and still under construction). You already know how to program; this guide teaches you to choose.
-\end{abstract}
+\begin{overviewbox}[What You'll Learn]
+This is the single document you open when facing an unfamiliar algorithmic problem. Instead of teaching one technique deeply, it teaches you how to \emph{diagnose}: classify the output goal via a 5-branch triage tree, read input-size constraints backward to rule out slow complexities, match problem keywords across all 12 finished modules in one unified index, and practice cold-start triage on paper.
+\end{overviewbox}
 
-\tableofcontents
-\newpage
+\vspace{-5pt}
+{\setlength{\parskip}{0pt}\footnotesize\tableofcontents}
+
+\renewcommand{\sectionbreak}{\clearpage}
 
 % ============================================================================
-\section{How to Use This Guide}
-% ============================================================================
-
-You read a problem statement. Within the first minute you want to answer three questions:
-
-\begin{enumerate}
-    \item \textbf{What kind of answer is required?} A single number, a yes/no, a list of every valid configuration, or one best configuration? (Section~\ref{sec:tree})
-    \item \textbf{How large is the input?} The input size decides whether a simple loop is enough or whether you need a smarter technique. (Section~\ref{sec:size})
-    \item \textbf{Which words in the statement point to a known technique?} Search the index in Section~\ref{sec:index} for the phrase that matches your problem, then open the topic document named in the last column.
-\end{enumerate}
-
-\begin{calloutbox}{The Fastest Way to Use This Document}
-Do not read it from start to finish. Jump straight to Section~\ref{sec:index}, find the row whose \emph{Problem Signal} resembles your problem, and read the \emph{Technique} and \emph{Module} columns. If no row matches, walk through the decision tree in Section~\ref{sec:tree} to narrow down the category first.
-\end{calloutbox}
-
-% ============================================================================
-\section{Step 1: Classify the Problem}
+\section{How to Use This Guide and Classify the Problem}
 \label{sec:tree}
 % ============================================================================
 
-Every problem asks for one of five kinds of answer. Identifying which one you face removes most of the guessing.
+Within your first 60 seconds reading any problem statement, answer three questions:
+\begin{enumerate}
+    \item \textbf{What kind of answer is required?} Optimization, Enumeration, Decision, Counting, or Querying? (Figure~\ref{fig:triage_tree})
+    \item \textbf{How large is the input $N$?} Constraints immediately reveal which complexity classes can pass. (Section~\ref{sec:size})
+    \item \textbf{Which keywords point to a known pattern?} Match the symptom in Section~\ref{sec:index} and open that module.
+\end{enumerate}
 
-\begin{center}
-{\footnotesize
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    hdr/.style={draw=primaryblue, fill=primaryblue!8, thick, rounded corners=3pt, align=center, inner sep=3.5pt, text width=2.48cm},
+    body/.style={draw=codeframe, fill=white, thick, rounded corners=2pt, align=left, font=\scriptsize, text width=2.48cm, inner sep=4pt, minimum height=3.15cm}
+]
+    % Root Banner across x = 0.0 .. 15.3
+    \node[draw=primaryblue, fill=codebg, rounded corners=4pt, thick, align=center, inner sep=6pt, text width=14.7cm] (root) at (7.65, 7.20) {
+        \textbf{\normalsize\color{primaryblue}Problem Objective Triage Framework}\\[2pt]
+        \scriptsize\color{codegray}Classify the required output format first to eliminate irrelevant algorithmic families.
+    };
 
-}
-\end{center}
+    % Clean orthogonal bus bar from root.south down to 5 columns
+    % Column centers: 1.45, 4.55, 7.65, 10.75, 13.85 (spacing 3.10 cm; outer card width ~2.74 cm -> 0.36 cm gutter!)
+    \draw[thick, primaryblue] (root.south) -- (7.65, 6.28);
+    \draw[thick, primaryblue] (1.45, 6.28) -- (13.85, 6.28);
 
-\noindent\emph{Figure: Top-level triage tree. Start at the quoted phrase that resembles your problem and follow the branch to a technique family.}
+    % Col 1: Optimization
+    \node[hdr] (c1) at (1.45, 5.45) {\textbf{\scriptsize\color{primaryblue}1. Optimization}\\[1pt]\tiny\color{codegray}``Find $\min$ or $\max$''};
+    \draw[lmarrow] (1.45, 6.28) -- (c1.north);
+    \node[body, anchor=north] at (1.45, 4.82) {
+        \textbf{\color{accentteal}Greedy}\\[-1pt]\tiny Local choice + swap proof\\[4pt]
+        \textbf{\color{accentteal}Dynamic Prog.}\\[-1pt]\tiny Overlapping states\\[4pt]
+        \textbf{\color{accentteal}Dijkstra / MST}\\[-1pt]\tiny Weighted graph paths
+    };
 
-\begin{calloutbox}{When Two Branches Both Seem to Fit}
-Counting problems and enumeration problems are often confused. The rule of thumb: if you must \emph{produce} the configurations, use backtracking. If you only need \emph{how many} there are, use a formula or dynamic programming. Generating configurations you never look at wastes exponential time.
+    % Col 2: Enumeration
+    \node[hdr] (c2) at (4.55, 5.45) {\textbf{\scriptsize\color{primaryblue}2. Enumeration}\\[1pt]\tiny\color{codegray}``List all configs''};
+    \draw[lmarrow] (4.55, 6.28) -- (c2.north);
+    \node[body, anchor=north] at (4.55, 4.82) {
+        \textbf{\color{accentteal}Backtracking}\\[-1pt]\tiny Choose / explore / undo\\[4pt]
+        \textbf{\color{accentteal}Pruned Search}\\[-1pt]\tiny Abort invalid branches\\[4pt]
+        \textbf{\color{accentteal}Bitmask / Gosper}\\[-1pt]\tiny Subsets ($N \le 20$)
+    };
+
+    % Col 3: Decision
+    \node[hdr] (c3) at (7.65, 5.45) {\textbf{\scriptsize\color{primaryblue}3. Decision}\\[1pt]\tiny\color{codegray}``Is it possible?''};
+    \draw[lmarrow] (7.65, 6.28) -- (c3.north);
+    \node[body, anchor=north] at (7.65, 4.82) {
+        \textbf{\color{accentteal}BFS / DFS / DSU}\\[-1pt]\tiny Reachability \& cycles\\[4pt]
+        \textbf{\color{accentteal}Binary Search}\\[-1pt]\tiny Monotonic $P(x)$ check\\[4pt]
+        \textbf{\color{accentteal}2-Color / 2-Ptr}\\[-1pt]\tiny Bipartite \& pair checks
+    };
+
+    % Col 4: Counting
+    \node[hdr] (c4) at (10.75, 5.45) {\textbf{\scriptsize\color{primaryblue}4. Counting}\\[1pt]\tiny\color{codegray}``How many ways?''};
+    \draw[lmarrow] (10.75, 6.28) -- (c4.north);
+    \node[body, anchor=north] at (10.75, 4.82) {
+        \textbf{\color{accentteal}Combinatorics}\\[1pt]\tiny $\binom{n}{k}$, Catalan, Stars/Bars\\[4pt]
+        \textbf{\color{accentteal}Counting DP}\\[-1pt]\tiny Additive transitions\\[4pt]
+        \textbf{\color{accentteal}Inclusion-Excl.}\\[-1pt]\tiny Overlapping set unions
+    };
+
+    % Col 5: Querying
+    \node[hdr] (c5) at (13.85, 5.45) {\textbf{\scriptsize\color{primaryblue}5. Querying}\\[1pt]\tiny\color{codegray}``Answer $Q$ ranges''};
+    \draw[lmarrow] (13.85, 6.28) -- (c5.north);
+    \node[body, anchor=north] at (13.85, 4.82) {
+        \textbf{\color{accentteal}Prefix Sum / XOR}\\[-1pt]\tiny Static $O(1)$ range query\\[4pt]
+        \textbf{\color{accentteal}Difference Arr.}\\[-1pt]\tiny Batch range updates\\[4pt]
+        \textbf{\color{accentteal}Mono Stack/Deque}\\[-1pt]\tiny Next Greater / Window
+    };
+\end{tikzpicture}
+\caption{Top-level algorithmic triage decision tree: classify the core output requirement first to narrow down candidate paradigms.}
+\label{fig:triage_tree}
+\end{figure}
+
+\begin{calloutbox}{Counting vs. Enumeration --- The Golden Rule}
+If a problem asks you to \emph{produce} every valid configuration, use \textbf{Backtracking} (Module~05). If it only asks \emph{how many} exist (often modulo $10^9 + 7$), use \textbf{Combinatorics} (Module~01) or \textbf{Counting DP} (Module~06)---never generate configurations you only intend to count!
 \end{calloutbox}
 
 % ============================================================================
@@ -127,435 +272,332 @@ Counting problems and enumeration problems are often confused. The rule of thumb
 \label{sec:size}
 % ============================================================================
 
-A modern computer performs roughly $10^8$ simple operations per second. The input size therefore tells you which complexity classes are feasible before you write a line of code.
+A modern CPU executes roughly $10^8$ simple operations per second. Read the constraint on $N$ \emph{backward} to see what complexity class the problem author expects:
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{3cm}|p{3cm}|X|}
-\hline
-\textbf{Input Size $N$} & \textbf{Feasible Complexity} & \textbf{What It Usually Means} \\ \hline
-$N \le 10$ & $O(N!)$ & Try every ordering. Plain backtracking over permutations is fine. \\ \hline
-$N \le 20$ & $O(2^N)$ & Try every subset. Backtracking over subsets or bitmask enumeration. \\ \hline
-$N \le 500$ & $O(N^3)$ & Three nested loops, or a cubic dynamic programming table. \\ \hline
-$N \le 5{,}000$ & $O(N^2)$ & Two nested loops, or a two-dimensional table. \\ \hline
-$N \le 10^6$ & $O(N \log N)$ or $O(N)$ & Sorting, sieves, prefix sums, a single pass. \\ \hline
-$N \le 10^8$ & $O(N)$ with a tiny constant & One simple loop only. Anything heavier times out. \\ \hline
-$N \ge 10^9$ & $O(\log N)$ or $O(1)$ & A closed-form formula, binary search, or fast exponentiation is required. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\begin{calloutbox}{Reading the Table Backwards}
-If a problem states $N \le 20$ and asks you to list things, the author expects exponential backtracking. If it states $N \le 10^{18}$, the author expects a formula or an $O(\log N)$ technique. The constraint is a hint about the intended solution.
-\end{calloutbox}
+\begingroup\small\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{2.7cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Input Size $N$}} & \textcolor{primaryblue}{\textbf{Feasible Complexity}} & \textcolor{primaryblue}{\textbf{What It Usually Signals}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+$N \le 10$ & $O(N!)$ & Try every permutation (plain backtracking). \\
+$N \le 15$ & $O(3^N)$ & Submask enumeration DP over all subsets. \\
+$N \le 20$ & $O(2^N)$ or $O(N^2 \cdot 2^N)$ & Subset backtracking or Bitmask DP (TSP / assignment). \\
+$N \le 500$ & $O(N^3)$ & Floyd-Warshall, Interval DP, or three nested loops. \\
+$N \le 5{,}000$ & $O(N^2)$ & 2D DP tables (LCS, Edit Distance) or pairwise checks. \\
+$N \le 10^6$ & $O(N \log N)$ or $O(N)$ & Sorting, Greedy, Binary Search, Sieves, BFS/DFS, Mono Stack. \\
+$N \le 10^8$ & $O(N)$ (tiny constant) & Single linear pass, bit operations, or simple sieve. \\
+$N \ge 10^9$ & $O(\log N)$ or $O(1)$ & Closed-form formula, Binary Search, Fast Exp, or $O(\sqrt{N})$. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
 % ============================================================================
-\section{Step 3: Match the Problem Signal}
+\section{Step 3: Unified Problem Signal Index}
 \label{sec:index}
 % ============================================================================
 
-This is the unified pattern recognition index. Each row merges the quick-reference tables of the finished topic documents. Rows are grouped by the kind of problem, not by document, so you can scan by symptom.
+Scan the grouped tables below by the phrasing or symptom in your problem, then open the module named in the subsection banner.
 
 \subsection{Counting Arrangements and Selections (Module 01: Combinatorics)}
-
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``how many ways to arrange $n$ distinct items?'' & Count sequences where order matters. & $n!$ (factorial) \\ \hline
-``how many ways to choose $k$ items from $n$?'' & Count groups where order does not matter. & $\binom{n}{k}$ \\ \hline
-``unique permutations'', ``array with duplicates'' & Some swaps produce identical results. & Multiset permutation: $\frac{n!}{n_1!\,n_2!\cdots}$ \\ \hline
-``distribute $n$ identical items into $k$ groups'' & Split identical objects into distinct buckets. & Stars and Bars: $\binom{n+k-1}{k-1}$ \\ \hline
-``nobody gets their own item'' & Every item must be displaced. & Derangements $D_n$ \\ \hline
-``seating around a circular table'' & Rotations count as the same arrangement. & Circular permutations $(n-1)!$ \\ \hline
-``how many valid parenthesis strings?'', ``how many unique binary search trees?'' & Problems with a recursive left/right split. & Catalan number $C_n$ \\ \hline
-``shortest grid paths from $(0,0)$ to $(m,n)$'' & Moving only right and down on a grid. & $\binom{m+n}{m}$ \\ \hline
-``how many integers divisible by at least one of these primes?'' & Overlapping groups that need de-duplication. & Inclusion-Exclusion \\ \hline
-``partition a set into $k$ non-empty groups'' & Split distinct objects into identical buckets. & Stirling numbers $S(n,k)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``arrange $n$ distinct items'', ``choose $k$ from $n$'' & Ordered permutations vs. unordered selections. & $n!$ / $P(n,k)$ / $\binom{n}{k}$ \\
+``unique permutations with duplicates'' & Identical swaps collapse identical arrangements. & Multiset: $n! / (n_1!\,n_2!\cdots)$ \\
+``distribute $n$ identical items into $k$ bins'' & Split identical stars with $k-1$ bars. & Stars and Bars: $\binom{n+k-1}{k-1}$ \\
+``nobody gets their own item'' & Zero fixed points allowed. & Derangements $D_n$ \\
+``seating around a circular table'' & Rotations count as one arrangement. & Circular: $(n-1)!$ \\
+``valid parentheses'', ``unique BSTs'' & Recursive left/right split structure. & Catalan number $C_n$ \\
+``grid paths from $(0,0)$ to $(m,n)$'' & Sequences of right and down steps. & $\binom{m+n}{m}$ \\
+``divisible by at least one of these primes'' & De-duplicate overlapping sets. & Inclusion-Exclusion (PIE) \\
+``partition set into $k$ non-empty groups'' & Distinct items into identical non-empty buckets. & Stirling numbers $S(n,k)$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
 \subsection{Huge Numbers, Remainders, and Wrap-Around (Module 02: Modular Arithmetic)}
-
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``return the answer modulo $10^9+7$'' & The answer is too large for any integer type. & Reduce every intermediate result with \texttt{\% MOD} \\ \hline
-``circular array'', ``ring buffer'', ``round-robin'' & Index wraps back to $0$ after the end. & \texttt{(idx + step) \% N} \\ \hline
-``compute $a^b$'' with $b$ up to $10^{18}$ & Direct multiplication would take forever. & Binary exponentiation $O(\log b)$ \\ \hline
-``divide inside a modular computation'' & Division requires an inverse in modular math. & Modular inverse (Fermat or Extended Euclidean) \\ \hline
-``$x \equiv r_i \pmod{m_i}$ for several $i$'' & Several independent remainder clues. & Chinese Remainder Theorem \\ \hline
-``last $k$ digits of $a^b$'' & Last $k$ digits equal the value modulo $10^k$. & Binary exponentiation modulo $10^k$ \\ \hline
-``parity'', ``odd/even invariant'' & Does a change preserve some property? & Modulo $2$ \\ \hline
-``answer modulo a prime'' for combinations & Combinations need division. & Precomputed factorials and modular inverses \newline \textit{(Also in: 01. Combinatorics; 02. Modular Arithmetic)} \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``answer modulo $10^9 + 7$'' & Reduce every intermediate step to prevent overflow. & Modular $+, -, \times$ with \texttt{\% MOD} \\
+``circular array'', ``ring buffer'' & Index wraps around after reaching $N$. & \texttt{((idx + step) \% N + N) \% N} \\
+``compute $a^b \bmod m$'' ($b \le 10^{18}$) & Repeated squaring halves exponent each step. & Binary Exponentiation $O(\log b)$ \\
+``divide inside modular arithmetic'' & Multiply by inverse $a^{-1} \bmod m$. & Fermat ($m$ prime) / Ext.\ Euclid \\
+``$x \equiv r_i \pmod{m_i}$ for several $i$'' & Align independent periodic remainders. & Chinese Remainder Theorem \\
+``$\binom{n}{k} \bmod p$ for many queries'' & Precompute factorials and inverse factorials. & Fact + InvFact (also Mod.\ 01) \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
 \subsection{Primes, Divisors, and Factors (Module 03: Number Theory)}
-
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``is $N$ prime?'' (single query) & Test whether any number divides $N$. & Trial division up to $\sqrt{N}$ (using $6k \pm 1$) \\ \hline
-``count primes up to $N$'' ($N \le 10^7$) & Find all primes in a large range. & Sieve of Eratosthenes \\ \hline
-``primes in range $[L, R]$'', $R \le 10^{12}$ & Memory too small for a full sieve. & Segmented Sieve \\ \hline
-``all divisors of $N$'' & Pairs of numbers multiplying to $N$. & $O(\sqrt{N})$ pair collection \\ \hline
-``number of divisors of $N$'' & Count divisors without listing them. & Prime factorize, then $\prod (a_i + 1)$ \\ \hline
-``greatest common divisor'', ``reduce a fraction'' & Largest factor shared by two numbers. & Euclidean Algorithm (\texttt{std::gcd}) \\ \hline
-``events repeat every $A$ and $B$ days'' & Smallest time when both events align. & Least Common Multiple (\texttt{std::lcm}) \\ \hline
-``count numbers $\le N$ coprime to $N$'' & Numbers sharing no prime factor with $N$. & Euler's Totient $\phi(N)$ \newline \textit{(Also in: 03. Number Theory; 02. Modular Arithmetic)} \\ \hline
-``factorize $10^5$ different numbers'' & Separate $O(\sqrt{N})$ tests would time out. & Precompute smallest-prime-factor array \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``is $N$ prime?'', ``all divisors of $N$'' & Factors pair around $\sqrt{N}$. & Trial division / $O(\sqrt{N})$ pairs \\
+``all primes up to $N$'' ($N \le 10^7$) & Mark multiples starting at $p^2$. & Sieve of Eratosthenes \\
+``primes in $[L, R]$'' ($R \le 10^{12}$) & Full sieve exceeds RAM; sieve only the window. & Segmented Sieve \\
+``factorize $10^5$ numbers'' & Divide repeatedly by precomputed smallest factor. & SPF Sieve ($O(\log N)$ query) \\
+``greatest common divisor'', ``alignment period'' & Shared factor / simultaneous cycle repeat. & \texttt{std::gcd} / \texttt{std::lcm} \\
+``count numbers $\le N$ coprime to $N$'' & Numbers sharing no prime factor with $N$. & Euler's Totient $\phi(N)$ \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
 \subsection{Sums, Ranges, and Series (Module 04: Sequences and Series)}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``sum of a subsegment $[L, R]$'' & Precompute running totals for $O(1)$ queries. & 1D Prefix Sums \\
+``sum of a rectangle in a 2D grid'' & 4-corner inclusion-exclusion on 2D totals. & 2D Prefix Sums \\
+``add $v$ to range $[L, R]$'' (many updates) & Record $+v$ at $L$ and $-v$ at $R+1$; sweep once. & Difference Array \\
+``arithmetic / geometric progression'' & Constant difference or constant multiplier. & Arithmetic / Geometric Formula \\
+``sum of terms like $\frac{1}{k(k+1)}$'' & Adjacent terms cancel pairwise. & Telescoping Sum \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``sum of a subsegment'', ``total between days $X$ and $Y$'' & Add a contiguous slice of an array many times. & Prefix Sums \newline \textit{(Also in: 04. Sequences and Series)} \\ \hline
-``add $v$ to range $[L, R]$'' & Apply batch interval additions without loops. & Difference Array \newline \textit{(Also in: 04. Sequences and Series)} \\ \hline
-``sum of all multiples'', ``arithmetic progression'' & Elements grow by a constant addition. & Arithmetic Sum Formula \newline \textit{(Also in: 04. Sequences and Series)} \\ \hline
-``double each day'', ``powers of 2'', ``geometric progression'' & Elements grow by a constant multiplication. & Geometric Sum Formula \newline \textit{(Also in: 04. Sequences and Series)} \\ \hline
-``sum of terms like $\frac{1}{x(x+1)}$'' & Consecutive terms may cancel out. & Telescoping Sum \newline \textit{(Also in: 04. Sequences and Series)} \\ \hline
-``sum of a rectangle in a grid'' & Prefix sums extended to two dimensions. & 2D Prefix Sums \newline \textit{(Also in: 04. Sequences and Series)} \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\subsection{Generating Configurations (Module 05: Recursion and Backtracking)}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``find all subsets / combinations'' & Include/exclude or \texttt{start}-index recursion. & Backtracking (subsets/combos) \\
+``return all permutations'' & Every ordering using \texttt{used[]} or \texttt{next\_permutation}. & Permutation Backtracking \\
+``unique subsets/permutations with duplicates'' & Sort first; skip equal siblings at the same level. & Sorted Duplicate Pruning \\
+``N-Queens'', ``valid parentheses'', ``Sudoku'' & Abort partial branches as soon as a rule breaks. & Constraint-Pruned Backtracking \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
-\subsection{Generating Every Valid Configuration (Module 05: Recursion and Backtracking)}
-
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``return all valid parenthesis strings'' & Build every correct bracket string. & Backtracking with constraint pruning \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
-``find all subsets'', ``power set'' & For every element, choose yes or no. & Backtracking (include/exclude) \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
-``return all permutations'' & Find every distinct ordering. & Backtracking with a \texttt{used} array, or \texttt{next\_permutation} \newline \textit{(Also in: 05. Recursion; 01. Combinatorics)} \\ \hline
-``return all combinations of size $k$'' & Pick exactly $k$ of $n$ without order. & Backtracking with a \texttt{start} index \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
-``N-Queens'', ``fill the board so no rule is violated'' & Constraint satisfaction puzzle. & Backtracking with pruning \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
-``find any one valid arrangement'' & Stop as soon as a single solution exists. & Backtracking with early return \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
-``unique permutations'', ``input contains duplicates'' & Find orderings without producing repeated results. & Backtracking: sort, then skip identical elements \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
-``subsets with duplicates'' & Find subsets without producing repeated results. & Backtracking: sort, then skip equal siblings \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Overlapping Subproblems and State Transitions (Module 06: Dynamic Programming)}
-
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``number of ways to reach'' & Counting paths or combinations. & DP (add transitions) \\ \hline
-``number of distinct subsequences'', ``ways to form a string'' & Counting matches between characters. & DP on Strings \\ \hline
-``minimum cost / minimum number of \dots'' & Shortest path in state graph. & DP (min transition) \\ \hline
-``minimum coins / steps to reach a target'' & Shortest path bounded by transitions. & 1D Coin Change \\ \hline
-``maximum value without exceeding capacity'' & Choose items with a budget. & 0/1 Knapsack \\ \hline
-``maximum sum of a non-adjacent selection'' & Pick separated elements. & House Robber (1D) \\ \hline
-``longest common subsequence'' & Match characters in order. & Two-Sequence DP \\ \hline
-``longest palindromic subsequence/substring'' & Palindrome check in a window. & Interval DP (expand) \\ \hline
-``minimum edits to transform'' & Insert/Delete/Replace operations. & Edit Distance DP \\ \hline
-``longest increasing subsequence'' & Pick elements strictly increasing. & 1D DP (LIS) \\ \hline
-``can we split into equal sum halves'' & Target sum is exactly half total. & Subset-Sum (Knapsack) \\ \hline
-``partition into $k$ groups with minimum cost'' & Cost grouped by elements. & DP (Index and $k$) \\ \hline
-``minimum cost to merge/multiply a sequence'' & Cost depends on final merge point. & Interval DP \\ \hline
-``stock-style buy/sell with states'' & State transitions with multiple roles. & State-Machine DP \\ \hline
-``unbounded reuse of items'' & Take the same item infinitely. & Unbounded Knapsack (forward loop) \\ \hline
-``visit every node exactly once, $n \le 20$'' & Traveling Salesman style. & Bitmask DP \\ \hline
-``count ways modulo'' & Answers get too large. & DP (apply \% at additions) \\ \hline
-``grid paths with obstacles'' & Navigating 2D array. & 2D Grid DP \\ \hline
-``no two adjacent chosen'' & House robber constraint. & 1D DP \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\subsection{Overlapping Subproblems (Module 06: Dynamic Programming)}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``no two adjacent chosen'', ``climbing stairs'' & Best/count depending on immediate prior states. & 1D DP (House Robber / Stairs) \\
+``minimum coins / ways to make target'' & Unbounded transition over coin denominations. & 1D Coin Change (forward loop) \\
+``max value within weight capacity'', ``equal partition'' & Indivisible items with capacity budget $W$. & 0/1 Knapsack (backward loop) \\
+``grid paths with obstacles / min path sum'' & Navigate 2D grid moving right and down. & 2D Grid DP \\
+``longest common subsequence'', ``edit distance'' & Align or transform two strings prefix-by-prefix. & Two-Sequence 2D DP \\
+``longest increasing subsequence'' & Best strictly increasing chain ending at $i$. & LIS DP ($O(N^2)$ / $O(N \log N)$) \\
+``min cost to merge segments'', ``longest palindrome'' & Subproblem depends on contiguous interval $[i, j]$. & Interval DP (fill by length) \\
+``buy/sell stock with cooldown or fee'' & Finite set of distinct roles per day. & State-Machine DP \\
+``visit every node once'' ($N \le 20$) & Track visited set as integer mask + last node. & Bitmask DP (also Mod.\ 12) \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
 \subsection{Graphs, Traversals, and Networks (Module 07: Graph Algorithms)}
-
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``shortest path in unweighted maze / grid'' & Find minimum steps from start to target cell. & BFS with FIFO queue \\ \hline
-``minimum word transformations'' & Each valid 1-letter change is an unweighted edge. & BFS from start word \\ \hline
-``number of islands / clusters'' & Count disconnected subgraphs in grid or graph. & DFS or BFS flood fill \\ \hline
-``network delay / shortest path with weights $\ge 0$'' & Find cheapest path where each edge has non-negative cost. & Dijkstra with min-heap \\ \hline
-``course schedule / task dependencies'' & Find a valid execution order respecting all prerequisites. & Kahn's Topological Sort \\ \hline
-``detect cycle in directed dependencies'' & Determine if deadlocks or circular prerequisites exist. & Kahn's in-degree count \\ \hline
-``redundant connection / cycle in undirected graph'' & Find the edge connecting nodes already in the same component. & DSU with path compression \\ \hline
-``minimum cost to connect all nodes'' & Connect every node with minimum total edge weight. & Kruskal's MST (DSU) \\ \hline
-``split people into two teams without conflicts'' & Color graph using two colors so adjacent nodes differ. & Bipartite 2-coloring \\ \hline
-``shortest path between all pairs, $V \le 400$'' & Compute all-pairs distance matrix. & Floyd-Warshall \\ \hline
-``graph has negative edge weights'' & Find shortest path with negative edges or detect negative cycle. & Bellman-Ford \\ \hline
-``dynamically query connectivity as edges added'' & Incrementally merge sets and check connectivity. & Disjoint Set Union (DSU) \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``shortest path in unweighted maze / word ladder'' & Level-by-level minimum hops. & BFS (FIFO queue) \\
+``number of islands'', ``connected components'' & Explore full component from each unvisited node. & DFS / BFS Flood Fill \\
+``shortest path with edge weights $\ge 0$'' & Greedily finalize closest unsettled vertex. & Dijkstra (min-heap) \\
+``negative edge weights'', ``negative cycle'' & Relax all edges $V - 1$ times. & Bellman-Ford \\
+``all-pairs shortest paths'' ($V \le 400$) & Intermediate-vertex matrix relaxation. & Floyd-Warshall \\
+``course prerequisites'', ``directed cycle'' & Order DAG nodes or detect leftover in-degree. & Kahn's Topo Sort / 3-Color DFS \\
+``dynamic connectivity'', ``min cost to connect all'' & Merge components or build minimum spanning tree. & DSU / Kruskal's MST \\
+``split into two conflict-free teams'' & 2-color adjacent nodes with opposite colors. & Bipartite 2-Coloring \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
 \subsection{Interval Halving and Answer Spaces (Module 08: Binary Search)}
-
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``find minimum capacity to complete in time'' & Monotonic capacity threshold: larger capacities also succeed. & Binary Search on Answer \\ \hline
-``maximize minimum distance between items'' & Feasibility condition: can we place $K$ items with gap $\ge D$? & Binary Search on Answer \\ \hline
-``first element $\ge target$ in sorted array'' & Locate the starting boundary of a value. & Lower Bound \\ \hline
-``count occurrences of $X$ in sorted array'' & Count identical elements without a linear scan. & Upper Bound $-$ Lower Bound \\ \hline
-``search target in rotated sorted array'' & Cyclically shifted sorted data. & Rotated Binary Search \\ \hline
-``find any peak element ($A[i] > A[i+1]$)'' & Find local extremum in logarithmic time. & Slope Analysis Binary Search \\ \hline
-``find integer square root $\lfloor \sqrt{N} \rfloor$'' & Find largest $k$ such that $k^2 \le N$. & Monotonic Predicate Search \\ \hline
-``minimize maximum subarray sum in $K$ splits'' & Painter's partition / allocation. & Binary Search on Answer + Greedy \\ \hline
-``smallest divisor giving sum $\le$ threshold'' & Monotonic divisor: larger divisors decrease total sum. & Binary Search on Answer \\ \hline
-``find real root with precision $10^{-7}$'' & Continuous bisection on continuous domain. & Floating-Point Binary Search \\ \hline
-``first bad version / earliest failure'' & Monotonic failure: once broken, all later revisions broken. & First-True Binary Search \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``first element $\ge \text{target}$'', ``count occurrences'' & Half-open $[L, R)$ boundary queries. & Lower / Upper Bound \\
+``min capacity / max min-distance / $K$ splits'' & Monotonic \texttt{FFFTTT} yes/no feasibility check. & Binary Search on Answer \\
+``search in rotated sorted array'' & One half around \texttt{mid} is always sorted. & Rotated Binary Search \\
+``find peak element'', ``row-sorted 2D matrix'' & Follow rising slope or flatten 2D index. & Peak / 2D Matrix BS \\
+``real root to precision $10^{-7}$'' & Fixed-iteration bisection on doubles. & Continuous Binary Search \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
 \subsection{Pattern Matching, Hashing, Tries, and Palindromes (Module 09: String Algorithms)}
-
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``find all occurrences of $P$ in $T$'' & Exact linear-time substring search without rewinding. & KMP ($\pi$-array) or Z-Algorithm \\ \hline
-``is $S$ built by repeating a substring?'' & Shortest exact repeating period of a string. & KMP ($N \bmod (N - \pi[N-1]) = 0$) \\ \hline
-``is $B$ a cyclic rotation of $A$?'' & Wrap-around substring check across concatenation. & Search $B$ inside $A + A$ \\ \hline
-``sum of LCP scores of all suffixes'' & Longest common prefix starting at every suffix $i$. & Z-Algorithm ($Z$-array) \\ \hline
-``compare many substrings in $O(1)$'', ``longest repeated substring'' & Fast slice equality or binary search on length. & Prefix Double Rolling Hash (Rabin-Karp) \\ \hline
-``prefix lookup'', ``autocomplete dictionary'' & Match prefixes across $W$ words in $O(L)$ time. & Flat Vector-Pool Trie \\ \hline
-``maximum XOR of two numbers'' & Greedily pick opposite bits from MSB to LSB. & Bitwise Trie ($\Sigma = \{0, 1\}$) \\ \hline
-``longest palindromic substring'' ($N \le 10^5$) & Linear-time mirror symmetry over all centers. & Manacher's Algorithm ($O(N)$) \\ \hline
-``shortest palindrome by prepending'' & Longest palindromic prefix of $S$. & KMP on $S + \text{`\#'} + \operatorname{rev}(S)$ \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``all occurrences of $P$ in $T$'', ``repeating period'' & Linear substring search via prefix borders. & KMP ($\pi$-array) / Z-Algorithm \\
+``compare many substrings in $O(1)$'' & Collision-safe two-prime polynomial hashes. & Double Rolling Hash \\
+``prefix lookup'', ``autocomplete'', ``max XOR pair'' & Shared prefix tree over alphabet or bits $\{0, 1\}$. & Flat Vector-Pool / Bitwise Trie \\
+``longest palindromic substring'' ($N \le 10^5$) & Linear mirror reuse across all centers. & Manacher's Algorithm ($O(N)$) \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
 \subsection{Making the Best Local Choice (Module 10: Greedy Algorithms)}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``max non-overlapping events'', ``min arrows'' & Maximize disjoint intervals on a timeline. & Sort by earliest finish $f_i$ \\
+``min meeting rooms'', ``min platforms'' & Host all overlapping events simultaneously. & Sort by start $s_i$ + min-heap \\
+``fractional amounts'', ``divisible goods'' & Slice items to maximize value per unit weight. & Sort by density $v_i / w_i$ \\
+``min cost to merge ropes'', ``optimal prefix code'' & Repeatedly combine smallest two active items. & Min-Heap / Huffman Greedy \\
+``assign tasks to workers'', ``boats to save people'' & Pair sorted demands and supplies greedily. & Sort + Two-Pointer Matching \\
+``can reach end / min jumps'', ``circular gas tour'' & Track furthest reach $R_{\max}$ or prefix tank surplus. & Linear $O(N)$ Horizon Greedy \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``maximum number of non-overlapping'', ``attend most events'' & Fit as many independent segments on a timeline as possible. & Sort by end time, pick earliest finish. \\ \hline
-``fractional amounts allowed'', ``divisible goods'' & You can slice items to perfectly fill capacity. & Sort by value-to-weight ratio. \\ \hline
-``minimum cost to connect cables/ropes'' & Merging items pairwise where cost is sum of parts. & Min-heap (Priority Queue), take smallest two. \\ \hline
-``assign tasks to workers'', ``maximize pairs'' & Match items from two groups efficiently. & Sort both groups, use two pointers. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\subsection{Nearest Extrema and Windows (Module 11: Monotonic Stacks and Queues)}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``next/previous greater'', ``stock span'', ``visible'' & Nearest strictly larger neighbor left or right. & Decreasing Monotonic Stack \\
+``next/previous smaller'', ``largest histogram'' & Nearest strictly smaller boundary on each side. & Increasing Monotonic Stack \\
+``max/min in every window of size $K$'' & Running extremum across a shifting window. & Monotonic Deque ($O(N)$) \\
+``sum of subarray mins'', ``remove $K$ digits'' & Contribution span or lexicographic removal budget. & Monotonic Stack + Tie-Break \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
-\subsection{Nearest Extrema, Spans, and Sliding Windows (Module 11: Monotonic Stacks and Queues)}
-
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``next greater element'', ``first warmer day'' & Find the first larger value to the right of each element. & Decreasing Monotonic Stack \\ \hline
-``stock span'', ``previous greater element'' & Count consecutive prior days with lower or equal price (stops at first strictly greater). & Decreasing Monotonic Stack \\ \hline
-``previous / next smaller element'' & Find the nearest strictly smaller value to the left or right of each element. & Increasing Monotonic Stack \\ \hline
-``largest rectangle in histogram'' & Expand bar width left and right until a shorter bar appears. & Increasing Monotonic Stack with sentinel \\ \hline
-``maximum/minimum in sliding window of size $K$'' & Query range extremum over a continuously shifting interval. & Monotonic Deque (double-ended eviction) \\ \hline
-``sum of subarray minimums'' & Sum the minimum of every contiguous subarray. & Monotonic Stack with symmetry breaking \\ \hline
-``remove $K$ digits to create smallest number'' & Maintain smallest lexicographical sequence of remaining digits. & Increasing Monotonic Stack with removal quota \\ \hline
-``visible buildings / line of sight'' & Count buildings visible before being blocked by a taller one. & Decreasing Monotonic Stack \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Bitwise Invariants, Bitmasks, and State Compression (Module 12: Bit Manipulation and Bitmasks)}
-
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``every element appears twice except one'', ``single non-duplicate'' & Identical values must annihilate without allocating a frequency hash table. & XOR Accumulator ($A \oplus A = 0$) \\ \hline
-``range XOR sum'', ``subarray XOR equals zero'' & Frequent cumulative XOR queries over intervals $[L, R]$. & 1D Prefix XOR Array ($P[L] \oplus P[R+1]$) \\ \hline
-``visit all $N$ cities'', ``assign $N$ tasks to $N$ workers'', $N \le 20$ & State depends solely on subset of visited items and last location. & Bitmask DP ($O(N^2 \cdot 2^N)$ state compression) \\ \hline
-``all sub-configurations of a configuration'', ``merge sub-clusters'' & Evaluating costs over all sub-partitions for every subset. & Submask Enumeration ($O(3^N)$ loop) \\ \hline
-``is power of two'', ``count set bits'', ``lowest 1-bit'' & Fundamental bit property test in constant time. & $x \ \& \ (x - 1)$, $x \ \& \ (-x)$, or \texttt{std::has\_single\_bit} \\ \hline
-``bitwise operations on pairs to maximize/minimize objective'' & Bitwise operators act independently without carry across columns. & Bit Frequency Ledger (Column-by-column accounting) \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Cross-Cutting Decisions}
-
-These decisions appear inside many problems regardless of topic.
-
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{4.2cm}|X|p{3.8cm}|}
-\hline
-\textbf{Problem Signal / Keywords} & \textbf{Meaning} & \textbf{Technique} \\ \hline
-``count the ways'' (not ``list the ways'') & You only need an integer, so avoid generating the configurations. & Formula or Dynamic Programming instead of backtracking \newline \textit{(Also in: 01. Combinatorics; 05. Recursion; 06. DP)} \\ \hline
-``$N$ too large for a loop ($N \ge 10^9$)'' & Any $O(N)$ pass times out. & Closed-form formula or $O(\log N)$ technique \newline \textit{(Also in: 02. Modular Arithmetic; 04. Sequences)} \\ \hline
-``many queries on static data'' & Repeating the same scan wastes time. & Precompute once, answer in $O(1)$ \newline \textit{(Also in: 03. Number Theory; 04. Sequences)} \\ \hline
-``deep recursion ($N > 10^4$)'' & The call stack may overflow. & Convert to an iterative loop with an explicit stack \newline \textit{(Also in: 05. Recursion and Backtracking)} \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\subsection{Bitwise Invariants and State Compression (Module 12: Bit Manipulation)}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash\bfseries}p{4.0cm}}
+\arrayrulecolor{primaryblue}\toprule[1.1pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Keywords in the Problem}} & \textcolor{primaryblue}{\textbf{Plain English Meaning}} & \textcolor{primaryblue}{\textbf{Tool to Use}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+``every element twice except one/two'' & Duplicate pairs cancel via $A \oplus A = 0$. & XOR + LSB Partition ($x \mathbin{\&} -x$) \\
+``range XOR sum'' on static array & Prefix self-cancellation $P[L] \oplus P[R+1]$. & 1D Prefix XOR Array \\
+``all sub-configurations'' ($N \le 15$) & Enumerate valid submasks across all masks. & Submask Loop ($O(3^N)$) \\
+``all $K$-element subsets'', ``visit $N \le 20$ cities'' & Fixed-cardinality masks or subset state DP. & Gosper's Hack / Bitmask DP \\
+``repeated \texttt{\&}/\texttt{|}'', ``appears $3\times$ except one'' & Bit columns operate independently without carry. & Column Ledger Accounting \\
+\arrayrulecolor{primaryblue}\bottomrule[1.1pt]
+\end{tabularx}\endgroup
 
 % ============================================================================
 \section{Module Registry}
 \label{sec:registry}
 % ============================================================================
 
-This section lists every topic document in the library. Finished documents are marked $\checkmark$ and contain a full pattern recognition section. Planned documents are marked \textbf{Under Construction}. Their problem signals will be merged into Section~\ref{sec:index} as soon as they are written.
+All 12 core topic modules and both \texttt{00.*} meta guides are complete and print-ready.
 
-\subsection{Available Modules}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.2cm} >{\centering\arraybackslash}p{1.9cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Module}} & \textcolor{primaryblue}{\textbf{Status}} & \textcolor{primaryblue}{\textbf{What It Covers}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+00. C++ Reference & \color{codegreen}$\checkmark$ Available & Modern C++17/20/23 containers, ranges, \texttt{<bit>}, views, memory layout, and UB traps. \\
+01. Combinatorics & \color{codegreen}$\checkmark$ Available & Permutations, combinations, Stars \& Bars, derangements, Catalan, Stirling, PIE. \\
+02. Modular Arithmetic & \color{codegreen}$\checkmark$ Available & Clock arithmetic, overflow safety, binary exponentiation, inverses, Ext.\ Euclid, CRT. \\
+03. Number Theory & \color{codegreen}$\checkmark$ Available & Primes, Sieve of Eratosthenes, SPF \& Segmented Sieves, divisors, GCD/LCM, $\phi(n)$. \\
+04. Sequences \& Series & \color{codegreen}$\checkmark$ Available & Arithmetic/geometric sums, 1D/2D prefix sums, difference arrays, telescoping sums. \\
+05. Recursion \& Backtracking & \color{codegreen}$\checkmark$ Available & Call stack, choose/explore/undo, pruning, subsets, permutations, combinations, N-Queens. \\
+06. Dynamic Programming & \color{codegreen}$\checkmark$ Available & State design, 1D/2D grids, 0/1 \& Unbounded Knapsack, LCS/Edit Distance, Interval \& Bitmask DP. \\
+07. Graph Algorithms & \color{codegreen}$\checkmark$ Available & Representations, BFS/DFS, Dijkstra, Bellman-Ford, Floyd-Warshall, Kahn's, DSU, Kruskal, 2-Coloring. \\
+08. Binary Search & \color{codegreen}$\checkmark$ Available & Half-open $[L, R)$, lower/upper bounds, BS on answer, rotated, peaks, 2D matrix, continuous BS. \\
+09. String Algorithms & \color{codegreen}$\checkmark$ Available & Double rolling hash (Rabin-Karp), KMP ($\pi$-array), Z-algorithm, Tries, Manacher's palindromes. \\
+10. Greedy Algorithms & \color{codegreen}$\checkmark$ Available & Exchange Argument, Greedy vs.\ DP, Intervals/Min Rooms, Fractional Knapsack, Huffman, 2-Ptr, Jump Game. \\
+11. Monotonic Stacks/Queues & \color{codegreen}$\checkmark$ Available & NGE/PGE/NSE/PSE, Stock Span, Histogram, Sliding Window Deque, Subarray Mins, Remove $K$ Digits. \\
+12. Bit Manipulation & \color{codegreen}$\checkmark$ Available & Two's complement, $x \mathbin{\&} (-x)$, Kernighan, \texttt{<bit>}, Prefix XOR, Column Ledger, $O(3^N)$ submasks, Gosper, TSP. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\end{tabularx}\endgroup
 
-\vspace{0.2cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{3.8cm}|p{1.6cm}|X|}
-\hline
-\textbf{Module} & \textbf{Status} & \textbf{What It Covers} \\ \hline
-00. C++ Reference & $\checkmark$ Available & Quick reference for modern C++ syntax and standard library idioms used throughout the library. \\ \hline
-01. Combinatorics and Permutations & $\checkmark$ Available & Factorials, permutations, combinations, Stars and Bars, derangements, Catalan numbers, Stirling numbers, Inclusion-Exclusion, counting modulo a prime. \\ \hline
-02. Modular Arithmetic & $\checkmark$ Available & Clock arithmetic, overflow prevention, binary exponentiation, modular inverses, Extended Euclidean Algorithm, Chinese Remainder Theorem. \\ \hline
-03. Number Theory & $\checkmark$ Available & Primes, sieves, divisors, factorization, GCD and LCM, Euler's Totient, segmented sieve. \\ \hline
-04. Sequences, Series, and Prefix Sums & $\checkmark$ Available & Arithmetic and geometric sums, sum of squares and cubes, prefix sums in one and two dimensions, difference arrays, telescoping sums. \\ \hline
-05. Recursion and Backtracking & $\checkmark$ Available & Call stack, recursion trees, the make-a-choice/explore/undo pattern, pruning, subsets, permutations, combinations, N-Queens. \\ \hline
-06. Dynamic Programming & $\checkmark$ Available & State definition, transitions, memoization vs tabulation, 1D/2D grids, knapsack family, two-sequence (LCS/edit distance), interval DP, space optimization, and bitmask DP. \\ \hline
-07. Graph Algorithms & $\checkmark$ Available & Graph representations, BFS, DFS, 2D grid flood fill, Dijkstra shortest paths, Kahn's topological sort, Disjoint Set Union (DSU), Kruskal's MST, Bellman-Ford, Floyd-Warshall, and bipartite 2-coloring. \\ \hline
-08. Binary Search & $\checkmark$ Available & Interval halving, search invariants, lower/upper bounds, binary search on the answer, rotated array searches, peak element finding, and continuous floating-point bisection. \\ \hline
-09. String Algorithms & $\checkmark$ Available & Polynomial double rolling hashing (Rabin-Karp), KMP prefix function ($\pi$-array), Z-algorithm, flat vector-pool and bitwise tries, string periodicity, and linear-time palindromes (Manacher). \\ \hline
-10. Greedy Algorithms & $\checkmark$ Available & Greedy choice property, optimal substructure, interval scheduling, fractional knapsack, and Huffman/rope merging. \\ \hline
-11. Monotonic Stacks and Queues & $\checkmark$ Available & Monotonic stacks and deques, Next/Previous Greater/Smaller Element, span calculations, histogram rectangle expansion, sliding window extrema, and subarray contribution accounting. \\ \hline
-12. Bit Manipulation and Bitmasks & $\checkmark$ Available & Fundamental bit representations (LSB, MSB, two's complement), bitwise arithmetic identities, Brian Kernighan's algorithm, prefix XOR queries, submask enumeration ($O(3^N)$), Gosper's hack, bit frequency ledgers, and bitmask DP. \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
-
-\subsection{Planned Modules (Under Construction)}
-
-Each planned module lists the scope it is expected to cover. Nothing below is final.
-
-\begin{calloutbox}{Upcoming Planned Modules (13--16)}
+\begin{calloutbox}{Upcoming Planned Modules (Phase 5: Modules 13--16)}
 \textbf{Status:} Planned. \textbf{Expected scope:} 13.\ Two Pointers \& Sliding Window; 14.\ Heaps \& Priority Queues; 15.\ Trees \& BSTs; 16.\ Fenwick \& Segment Trees.
 \end{calloutbox}
 
 % ============================================================================
-\section{Summary and Complexity Reference}
+\section{Master Summary and Complexity Reference}
 % ============================================================================
 
-The table below collects the most commonly needed techniques across all available modules in one place.
+This multi-page table summarizes the time and space complexity of every core technique across Modules~01--12.
 
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{3.4cm}|p{2.6cm}|p{2.2cm}|X|}
-\hline
-\textbf{Task} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
-Direct loop sum & $O(N)$ & $O(1)$ & One-off sum with small $N$. \\ \hline
-Arithmetic or geometric formula & $O(1)$ & $O(1)$ & Sum follows a constant-difference or constant-ratio pattern. \\ \hline
-Build prefix sums & $O(N)$ & $O(N)$ & Many range-sum queries on a static array. \\ \hline
-Difference array update & $O(1)$ per update & $O(N)$ & Many range additions, one final readout. \\ \hline
-Binary exponentiation & $O(\log b)$ & $O(1)$ & Large power, usually modulo a number. \\ \hline
-Modular inverse & $O(\log n)$ & $O(1)$ & Division inside a modular computation. \\ \hline
-Trial division primality & $O(\sqrt{N})$ & $O(1)$ & Single number up to about $10^{12}$. \\ \hline
-Sieve of Eratosthenes & $O(N \log\log N)$ & $O(N)$ & All primes up to about $10^7$. \\ \hline
-Precomputed factorials & $O(N)$ build, $O(1)$ query & $O(N)$ & Many $\binom{n}{k}$ queries modulo a prime. \\ \hline
-Generate all subsets & $O(N \cdot 2^N)$ & $O(N)$ & ``Return all subsets'' with $N \le 20$. \\ \hline
-Generate all permutations & $O(N \cdot N!)$ & $O(N)$ & ``Return all orderings'' with $N \le 8$. \\ \hline
-N-Queens backtracking & $O(N!)$ worst case & $O(N)$ & Constraint puzzle with $N \le 13$. \\ \hline
-\end{tabularx}
-
-\vspace{0.3cm}
-\noindent
-\begin{tabularx}{\textwidth}{|p{3.4cm}|p{2.6cm}|p{2.2cm}|X|}
-\hline
-\textbf{Task} & \textbf{Time} & \textbf{Space} & \textbf{Use When} \\ \hline
-1D DP (Stairs, Robber) & $O(N)$ & $O(1)$ or $O(N)$ & Optimal or count problem depending on immediate prior states. \\ \hline
-2D Grid DP & $O(N \times M)$ & $O(\min(N, M))$ & Path optimization on a grid moving down/right. \\ \hline
-0/1 Knapsack & $O(N \times W)$ & $O(W)$ & Maximize value within weight/capacity limit $W$. \\ \hline
-Longest Common Subsequence & $O(N \times M)$ & $O(N \times M)$ & Matching subsequences across two strings. \\ \hline
-Interval DP & $O(N^3)$ & $O(N^2)$ & Merging contiguous segments (such as matrix chain). \\ \hline
-Bitmask DP & $O(2^N \times N^2)$ & $O(2^N \times N)$ & Visiting all items/subsets with $N \le 20$. \\ \hline
-BFS (unweighted) & $O(V + E)$ & $O(V)$ & Unweighted shortest paths, level-order traversal. \\ \hline
-DFS / Flood fill & $O(V + E)$ & $O(V)$ & Component counting, path existence, grid reachability. \\ \hline
-Dijkstra & $O((V + E) \log V)$ & $O(V + E)$ & Shortest paths with non-negative edge weights. \\ \hline
-Topological sort (Kahn) & $O(V + E)$ & $O(V)$ & Task scheduling with prerequisites, DAG cycle check. \\ \hline
-Disjoint Set Union (DSU) & $O(\alpha(V))$ amort. & $O(V)$ & Dynamic connectivity, incremental cycle detection. \\ \hline
-Kruskal's MST & $O(E \log E)$ & $O(V)$ & Minimum Spanning Tree for sparse graphs. \\ \hline
-Binary search (exact) & $O(\log N)$ & $O(1)$ & Finding target in sorted contiguous array. \\ \hline
-Lower bound / Upper bound & $O(\log N)$ & $O(1)$ & First index where element $\ge target$ or $> target$. \\ \hline
-Binary search on answer & $O(C \cdot \log R)$ & $O(1)$ & Optimization over monotonic domain with check $C$. \\ \hline
-Rotated array search & $O(\log N)$ & $O(1)$ & Cyclically shifted sorted unique array. \\ \hline
-Peak element search & $O(\log N)$ & $O(1)$ & Finding local maximum in array with distinct neighbors. \\ \hline
-Continuous binary search & $O(\text{iters} \cdot C)$ & $O(1)$ & Real-valued root or threshold on continuous function. \\ \hline
-Prefix Double Rolling Hash & $O(N)$ build, $O(1)$ query & $O(N)$ & Collision-safe substring equality and binary search on length. \\ \hline
-KMP / Z-Algorithm Search & $O(N + M)$ & $O(M)$ / $O(N + M)$ & Exact linear-time pattern search, periods, suffix LCPs. \\ \hline
-Trie Insert / Search / Prefix & $O(L)$ & $O(\text{nodes} \cdot \Sigma)$ & Dictionary prefix lookup, autocomplete, bitwise XOR queries. \\ \hline
-Manacher's Algorithm & $O(N)$ & $O(N)$ & Longest palindromic substring or all palindrome radii. \\ \hline
-Greedy interval scheduling & $O(N \log N)$ & $O(1)$ & Maximize non-overlapping timeline events. \\ \hline
-Greedy knapsack/matching & $O(N \log N)$ & $O(1)$ & Sorting-based choices on divisible or pairable items. \\ \hline
-Next / Previous Greater Element & $O(N)$ & $O(N)$ & Nearest larger neighbor needed for each array element. \\ \hline
-Largest Histogram Rectangle & $O(N)$ & $O(N)$ & Finding largest rectangular area bounded by vertical bars. \\ \hline
-Sliding Window Extremum & $O(N)$ & $O(K)$ & Finding running minimum or maximum across a sliding window. \\ \hline
-Subarray Extremum Contributions & $O(N)$ & $O(N)$ & Summing minimum or maximum values over all contiguous subarrays. \\ \hline
-Prefix XOR Range Query & $O(1)$ & $O(N)$ build & Frequent subarray XOR queries on static array. \\ \hline
-Submask Enumeration (all masks) & $O(3^N)$ & $O(2^N)$ & Exhaustive subset dynamic programming ($N \le 15$). \\ \hline
-Bit Frequency Ledger Accumulation & $O(B \cdot N)$ & $O(B)$ & Independent column analysis ($B \in \{32, 64\}$). \\ \hline
-\end{tabularx}
-\vspace{0.3cm}
+\begingroup\footnotesize\rowcolors{2}{codebg}{white}
+\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.0cm} >{\centering\arraybackslash}p{2.3cm} >{\centering\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Task / Technique}} & \textcolor{primaryblue}{\textbf{Time}} & \textcolor{primaryblue}{\textbf{Space}} & \textcolor{primaryblue}{\textbf{Use When}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+\endhead
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
+\endfoot
+Precomputed factorials (01/02) & $O(N)$ / $O(1)$ & $O(N)$ & Many $\binom{n}{k} \bmod p$ queries. \\
+Binary exponentiation (02) & $O(\log b)$ & $O(1)$ & Large power $a^b \bmod m$. \\
+Modular inverse / Ext.\ Euclid (02) & $O(\log m)$ & $O(1)$ & Division modulo $m$ (coprime). \\
+Trial division primality (03) & $O(\sqrt{N})$ & $O(1)$ & Single primality/divisor check up to $10^{12}$. \\
+Sieve of Eratosthenes (03) & $O(N \log\log N)$ & $O(N)$ & All primes up to $N \le 10^7$. \\
+Segmented Sieve (03) & $O((R{-}L)\log\log R)$ & $O(R{-}L+\sqrt{R})$ & Primes in $[L, R]$ with $R \le 10^{12}$. \\
+SPF Sieve Factorization (03) & $O(N \log\log N)$ / $O(\log N)$ & $O(N)$ & Factorizing $10^5+$ numbers up to $10^7$. \\
+1D / 2D Prefix Sums (04) & $O(N)$ / $O(1)$ & $O(N)$ / $O(NM)$ & Static subarray or submatrix sum queries. \\
+Difference Array (04) & $O(1)$ update & $O(N)$ & Batch range additions, single final readout. \\
+Backtracking Subsets / Perms (05) & $O(N \cdot 2^N)$ / $O(N \cdot N!)$ & $O(N)$ & Listing every valid configuration ($N \le 20$). \\
+1D DP (Robber / Coin Change) (06) & $O(N)$ / $O(N \cdot C)$ & $O(1)$ / $O(N)$ & Optimal value or count from prior states. \\
+0/1 Knapsack (06) & $O(N \cdot W)$ & $O(W)$ & Indivisible items maximizing value under $W$. \\
+LCS / Edit Distance (06) & $O(N \cdot M)$ & $O(N \cdot M)$ & Two-string alignment or min edit ops. \\
+Interval DP (06) & $O(N^3)$ & $O(N^2)$ & Optimal merging/splitting of segments. \\
+Bitmask DP / TSP (06/12) & $O(N^2 \cdot 2^N)$ & $O(N \cdot 2^N)$ & Permutation/subset optimization ($N \le 20$). \\
+BFS / DFS / 2-Coloring (07) & $O(V + E)$ & $O(V)$ & Unweighted shortest path, components, bipartite. \\
+Dijkstra (07) & $O((V + E) \log V)$ & $O(V + E)$ & Shortest paths with weights $\ge 0$. \\
+Bellman-Ford (07) & $O(V \cdot E)$ & $O(V)$ & Negative edges or negative cycle detection. \\
+Floyd-Warshall (07) & $O(V^3)$ & $O(V^2)$ & All-pairs shortest paths ($V \le 400$). \\
+Kahn's Topo Sort (07) & $O(V + E)$ & $O(V)$ & Dependency ordering and DAG cycle check. \\
+DSU / Kruskal's MST (07) & $O(\alpha(V))$ / $O(E \log E)$ & $O(V)$ & Dynamic connectivity and sparse MST. \\
+Binary Search / Bounds / 2D (08) & $O(\log N)$ / $O(\log(MN))$ & $O(1)$ & Sorted array, rotated, peak, or 2D matrix. \\
+Binary Search on Answer (08) & $O(C \cdot \log R)$ & $O(1)$ & Monotonic \texttt{FFFTTT} feasibility optimization. \\
+Double Rolling Hash (09) & $O(N)$ / $O(1)$ & $O(N)$ & Collision-safe $O(1)$ substring comparison. \\
+KMP / Z-Algorithm (09) & $O(N + M)$ & $O(M)$ / $O(N{+}M)$ & Exact pattern search, periods, suffix LCPs. \\
+Trie Insert / Search (09) & $O(L)$ & $O(\text{nodes} \cdot \Sigma)$ & Dictionary prefix search and bitwise max XOR. \\
+Manacher's Algorithm (09) & $O(N)$ & $O(N)$ & Longest palindromic substring in linear time. \\
+Interval Sched.\ / Knapsack (10) & $O(N \log N)$ & $O(1)^*$ & Earliest finish, divisible items, 2-ptr match. \\
+Min Rooms / Huffman Heap (10) & $O(N \log N)$ & $O(N)$ & Dynamic min-heap room reuse or rope merges. \\
+Jump Horizon / Gas Tour (10) & $O(N)$ & $O(1)$ & Furthest reachability or circular surplus start. \\
+Monotonic Stack / Deque (11) & $O(N)$ & $O(N)$ / $O(K)$ & NGE/NSE, Histogram, Sliding Window Max. \\
+Prefix XOR Range Query (12) & $O(N)$ build, $O(1)$ query & $O(N)$ & Static subarray XOR queries. \\
+All-Submasks Loop (12) & $O(3^N)$ & $O(1)$ iter / $O(2^N)$ DP & Sub-partition DP over all subsets ($N \le 15$). \\
+Column Ledger Accounting (12) & $O(B \cdot N)$ & $O(B)$ & Carry-free per-bit counting ($B \in \{32, 64\}$). \\
+\end{xltabular}\endgroup
+{\footnotesize\color{codegray}$^*$In-place sorting uses $O(\log N)$ auxiliary stack space.}
 
 % ============================================================================
 \section{Glossary of Terms and Symbols}
 % ============================================================================
 
-\subsection{Core Concepts}
-\begin{itemize}
-    \item \textbf{Enumeration}: Producing every valid configuration, one by one. The answer is a list.
-    \item \textbf{Counting}: Determining how many valid configurations exist. The answer is a single number.
-    \item \textbf{Decision problem}: A problem whose answer is yes or no.
-    \item \textbf{Optimization}: Finding the best configuration according to some measure, such as the smallest cost or longest length.
-    \item \textbf{Query}: One question asked about the input. Many problems ask thousands of queries against one fixed input.
-    \item \textbf{Precomputation}: Doing work once at the start so that each later query is cheap. The programming equivalent of building a lookup table.
-    \item \textbf{Closed-form formula}: A formula that computes the answer directly, without a loop that grows with the input size.
-    \item \textbf{Time Limit Exceeded (TLE)}: Your program is correct but too slow for the allowed time.
-    \item \textbf{Constraint}: A limit stated in the problem, such as $N \le 10^5$. It reveals the intended complexity.
-    \item \textbf{Module}: One topic document in this library, for example Number Theory.
-    \item \textbf{Backtracking}: Building a solution step by step and undoing a step as soon as it cannot lead to a valid answer.
-    \item \textbf{Dynamic Programming}: Solving small subproblems once, storing their answers in a table, and reusing them for larger problems.
-    \item \textbf{Modular arithmetic}: Arithmetic that wraps around after reaching a fixed value, like a clock resetting at 12.
-    \item \textbf{Graph}: A collection of vertices (nodes) and edges connecting pairs of vertices.
-    \item \textbf{Disjoint Set Union (DSU)}: A data structure that tracks elements partitioned into disjoint subsets, supporting near-constant time union and find operations.
-    \item \textbf{Topological order}: A linear ordering of vertices in a directed acyclic graph where every dependency precedes its target.
-    \item \textbf{Binary Search}: Systematic interval halving over a sorted array or monotonic answer space.
-    \item \textbf{Monotonicity}: The property where a condition preserves truth value after a transition point ($FF\dots FTT\dots T$).
-    \item \textbf{Lower / Upper Bound}: Boundary indices locating the first element $\ge target$ or strictly $> target$.
-    \item \textbf{Monotonic Stack}: A stack whose elements are strictly or non-strictly sorted, used to find nearest extrema in $O(N)$ amortized time.
-    \item \textbf{Monotonic Deque}: A double-ended queue maintaining sorted elements that enables $O(1)$ amortized sliding window range queries.
-    \item \textbf{Bitmask}: An integer interpreted as a compact boolean array or subset where bit $i = 1$ indicates inclusion of element $i$.
-    \item \textbf{Two's Complement}: The standard binary encoding for signed integers where the MSB has negative weight $-2^{N-1}$.
-    \item \textbf{Self-Inverse}: An algebraic operator that undoes itself, satisfying $x \oplus x = 0$.
-    \item \textbf{Trie (Prefix Tree)}: A character-indexed tree storing a dictionary of strings so insert, search, and prefix lookups run in $O(L)$ time independent of dictionary size.
-    \item \textbf{Double Rolling Hash}: Two independent polynomial string hashes evaluated modulo distinct large primes, enabling $O(1)$ substring equality queries with negligible collision risk.
-    \item \textbf{Border}: A proper prefix of a string that is also its suffix; the foundation of KMP pattern matching and string periodicity.
+\subsection*{Core Concepts}
+\begin{itemize}[itemsep=2pt]
+    \item \textbf{Optimization / Enumeration / Decision / Counting / Querying}: The five core output categories in Figure~\ref{fig:triage_tree}.
+    \item \textbf{Precomputation}: Paying $O(N)$ build time once so every later query runs in $O(1)$ or $O(\log N)$.
+    \item \textbf{Backtracking vs.\ Dynamic Programming vs.\ Greedy}: Backtracking explores and undoes all valid branches; DP caches overlapping subproblems; Greedy commits irreversibly via an Exchange Argument.
+    \item \textbf{Monotonicity}: A predicate that flips truth value at most once ($\texttt{FFFTTT}$), enabling Binary Search on the Answer.
+    \item \textbf{Disjoint Set Union (DSU)}: Near-$O(1)$ ($O(\alpha(N))$) component union/find using path compression + union by rank.
+    \item \textbf{Monotonic Stack / Deque}: Sorted stack or double-ended queue maintaining nearest extrema in $O(N)$ amortized time.
+    \item \textbf{Trie / Double Rolling Hash / Border}: Core string primitives for $O(L)$ prefix lookup, $O(1)$ slice equality, and KMP search.
+    \item \textbf{Bitmask / Two's Complement / Self-Inverse}: Subset integer encoding, negative-MSB signed arithmetic, and $x \oplus x = 0$.
 \end{itemize}
 
-\subsection{Mathematical Symbols}
-\begin{itemize}
-    \item $N$: The size of the input, usually the number of elements.
-    \item $V, E$: The number of vertices and edges in a graph.
-    \item $O(\cdot)$: Big-O notation. It describes how the running time grows with the input size. $O(N)$ means ``proportional to $N$'', like one pass through a \texttt{std::vector}.
-    \item $\log N$: How many times you can halve $N$ before reaching $1$. For $N = 10^9$ it is about $30$.
-    \item $N!$: ``$N$ factorial'', the product $1 \cdot 2 \cdots N$. It is the number of orderings of $N$ distinct items.
-    \item $2^N$: Two multiplied by itself $N$ times. It is the number of subsets of $N$ items.
-    \item $\binom{n}{k}$: ``$n$ choose $k$'', the number of ways to pick $k$ items from $n$ when order does not matter.
-    \item $\sqrt{N}$: The square root of $N$, the number that multiplied by itself gives $N$.
-    \item $\lfloor \cdot \rfloor, \lceil \cdot \rceil$: Floor and ceiling rounding functions.
-    \item $\bmod$ or \texttt{\%}: The remainder after division. $14 \bmod 12 = 2$.
-    \item $\phi(N)$: Euler's totient, the count of numbers from $1$ to $N$ that share no prime factor with $N$.
-    \item $C_n$: The $n$-th Catalan number, which counts valid parenthesis strings of $n$ pairs and many similar structures.
-    \item $\alpha(N)$: The inverse Ackermann function, an extraordinarily slow-growing function ($\le 4$ for all practical inputs).
-    \item $\pi[i], Z[i], \Sigma$: KMP prefix function, Z-function (suffix-prefix LCP), and alphabet size.
-    \item $\prod$: ``Product of'', the multiplication analogue of the summation sign.
-    \item $\checkmark$: Marks a module that is complete.
+\subsection*{Mathematical Symbols}
+\begin{itemize}[itemsep=2pt]
+    \item $N, V, E, W$: Input size, graph vertices/edges, and knapsack weight capacity.
+    \item $O(\cdot),\; \log N,\; \sqrt{N},\; \alpha(N)$: Complexity growth, binary logarithm, square root, and inverse Ackermann ($\le 4$).
+    \item $\sum,\; \prod,\; \lfloor \cdot \rfloor,\; \lceil \cdot \rceil$: Summation, product, floor, and ceiling functions.
+    \item $N!,\; \binom{n}{k},\; D_n,\; C_n,\; S(n,k)$: Factorial, binomial coefficient, derangements, Catalan numbers, and Stirling numbers of the second kind.
+    \item $\bmod,\; \gcd,\; \operatorname{lcm},\; \phi(N)$: Remainder, greatest common divisor, least common multiple, and Euler's totient.
+    \item $\oplus,\; \mathbin{\&},\; \pi[i],\; Z[i],\; \Sigma$: Bitwise XOR, bitwise AND, KMP prefix function, Z-array, and alphabet size.
 \end{itemize}
 
 % ============================================================================
@@ -564,39 +606,106 @@ Bit Frequency Ledger Accumulation & $O(B \cdot N)$ & $O(B)$ & Independent column
 
 \subsection*{Free Online Resources (Start Here)}
 \begin{itemize}
-    \item \textbf{CP-Algorithms} (\texttt{cp-algorithms.com}) --- Free, code-heavy reference that organizes techniques by topic. A good second stop once this guide has pointed you to a technique.
-    \item \textbf{Art of Problem Solving Wiki} (\texttt{artofproblemsolving.com/wiki}) --- Beginner-friendly explanations of the mathematics behind many techniques in this guide.
-    \item \textbf{Brilliant.org} (\texttt{brilliant.org}) --- Interactive, visual courses on algorithms, number theory, and combinatorics.
+    \item \textbf{CP-Algorithms} (\texttt{cp-algorithms.com}) --- Code-heavy reference organized by algorithmic topic.
+    \item \textbf{Art of Problem Solving Wiki} (\texttt{artofproblemsolving.com/wiki}) --- Intuitive mathematical foundations for combinatorics and number theory.
+    \item \textbf{Brilliant.org} (\texttt{brilliant.org}) --- Interactive problem-solving courses across math and computer science.
 \end{itemize}
 
 \subsection*{Books (When You Are Ready to Go Deeper)}
 \begin{itemize}
-    \item S.\ Halim and F.\ Halim, \emph{Competitive Programming} --- Organizes problem types by technique, very similar in spirit to this guide. Intermediate; read after you are comfortable with the topic documents.
-    \item S.\ Skiena, \emph{The Algorithm Design Manual} --- Contains a ``catalog of algorithmic problems'' that maps problem types to techniques. Intermediate; a good companion for building problem-recognition skill.
-    \item T.\ H.\ Cormen, C.\ E.\ Leiserson, R.\ L.\ Rivest, C.\ Stein, \emph{Introduction to Algorithms} --- The standard rigorous reference. Advanced; use it as a dictionary, not as a first read.
+    \item \textbf{S.\ Halim and F.\ Halim, \emph{Competitive Programming}} --- \emph{Intermediate.} Organizes problem types by technique, matching this guide's triage mindset.
+    \item \textbf{S.\ Skiena, \emph{The Algorithm Design Manual}} --- \emph{Intermediate.} Features a famous catalog mapping problem symptoms to algorithmic tools.
+    \item \textbf{T.\ H.\ Cormen et al., \emph{Introduction to Algorithms} (CLRS)} --- \emph{Advanced.} Rigorous dictionary reference for proofs and complexity bounds.
 \end{itemize}
+
+% ============================================================================
+\section*{Triage Practice: Cold-Start Pen-and-Paper Drills}
+\addcontentsline{toc}{section}{Triage Practice: Cold-Start Pen-and-Paper Drills}
+\markboth{Triage Practice: Cold-Start Pen-and-Paper Drills}{}
+% ============================================================================
+
+For each disguised problem below, identify on paper: (a) \textbf{Output Category}, (b) \textbf{Target Complexity}, (c) \textbf{Exact Technique}, and (d) \textbf{Which Module to Open}.
+
+\begin{tryitbox}{Triage}{Constraints-Driven Triage}{ex1}
+\begin{enumerate}[itemsep=2pt, topsep=2pt]
+    \item \emph{Problem 1}: You have $N = 16$ delivery trucks and $N = 16$ packages, with a matrix $\text{cost}[i][j]$. Assign one package per truck to minimize total cost.
+    \item \emph{Problem 2}: Given $N = 10^5$ integers, answer $10^5$ queries asking for the maximum element in every contiguous window of length $K = 500$.
+    \item \emph{Problem 3}: Compute the number of primes in the interval $[10^{11}, 10^{11} + 10^6]$.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Triage}{Greedy vs. Dynamic Programming vs. Binary Search}{ex2}
+\begin{enumerate}[itemsep=2pt, topsep=2pt]
+    \item \emph{Problem 4}: You must ship $N = 10^5$ ordered packages of weights $w_i$ within $D$ days without reordering them. Find the \textbf{minimum ship weight capacity} required.
+    \item \emph{Problem 5}: You have $N = 10^5$ conference talks $[s_i, f_i)$ and want to attend the \textbf{maximum number} of non-overlapping talks.
+    \item \emph{Problem 6}: Same $N = 10^5$ talks, except each talk now has a different \textbf{payout} $p_i$, and you want maximum total payout.
+\end{enumerate}
+\end{tryitbox}
+
+\begin{tryitbox}{Triage}{Strings, Graphs, and Counting Disguises}{ex3}
+\begin{enumerate}[itemsep=2pt, topsep=2pt]
+    \item \emph{Problem 7}: Given a list of $10^5$ course prerequisites $(a \to b)$, determine if all courses can be finished and output one valid order.
+    \item \emph{Problem 8}: Given a string $S$ of length $2 \times 10^5$, find the shortest non-empty substring $P$ that repeats an exact integer number of times to form $S$.
+    \item \emph{Problem 9}: How many ways can you distribute $50$ identical coins into $8$ distinct jars so every jar gets at least $1$ coin (answer modulo $10^9 + 7$)?
+\end{enumerate}
+\end{tryitbox}
+
+% ============================================================================
+\section*{Solutions to Pen-and-Paper Exercises}
+\addcontentsline{toc}{section}{Solutions to Pen-and-Paper Exercises}
+\markboth{Solutions to Pen-and-Paper Exercises}{}
+% ============================================================================
+
+\begin{enumerate}[itemsep=3pt]
+    \item \label{sol:ex1}\textbf{Exercise 1 (Triage) --- Constraints-Driven Triage:}
+    \emph{P1}: Optimization; $O(N \cdot 2^N)$; \textbf{Bitmask DP} (Module~06 / Module~12).
+    \emph{P2}: Querying; $O(N)$; \textbf{Monotonic Deque} (Module~11).
+    \emph{P3}: Counting; $O((R{-}L)\log\log R)$; \textbf{Segmented Sieve} (Module~03).
+    \trapnote{Trying a standard Sieve of Eratosthenes on $R = 10^{11}$ requires $100\text{ GB}$ of RAM---always check window width $R - L$ when $R \ge 10^9$.}
+
+    \item \label{sol:ex2}\textbf{Exercise 2 (Triage) --- Greedy vs.\ DP vs.\ Binary Search:}
+    \emph{P4}: Optimization / Decision; $O(N \log(\sum w_i))$; \textbf{Binary Search on the Answer} + greedy day-packing check (Module~08).
+    \emph{P5}: Optimization; $O(N \log N)$; \textbf{Interval Scheduling Greedy} sorted by finish time $f_i$ (Module~10).
+    \emph{P6}: Optimization; $O(N \log N)$; \textbf{Weighted Interval DP} (sort by $f_i$ + binary search predecessor; Module~06 + Module~08).
+    \trapnote{Assuming earliest-finish greedy still works once talks carry unequal profits---arbitrary weights break the Exchange Argument and force DP.}
+
+    \item \label{sol:ex3}\textbf{Exercise 3 (Triage) --- Strings, Graphs, and Counting Disguises:}
+    \emph{P7}: Decision / Ordering; $O(V + E)$; \textbf{Kahn's Topological Sort} (Module~07).
+    \emph{P8}: Querying / Structure; $O(N)$; \textbf{KMP Prefix Function} checking $p = N - \pi[N-1]$ (Module~09).
+    \emph{P9}: Counting; $O(N)$ / $O(1)$; \textbf{Stars and Bars} with lower bounds $\binom{50-1}{8-1} = \binom{49}{7} \bmod (10^9{+}7)$ (Module~01 + Module~02).
+    \trapnote{Forgetting the lower-bound shift in Stars and Bars (pre-placing $1$ coin in each of the $8$ jars reduces $n$ from $50$ to $42$, giving $\binom{42 + 8 - 1}{8 - 1} = \binom{49}{7}$).}
+\end{enumerate}
 
 % ============================================================================
 \section*{Version History}
 \addcontentsline{toc}{section}{Version History}
+\markboth{Version History}{}
 % ============================================================================
 
-\noindent
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Date} & \textbf{Change} \\ \hline
-2026-10-03 & Document created: decision tree, input size table, unified problem signal index for the five finished modules, module registry with four planned modules, summary, glossary, further reading. \\ \hline
-2026-10-03 & Added Version History section. \\ \hline
-2026-10-03 & Added index rows for unique permutations and subsets with duplicates, synced from the refactored Recursion and Backtracking module. \\ \hline
-2026-10-03 & Added Dynamic Programming module to Available registry, synced 19 pattern recognition rows, and added DP complexity entries. \\ \hline
-2026-10-03 & Added Graph Algorithms module to Available registry, synced 12 pattern recognition rows, and added graph algorithm complexity entries. \\ \hline
-2026-10-03 & Added Binary Search module to Available registry, synced 11 pattern recognition rows, and added binary search complexity entries. \\ \hline
-2026-10-10 & Added Greedy Algorithms module to Available registry, synced 4 pattern recognition rows, and added greedy complexity entries. \\ \hline
-2026-10-11 & Added Monotonic Stacks and Queues module to Available registry, synced 7 pattern recognition rows, and added monotonic complexity entries. \\ \hline
-2026-10-12 & Added Bit Manipulation and Bitmasks module to Available registry, synced 6 pattern recognition rows, and added bit manipulation complexity entries and glossary definitions. \\ \hline
-2026-11-24 & Fixed Stock Span row in Module 11 pattern table (Decreasing Monotonic Stack / Previous Greater Element) and added dedicated row for Previous/Next Smaller Element. \\ \hline
-2026-11-25 & Promoted 09. String Algorithms to Available registry and synced its pattern recognition rows, complexity entries, and glossary definitions. \\ \hline
+\begin{center}
+\begingroup
+\footnotesize
+\rowcolors{2}{codebg}{white}
+\begin{tabularx}{\textwidth}{>{\bfseries}l >{\raggedright\arraybackslash}X}
+\arrayrulecolor{primaryblue}\toprule[1.2pt]
+\rowcolor{primaryblue!10}
+\textcolor{primaryblue}{\textbf{Date}} & \textcolor{primaryblue}{\textbf{Change}} \\
+\arrayrulecolor{codeframe}\midrule[0.6pt]
+2026-10-03 & Document created: decision tree, input size table, unified problem signal index for the five finished modules, module registry with four planned modules, summary, glossary, further reading. \\
+2026-10-03 & Added Version History section. \\
+2026-10-03 & Added index rows for unique permutations and subsets with duplicates, synced from the refactored Recursion and Backtracking module. \\
+2026-10-03 & Added Dynamic Programming module to Available registry, synced 19 pattern recognition rows, and added DP complexity entries. \\
+2026-10-03 & Added Graph Algorithms module to Available registry, synced 12 pattern recognition rows, and added graph algorithm complexity entries. \\
+2026-10-03 & Added Binary Search module to Available registry, synced 11 pattern recognition rows, and added binary search complexity entries. \\
+2026-10-10 & Added Greedy Algorithms module to Available registry, synced 4 pattern recognition rows, and added greedy complexity entries. \\
+2026-10-11 & Added Monotonic Stacks and Queues module to Available registry, synced 7 pattern recognition rows, and added monotonic complexity entries. \\
+2026-10-12 & Added Bit Manipulation and Bitmasks module to Available registry, synced 6 pattern recognition rows, and added bit manipulation complexity entries and glossary definitions. \\
+2026-11-24 & Fixed Stock Span row in Module 11 pattern table (Decreasing Monotonic Stack / Previous Greater Element) and added dedicated row for Previous/Next Smaller Element. \\
+2026-11-25 & Promoted 09. String Algorithms to Available registry and synced its pattern recognition rows, complexity entries, and glossary definitions. \\
+2026-11-26 & Overhauled to canonical print-first guide: embedded fixed Diagram 3, deduplicated House Robber, switched Complexity Table to \texttt{xltabular} with fixes/syncs for Modules 03--12, synced Glossary symbols, and added 3 Triage Practice drills with solutions. \\
+\arrayrulecolor{primaryblue}\bottomrule[1.2pt]
 \end{tabularx}
+\endgroup
+\end{center}
 
 \end{document}
-

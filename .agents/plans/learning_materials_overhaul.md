@@ -37,6 +37,11 @@ To keep token usage predictable and reviews manageable, execute this plan in sho
   - Completed `learning_materials/10.greedy_algorithms.tex` full stub expansion and overhaul across all applicable phases (Phase 2.2 rewrite & expansion: added Exchange Argument and Greedy Stays Ahead proof recipes, Greedy-vs-DP counterexamples for `{1, 3, 4}` coins and 0/1 Knapsack, full subsections for Interval Scheduling/Partitioning, NaN-safe Fractional Knapsack, Huffman/Rope Merging, Two-Pointer Matching, and Furthest-Reach Jump Game, 5 complete worked traces, and 6 standalone C++23 listings using `&Event::end` projections, `INT_MIN` sentinel, NaN-safe partitioning, 64-bit min-heap, and `std::optional` jump returns + Phase 3 fixed & visually verified Diagram 21 plus 3 new TikZ diagrams for Exchange Argument swap, `{1, 3, 4}` Greedy failure, and Fractional Knapsack density bar + Phase 4.12 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes including "Break Two Plausible Interval Rules" + Solutions with 1-line **Common trap** diagnostics).
 - **Session 13 (Done — `2026-11-26`):**
   - Completed `learning_materials/12.bit_manipulation_and_bitmasks.tex` across all applicable phases (Phase 1.12 bug fixes: replaced all 15 raw Markdown `**bold**`, backticks, and UTF-8 dashes; fixed Table 1 $2^{31} = |\texttt{INT32\_MIN}|$ vs. Signed Max $2^{31}-1$ and "Involution" terminology; fixed Gosper's Hack `k == 0 || k > n` / `n == 64` / `>> std::countr_zero(set)`, constrained `lowest_set_bit` to `std::unsigned_integral`, switched `for_each_submask` to `std::invocable`, guarded `TravellingSalesperson::solve` `n <= 1` and `INF` overflow; added plain-English pre-listing notes, expanded `<bit>` coverage, replaced hallucinated Project Euler IDs with verified Problem 59, and trimmed Version History L977 + Phase 3 fixed & visually verified Diagrams 25--28 and 41 with zero double-scaling, zero right/bit-label/math overflow, and canonical palette + Phase 4.14 canonical print-first layout, 4-beat Origin Stories, local `notationbox` tables, **8 compact inline drills + 6-drill End-of-Chapter Practice Sheet** across all 6 thinking modes + Solutions with 1-line **Common trap** diagnostics).
+- **Session 14 (Done — `2026-11-26`):**
+  - Completed both `00.*` meta guides and retired `learning_materials/diagrams_review.tex` (and untracked `diagrams_review.pdf`), closing Phases 1--4 across the entire 14-document library:
+    - `learning_materials/00.cpp_reference.tex` (Phase 1.1 + Phase 3 D1/D2 + Phase 4.1): stripped BOM, added Version History, fixed `std::span{vec}.subspan(0, 2)`, fixed headers & backticks & collapsed format spaces, corrected C++20 stateless lambda / `stable_sort` / `fold_left` `<algorithm>` / `bit_width(0) == 0` notes, added Modules 09--12 idioms (`std::string_view`, `std::deque`/`std::stack<int, std::vector<int>>`, `<bit>`/`std::bitset`, safe `INF`, C++23 deducing `this`), embedded & visually verified fixed Diagrams 1 (decreasing stack addresses, valid `new int(99)`) & 2, and added "Why This Exists" notes + 3 quick checks with solutions.
+    - `learning_materials/00.problem_solving_guide.tex` (Phase 1.2 + Phase 3 D3 + Phase 4.2): embedded & visually verified fixed Diagram 3 (5 non-overlapping columns with orthogonal bus routing), removed duplicate House Robber row & redundant tags, switched Master Complexity Reference to `xltabular` with Prefix XOR / Submask fixes and synced Modules 03--12 rows, synced missing Glossary symbols (`D_n`, `S(n,k)`, `\oplus`, `\&`, `\sum`, `\gcd`, `\operatorname{lcm}`), and added 3 cold-start Triage Practice drills with solutions.
+    - Retired `learning_materials/diagrams_review.tex` and verified 100% Clean Directory Policy (`--strict-clean-dir`) with 0 errors and 0 warnings.
 - **Ongoing Sessions (1 Module per Fresh Session):**
   - Follow the exact same single-module vertical slice (Phases 1/2 + 3 + 4 + verification + Progress Matrix update + commit) for whichever module the user selects next.
   - Suggested order: `11` → `12` → `00.problem_solving_guide.tex` → `10` → `09` → `06` → `07` → (`08`, `05`, `04`, `03`, `02`, `01`, `00.cpp_reference.tex` on demand) → delete `learning_materials/diagrams_review.tex` once all diagrams are migrated → Phase 5 (`13`–`16`) just-in-time.
@@ -112,20 +117,20 @@ Establish the updated standard before editing individual monographs so every sub
 Fix every confirmed factual error, C++23 compile/UB defect, formatting glitch, and skill violation.
 
 ### Meta Guides (`00.*`)
-- [ ] **1.1 `learning_materials/00.cpp_reference.tex`:**
-  - [ ] Strip UTF-8 BOM (`U+FEFF`) on line 1.
-  - [ ] Add missing `Version History` section at end of document.
-  - [ ] Fix invalid `vec.subspan(0, 2)` comment on L662 (`std::span{vec}.subspan(0, 2)`).
-  - [ ] Add missing `#include <ranges>` in listing #8, `#include <functional>` / `<utility>` / `<cstddef>` in incomplete listings, and remove unused headers.
-  - [ ] Replace raw Markdown backticks `` `printf`/`scanf` `` on L787 with `\texttt{...}` and fix collapsed spaces in `\texttt{"        42"}` (L612–613).
-  - [ ] Fix C++20 stateless lambda note (L177–178), `ranges::stable_sort`/`stable_partition` complexity nuances (L260/265), `ranges::fold_left` `<algorithm>` header note (L345), and `std::bit_width(0) == 0` edge case (L398).
-  - [ ] Add brief C++23 reference blocks relevant to Modules 09–12: `std::string_view` (`remove_prefix`/`remove_suffix` + lifetime warning), `std::deque`/`std::stack<int, std::vector<int>>`, `<bit>` unsigned-only caveat + `std::bitset` + `1ULL << k` shift UB, safe `INF = max() / 2`, and C++23 deducing `this`.
-- [ ] **1.2 `learning_materials/00.problem_solving_guide.tex`:**
+- [x] **1.1 `learning_materials/00.cpp_reference.tex`:** *(Completed 2026-11-26)*
+  - [x] Strip UTF-8 BOM (`U+FEFF`) on line 1.
+  - [x] Add missing `Version History` section at end of document.
+  - [x] Fix invalid `vec.subspan(0, 2)` comment on L662 (`std::span{vec}.subspan(0, 2)`).
+  - [x] Add missing `#include <ranges>` in listing #8, `#include <functional>` / `<utility>` / `<cstddef>` in incomplete listings, and remove unused headers.
+  - [x] Replace raw Markdown backticks `` `printf`/`scanf` `` on L787 with `\texttt{...}` and fix collapsed spaces in `\texttt{"        42"}` (L612–613).
+  - [x] Fix C++20 stateless lambda note (L177–178), `ranges::stable_sort`/`stable_partition` complexity nuances (L260/265), `ranges::fold_left` `<algorithm>` header note (L345), and `std::bit_width(0) == 0` edge case (L398).
+  - [x] Add brief C++23 reference blocks relevant to Modules 09–12: `std::string_view` (`remove_prefix`/`remove_suffix` + lifetime warning), `std::deque`/`std::stack<int, std::vector<int>>`, `<bit>` unsigned-only caveat + `std::bitset` + `1ULL << k` shift UB, safe `INF = max() / 2`, and C++23 deducing `this`.
+- [x] **1.2 `learning_materials/00.problem_solving_guide.tex`:** *(Completed 2026-11-26)*
   - [x] Fix wrong Stock Span row on L343 (Stock Span = Previous **Greater** Element = **Decreasing** Monotonic Stack, not Increasing). *(Completed 2026-11-24 alongside Module 11)*
-  - [ ] Remove duplicate House Robber row (L261 vs L274) and redundant `(Also in: ...)` tags in Sec 4.4–4.5.
-  - [ ] Fix Complexity Table formatting & errors: switch 28-row `tabularx` (L448–478) to `xltabular` so it page-breaks cleanly; fix Prefix XOR `O(N) build` misplaced in Space column (L475); clarify Submask Enumeration space (`O(1)` iteration, `O(2^N)` DP table, L476); add Greedy Huffman/heap row and missing Module `03`/`04`/`06`/`07`/`08` rows.
-  - [ ] Reconcile Pattern Recognition table format (4-column vs grouped 3-column) with `SKILL.md`, and sync missing Glossary symbols (`D_n`, `S(n,k)`, `\oplus`, `\&`, `\sum`, `\gcd`, `\operatorname{lcm}`).
-  - [ ] *(Synced in Phase 2 & Phase 3)* Move `09. String Algorithms` from Under Construction to Available, sync its patterns/complexity/glossary, and replace empty triage tree (L113–119) with fixed Diagram 3.
+  - [x] Remove duplicate House Robber row (L261 vs L274) and redundant `(Also in: ...)` tags in Sec 4.4–4.5.
+  - [x] Fix Complexity Table formatting & errors: switch 28-row `tabularx` (L448–478) to `xltabular` so it page-breaks cleanly; fix Prefix XOR `O(N) build` misplaced in Space column (L475); clarify Submask Enumeration space (`O(1)` iteration, `O(2^N)` DP table, L476); add Greedy Huffman/heap row and missing Module `03`/`04`/`06`/`07`/`08` rows.
+  - [x] Reconcile Pattern Recognition table format (grouped 3-column canonical `booktabs`) with `SKILL.md`, and sync missing Glossary symbols (`D_n`, `S(n,k)`, `\oplus`, `\&`, `\sum`, `\gcd`, `\operatorname{lcm}`).
+  - [x] *(Synced in Phase 2 & Phase 3)* Move `09. String Algorithms` from Under Construction to Available, sync its patterns/complexity/glossary, and replace empty triage tree (L113–119) with fixed Diagram 3.
 
 ### Core Modules (`01`–`08`)
 - [x] **1.3 `learning_materials/01.combinatorics_permutations.tex`:** *(Completed 2026-11-25)*
@@ -230,14 +235,14 @@ All 41 diagrams currently sit unintegrated in `learning_materials/diagrams_revie
 - [x] **D40 (L3337):** Remove `LeetCode 62` platform-agnostic violation; replace UTF-8 `—` (L3328) with `---`. *(Fixed when embedded into Module 01 on 2026-11-25.)*
 - [x] **D30 (L2306–2308, KMP):** Fix shifted pattern cells after fallback `j = pi[3] = 2` so `P[2] = 'A'` aligns under `T[4] = 'A'` (followed by `P[3] = 'B'`, `P[4] = 'C'`). *(Fixed & embedded into Module 09 on 2026-11-25.)*
 - [x] **D31 (L2335–2381, Rabin-Karp):** Separate window length `L` from prime modulus `M`; fix precomputation time to $O(L)$; fix birthday collision probability for $N = 10^5, M = 10^9+7$ (`~99.3%`, or state `~5%` for $N = 10^4$). *(Fixed & embedded into Module 09 on 2026-11-25.)*
-- [ ] **D1 (L157–172 vs L202–203, Memory Layout):** Make stack addresses *decrease* in the "Stack Grows Down" direction and fix invalid C++ `int* ptr = 0x55aa10;`.
+- [x] **D1 (L157–172 vs L202–203, Memory Layout):** Make stack addresses *decrease* in the "Stack Grows Down" direction and fix invalid C++ `int* ptr = 0x55aa10;`. *(Fixed & embedded into `00.cpp_reference.tex` on 2026-11-26.)*
 - [x] **D18 (L1416, DSU):** Clarify that $O(\alpha(N))$ requires **both** path compression and union by rank/size. *(Fixed & embedded into Module 07 on 2026-11-26.)*
 - [x] **D38 (L3050 vs L3054):** Reconcile squaring count (`3` vs `4`) in binary exponentiation badge. *(Fixed & embedded into Module 02 on 2026-11-25 by stopping before unused final squaring at `b = 0`.)*
 
 ### 3.2 Fix Layout Collisions & Styling Across Existing Gallery Diagrams
 Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standardize red semantics (muted `red!70!black` strictly for pruned/error/conflict states), and eliminate every collision:
-- [ ] **Severe collisions:** D5 (L476/480), D17 (L1302 margin overflow), D26 (L1966 right overflow), D29 (L2174 edge slicing `"car"`), D30 (L2301/2309 unbounded note), D34 (L2629–2638 legend & arrow collisions), D35 (L2730 trace overflow), D36 (L2851 prose hitting red banner), D37 (L2906/2909/2918 text collisions), D38/D40 (replace `$$...$$` inside TikZ nodes overflowing dividers), D39 (L3130–3150 touching circles & arc label hitting `sqrt(N)=6`), D41 (L3378–3466 bit labels overlapping `b7`/`b0` & `$$...$$` overflow).
-- [ ] **Minor collisions & cleanups:** D1 (duplicate `font=`, `\hfill` without `text width`, arrow label width), D3 (column border overlap), D4 (`Slot 4`/`Slot 7` hitting BAR tops), D10 (`Returns` hitting Col 3), D14 (`from Left: 2` width), D18 (panel gap), D24 (blue frame touching Cell 4), D25 (MSB/LSB label overhang & sign arrow target), D32 (label padding & `c_2+1`/`r_2+1` boundary clarity).
+- [x] **Severe collisions:** D5, D17, D26, D29, D30, D34, D35, D36, D37, D38/D40, D39, D41 — all fixed natively within `\textwidth` and visually verified across Sessions 2--13.
+- [x] **Minor collisions & cleanups:** D1, D3, D4, D10, D14, D18, D24, D25, D32 — all fixed and visually verified across Sessions 2--14.
 
 ### 3.3 Create Missing Promised & High-Value Diagrams
 - [x] **Module 05 (using `forest` package):** Subsets `{1, 2}` include/exclude decision tree (promised at L294) + N-Queens pruned backtracking tree with explicit `✗` pruned branches. *(Completed & visually verified 2026-11-25)*
@@ -247,8 +252,8 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 - [x] **Module 10:** Fractional Knapsack value/weight ratio bar + Greedy Failure Counterexample (`{1, 3, 4}` for target `6`) + Exchange Argument timeline swap diagram. *(Completed & visually verified 2026-11-26)*
 
 ### 3.4 Embed Into Monographs, Visually Verify & Clean Up
-- [ ] Embed D1, D2 → `00.cpp_reference.tex` (and visually inspect rendered PNGs).
-- [ ] Embed D3 → `00.problem_solving_guide.tex` (replaces empty L113–119).
+- [x] Embed D1, D2 → `00.cpp_reference.tex` *(fixed D1 decreasing stack addresses, valid `new int(99)`, removed duplicate `font=` and `scale=`, fixed `\hfill` text widths & center gap; polished D2 natively with red dashed invalidation hazard; visually verified 2026-11-26)*.
+- [x] Embed D3 → `00.problem_solving_guide.tex` *(replaces empty L113–119; 5 non-overlapping columns with orthogonal bus routing; visually verified 2026-11-26)*.
 - [x] Embed D4, D40 → `01.combinatorics_permutations.tex` *(fixed D4 slot-label clearance, D40 platform/UTF-8/double-scaling/border collisions, and added Catalan Reflection Principle diagram; visually verified 2026-11-25)*.
 - [x] Embed D5, D38 → `02.modular_arithmetic.tex` *(replaces missing L110 figure; fixed D5 arc label collisions, fixed D38 double-scaling, `$$...$$` node overflow, and 3-vs-4 squaring count, and added CRT periodic clocks alignment diagram; visually verified 2026-11-25)*.
 - [x] Embed D6, D7, D39 → `03.number_theory.tex` *(replaces empty L390–394; redesigned D39 without double-scaling, touching circles, arc collisions, or ad-hoc red axis/pivot; scaled D7 cleanly with exact $252 \times 105$ ratio; visually verified 2026-11-25)*.
@@ -261,7 +266,7 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 - [x] Embed D21 + Fractional Knapsack / Counterexample / Exchange Argument → `10.greedy_algorithms.tex` *(removed D21 `scale=0.93`, standardized canonical palette with vertical finish-time guide lines, added Exchange Argument timeline swap, `{1, 3, 4}` Greedy failure comparison, and Fractional Knapsack density bar; visually verified 2026-11-26)*.
 - [x] Embed D22, D23, D24 → `11.monotonic_stacks_and_queues.tex` (replaces 3 text stubs; fixed D24 blue frame collision and D22 label/card spacing). *(Completed 2026-11-24)*
 - [x] Embed D25, D26, D27, D28, D41 → `12.bit_manipulation_and_bitmasks.tex` *(replaces 4 text stubs; removed double-scaling across all 5 diagrams, fixed D25 MSB/LSB overhang & sign arrow target, fixed D26 right-margin carry overflow, fixed D41 bit-label collisions, `$$...$$` overflow, and ad-hoc red shades, and added step visit tags `#1`--`#8` to D28; visually verified 2026-11-26)*.
-- [ ] **Delete `learning_materials/diagrams_review.tex`** once every diagram is embedded and verified, restoring the Clean Directory Policy.
+- [x] **Delete `learning_materials/diagrams_review.tex`** once every diagram is embedded and verified, restoring the Clean Directory Policy. *(Retired 2026-11-26 alongside `diagrams_review.pdf`.)*
 
 ---
 
@@ -269,8 +274,8 @@ Remove redundant `\resizebox{\textwidth}{!}` + `scale=` double-scaling, standard
 
 Apply the **Pedagogical Blueprint** (4-Beat Origin Stories, local `notationbox` mini-tables, 2–4 `tryitbox` pen-and-paper drills + clickable Solutions appendix, and 5-line paragraph cap) across every monograph.
 
-- [ ] **4.1 `00.cpp_reference.tex`:** Add "Why this container/view exists" 2-line origin notes (`std::span`, `std::string_view`, `std::ranges` lazy views vs. eager copies) + 3 "Pick the Right Tool / Spot the UB" pen-and-paper quick checks.
-- [ ] **4.2 `00.problem_solving_guide.tex`:** Add a 3-problem **"Triage Practice" `tryitbox`** (given 3 short problem descriptions + constraints, pick Paradigm + Complexity + Module on paper, check against Solutions appendix).
+- [x] **4.1 `00.cpp_reference.tex`:** *(Completed 2026-11-26)* Add "Why this container/view exists" 2-line origin notes (`std::span`, `std::string_view`, `std::ranges` lazy views vs. eager copies, `std::deque` vs. `std::stack<int, std::vector<int>>`) + 3 "Pick the Right Tool / Spot the UB" pen-and-paper quick checks with solutions.
+- [x] **4.2 `00.problem_solving_guide.tex`:** *(Completed 2026-11-26)* Add a 3-exercise (9-problem) **"Triage Practice" `tryitbox` suite** (constraints-driven, Greedy vs. DP vs. BS, and strings/graphs/counting disguises) + Solutions with 1-line trap diagnostics.
 - [x] **4.3 `01.combinatorics_permutations.tex`:** *(Completed 2026-11-25)*
   - *Origin Stories:* Why we divide by $k!$ in $\binom{n}{k}$; where Stars & Bars bijection comes from; why Catalan counts *every* valid split (reflection principle intuition); where Inclusion-Exclusion alternating signs come from.
   - *Local `notationbox`:* Permutations ($P(n,k)$, $n!$), Combinations ($\binom{n}{k}$), Derangements/Catalan/Stirling ($D_n, C_n, S(n,k)$).
@@ -338,8 +343,8 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | Module | Ph 1: Bug Fixes | Ph 2: Stub Expansion | Ph 3: Diagrams Embedded | Ph 4: "But Why?" + Notation + Drills | C++23 Check | PDF Visual Pass |
 |---|---|---|---|---|---|---|
 | `SKILL.md` & `verify_learning_materials.py` (Phase 0) | DONE (2026-11-24) | N/A | N/A | DONE (2026-11-24) | N/A | N/A |
-| `00.cpp_reference.tex` | `[ ]` | N/A | `[ ]` (D1, D2) | `[ ]` | `[ ]` | `[ ]` |
-| `00.problem_solving_guide.tex` | `[ ]` | N/A | `[ ]` (D3) | `[ ]` | N/A | `[ ]` |
+| `00.cpp_reference.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
+| `00.problem_solving_guide.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | N/A | DONE (2026-11-26) |
 | `01.combinatorics_permutations.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `02.modular_arithmetic.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
 | `03.number_theory.tex` | DONE (2026-11-25) | N/A | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) | DONE (2026-11-25) |
@@ -352,7 +357,7 @@ Update a cell to `DONE (YYYY-MM-DD)` only after passing the **Mandatory Verifica
 | `10.greedy_algorithms.tex` | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
 | `11.monotonic_stacks_and_queues.tex` | DONE (2026-11-24) | N/A | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) | DONE (2026-11-24) |
 | `12.bit_manipulation_and_bitmasks.tex` | DONE (2026-11-26) | N/A | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) | DONE (2026-11-26) |
-| Retire `diagrams_review.tex` | N/A | N/A | `[ ]` | N/A | N/A | N/A |
+| Retire `diagrams_review.tex` | N/A | N/A | DONE (2026-11-26) | N/A | N/A | N/A |
 | `13.two_pointers_and_sliding_window.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
 | `14.heaps_and_priority_queues.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
 | `15.trees_and_bsts.tex` | N/A | New (Ph 5) | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
